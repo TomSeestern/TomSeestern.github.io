@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Home - Tom Segbers</title>
     <meta name="description" content="My Personal Homepage">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=55ed58843090e40cf7c6b6646703fdb1">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
@@ -28,7 +28,7 @@
     <main class="page lanidng-page">
         <section class="portfolio-block block-intro">
             <div class="container">
-                <div class="avatar" style="background: url(&quot;assets/img/avatars/avatar.jpg?h=09559cb9ba427148bc3f8bea62e0338d&quot;) center / cover;"></div>
+                <div class="avatar" style="background: url(&quot;assets/img/avatars/avatar.jpg&quot;) center / cover;"></div>
                 <div class="about-me">
                     <p>Hi there! I am&nbsp;<strong>Tom Segbers</strong>.&nbsp;I work as aspiring machine learning engineer and&nbsp;have a background in ML, robotics and backend Development.</p><a class="btn btn-outline-primary" role="button" href="contact.html">Contact me!</a>
                 </div>
@@ -56,7 +56,6 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <!-- Start: Contact Info Card -->
                             <div class="contact-info portfolio-info-card" style="background: var(--white);">
                                 <h2>Contact Info</h2>
                                 <div class="row">
@@ -75,7 +74,7 @@
                                     <div class="col-1"><i class="icon ion-social-linkedin-outline icon"></i></div>
                                     <div class="col-9"><a class="stretched-link" href="https://linkedin.com/in/tomsegbers/" target="_blank">linkedin.com/in/tomsegbers/</a></div>
                                 </div>
-                            </div><!-- End: Contact Info Card -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -83,37 +82,36 @@
         </section>
         <section class="portfolio-block projects-cards">
             <div class="container">
-                <!-- Start: portfolio heading -->
                 <div class="heading">
                     <h2>Recent Work</h2>
-                </div><!-- End: portfolio heading -->
+                </div>
                 <div class="row">
                     <div class="col-md-6 col-lg-4">
-                        <div class="card border-0"><a href="#"><img class="img-fluid card-img-top scale-on-hover" src="assets/img/projects/p1/p1-marketplace.png?h=0613d26f99a1235c66beb1d4455593e3" alt="Card Image" style="height: 190px;width: 300px;"></a>
+                        <div class="card border-0"><a class="d-xl-flex justify-content-xl-center" href="changeDetecion.html" target="_parent"><img class="img-fluid card-img-top scale-on-hover" src="assets/img/projects/p1/p1-marketplace.png" alt="Card Image" style="height: 190px;width: 300px;"></a>
                             <div class="card-body">
-                                <h6><a href="#">Change Detecion on moving UAV Video</a></h6>
-                                <p class="text-muted card-text">My Bachelor Thesis - Detecting Object Movement from a Moving UAV Video Stream in realtime.</p>
+                                <h6><a href="changeDetecion.html" target="_parent">Change Detecion on moving UAV Video</a></h6>
+                                <p class="text-muted card-text">My Bachelor Thesis <br>Detecting Object Movement from a Moving UAV Video Stream in realtime.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">
-                        <div class="card border-0"><a href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/p0/ezb.jpg?h=9f2d68e08b37d211a8dc82869d4f9411" alt="Card Image" style="height: 190px;width: 300px;"></a>
+                        <div class="card border-0"><a class="d-xl-flex justify-content-xl-center" href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/p0/ezb.jpg" alt="Card Image" style="height: 190px;width: 300px;"></a>
                             <div class="card-body">
-                                <h6><a href="#"><strong>Nowcasting inflation: ML for automated</strong><br><strong>Product Classification</strong></a></h6>
-                                <p class="text-muted card-text">Hackathon with the European Central Bank to calculate the current Inflation levels.</p>
+                                <h6><a href="#"><strong>&nbsp;ML for automated</strong><br><strong>Product Classification</strong></a></h6>
+                                <p class="text-muted card-text">Hackathon with the European Central Bank to calculate the current Inflation levels.<br>Theme: "Nowcasting Inflation"</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">
-                        <div class="card border-0"><a href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/p4/p4-screenMockups.jpg?h=62c01faa665a1b0456b6c827e940b4db" alt="Card Image" style="height: 190px;width: 300px;margin: 1px auto;"></a>
+                        <div class="card border-0"><a class="d-xl-flex justify-content-xl-center" href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/p4/p4-screenMockups.jpg" alt="Card Image" style="height: 190px;width: 300px;margin: 1px auto;"></a>
                             <div class="card-body">
                                 <h6><a href="#">SouDest</a></h6>
-                                <p class="text-muted card-text">Our all-in-one Journey planner. <br>Comes as Native Android App <br>or Responsive React WebApp.<br></p>
+                                <p class="text-muted card-text">Our all-in-one Journey planner. Comes as Native Android App <br>or Responsive ReactJS WebApp.<br></p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">
-                        <div class="card border-0"><a href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/p2/p2-turtlebotPathplaning.jpg?h=04b188c43728c2c3ca0696231348c255" alt="Card Image" style="height: 190px;width: 300px;"></a>
+                        <div class="card border-0"><a class="d-xl-flex justify-content-xl-center" href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/p2/p2-turtlebotPathplaning.jpg" alt="Card Image" style="height: 190px;width: 300px;"></a>
                             <div class="card-body">
                                 <h6><a href="#">BotBoost - A Obstacle Avoidance Algorithm</a></h6>
                                 <p class="text-muted card-text">Implementation of "Bug V2"&nbsp; - Obstacle Avoidance&nbsp; Algorithm for the Turtlebot Robot Kit running with ROS&nbsp;</p>
@@ -121,15 +119,15 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">
-                        <div class="card border-0"><a href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/p3/p3-presenting.jpg?h=e6beb71dfc8beef5c5e03543b3753173" alt="Card Image" style="height: 190px;width: 300px;"></a>
+                        <div class="card border-0"><a class="d-xl-flex justify-content-xl-center" href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/p3/p3-presenting.jpg" alt="Card Image" style="height: 190px;width: 300px;"></a>
                             <div class="card-body">
                                 <h6><a href="#"><strong>Talks, trainings and other small Projects</strong></a></h6>
-                                <p class="text-muted card-text">Other smaller Projects I was involved in.</p>
+                                <p class="text-muted card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">
-                        <div class="card border-0"><a href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/pX/pX-JustTheStart.jpg?h=0d80d25aec08802026c2ca0d52f9b070" alt="Card Image" style="height: 190px;width: 300px;"></a>
+                        <div class="card border-0"><a class="d-xl-flex justify-content-xl-center" href="#"><img class="card-img-top scale-on-hover" src="assets/img/projects/pX/pX-JustTheStart.jpg" alt="Card Image" style="height: 190px;width: 300px;"></a>
                             <div class="card-body">
                                 <h6><a href="#">More to come!</a></h6>
                                 <p class="text-muted card-text">Stay tuned for more awesome Projects!</p>
@@ -155,9 +153,9 @@
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/smart-forms.min.js?h=9db842b3dc3336737559eb4abc0f1b3d"></script>
+    <script src="assets/js/smart-forms.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
-    <script src="assets/js/script.min.js?h=81690170888ca326373533f544f9c5ee"></script>
+    <script src="assets/js/script.min.js"></script>
 </body>
 
 </html>
