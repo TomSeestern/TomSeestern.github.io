@@ -200,6 +200,12 @@ While CSS-in-TS libraries such as [Stitches](https://stitches.dev/) and [Vanilla
 
 Creating variants using traditional CSS can be a tedious task, requiring you to manually match classes to props and add types. CVA is here to take that pain away, allowing you to focus on the enjoyable aspects of UI development. By providing an easy and type-safe way to create variants, CVA simplifies the process and helps you create powerful design systems without compromising on the flexibility and control of CSS.
 
+### Flowbite
+
+This Project comes with a the [Flowbite](https://flowbite.com/) design system. Flowbite is a beautiful, modern, and responsive UI kit that's built with Tailwind CSS. It's a great starting point for creating your own design system.
+We use various elements from Flowbite in the Project, including the navbar, footer, and buttons. You can find the full documentation for Flowbite [here](https://flowbite.com/docs/).
+
+
 ## 💾 State Management
 
 While this boilerplate doesn't include a specific state management library, we believe it's essential for you to choose the one that best suits your project's needs. Here are some libraries we recommend for state management:

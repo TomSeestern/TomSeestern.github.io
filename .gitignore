@@ -34,3 +34,7 @@ yarn-error.log*
 /playwright/.cache/
 
 /.npm-only-allow
+
+
+# Contentlayer
+.contentlayer
