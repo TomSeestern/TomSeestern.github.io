@@ -47,6 +47,7 @@
     "@semantic-release/release-notes-generator": "^12.1.0",
     "@t3-oss/env-nextjs": "^0.7.1",
     "@vercel/otel": "^0.3.0",
+    "await-to-js": "^3.0.0",
     "class-variance-authority": "^0.7.0",
     "flowbite": "^2.2.0",
     "flowbite-react": "^0.7.0",

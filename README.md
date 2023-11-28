@@ -102,6 +102,41 @@ Easily deploy your Next.js app with [Vercel](https://vercel.com/new?utm_medium=d
 
 [![Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/Blazity/next-enterprise)
 
+
+### Typescript
+
+This boilerplate uses TypeScript for type safety and better developer experience. To learn more about TypeScript, check out the [official documentation](https://www.typescriptlang.org/docs/).
+
+#### await-to-js
+
+This Project uses [await-to-js](https://github.com/scopsy/await-to-js) to handle async/await errors. It's a great way to handle errors in async functions without using try/catch blocks.
+Example (Before and After):
+
+```ts
+// Before
+try {
+  const user = await getUser()
+  const posts = await getPosts(user.id)
+  const comments = await getComments(posts[0].id)
+  console.log(comments[0])
+} catch (err) {
+  console.error(err)
+}
+
+// After
+const [err, user] = await to(getUser())
+if (err) console.error(err)
+
+const [err, posts] = await to(getPosts(user.id))
+if (err) console.error(err)
+
+const [err, comments] = await to(getComments(posts[0].id))
+if (err) console.error(err)
+
+console.log(comments[0])
+```
+
+
 ## 📃 Scripts Overview
 
 The following scripts are available in the `package.json`:
