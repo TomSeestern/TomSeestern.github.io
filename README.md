@@ -205,6 +205,11 @@ Creating variants using traditional CSS can be a tedious task, requiring you to 
 This Project comes with a the [Flowbite](https://flowbite.com/) design system. Flowbite is a beautiful, modern, and responsive UI kit that's built with Tailwind CSS. It's a great starting point for creating your own design system.
 We use various elements from Flowbite in the Project, including the navbar, footer, and buttons. You can find the full documentation for Flowbite [here](https://flowbite.com/docs/).
 
+### @tailwindcss/typography
+
+This Project uses the [`@tailwindcss/typography`](https://tailwindcss.com/docs/typography-plugin) plugin to style the typography. It's a great way to add beautiful typography to your app without writing any CSS. You can find the full documentation for `@tailwindcss/typography` [here](https://tailwindcss.com/docs/typography-plugin).
+We use it to style the markdown files in the Blog section. 
+
 
 ## 💾 State Management
 
