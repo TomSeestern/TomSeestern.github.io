@@ -256,6 +256,21 @@ If the required environment variables are not set, you'll get an error message:
   ❌ Invalid environment variables: { SECRET_KEY: [ 'Required' ] }
 ```
 
+## Content
+
+### Blog Posts
+
+The Website includes a Blog section, for this the site uses [Gray-Matter](https://github.com/jonschlinkert/gray-matter) to parse the markdown files and [MDX](https://mdxjs.com/) to render the markdown files as React components.
+Each Blog post is a markdown file located in `content/blog` and has the following frontmatter:
+
+```md
+
+```
+
+The file located under `content/blog/index.mdx` is the Blog page itself, it uses the `BlogPost` component to render the list of posts.
+It Parses each markdown file and renders the `BlogPost` under the corresponding URL. 
+
+
 ## 🤝 Contribution
 
 Contributions are always welcome! To contribute, please follow these steps:
