@@ -10,9 +10,9 @@ export function Footer({ ...props }: FooterProps) {
   return (
     <footer className="rounded-lg bg-white p-4 antialiased shadow dark:bg-gray-800 sm:flex sm:items-center sm:justify-between sm:p-6 xl:p-8">
       <p className="mb-4 text-center text-sm text-gray-500 dark:text-gray-400 sm:mb-0">
-        © 2019-2022{" "}
-        <a href="https://flowbite.com/" className="hover:underline" target="_blank">
-          Flowbite.com
+        © 2019-2024{" "}
+        <a href="https://tomsegbers.de/" className="hover:underline" target="_blank">
+          TomSegbers.de
         </a>
         . All rights reserved.
       </p>
