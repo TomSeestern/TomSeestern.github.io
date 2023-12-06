@@ -1,22 +1,23 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import fs from "fs"
+import path from "path"
+import matter from "gray-matter"
+import ReactMarkdown from "react-markdown"
 
 /**
  * Interface representing the parameters expected by the page's `getStaticProps`.
  */
 interface Params {
-    params: {
-        slug: string;
-    };
+  params: {
+    slug: string
+  }
 }
 
 /**
  * Interface representing the props expected by the Page component.
  */
 interface PageProps {
-    content: string;
-    slug: string;
+  content: string
+  slug: string
 }
 
 /**
@@ -27,27 +28,29 @@ interface PageProps {
  * @returns {JSX.Element} - A JSX element representing the content of the markdown file.
  */
 export default function Page({ params }: Params): JSX.Element {
-    let content = null;
+  let content = null
 
-    try {
-        const filePath = path.join(process.cwd(), 'app/blog/entry/', params.slug + '.md');
-        const fileContents = fs.readFileSync(filePath, 'utf8');
-        content = matter(fileContents).content;
-    } catch (e) {
-        // Return 404 if the file doesn't exist or other errors occurred
-        return <div>404</div>;
-    }
+  try {
+    const filePath = path.join(process.cwd(), "app/blog/entry/", params.slug + ".md")
+    const fileContents = fs.readFileSync(filePath, "utf8")
+    content = matter(fileContents).content
+  } catch (e) {
+    // Return 404 if the file doesn't exist or other errors occurred
+    return <div>404</div>
+  }
 
-    if (!content || !params.slug) {
-        return <div>Loading...</div>;
-    }
+  if (!content || !params.slug) {
+    return <div>Loading...</div>
+  }
 
-    // Render the content as is, or transform it to HTML as per your setup
-    return (
-        <article className="prose">
-            <div>{content}</div>
-        </article>
-    );
+  // Render the content as is, or transform it to HTML as per your setup
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+      <article className="prose">
+        <ReactMarkdown className="">{content}</ReactMarkdown>
+      </article>
+    </div>
+  )
 }
 
 /**
@@ -58,11 +61,11 @@ export default function Page({ params }: Params): JSX.Element {
  * @returns {Promise<{ slug: string }[]>} - An array of objects, each containing the slug for a post.
  */
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
-    const postsDirectory = path.join(process.cwd(), 'app/blog/entry');
-    const filenames = fs.readdirSync(postsDirectory);
+  const postsDirectory = path.join(process.cwd(), "app/blog/entry")
+  const filenames = fs.readdirSync(postsDirectory)
 
-    return filenames.map((filename) => {
-        const slug = filename.replace(/\.md$/, ''); // Remove the .md extension from filename
-        return {slug};
-    });
+  return filenames.map((filename) => {
+    const slug = filename.replace(/\.md$/, "") // Remove the .md extension from filename
+    return { slug }
+  })
 }
