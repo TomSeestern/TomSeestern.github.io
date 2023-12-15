@@ -2,6 +2,9 @@ import { Metadata } from "next"
 import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
 import Image from "next/image"
 import React from "react"
+import path from "path"
+import fs from "fs"
+import matter from "gray-matter"
 
 export const metadata: Metadata = {
   title: "Next.js Enterprise Boilerplate",
@@ -21,38 +24,32 @@ export const metadata: Metadata = {
 }
 
 export default function Web() {
-  const articles = [
-    {
-      id: 1,
-      title: "How to quickly deploy a static website",
-      articleDate: new Date("2023-12-01"),
-      articleContent:
-        "Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers influence both web designers and developers.",
-      authorImgSrc: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png",
-      authorName: "Michael Gouch",
-      fullArticleLink: "#",
-    },
-    {
-      id: 2,
-      title: "Our first project with React",
-      articleDate: new Date("2023-09-15"),
-      articleContent:
-        "Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers influence both web designers and developers.",
-      authorImgSrc: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png",
-      authorName: "Neil Sims",
-      fullArticleLink: "#",
-    },
-    {
-      id: 3,
-      title: "Those HTML attributes you never use",
-      articleDate: new Date("2023-06-01"),
-      articleContent:
-        "Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers influence both web designers and developers.",
-      authorImgSrc: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/roberta-casas.png",
-      authorName: "Roberta Casas",
-      fullArticleLink: "#",
-    },
-  ]
+  const postsDirectory = path.join(process.cwd(), "app/blog/entry/")
+  const filenames = fs.readdirSync(postsDirectory)
+
+  const articles = filenames
+    .map((filename) => {
+      const filePath = path.join(postsDirectory, filename)
+
+      // Check if filePath is a file, not a directory
+      if (fs.statSync(filePath).isFile()) {
+        const fileContents = fs.readFileSync(filePath, "utf8")
+        const { data } = matter(fileContents)
+
+        return {
+          id: filename.replace(/\.md?$/, ""),
+          title: data.title || "Untitled",
+          articleDate: new Date(data.articleDate || "1990-01-01"),
+          articleContent: data.articleContent || "Failed to load content",
+          authorImgSrc: data.authorImgSrc || "/img/placeholder.png",
+          authorName: data.authorName || "Anonymous",
+          fullArticleLink: "/blog/entry/" + filename.replace(/\.md?$/, ""),
+        }
+      }
+    })
+    .filter(Boolean) // Filter out undefined values (directories)
+    .sort((a, b) => b.articleDate.valueOf() - a.articleDate.valueOf()) // Sort by date, newest first (descending)
+    .slice(0, 3)
 
   return (
     <>
@@ -131,7 +128,9 @@ export default function Web() {
       <section className="bg-white dark:bg-gray-900">
         <div className="mx-auto grid max-w-screen-xl gap-8 px-4 py-8 lg:grid-cols-2 lg:gap-16 lg:px-6 lg:py-16 ">
           <div>
-            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Our Blog</h2>
+            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+              My Recent Projects
+            </h2>
             <p className="font-light text-gray-500 dark:text-gray-400 sm:text-xl">
               We use an agile approach to test assumptions and connect with the needs of your audience early and often.
             </p>
