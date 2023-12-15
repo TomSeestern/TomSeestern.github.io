@@ -11,22 +11,22 @@ export function Header({ ...props }: HeaderProps) {
     <header>
       <nav className="border-gray-200 bg-white px-4 py-2.5 dark:bg-gray-800 lg:px-6">
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
-          <a href="https://TomSegbers.de" className="flex items-center">
-            <img src="https://flowbite.com/docs/images/logo.svg" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
-            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Flowbite</span>
+          <a href="/" className="flex items-center">
+            <Image
+              src="/img/logo.png"
+              className="mr-3 h-6 w-6 sm:h-9 sm:w-9"
+              alt="Tom Segbers Logo"
+              width={512}
+              height={512}
+            />
+            <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Tom Segbers</span>
           </a>
           <div className="flex items-center lg:order-2">
             <a
-              href="#"
-              className="mr-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800 lg:px-5 lg:py-2.5"
-            >
-              Log in
-            </a>
-            <a
-              href="#"
+              href="/contact"
               className="mr-2 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 lg:px-5 lg:py-2.5"
             >
-              Get started
+              Contact
             </a>
             <button
               data-collapse-toggle="mobile-menu-2"
@@ -56,48 +56,31 @@ export function Header({ ...props }: HeaderProps) {
             <ul className="mt-4 flex flex-col font-medium lg:mt-0 lg:flex-row lg:space-x-8">
               <li>
                 <a
-                  href="#"
-                  className="block rounded bg-primary-700 py-2 pl-3 pr-4 text-white dark:text-white lg:bg-transparent lg:p-0 lg:text-primary-700"
-                  aria-current="page"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
+                  href="about"
                   className="block border-b border-gray-100 py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white lg:border-0 lg:p-0 lg:hover:bg-transparent lg:hover:text-primary-700 lg:dark:hover:bg-transparent lg:dark:hover:text-white"
                 >
-                  Company
+                  About
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="projects"
                   className="block border-b border-gray-100 py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white lg:border-0 lg:p-0 lg:hover:bg-transparent lg:hover:text-primary-700 lg:dark:hover:bg-transparent lg:dark:hover:text-white"
                 >
-                  Marketplace
+                  Projects
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
+                  href="blog"
                   className="block border-b border-gray-100 py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white lg:border-0 lg:p-0 lg:hover:bg-transparent lg:hover:text-primary-700 lg:dark:hover:bg-transparent lg:dark:hover:text-white"
                 >
-                  Features
+                  Blog
                 </a>
               </li>
               <li>
                 <a
-                  href="#"
-                  className="block border-b border-gray-100 py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white lg:border-0 lg:p-0 lg:hover:bg-transparent lg:hover:text-primary-700 lg:dark:hover:bg-transparent lg:dark:hover:text-white"
-                >
-                  Team
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
+                  href="contact"
                   className="block border-b border-gray-100 py-2 pl-3 pr-4 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white lg:border-0 lg:p-0 lg:hover:bg-transparent lg:hover:text-primary-700 lg:dark:hover:bg-transparent lg:dark:hover:text-white"
                 >
                   Contact
