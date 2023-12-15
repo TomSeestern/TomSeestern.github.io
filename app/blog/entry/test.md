@@ -1,12 +1,14 @@
 ---
-title: How To Run AB Tests In React
+title: My first test Post
 description: 4 options I came across
-publishedDate: 2021/02/14
+publishedDate: 1900-01-01
 thumbnail: /assets/how-to-make-beef-stew.jpeg
 tags:
   - react
   - ab testing
 ---
+
+# My first Blog post
 
 ### Ingredients
 
