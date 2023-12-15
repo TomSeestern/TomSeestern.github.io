@@ -1,6 +1,7 @@
 import { Metadata } from "next"
+
 import { Button } from "components/Button/Button"
-import { LP_GRID_ITEMS } from "lp-items"
+import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
 
 export const metadata: Metadata = {
   title: "Next.js Enterprise Boilerplate",
@@ -20,6 +21,39 @@ export const metadata: Metadata = {
 }
 
 export default function Web() {
+  const articles = [
+    {
+      id: 1,
+      title: "How to quickly deploy a static website",
+      articleDate: new Date("2023-12-01"),
+      articleContent:
+        "Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers influence both web designers and developers.",
+      authorImgSrc: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gouch.png",
+      authorName: "Michael Gouch",
+      fullArticleLink: "#",
+    },
+    {
+      id: 2,
+      title: "Our first project with React",
+      articleDate: new Date("2023-09-15"),
+      articleContent:
+        "Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers influence both web designers and developers.",
+      authorImgSrc: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/neil-sims.png",
+      authorName: "Neil Sims",
+      fullArticleLink: "#",
+    },
+    {
+      id: 3,
+      title: "Those HTML attributes you never use",
+      articleDate: new Date("2023-06-01"),
+      articleContent:
+        "Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers influence both web designers and developers.",
+      authorImgSrc: "https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/roberta-casas.png",
+      authorName: "Roberta Casas",
+      fullArticleLink: "#",
+    },
+  ]
+
   return (
     <>
       <section className="bg-white dark:bg-gray-900">
@@ -46,16 +80,24 @@ export default function Web() {
         </div>
       </section>
       <section className="bg-white dark:bg-gray-900">
-        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-16 lg:px-6">
-          <div className="justify-center space-y-8 md:grid md:grid-cols-2 md:gap-12 md:space-y-0 lg:grid-cols-3">
-            {LP_GRID_ITEMS.map((singleItem) => (
-              <div key={singleItem.title} className="flex flex-col items-center justify-center text-center">
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 p-1.5 text-blue-700 dark:bg-primary-900 lg:h-12 lg:w-12">
-                  {singleItem.icon}
-                </div>
-                <h3 className="mb-2 text-xl font-bold dark:text-white">{singleItem.title}</h3>
-                <p className="text-gray-500 dark:text-gray-400">{singleItem.description}</p>
-              </div>
+        <div className="mx-auto grid max-w-screen-xl gap-8 px-4 py-8 lg:grid-cols-2 lg:gap-16 lg:px-6 lg:py-16 ">
+          <div>
+            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Our Blog</h2>
+            <p className="font-light text-gray-500 dark:text-gray-400 sm:text-xl">
+              We use an agile approach to test assumptions and connect with the needs of your audience early and often.
+            </p>
+          </div>
+          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            {articles.map((article, index) => (
+              <ArticleComponent
+                key={article.id}
+                title={article.title}
+                articleDate={article.articleDate}
+                articleContent={article.articleContent}
+                authorImgSrc={article.authorImgSrc}
+                authorName={article.authorName}
+                fullArticleLink={article.fullArticleLink}
+              />
             ))}
           </div>
         </div>

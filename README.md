@@ -280,6 +280,132 @@ types. CVA is here to take that pain away, allowing you to focus on the enjoyabl
 providing an easy and type-safe way to create variants, CVA simplifies the process and helps you create powerful design
 systems without compromising on the flexibility and control of CSS.
 
+#### Using `class-variance-authority` (CVA)
+
+CVA provides a structured way to handle class variants in components. It's particularly useful for creating component
+libraries or scalable UI elements.
+
+##### Basic Usage
+
+1. **Import CVA**:
+
+    ```typescript
+    import { cva, type VariantProps } from 'class-variance-authority';
+    ```
+
+2. **Define Your Component with Variants**:
+
+   Create a base style for your component and define variants for different styles.
+
+    ```typescript
+    const button = cva(
+      // Base classes
+      ['base-class-1', 'base-class-2'],
+      {
+        variants: {
+          size: {
+            small: ['size-small'],
+            large: ['size-large']
+          },
+          color: {
+            primary: ['color-primary'],
+            secondary: ['color-secondary']
+          },
+        },
+        defaultVariants: {
+          size: 'large',
+          color: 'primary'
+        },
+      }
+    );
+    ```
+
+3. **Create Component Props**:
+
+   Use `VariantProps` to include the variant types in your component props.
+
+    ```typescript
+    interface ButtonProps extends VariantProps<typeof button> {
+      // Your additional props here
+    }
+    ```
+
+#### Using `tailwind-merge` (twMerge)
+
+`twMerge` is a utility function for merging Tailwind CSS classes, ensuring that similar classes are overridden
+correctly.
+
+##### Basic Usage
+
+1. **Import twMerge**:
+
+    ```typescript
+    import { twMerge } from 'tailwind-merge';
+    ```
+
+2. **Merge Classes in Component**:
+
+   Use `twMerge` to merge base classes with dynamic ones based on props.
+
+    ```typescript
+    const MyComponent = ({ className, ...props }) => {
+      const mergedClasses = twMerge('base-class', className);
+      return <div className={mergedClasses} {...props}></div>;
+    };
+    ```
+
+#### Example: Creating a New Button Component
+
+Here's a quick example of how you can use both CVA and twMerge together:
+
+```typescript
+import {cva, type VariantProps} from 'class-variance-authority';
+import {twMerge} from 'tailwind-merge';
+
+const button = cva(
+    ['base-class'],
+    {
+        variants: {
+            size: {
+                small: ['size-small'],
+                large: ['size-large']
+            },
+            color: {
+                primary: ['color-primary'],
+                secondary: ['color-secondary']
+            },
+        },
+        defaultVariants: {
+            size: 'large',
+            color: 'primary'
+        },
+    }
+);
+
+interface ButtonProps extends VariantProps<typeof button> {
+    additionalProp?: string;
+}
+
+const Button = ({className, ...props}: ButtonProps) => {
+    return <button className = {twMerge(button(props), className
+)
+}
+    {...
+        props
+    }
+    />;
+};
+```
+
+## Best Practices
+
+- **Consistency**: Stick to predefined variants for consistency across components.
+- **Documentation**: Document your variants and their usage within your component library.
+- **Performance**: Be mindful of the number of variants; excessive variants can lead to performance issues.
+
+We hope this guide helps you get up to speed with CVA and twMerge. Feel free to reach out to the team for any
+clarifications or assistance. Happy coding!
+
 ### Flowbite
 
 This Project comes with a the [Flowbite](https://flowbite.com/) design system. Flowbite is a beautiful, modern, and
