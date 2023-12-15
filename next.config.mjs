@@ -17,7 +17,7 @@ const config = withPlugins([[withBundleAnalyzer({enabled: env.ANALYZE})]], {
         ]
     },
     images: {
-        domains: ["flowbite.s3.amazonaws.com"],
+        domains: ["flowbite.s3.amazonaws.com", "placehold.co"],
     },
 })
 
