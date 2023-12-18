@@ -1,5 +1,5 @@
 import React from "react"
-import {Button} from "flowbite-react"
+import {Button, Tooltip} from "flowbite-react"
 import path from "path"
 import fs from "fs"
 
@@ -61,22 +61,21 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
           className="inline-flex items-center text-lg font-medium text-primary-600 hover:underline dark:text-primary-500"
         >
           {ctaText}
-          {/* SVG code omitted for brevity */}
+          {/* Todo: Add Link Icon */}
         </a>
       </div>
       <p className="text-lg font-normal text-gray-500 dark:text-gray-400">{description}</p>
       <div className="flex items-center gap-2.5">
         {technologies.map((tech, index) => (
           <div key={tech} className="rounded-lg p-1 hover:bg-gray-50 dark:hover:bg-gray-800">
-            <img data-tooltip-target={`tooltip-logo-${tech}`} className="h-8 w-auto object-contain" src={tech} alt="" />
-            <div
-              id={`tooltip-logo-${tech}`}
-              role="tooltip"
-              className="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700"
-            >
-              {tech}
-              <div className="tooltip-arrow" data-popper-arrow="" />
-            </div>
+            <Tooltip content={tech}>
+              <img
+                data-tooltip-target={`tooltip-logo-${tech}`}
+                className="h-8 w-auto object-contain"
+                src={tech}
+                alt={"Tech Icon " + tech}
+              />
+            </Tooltip>
           </div>
         ))}
       </div>
