@@ -54,7 +54,7 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
     <article className="space-y-4">
       <img className="h-12 w-auto object-contain" src={imageUrl} alt="" />
       <div className="space-y-1">
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h3>
+        <h3 className="truncate text-2xl font-bold text-gray-900 dark:text-white">{title}</h3>
         <a
           href={ctaLink}
           title={ctaText}
@@ -64,8 +64,9 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
           {/* Todo: Add Link Icon */}
         </a>
       </div>
-      <p className="text-lg font-normal text-gray-500 dark:text-gray-400">{description}</p>
-      <div className="flex items-center gap-2.5">
+      {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
+      <p className="line-clamp-3 min-h-[4.5rem] text-lg font-normal text-gray-500 dark:text-gray-400">{description}</p>
+      <div className="flex min-h-[2rem] items-center gap-2.5">
         {technologies.map((tech, index) => (
           <div key={tech} className="rounded-lg p-1 hover:bg-gray-50 dark:hover:bg-gray-800">
             <Tooltip content={tech}>
