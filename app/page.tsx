@@ -6,6 +6,7 @@ import path from "path"
 import fs from "fs"
 import matter from "gray-matter"
 import { Card } from "flowbite-react"
+import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
 
 export const metadata: Metadata = {
   title: "Next.js Enterprise Boilerplate",
@@ -45,6 +46,7 @@ export default function Web() {
           authorImgSrc: data.authorImgSrc || "/img/placeholder.png",
           authorName: data.authorName || "Anonymous",
           fullArticleLink: "/blog/entry/" + filename.replace(/\.md?$/, ""),
+          technologies: data.technologies || [],
         }
       }
     })
@@ -130,14 +132,16 @@ export default function Web() {
           <div className="animate-marquee flex space-x-8">
             {articles.map((article, index) => (
               <Card key={article.id} href="#" className="max-w-sm">
-                <ArticleComponent
+                <ProjectTeaser
                   key={article.id}
                   title={article.title}
-                  articleDate={article.articleDate}
-                  articleContent={article.articleContent}
-                  authorImgSrc={article.authorImgSrc}
-                  authorName={article.authorName}
-                  fullArticleLink={article.fullArticleLink}
+                  imageUrl={article.fullArticleLink}
+                  description={article.articleContent}
+                  technologies={article.technologies}
+                  ctaText={"Learn More"}
+                  ctaLink={article.fullArticleLink}
+                  buttonText={"Learn more"}
+                  buttonLink={article.fullArticleLink}
                 />
               </Card>
             ))}
@@ -146,13 +150,16 @@ export default function Web() {
           <div className="animate-marquee2 absolute flex space-x-8 px-4">
             {articles.map((article, index) => (
               <Card key={article.id} href="#" className="max-w-sm">
-                <ArticleComponent
+                <ProjectTeaser
+                  key={article.id}
                   title={article.title}
-                  articleDate={article.articleDate}
-                  articleContent={article.articleContent}
-                  authorImgSrc={article.authorImgSrc}
-                  authorName={article.authorName}
-                  fullArticleLink={article.fullArticleLink}
+                  imageUrl={article.fullArticleLink}
+                  description={article.articleContent}
+                  technologies={article.technologies}
+                  ctaText={"Learn More"}
+                  ctaLink={article.fullArticleLink}
+                  buttonText={"Learn more"}
+                  buttonLink={article.fullArticleLink}
                 />
               </Card>
             ))}
