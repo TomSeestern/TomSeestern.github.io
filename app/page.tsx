@@ -5,6 +5,7 @@ import React from "react"
 import path from "path"
 import fs from "fs"
 import matter from "gray-matter"
+import { Card } from "flowbite-react"
 
 export const metadata: Metadata = {
   title: "Next.js Enterprise Boilerplate",
@@ -49,7 +50,6 @@ export default function Web() {
     })
     .filter(Boolean) // Filter out undefined values (directories)
     .sort((a, b) => b.articleDate.valueOf() - a.articleDate.valueOf()) // Sort by date, newest first (descending)
-    .slice(0, 3)
 
   return (
     <>
@@ -126,6 +126,41 @@ export default function Web() {
       </section>
 
       <section className="bg-white dark:bg-gray-900">
+        <div className="relative flex py-8">
+          <div className="animate-marquee flex space-x-8">
+            {articles.map((article, index) => (
+              <Card key={article.id} href="#" className="max-w-sm">
+                <ArticleComponent
+                  key={article.id}
+                  title={article.title}
+                  articleDate={article.articleDate}
+                  articleContent={article.articleContent}
+                  authorImgSrc={article.authorImgSrc}
+                  authorName={article.authorName}
+                  fullArticleLink={article.fullArticleLink}
+                />
+              </Card>
+            ))}
+          </div>
+
+          <div className="animate-marquee2 absolute flex space-x-8 px-4">
+            {articles.map((article, index) => (
+              <Card key={article.id} href="#" className="max-w-sm">
+                <ArticleComponent
+                  title={article.title}
+                  articleDate={article.articleDate}
+                  articleContent={article.articleContent}
+                  authorImgSrc={article.authorImgSrc}
+                  authorName={article.authorName}
+                  fullArticleLink={article.fullArticleLink}
+                />
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white dark:bg-gray-900">
         <div className="mx-auto grid max-w-screen-xl gap-8 px-4 py-8 lg:grid-cols-2 lg:gap-16 lg:px-6 lg:py-16 ">
           <div>
             <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
@@ -136,7 +171,7 @@ export default function Web() {
             </p>
           </div>
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
-            {articles.map((article, index) => (
+            {articles.slice(0, 3).map((article, index) => (
               <ArticleComponent
                 key={article.id}
                 title={article.title}
