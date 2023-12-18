@@ -2,6 +2,8 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 import ReactMarkdown from "react-markdown"
+import {Breadcrumb, BreadcrumbItem} from "flowbite-react"
+import {HiHome} from "react-icons/hi"
 
 /**
  * Interface representing the parameters expected by the page's `getStaticProps`.
@@ -13,14 +15,6 @@ interface Params {
 }
 
 /**
- * Interface representing the props expected by the Page component.
- */
-interface PageProps {
-  content: string
-  slug: string
-}
-
-/**
  * Page component responsible for rendering the content of a markdown file.
  * The slug of the file is passed via props and used to determine which file's content to display.
  *
@@ -28,28 +22,38 @@ interface PageProps {
  * @returns {JSX.Element} - A JSX element representing the content of the markdown file.
  */
 export default function Page({ params }: Params): JSX.Element {
-  let content = null
+  let fileContent = null
 
   try {
     const filePath = path.join(process.cwd(), "app/blog/entry/", params.slug + ".md")
     const fileContents = fs.readFileSync(filePath, "utf8")
-    content = matter(fileContents).content
+    fileContent = matter(fileContents)
   } catch (e) {
     // Return 404 if the file doesn't exist or other errors occurred
     return <div>404</div>
   }
 
-  if (!content || !params.slug) {
+  if (!fileContent || !params.slug) {
     return <div>Loading...</div>
   }
 
-  // Render the content as is, or transform it to HTML as per your setup
+  // Render the fileContent as is, or transform it to HTML as per your setup
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <article className="prose">
-        <ReactMarkdown className="">{content}</ReactMarkdown>
-      </article>
-    </div>
+    <>
+      <Breadcrumb className="px-5 py-3">
+        <BreadcrumbItem href="/" icon={HiHome}>
+          Home
+        </BreadcrumbItem>
+        <BreadcrumbItem href="/blog">Blog</BreadcrumbItem>
+        <BreadcrumbItem className="truncate">{fileContent.data.title || "Content "}</BreadcrumbItem>
+      </Breadcrumb>
+
+      <div className="flex min-h-screen flex-col items-center justify-center py-2">
+        <article className="prose">
+          <ReactMarkdown className="">{fileContent.content}</ReactMarkdown>
+        </article>
+      </div>
+    </>
   )
 }
 
