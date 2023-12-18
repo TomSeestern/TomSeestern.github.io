@@ -128,7 +128,7 @@ export default function Web() {
       </section>
 
       <section className="bg-white dark:bg-gray-900">
-        <div className="relative flex py-8">
+        <div className="relative flex overflow-hidden py-8">
           <div className="animate-marquee flex space-x-8">
             {articles.map((article, index) => (
               <Card key={article.id} href="#" className="max-w-sm">
@@ -168,7 +168,7 @@ export default function Web() {
       </section>
 
       <section className="bg-white dark:bg-gray-900">
-        <div className="mx-auto grid max-w-screen-xl gap-8 px-4 py-8 lg:grid-cols-2 lg:gap-16 lg:px-6 lg:py-16 ">
+        <div className="mx-auto gap-8 px-4 py-8 lg:grid-cols-2 lg:gap-16 lg:px-6 lg:py-16 ">
           <div>
             <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
               My Recent Projects
