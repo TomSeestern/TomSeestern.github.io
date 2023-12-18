@@ -40,7 +40,7 @@ export default function Page({ params }: Params): JSX.Element {
   // Render the fileContent as is, or transform it to HTML as per your setup
   return (
     <>
-      <Breadcrumb className="px-5 py-3">
+      <Breadcrumb className="py-2">
         <BreadcrumbItem href="/" icon={HiHome}>
           Home
         </BreadcrumbItem>

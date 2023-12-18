@@ -9,7 +9,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="flex min-h-screen flex-col">
         <Header />
 
-        <main className="flex-grow bg-gray-100 dark:bg-gray-900">{children}</main>
+        <main className="mx-auto w-full max-w-screen-xl p-4">{children}</main>
 
         <Footer />
       </body>
