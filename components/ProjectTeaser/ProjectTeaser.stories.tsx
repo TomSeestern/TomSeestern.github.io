@@ -10,7 +10,7 @@ export default {
     title: { control: "text", description: "The title of the project" },
     previewLink: { control: "text", description: "The URL for the live preview of the project" },
     description: { control: "text", description: "The description of the project" },
-    technologies: { control: "object", description: "An array of Technology objects" },
+    technologies: { control: "array", description: "An array of Technology names" },
     caseStudyLink: { control: "text", description: "The URL for the case study of the project" },
     ctaText: { control: "text", description: "The text for the CTA" },
     ctaLink: { control: "text", description: "The URL for the CTA" },
@@ -34,10 +34,7 @@ Default.args = {
   title: "Title of the project",
   description: "This is a summary of the project.",
   technologies: [
-    {
-      iconLink: "https://placehold.co/400x400.png",
-      name: "Technology Name",
-    },
+    "React",
     // Add more technologies as needed
   ],
   ctaText: "View all projects",

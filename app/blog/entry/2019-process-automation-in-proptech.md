@@ -10,6 +10,12 @@ tags:
   - Database Management
   - API Development
   - IT Consulting
+technologies:
+  - React
+  - AWS
+  - Typescript
+  - tailwindcss
+  - Figma
 ---
 
 # Project Overview

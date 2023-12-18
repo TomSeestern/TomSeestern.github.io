@@ -18,6 +18,8 @@ function Articles() {
         const fileContents = fs.readFileSync(filePath, "utf8")
         const { data } = matter(fileContents)
 
+        console.log("File read: ", filePath, " Tech: ", data.technologies)
+
         return {
           id: filename.replace(/\.md?$/, ""),
           title: data.title || "Untitled",
@@ -26,6 +28,7 @@ function Articles() {
           authorImgSrc: data.authorImgSrc || "/img/placeholder.png",
           authorName: data.authorName || "Anonymous",
           fullArticleLink: "/blog/entry/" + filename.replace(/\.md?$/, ""),
+          technologies: data.technologies || [],
         }
       }
     })
@@ -93,7 +96,7 @@ function Articles() {
                 title={article.title}
                 imageUrl={article.fullArticleLink}
                 description={article.articleContent}
-                technologies={[]}
+                technologies={article.technologies}
                 ctaText={"Learn More"}
                 ctaLink={article.fullArticleLink}
                 buttonText={"Learn more"}
