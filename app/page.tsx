@@ -1,12 +1,11 @@
 import { Metadata } from "next"
-import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
 import Image from "next/image"
 import React from "react"
 import path from "path"
 import fs from "fs"
 import matter from "gray-matter"
-import { Card } from "flowbite-react"
 import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
+import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
 
 export const metadata: Metadata = {
   title: "Next.js Enterprise Boilerplate",
@@ -129,9 +128,9 @@ export default function Web() {
 
       <section className="bg-white dark:bg-gray-900">
         <div className="relative flex overflow-hidden py-8">
-          <div className="animate-marquee flex space-x-8">
+          <div className="flex animate-marquee space-x-8">
             {articles.map((article, index) => (
-              <Card key={article.id} href="#" className="max-w-sm">
+              <div key={article.id} className="max-w-sm">
                 <ProjectTeaser
                   key={article.id}
                   title={article.title}
@@ -143,13 +142,13 @@ export default function Web() {
                   buttonText={"Learn more"}
                   buttonLink={article.fullArticleLink}
                 />
-              </Card>
+              </div>
             ))}
           </div>
 
-          <div className="animate-marquee2 absolute flex space-x-8 px-4">
+          <div className="absolute flex animate-marquee2 space-x-8 px-4">
             {articles.map((article, index) => (
-              <Card key={article.id} href="#" className="max-w-sm">
+              <div key={article.id} className="max-w-sm">
                 <ProjectTeaser
                   key={article.id}
                   title={article.title}
@@ -161,7 +160,7 @@ export default function Web() {
                   buttonText={"Learn more"}
                   buttonLink={article.fullArticleLink}
                 />
-              </Card>
+              </div>
             ))}
           </div>
         </div>
