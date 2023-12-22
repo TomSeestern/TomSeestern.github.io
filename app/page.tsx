@@ -122,9 +122,9 @@ export default function Web() {
           </p>
         </div>
         <div className="relative flex overflow-hidden py-2">
-          <div className="flex animate-marquee space-x-8">
+          <div className="flex animate-marquee space-x-4">
             {articles.map((article) => (
-              <div key={article.id} className="max-w-sm">
+              <div key={article.id} className="h-96 w-96">
                 <ProjectTeaser
                   key={article.id}
                   title={article.title}
@@ -140,9 +140,9 @@ export default function Web() {
             ))}
           </div>
 
-          <div className="absolute flex animate-marquee2 space-x-8 px-4">
+          <div className="absolute flex animate-marquee2 space-x-4 px-2">
             {articles.map((article) => (
-              <div key={article.id} className="max-w-sm">
+              <div key={article.id} className="h-96 w-96">
                 <ProjectTeaser
                   key={article.id}
                   title={article.title}
@@ -186,7 +186,7 @@ export default function Web() {
               These are some of my recent Blog Posts. I write about a variety of topics, including AI, Tech, and more.
             </p>
           </div>
-          <div className="my-8 md:grid md:grid-cols-2 md:gap-16 md:gap-y-4">
+          <div className="my-8 md:grid md:grid-cols-2 md:gap-4">
             {articles.slice(0, 4).map((article) => (
               <ArticleComponent
                 key={article.id}

@@ -1,7 +1,7 @@
+import { Button, Card, Tooltip } from "flowbite-react"
 import React from "react"
-import {Button, Tooltip} from "flowbite-react"
-import path from "path"
 import fs from "fs"
+import path from "path"
 
 /**
  * Interface for the ProjectTeaser props
@@ -51,42 +51,45 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
   })
 
   return (
-    <article className="space-y-4">
-      <img className="h-12 w-auto object-contain" src={imageUrl} alt="" />
-      <div className="space-y-1">
-        <h3 className="truncate text-2xl font-bold text-gray-900 dark:text-white">{title}</h3>
-        <a
-          href={ctaLink}
-          title={ctaText}
-          className="inline-flex items-center text-lg font-medium text-primary-600 hover:underline dark:text-primary-500"
+    <Card className="h-full w-full">
+      <div className="flex h-full flex-col justify-between">
+        <div className="">
+          <h3 className="truncate text-2xl font-bold text-gray-900 dark:text-white">{title}</h3>
+          <a
+            href={ctaLink}
+            title={ctaText}
+            className="inline-flex items-center text-lg font-medium text-primary-600 hover:underline dark:text-primary-500"
+          >
+            {ctaText}
+            {/* Todo: Add Link Icon */}
+          </a>
+        </div>
+        {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
+        <p className="line-clamp-3 min-h-[4.5rem] text-lg font-normal text-gray-500 dark:text-gray-400">
+          {description}
+        </p>
+        <div className="flex min-h-[2rem] items-center gap-2.5">
+          {technologies.map((tech, index) => (
+            <div key={tech} className="rounded-lg p-1 hover:bg-gray-50 dark:hover:bg-gray-800">
+              <Tooltip content={tech}>
+                <img
+                  data-tooltip-target={`tooltip-logo-${tech}`}
+                  className="h-8 w-auto object-contain"
+                  src={tech}
+                  alt={"Tech Icon " + tech}
+                />
+              </Tooltip>
+            </div>
+          ))}
+        </div>
+        <Button
+          href={buttonLink}
+          className="inline-flex shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
         >
-          {ctaText}
-          {/* Todo: Add Link Icon */}
-        </a>
+          {buttonText}
+        </Button>
       </div>
-      {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
-      <p className="line-clamp-3 min-h-[4.5rem] text-lg font-normal text-gray-500 dark:text-gray-400">{description}</p>
-      <div className="flex min-h-[2rem] items-center gap-2.5">
-        {technologies.map((tech, index) => (
-          <div key={tech} className="rounded-lg p-1 hover:bg-gray-50 dark:hover:bg-gray-800">
-            <Tooltip content={tech}>
-              <img
-                data-tooltip-target={`tooltip-logo-${tech}`}
-                className="h-8 w-auto object-contain"
-                src={tech}
-                alt={"Tech Icon " + tech}
-              />
-            </Tooltip>
-          </div>
-        ))}
-      </div>
-      <Button
-        href={buttonLink}
-        className="inline-flex shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
-      >
-        {buttonText}
-      </Button>
-    </article>
+    </Card>
   )
 }
 
