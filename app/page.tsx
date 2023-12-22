@@ -1,5 +1,6 @@
 import matter from "gray-matter"
 import { Metadata } from "next"
+import Image from "next/image"
 import React from "react"
 import fs from "fs"
 import path from "path"
@@ -46,6 +47,8 @@ export default function Web() {
           fullArticleLink: "/blog/entry/" + filename.replace(/\.md?$/, ""),
           technologies: data.technologies || [],
         }
+      } else {
+        return null
       }
     })
     .filter(Boolean) // Filter out undefined values (directories)
@@ -53,7 +56,7 @@ export default function Web() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-white dark:bg-gray-900">
+      <section className="relative mb-16 overflow-hidden bg-white dark:bg-gray-900">
         <div className="mx-auto max-w-screen-xl gap-8 px-4 py-8 lg:py-16 xl:grid xl:grid-cols-12">
           <div className="col-span-8">
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
@@ -97,19 +100,30 @@ export default function Web() {
           </div>
           <div className="absolute right-0 top-0 hidden h-full w-1/3 xl:block">
             {/* TODO: Replace with a relevant personal image*/}
-            <img
+            <Image
               className="h-full w-full object-cover"
               src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/conference-speaker.jpg"
               alt="Conference speaker"
+              height={512}
+              width={512}
             />
           </div>
         </div>
       </section>
 
-      <section className="bg-white dark:bg-gray-900">
-        <div className="relative flex overflow-hidden py-8">
+      <section className="relative inset-x-1/2 w-screen -translate-x-1/2 bg-gray-50 py-8 dark:bg-gray-900">
+        <div className="inset-x-0 mx-auto w-full max-w-screen-xl p-8">
+          <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+            My Recent Projects
+          </h2>
+          <p className="font-light text-gray-500 dark:text-gray-400 sm:text-xl">
+            Learn more about the Projects that I worked on recently, how we diagnosed problems, implemented solutions
+            and created Customer value!
+          </p>
+        </div>
+        <div className="relative flex overflow-hidden py-2">
           <div className="flex animate-marquee space-x-8">
-            {articles.map((article, index) => (
+            {articles.map((article) => (
               <div key={article.id} className="max-w-sm">
                 <ProjectTeaser
                   key={article.id}
@@ -127,7 +141,7 @@ export default function Web() {
           </div>
 
           <div className="absolute flex animate-marquee2 space-x-8 px-4">
-            {articles.map((article, index) => (
+            {articles.map((article) => (
               <div key={article.id} className="max-w-sm">
                 <ProjectTeaser
                   key={article.id}
@@ -144,6 +158,22 @@ export default function Web() {
             ))}
           </div>
         </div>
+        <div className="mx-auto flex max-w-screen-xl justify-end space-x-4 py-8">
+          <a
+            href="/projects"
+            title="View all Projects"
+            className="flex items-center text-base font-medium text-primary-600 hover:underline dark:text-primary-500"
+          >
+            View all Projects
+            <Image
+              className={"ml-2 h-4 w-4"}
+              src={"/icon/arrow-right.svg"}
+              alt="Arrow right Icon"
+              width={32}
+              height={32}
+            />
+          </a>
+        </div>
       </section>
 
       <section className="bg-white dark:bg-gray-900">
@@ -157,7 +187,7 @@ export default function Web() {
             </p>
           </div>
           <div className="my-8 md:grid md:grid-cols-2 md:gap-16 md:gap-y-4">
-            {articles.slice(0, 3).map((article, index) => (
+            {articles.slice(0, 4).map((article) => (
               <ArticleComponent
                 key={article.id}
                 title={article.title}
@@ -168,6 +198,22 @@ export default function Web() {
                 fullArticleLink={article.fullArticleLink}
               />
             ))}
+          </div>
+          <div className="mx-auto flex max-w-screen-xl justify-end space-x-4 ">
+            <a
+              href="/blog"
+              title="View all Blog Posts"
+              className="flex items-center text-base font-medium text-primary-600 hover:underline dark:text-primary-500"
+            >
+              View all Blog Posts
+              <Image
+                className={"ml-2 h-4 w-4"}
+                src={"/icon/arrow-right.svg"}
+                alt="Arrow right Icon"
+                width={32}
+                height={32}
+              />
+            </a>
           </div>
         </div>
       </section>
