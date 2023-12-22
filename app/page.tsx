@@ -1,10 +1,10 @@
+import matter from "gray-matter"
 import { Metadata } from "next"
 import React from "react"
-import path from "path"
 import fs from "fs"
-import matter from "gray-matter"
-import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
+import path from "path"
 import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
+import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
 
 export const metadata: Metadata = {
   title: "Next.js Enterprise Boilerplate",
@@ -156,7 +156,7 @@ export default function Web() {
               These are some of my recent Blog Posts. I write about a variety of topics, including AI, Tech, and more.
             </p>
           </div>
-          <div className="my-8 divide-y divide-gray-200 dark:divide-gray-700">
+          <div className="my-8 md:grid md:grid-cols-2 md:gap-16 md:gap-y-4">
             {articles.slice(0, 3).map((article, index) => (
               <ArticleComponent
                 key={article.id}

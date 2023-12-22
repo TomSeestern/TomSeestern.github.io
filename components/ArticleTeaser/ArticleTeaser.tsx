@@ -1,8 +1,8 @@
-import React from "react"
-import Image from "next/image"
 import { formatDistanceToNow } from "date-fns"
-import PropTypes from "prop-types"
+import Image from "next/image"
 import Link from "next/link"
+import PropTypes from "prop-types"
+import React from "react"
 
 export interface ArticleProps {
   /**
@@ -54,7 +54,7 @@ const ArticleComponent: React.FC<ArticleProps> = ({
   fullArticleLink,
 }) => {
   return (
-    <article className="pb-6">
+    <article className="py-6">
       <div className="mb-5 flex items-center justify-between text-gray-500">
         <span className="inline-flex items-center rounded bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-primary-200 dark:text-primary-800">
           <Image className={"h-3 w-3"} src={"/icon/article.svg"} alt={"Article Icon"} width={32} height={32} />
