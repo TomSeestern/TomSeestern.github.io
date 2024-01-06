@@ -1,11 +1,10 @@
-import matter from "gray-matter"
 import { Metadata } from "next"
 import Image from "next/image"
 import React from "react"
-import fs from "fs"
-import path from "path"
 import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
 import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
+import { getAllProjects } from "../lib/projects"
+import { getAllBlogPosts } from "../lib/blog"
 
 export const metadata: Metadata = {
   title: "Next.js Enterprise Boilerplate",
@@ -25,35 +24,6 @@ export const metadata: Metadata = {
 }
 
 export default function Web() {
-  const postsDirectory = path.join(process.cwd(), "app/blog/entry/")
-  const filenames = fs.readdirSync(postsDirectory)
-
-  const articles = filenames
-    .map((filename) => {
-      const filePath = path.join(postsDirectory, filename)
-
-      // Check if filePath is a file, not a directory
-      if (fs.statSync(filePath).isFile()) {
-        const fileContents = fs.readFileSync(filePath, "utf8")
-        const { data } = matter(fileContents)
-
-        return {
-          id: filename.replace(/\.md?$/, ""),
-          title: data.title || "Untitled",
-          articleDate: new Date(data.articleDate || "1990-01-01"),
-          articleContent: data.articleContent || "Failed to load content",
-          authorImgSrc: data.authorImgSrc || "/img/placeholder.png",
-          authorName: data.authorName || "Anonymous",
-          fullArticleLink: "/blog/entry/" + filename.replace(/\.md?$/, ""),
-          technologies: data.technologies || [],
-        }
-      } else {
-        return null
-      }
-    })
-    .filter(Boolean) // Filter out undefined values (directories)
-    .sort((a, b) => b.articleDate.valueOf() - a.articleDate.valueOf()) // Sort by date, newest first (descending)
-
   return (
     <>
       <section className="relative mb-16 overflow-hidden bg-white dark:bg-gray-900">
@@ -122,7 +92,7 @@ export default function Web() {
         </div>
         <div className="relative flex overflow-hidden py-2">
           <div className="flex animate-marquee space-x-4">
-            {articles.map((article) => (
+            {getAllProjects().map((article) => (
               <div key={article.id} className="h-96 w-96">
                 <ProjectTeaser
                   key={article.id}
@@ -141,7 +111,7 @@ export default function Web() {
           </div>
 
           <div className="absolute flex animate-marquee2 space-x-4 px-2">
-            {articles.map((article) => (
+            {getAllProjects().map((article) => (
               <div key={article.id} className="h-96 w-96">
                 <ProjectTeaser
                   key={article.id}
@@ -188,17 +158,19 @@ export default function Web() {
             </p>
           </div>
           <div className="my-8 md:grid md:grid-cols-2 md:gap-4">
-            {articles.slice(0, 4).map((article) => (
-              <ArticleComponent
-                key={article.id}
-                title={article.title}
-                articleDate={article.articleDate}
-                articleContent={article.articleContent}
-                authorImgSrc={article.authorImgSrc}
-                authorName={article.authorName}
-                fullArticleLink={article.fullArticleLink}
-              />
-            ))}
+            {getAllBlogPosts()
+              .slice(0, 4)
+              .map((article) => (
+                <ArticleComponent
+                  key={article.id}
+                  title={article.title}
+                  articleDate={article.articleDate}
+                  articleContent={article.articleContent}
+                  authorImgSrc={article.authorImgSrc}
+                  authorName={article.authorName}
+                  fullArticleLink={article.fullArticleLink}
+                />
+              ))}
           </div>
           <div className="mx-auto flex max-w-screen-xl justify-end space-x-4 ">
             <a

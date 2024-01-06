@@ -1,40 +1,9 @@
-import matter from "gray-matter"
 import Image from "next/image"
 import React from "react"
-import fs from "fs"
-import path from "path"
 import ProjectTeaser from "../../components/ProjectTeaser/ProjectTeaser"
+import { getAllProjects } from "../../lib/projects"
 
 function Articles() {
-  const postsDirectory = path.join(process.cwd(), "app/projects/entry/")
-  const filenames = fs.readdirSync(postsDirectory)
-
-  const articles = filenames
-    .map((filename) => {
-      const filePath = path.join(postsDirectory, filename)
-
-      // Check if filePath is a file, not a directory
-      if (fs.statSync(filePath).isFile()) {
-        const fileContents = fs.readFileSync(filePath, "utf8")
-        const { data } = matter(fileContents)
-
-        return {
-          id: filename.replace(/\.md?$/, ""),
-          title: data.title || "Untitled",
-          articleDate: new Date(data.articleDate || "1990-01-01"),
-          articleContent: data.articleContent || "Failed to load content",
-          authorImgSrc: data.authorImgSrc || "/img/placeholder.png",
-          authorName: data.authorName || "Anonymous",
-          fullArticleLink: "/projects/entry/" + filename.replace(/\.md?$/, ""),
-          technologies: data.technologies || [],
-        }
-      } else {
-        return null
-      }
-    })
-    .filter(Boolean) // Filter out undefined values (directories)
-    .sort((a, b) => b.articleDate.valueOf() - a.articleDate.valueOf()) // Sort by date, newest first (descending)
-
   return (
     <>
       <section className="mx-auto my-8 max-w-2xl space-y-6 bg-white antialiased dark:bg-gray-900 lg:my-16">
@@ -83,7 +52,7 @@ function Articles() {
       <section className="bg-white antialiased dark:bg-gray-900">
         {/* Grid of 3x3 cards, 1 collum on mobile*/}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {articles.map((article) => (
+          {getAllProjects().map((article) => (
             <ProjectTeaser
               key={article.id}
               title={article.title}
