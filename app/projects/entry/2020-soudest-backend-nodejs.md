@@ -8,6 +8,13 @@ tags:
   - NodeJS
   - BackendDevelopment
   - MultimodalTravelPlanner
+technologies:
+  - NodeJS
+  - Passport
+  - SQL
+  - GoogleAuthentication
+  - JWT
+  - Express
 ---
 
 # Project Overview

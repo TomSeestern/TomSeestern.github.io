@@ -6,7 +6,7 @@ import path from "path"
 import ProjectTeaser from "../../components/ProjectTeaser/ProjectTeaser"
 
 function Articles() {
-  const postsDirectory = path.join(process.cwd(), "app/blog/entry/")
+  const postsDirectory = path.join(process.cwd(), "app/projects/entry/")
   const filenames = fs.readdirSync(postsDirectory)
 
   const articles = filenames
@@ -27,7 +27,7 @@ function Articles() {
           articleContent: data.articleContent || "Failed to load content",
           authorImgSrc: data.authorImgSrc || "/img/placeholder.png",
           authorName: data.authorName || "Anonymous",
-          fullArticleLink: "/blog/entry/" + filename.replace(/\.md?$/, ""),
+          fullArticleLink: "/projects/entry/" + filename.replace(/\.md?$/, ""),
           technologies: data.technologies || [],
         }
       } else {
@@ -65,11 +65,11 @@ function Articles() {
             />
           </a>
           <a
-            href="/blog"
-            title="View all Blog Posts"
+            href="/projects"
+            title="View all Projects"
             className="flex items-center text-base font-medium text-primary-600 hover:underline dark:text-primary-500"
           >
-            View Blog posts
+            View Projects
             <Image
               className={"ml-2 h-4 w-4"}
               src={"/icon/arrow-right.svg"}
