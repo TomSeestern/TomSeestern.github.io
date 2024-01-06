@@ -61,7 +61,7 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
       <div className="flex h-full flex-col justify-between gap-4">
         <div className="">
           <Link className="hover:underline" href={ctaLink}>
-            <h3 className="truncate text-2xl font-bold text-gray-900 dark:text-white">{title}</h3>
+            <h3 className="truncate text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
           </Link>
         </div>
         {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
@@ -71,7 +71,8 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
         <div className="flex min-h-[2rem] items-center gap-2.5">
           {technologies.map((tech, index) => (
             <div key={tech} className="rounded-lg p-1 hover:bg-gray-50 dark:hover:bg-gray-800">
-              <Tooltip content={tech}>
+              {/* Workaround to get a tooltip even if we just have a icon path, should be replaced with a text lookup */}
+              <Tooltip content={tech.replace("icon/", "").replace(".svg", "")}>
                 <img
                   data-tooltip-target={`tooltip-logo-${tech}`}
                   className="h-8 w-auto object-contain"
