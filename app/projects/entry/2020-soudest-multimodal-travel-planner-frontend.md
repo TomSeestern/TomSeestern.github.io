@@ -17,7 +17,7 @@ technologies:
   - Material-UI
   - Jest
   - ESLint
-  - Google Maps API
+  - GoogleMaps
   - Webpack
 ---
 

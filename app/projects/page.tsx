@@ -18,8 +18,6 @@ function Articles() {
         const fileContents = fs.readFileSync(filePath, "utf8")
         const { data } = matter(fileContents)
 
-        console.log("File read: ", filePath, " Tech: ", data.technologies)
-
         return {
           id: filename.replace(/\.md?$/, ""),
           title: data.title || "Untitled",

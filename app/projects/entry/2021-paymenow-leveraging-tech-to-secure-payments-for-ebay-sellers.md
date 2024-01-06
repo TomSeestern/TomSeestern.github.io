@@ -13,9 +13,11 @@ tags:
   - Technology Solution
 technologies:
   - React
-  - AWS Amplify
+  - BootstrapCSS
+  - AWS-Amplify
+  - Lambda
   - RDS
-  - Bootstrap
+  - AWS
   - Figma
 ---
 
@@ -26,7 +28,7 @@ technologies:
 - **Project Title:** PayMeNow
 - **Duration:** 2021
 - **Role:** Full-Stack Developer & IT Consultant
-- **Technologies Used:** React, AWS Amplify, Amazon RDS, Bootstrap, Figma
+- **Technologies Used:** React, AWS Amplify, Amazon RDS, BootstrapCSS, Figma
 
 ## Problem Statement and Objectives
 

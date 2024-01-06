@@ -11,11 +11,10 @@ tags:
   - Bulk Goods Analysis
   - Prototype Development
 technologies:
-  - Revolution Pi
+  - Raspberry Pi
   - Python
   - Java
-  - Bosch XDK
-  - XDK Workbench
+  - Bosch
   - Eclipse
   - Figma
 ---

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="204" preserveAspectRatio="xMidYMid">
+    <path fill="#00B0FF" d="M0 110.85V0l96 55.42v36.95L32 55.42v73.9z"/>
+    <path fill="#0081CB" d="M96 55.42 192 0v110.85l-64 36.95-32-18.48 64-36.95V55.42L96 92.37z"/>
+    <path fill="#00B0FF" d="M96 129.32v36.95l64 36.95v-36.95z"/>
+    <path fill="#0081CB"
+          d="m160 203.22 96-55.42V73.9l-32 18.47v36.95l-64 36.95v36.95Zm64-147.8V18.47L256 0v36.95l-32 18.47Z"/>
+</svg>

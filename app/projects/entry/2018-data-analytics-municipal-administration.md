@@ -12,8 +12,9 @@ tags:
   - Business-Intelligence
 technologies:
   - PowerBI
-  - Cloud-Storage-Solutions
-  - Office-365
+  - Office365
+  - Teams
+  - Azure
 ---
 
 # Project Overview

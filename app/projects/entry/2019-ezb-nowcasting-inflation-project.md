@@ -11,8 +11,8 @@ tags:
   - NowcastingInflation
   - MachineLearning
 technologies:
-  - Python3
-  - G-Colab
+  - Python
+  - Google-Colab
   - Scikit-learn
   - Seaborn
 ---

@@ -15,7 +15,7 @@ technologies:
   - React
   - BootstrapCSS
   - AWS
-  - MySQL
+  - SQL
 ---
 
 # Project Overview

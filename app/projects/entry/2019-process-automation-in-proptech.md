@@ -12,12 +12,10 @@ tags:
   - Software Development
   - API Integration
 technologies:
-  - MS Vision
+  - Microsoft-Visio
   - SQL
-  - FTP
   - SharePoint
-  - API Development
-  - O365
+  - Office365
   - PowerBI
 
 ---

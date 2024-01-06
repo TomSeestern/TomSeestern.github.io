@@ -17,9 +17,6 @@ technologies:
   - TensorFlow
   - Unity
   - OpenCV
-  - U-Net Architecture
-  - Nvidia Jetson NX
-  - Real Virtuality 4
 ---
 
 # Project Overview

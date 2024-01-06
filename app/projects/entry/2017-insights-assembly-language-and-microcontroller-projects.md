@@ -11,10 +11,9 @@ tags:
   - ITeducation
   - Robotics
 technologies:
-  - AT89C5131A
+  - Atmel
   - Assembly
-  - MotorControl
-  - LCDDisplay
+
 ---
 
 # Project Overview

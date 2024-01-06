@@ -1,4 +1,4 @@
-import { Button, Card, Tooltip } from "flowbite-react"
+import {Button, Card, Tooltip} from "flowbite-react"
 import React from "react"
 import fs from "fs"
 import path from "path"
@@ -40,12 +40,12 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
   technologies = technologies.map((tech) => {
     const relativePath = path.join("icon", (tech + ".svg").replace(" ", "").toLowerCase().trim())
     const iconPath = path.join(process.cwd(), "public", relativePath)
-    console.log("iconPath", iconPath)
 
     try {
       fs.accessSync(iconPath, fs.constants.F_OK)
       return relativePath.replaceAll("\\", "/") // File exists
     } catch (e) {
+      console.error("Missing iconPath", iconPath)
       return "https://placehold.co/400x400.png?name=" + tech.toString().toLowerCase().trim() // File does not exist
     }
   })

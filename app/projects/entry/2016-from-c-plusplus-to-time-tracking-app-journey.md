@@ -13,8 +13,7 @@ tags:
 technologies:
   - C++
   - QT Creator
-  - SQLite
-  - CSV
+  - SQL
 ---
 
 # Project Overview

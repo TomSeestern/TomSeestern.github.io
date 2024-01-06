@@ -17,6 +17,7 @@ technologies:
   - Pinata
   - React
   - TypeScript
+  - AWS
 ---
 
 # Project Overview

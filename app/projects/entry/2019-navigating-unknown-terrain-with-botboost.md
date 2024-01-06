@@ -14,7 +14,8 @@ tags:
 technologies:
   - Python
   - ROS
-  - A*
+  - Gitlab
+  - Ubuntu
 ---
 
 # Project Overview

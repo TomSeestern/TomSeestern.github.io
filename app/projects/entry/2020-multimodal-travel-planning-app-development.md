@@ -10,12 +10,13 @@ tags:
   - FullStackWebDevelopment
   - MobilitySolutions
 technologies:
+  - Android
   - Java
   - React
   - Git
   - Figma
   - AndroidStudio
-  - REST
+
 ---
 
 # Project Overview

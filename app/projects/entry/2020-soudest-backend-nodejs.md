@@ -12,7 +12,7 @@ technologies:
   - NodeJS
   - Passport
   - SQL
-  - GoogleAuthentication
+  - GoogleMaps
   - JWT
   - Express
 ---
