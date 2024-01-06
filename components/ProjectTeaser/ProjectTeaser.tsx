@@ -57,14 +57,16 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
   })
 
   return (
-    <Card className="h-full w-full">
+    <Card className="h-full w-full transform transition duration-500 ease-in-out hover:z-50 hover:-translate-y-1">
       <div className="flex h-full flex-col justify-between gap-4">
         <div className="">
-          <h3 className="truncate text-2xl font-bold text-gray-900 dark:text-white">{title}</h3>
+          <Link className="hover:underline" href={ctaLink}>
+            <h3 className="truncate text-2xl font-bold text-gray-900 dark:text-white">{title}</h3>
+          </Link>
         </div>
         {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
         <p className="line-clamp-3 min-h-[4.5rem] text-lg font-normal text-gray-500 dark:text-gray-400">
-          {description}
+          <Link href={ctaLink}>{description}</Link>
         </p>
         <div className="flex min-h-[2rem] items-center gap-2.5">
           {technologies.map((tech, index) => (
