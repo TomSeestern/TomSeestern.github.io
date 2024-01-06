@@ -81,7 +81,7 @@ function Articles() {
 
       <section className="bg-white antialiased dark:bg-gray-900">
         {/* Grid of 3x3 cards, 1 collum on mobile*/}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {articles.map((article) => (
             <ProjectTeaser
               key={article.id}
@@ -93,6 +93,7 @@ function Articles() {
               ctaLink={article.fullArticleLink}
               buttonText={"Learn more"}
               buttonLink={article.fullArticleLink}
+              projectDate={article.articleDate}
             />
           ))}
         </div>

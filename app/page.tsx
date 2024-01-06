@@ -134,6 +134,7 @@ export default function Web() {
                   ctaLink={article.fullArticleLink}
                   buttonText={"Learn more"}
                   buttonLink={article.fullArticleLink}
+                  projectDate={article.articleDate}
                 />
               </div>
             ))}
@@ -152,6 +153,7 @@ export default function Web() {
                   ctaLink={article.fullArticleLink}
                   buttonText={"Learn more"}
                   buttonLink={article.fullArticleLink}
+                  projectDate={article.articleDate}
                 />
               </div>
             ))}
