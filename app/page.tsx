@@ -99,13 +99,12 @@ export default function Web() {
             </div>
           </div>
           <div className="absolute right-0 top-0 hidden h-full w-1/3 xl:block">
-            {/* TODO: Replace with a relevant personal image*/}
             <Image
               className="h-full w-full object-cover"
-              src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/conference-speaker.jpg"
-              alt="Conference speaker"
-              height={512}
-              width={512}
+              src="/img/Tom_Segbers_Frontal.jpg"
+              alt="Frontal image of Tom Segbers"
+              height={1100}
+              width={1100}
             />
           </div>
         </div>
