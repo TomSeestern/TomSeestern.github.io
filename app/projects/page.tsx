@@ -37,14 +37,15 @@ function Articles() {
 
   return (
     <>
-      <section className="mx-auto max-w-2xl space-y-6 bg-white antialiased dark:bg-gray-900">
-        <div className="mx-auto max-w-screen-md px-4 pt-8 lg:pt-16">
+      <section className="mx-auto my-8 max-w-2xl space-y-6 bg-white antialiased dark:bg-gray-900 lg:my-16">
+        <div className="mx-auto max-w-screen-md px-4">
           <h2 className="mt-3 text-center text-3xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             Showcasing My Journey in Technology and Innovation
           </h2>
           <p className="mt-4 text-center text-base font-normal text-gray-500 dark:text-gray-400 sm:text-xl">
-            Each project represents a unique blend of creativity, technical skill, and dedication. Discover how I
-            approach challenges and innovate solutions.
+            Here you can find some of my previous Projects that have at least 3 Months of development time and/or
+            personal significance. Each project represents a unique blend of creativity, technical skill, and
+            dedication.
           </p>
         </div>
         <div className="flex justify-center space-x-4">
@@ -63,11 +64,11 @@ function Articles() {
             />
           </a>
           <a
-            href="/projects"
+            href="/blog"
             title="View all Projects"
             className="flex items-center text-base font-medium text-primary-600 hover:underline dark:text-primary-500"
           >
-            View Projects
+            View Blog posts
             <Image
               className={"ml-2 h-4 w-4"}
               src={"/icon/arrow-right.svg"}
