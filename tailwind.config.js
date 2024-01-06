@@ -83,8 +83,8 @@ module.exports = {
         ...defaultTheme.width,
       },
       animation: {
-        marquee: "marquee 25s linear infinite",
-        marquee2: "marquee2 25s linear infinite",
+        marquee: "marquee 90s linear infinite",
+        marquee2: "marquee2 90s linear infinite",
       },
       keyframes: {
         marquee: {
