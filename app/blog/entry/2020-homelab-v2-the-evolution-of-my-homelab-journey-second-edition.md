@@ -4,7 +4,7 @@ title: The Evolution of My Homelab Journey - The Second Iteration
 articleDate: 2020-12-31
 articleContent: In this blog, I detail the journey of developing my second iteration of homelab, complete with autonomous servers, automation, and artificial intelligence technologies.
 authorName: Tom Segbers
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorImgSrc: /img/logo.png
 tags:
   - Homelab
   - Automation

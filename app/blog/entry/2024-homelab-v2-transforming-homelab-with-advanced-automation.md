@@ -4,7 +4,7 @@ title: Transforming my Homelab with Advanced Automation - The 3rd Iteration Jour
 articleDate: 2023-12-31
 articleContent: Dive into the latest version of my Homelab, featuring the integration of AI and advanced automation buzzing with high-end technology. Join me as I take you through my passion-filled journey of unending innovation in the realm of home servers automation.
 authorName: Tom Segbers
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorImgSrc: /img/logo.png
 tags:
   - Homelab Automation
   - Technology
