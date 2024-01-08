@@ -25,10 +25,10 @@ export function Header() {
         <NavbarToggle />
       </div>
       <NavbarCollapse>
-        <NavbarLink href="about">About</NavbarLink>
-        <NavbarLink href="projects">Projects</NavbarLink>
-        <NavbarLink href="blog">Blog</NavbarLink>
-        <NavbarLink href="contact">Contact</NavbarLink>
+        <NavbarLink href="/about">About</NavbarLink>
+        <NavbarLink href="/projects">Projects</NavbarLink>
+        <NavbarLink href="/blog">Blog</NavbarLink>
+        <NavbarLink href="/contact">Contact</NavbarLink>
       </NavbarCollapse>
     </Navbar>
   )
