@@ -4,6 +4,7 @@ import matter from "gray-matter"
 import ReactMarkdown from "react-markdown"
 import {Breadcrumb, BreadcrumbItem} from "flowbite-react"
 import {HiHome} from "react-icons/hi"
+import {Metadata, ResolvingMetadata} from "next"
 
 /**
  * Interface representing the parameters expected by the page's `getStaticProps`.
@@ -72,4 +73,26 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
     const slug = filename.replace(/\.md$/, "") // Remove the .md extension from filename
     return { slug }
   })
+}
+
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export async function generateMetadata({ params }: Params, parent: ResolvingMetadata): Promise<Metadata> {
+  let fileContent = null
+
+  try {
+    const filePath = path.join(process.cwd(), "app/blog/entry/", params.slug + ".md")
+    const fileContents = fs.readFileSync(filePath, "utf8")
+    fileContent = matter(fileContents)
+  } catch (e) {}
+
+  return {
+    title: fileContent?.data.title?.toString() || "TomSegbers.de",
+    openGraph: {
+      images: [],
+    },
+  }
 }

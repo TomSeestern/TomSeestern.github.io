@@ -2,6 +2,18 @@ import Image from "next/image"
 import React from "react"
 import ProjectTeaser from "../../components/ProjectTeaser/ProjectTeaser"
 import { getAllProjects } from "../../lib/projects"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Projects - TomSegbers.de",
+  twitter: {
+    card: "summary_large_image",
+  },
+  openGraph: {
+    url: "https://Tom.Segbers.de/",
+    images: [],
+  },
+}
 
 function Articles() {
   return (

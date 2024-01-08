@@ -3,6 +3,18 @@ import TimelineEntry from "../../components/TimelineEntry/TimelineEntry"
 import PersonTeaser from "../../components/PersonTeaser/PersonTeaser"
 import Image from "next/image"
 import React from "react"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "About me",
+  twitter: {
+    card: "summary_large_image",
+  },
+  openGraph: {
+    url: "https://Tom.Segbers.de/",
+    images: [],
+  },
+}
 
 export default function About() {
   return (

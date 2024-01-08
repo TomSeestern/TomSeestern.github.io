@@ -2,6 +2,18 @@ import ArticleComponent from "../../components/ArticleTeaser/ArticleTeaser"
 import path from "path"
 import fs from "fs"
 import matter from "gray-matter"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Blog - TomSegbers.de",
+  twitter: {
+    card: "summary_large_image",
+  },
+  openGraph: {
+    url: "https://Tom.Segbers.de/",
+    images: [],
+  },
+}
 
 function Articles() {
   const postsDirectory = path.join(process.cwd(), "app/blog/entry/")
