@@ -39,8 +39,9 @@ export default function Contact() {
           Get in Touch
         </h2>
         <p className="mb-8 text-center font-light text-gray-500 dark:text-gray-400 sm:text-xl lg:mb-16">
-          Whether you have a collaboration idea, a project proposal, or just want to say hello, I'd love to hear from
-          you. Drop me a message, and I'll get back to you soon.
+          {
+            "Whether you have a collaboration idea, a project proposal, or just want to say hello, I'd love to hear from you. Drop me a message, and I'll get back to you soon."
+          }
         </p>
         <form onSubmit={handleAction} className="space-y-8">
           <div>
