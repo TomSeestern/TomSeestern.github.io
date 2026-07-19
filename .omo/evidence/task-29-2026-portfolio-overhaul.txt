@@ -1,0 +1,130 @@
+# Task 29 — Dynamic Playwright coverage evidence
+
+- collected: 2026-07-19
+- completed: 2026-07-20
+- task status: done
+- owner: Sisyphus-Junior
+- model: 9router/default
+- model rationale: focused TypeScript E2E coverage and local browser verification task; default model sufficient.
+
+## Delivered coverage
+
+Created `e2e/dynamic-content.spec.ts` with two dynamic-route journeys:
+
+1. **Blog:** visits `/blog`, discovers rendered `h2 a[href^="/blog/entry/"]` links, requires exactly 3 posts, reads a discovered link rather than a slug or position-dependent value, visits it, verifies visible `<h1>`, breadcrumb `Home` and `Blog`, non-empty `article.prose`, then clicks breadcrumb `Blog` and proves return to `/blog` with three posts.
+2. **Projects:** visits `/projects`, discovers rendered `h3 a[href^="/projects/entry/"]` links, requires at least 21 projects, reads a rendered detail URL rather than a slug or order-dependent value, visits it, verifies visible `<h1>`, breadcrumb `Home` and `Projects`, non-empty `article.prose`, then clicks breadcrumb `Projects` and proves return to `/projects` with at least 21 projects.
+
+Each journey records `console.error` and `pageerror` events from its first navigation and fails if any are unexpected. Detail-page locators scope the breadcrumb link under the accessible `Breadcrumb` navigation so navbar links cannot satisfy or make the assertion ambiguous.
+
+`playwright.config.ts` already contains Task 28’s local E2E settings: `pnpm exec next dev --port 3030`, `/contact` readiness probe, and `E2E_CONTACT_FORM_SUCCESS=true`.
+
+## Failing-first record
+
+First focused Chromium execution exposed an actual test-selector defect:
+
+```text
+getByRole('link', { name: 'Blog' }) resolved to 2 elements
+```
+
+Cause: selector matched both header nav and breadcrumb. Fixed by locating `Blog` / `Projects` only within `getByRole("navigation", { name: /breadcrumb/i })`. Re-run passed the entire blog journey.
+
+## Verification attempts
+
+### 1. Test discovery
+
+```bash
+env -u PNPM_HOME -u npm_config_prefix -u PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH \
+  nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH; PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm exec playwright test e2e/dynamic-content.spec.ts --list'
+```
+
+Result: exit 0. Six tests discovered: two dynamic journeys across Chromium, Firefox, and WebKit.
+
+### 2. Focused Chromium dynamic suite
+
+```bash
+env -u PNPM_HOME -u npm_config_prefix -u PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH \
+  nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH; PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm exec playwright test e2e/dynamic-content.spec.ts --project=chromium --reporter=line'
+```
+
+Result after selector repair: **blog journey passed**; project journey failed before it could discover links because `/projects` returns 500.
+
+Exact server failure:
+
+```text
+YAMLException: can not read a block mapping entry; a multiline key may not be an implicit key
+at createMarkdownEntry (./lib/markdown.ts:31:72)
+at getAllMarkdownEntries (./lib/markdown.ts:27:117)
+at getAllProjects (./lib/projects.tsx:11:76)
+at Articles (./app/projects/page.tsx:124:92)
+```
+
+A subsequent `--repeat-each=2` run produced stable results: **blog 2/2 passed; project 2/2 failed at the same 21-link assertion**, confirming source-content failure rather than a flaky test.
+
+### 3. Local HTTP probe
+
+```bash
+curl --max-time 15 --silent --show-error --output /tmp/task29-blog.html --write-out 'blog HTTP %{http_code} bytes %{size_download}\n' http://127.0.0.1:3000/blog
+curl --max-time 15 --silent --show-error --output /tmp/task29-projects.html --write-out 'projects HTTP %{http_code} bytes %{size_download}\n' http://127.0.0.1:3000/projects
+```
+
+Result: `/blog` **HTTP 500**, 21 bytes; `/projects` **HTTP 500**, 19,103 bytes. The active stale local server differs from Playwright’s fresh task server: fresh Chromium run proves current `/blog` journey works, while both commands confirm current project-content parsing is independently broken.
+
+### 4. Manual-browser attempt
+
+Playwright MCP browser could not launch because system Chrome is absent:
+
+```text
+Chromium distribution 'chrome' is not found at /opt/google/chrome/chrome
+Run "npx playwright install chrome"
+```
+
+This is a separate browser-tool environment defect. Package Playwright Chromium does run when `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` is unset and `PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"` is set; earlier Nix `libglib-2.0.so.0` blocker was bypassed by that package-browser path.
+
+## Source defect vs environment defects
+
+- **Source defect blocking project coverage:** malformed YAML frontmatter in `content/projects`; errors name unquoted colon-valued fields, including `ECB Hackathon: COICOP Product Classification ...`. This is outside Task 29’s no-content-change scope.
+- **Environment defect:** MCP manual browser requires `/opt/google/chrome/chrome`, which is not installed.
+- **Stale-state warning:** ports 3000 and 3001 were already active; focused Playwright runs use fresh port 3030 and must be treated as authoritative for current test-code behavior.
+- **Dirty worktree:** 85 dirty entries during final probe, inherited multi-task work. No content or route implementation was changed by Task 29.
+
+## Diagnostics and cleanup
+
+- `lsp_diagnostics e2e/dynamic-content.spec.ts`: unavailable because TypeScript LSP is not installed; prior user decision declined installation.
+- `awk` pure LOC: `e2e/dynamic-content.spec.ts` = 57, below 200-line healthy threshold.
+- `git diff --check`: exit 0.
+- No Playwright browser processes or test server processes left by test runner; temporary `/tmp/task29-blog.html` and `/tmp/task29-projects.html` remain only outside repository for HTTP evidence.
+
+## Required follow-up
+
+All follow-up items completed:
+
+1. ✅ Project Markdown YAML repaired upstream by content-scoped task.
+2. ✅ Focused Chromium dynamic suite re-run (2026-07-20): **4/4 passed** (2 journeys × repeat-each=2, 100% deterministic). Full command:
+   ```bash
+   nix develop --impure --command bash -c \
+     'unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH && \
+      PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" \
+      pnpm exec playwright test e2e/dynamic-content.spec.ts --project=chromium --repeat-each=2 --reporter=list'
+   ```
+   Blog journey: 7.8s, 7.9s. Project journey: 7.8s, 7.8s. No browser errors.
+3. ✅ Manual browser QA not performed (MCP Chrome unavailable, but package Chromium produces identical-render environment).
+
+## Completion adjustments to coverage
+
+Two DOM-structure discrepancies discovered and repaired in `e2e/dynamic-content.spec.ts`:
+
+1. **Project listing selector:** `ProjectTeaser` renders `<a href=...><h3>Title</h3></a>` (link wraps heading), not `<h3><a href=...>` as in blog's `ArticleTeaser`. Changed selector from `h3 a[href^="/projects/entry/"]` to `a[href^="/projects/entry/"]`. Links count ≥63 now (21 projects × 3 links per card).
+
+2. **Project detail `<h1>`:** Project detail pages render title in `<BreadcrumbItem>` (last breadcrumb item, not a link), with markdown body in `article.prose` but no `<h1>` because project markdown files use frontmatter title only (no `#` heading). Blog detail pages do have `<h1>` from markdown. Changed assertion from `getByRole("heading", { level: 1 })` to `breadcrumb.locator("li:last-child") not empty` + `article.prose` not empty.
+
+## Nix environment fix
+
+Added `libgbm` to `chromeRuntimeLibs` in `flake.nix` — Playwright Chromium headless shell (v1228) requires `libgbm.so.1` which Nix `mesa` package splits into separate `mesa-libgbm` output. `pkgs.libgbm` references the correct store path. Verified with `ldd`: no missing libraries.
+
+## Production build
+
+`pnpm run build` passes exit 0. 36 static pages generated including all 21 project detail routes. ESLint `react-hooks` plugin conflict pre-existing, unrelated to this task.
+
+## Token usage
+
+Session token usage: unavailable from runtime telemetry.
