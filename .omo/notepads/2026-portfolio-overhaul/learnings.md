@@ -289,7 +289,7 @@ Used semantic Playwright locators (`getByRole`, accessible text matching) over b
 
 - Baseline gray-matter inventory found nine malformed project frontmatter blocks among 21 files: five unquoted colon-bearing titles and four unlabeled teaser lines before `authorName`.
 - Minimal encoding repair: quote colon-bearing `title` values; convert unlabeled teaser lines to `articleContent: |-` without wording changes.
-- `lib/markdown.test.ts` now keeps exact 21 project IDs as real-filesystem regression coverage through `getAllMarkdownEntries` and gray-matter.
+- `scripts/check-project-frontmatter.js` validates the real 21-file inventory through gray-matter and prints each successful filename.
 - Nix command wrapper must unset `PNPM_HOME` and `npm_config_prefix`; its dev-shell initialization still prints a pnpm null-path error, but invoked commands run.
 - `pnpm build` exits 0 and statically generates all 36 pages. It still prints inherited `react-hooks` ESLint plugin-conflict output; distinguish warning output from process result.
 - Dev `/projects` verification yielded HTTP 200 and 21 unique `/projects/entry/` links. Wrapper timeout occurred only after assertions; trap cleanup succeeded and no port-3040 server remained.

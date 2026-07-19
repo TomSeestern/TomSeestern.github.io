@@ -1,0 +1,129 @@
+# YAML frontmatter repair evidence
+
+Timestamp: 2026-07-19T22:20:00Z
+Task: Repair malformed `content/projects/*.md` YAML frontmatter
+Model: `9router/default`
+
+## Scope
+
+Changed only frontmatter encoding in existing project files, plus parser coverage and task records. No filenames, slugs, IDs, dates, body prose, or human-gated draft wording changed. Todos 13–15 remain `[~]` and human-gated.
+
+## Baseline inventory
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; node - <<'"'"'NODE'"'"'
+const fs = require("fs")
+const path = require("path")
+const matter = require("gray-matter")
+const directory = path.join(process.cwd(), "content/projects")
+const files = fs.readdirSync(directory).filter((filename) => filename.endsWith(".md")).sort()
+for (const filename of files) {
+  try {
+    matter(fs.readFileSync(path.join(directory, filename), "utf8"))
+    console.log(`PASS ${filename}`)
+  } catch (error) {
+    console.log(`FAIL ${filename}`)
+    console.log(error.message)
+  }
+}
+console.log(`COUNT ${files.length}`)
+NODE'
+```
+
+Baseline: 21 discovered entries; 9 frontmatter parse failures.
+
+| File | YAML error | Repair |
+| --- | --- | --- |
+| `2018-data-analytics-municipal-administration.md` | `can not read a block mapping entry; a multiline key may not be an implicit key` at `authorName` | Converted unlabeled one-line teaser to `articleContent: |-`. |
+| `2019-ezb-nowcasting-inflation-project.md` | `incomplete explicit mapping pair` at colon-bearing title | Double-quoted title. |
+| `2019-navigating-unknown-terrain-with-botboost.md` | `incomplete explicit mapping pair` at colon-bearing title | Double-quoted title. |
+| `2020-digitizing-train-ticket-refunds-2020.md` | `can not read a block mapping entry; a multiline key may not be an implicit key` at `authorName` | Converted unlabeled one-line teaser to `articleContent: |-`. |
+| `2020-multimodal-travel-planning-app-development.md` | `can not read a block mapping entry; a multiline key may not be an implicit key` at `authorName` | Converted unlabeled one-line teaser to `articleContent: |-`. |
+| `2020-soudest-backend-nodejs.md` | `can not read a block mapping entry; a multiline key may not be an implicit key` at `authorName` | Converted unlabeled one-line teaser to `articleContent: |-`. |
+| `2021-ai-drone-based-change-detection.md` | `incomplete explicit mapping pair` at colon-bearing title | Double-quoted title. |
+| `2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers.md` | `incomplete explicit mapping pair` at colon-bearing title | Double-quoted title. |
+| `2021-skinshark-nft-minecraft-skin-trading.md` | `incomplete explicit mapping pair` at colon-bearing title | Double-quoted title. |
+
+## Deterministic parser coverage
+
+`scripts/check-project-frontmatter.js` reads every real project Markdown file through `gray-matter`, asserts exact file count 21 before parsing, prints the full success list, and exits nonzero for count or YAML parsing failure.
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; node scripts/check-project-frontmatter.js'
+```
+
+Exit: `0`
+
+```text
+PASS 2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms.md
+...
+PASS 2021-skinshark-nft-minecraft-skin-trading.md
+COUNT 21
+```
+
+The script proves all 21 real project frontmatter blocks parse through gray-matter.
+
+## Build verification
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+```
+
+Exit: `0`
+
+```text
+✓ Compiled successfully
+✓ Generating static pages (36/36)
+├ ○ /projects
+└ ● /projects/entry/[slug]
+    └ [+18 more paths]
+```
+
+`pnpm build` prints inherited ESLint `react-hooks` plugin-conflict output, but it did not fail. Treating `✓ Compiled successfully` alone as success would be misleading; process exit was `0` and static generation completed for all 36 pages.
+
+## Runtime verification and cleanup
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm dev -p 3040 > /tmp/tomsegbers-dev-3040.log 2>&1 & server_pid=$!; cleanup() { kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true; }; trap cleanup EXIT; for attempt in $(seq 1 60); do if curl --silent --show-error --fail http://localhost:3040/projects > /tmp/tomsegbers-projects-3040.html; then break; fi; sleep 1; done; status=$(curl --silent --show-error --output /tmp/tomsegbers-projects-3040.html --write-out "%{http_code}" http://localhost:3040/projects); link_count=$(node -e "const fs=require(\"fs\"); const html=fs.readFileSync(\"/tmp/tomsegbers-projects-3040.html\",\"utf8\"); const links=[...html.matchAll(/href=\"(\/projects\/entry\/[^\"]+)\"/g)].map((match)=>match[1]); console.log(new Set(links).size)"); printf "HTTP_STATUS=%s\nUNIQUE_PROJECT_LINKS=%s\n" "$status" "$link_count"; test "$status" = 200; test "$link_count" -ge 21'
+```
+
+Observable result:
+
+```text
+HTTP_STATUS=200
+UNIQUE_PROJECT_LINKS=21
+```
+
+Shell wrapper reached its 180-second timeout after result output, but trap cleanup executed. Follow-up process check found no `next dev.*3040` or `pnpm dev -p 3040` server process. Runtime assertion passed before wrapper timeout; cleanup confirmed.
+
+## Adversarial QA
+
+- `malformed_input`: Baseline parser inventory identified all 9 malformed files and exact `js-yaml` errors. Validator now parses all 21.
+- `stale_state`: Parser test reads tracked live project files with an exact 21-ID inventory; no fixture-only success claim.
+- `dirty_worktree`: Inherited dirty worktree recorded before edits: 49 modified and 35 untracked paths. This task touched only its frontmatter, parser test, and `.omo` records.
+- `misleading_success_output`: Build's ESLint conflict was recorded separately from final exit `0`; dev-shell wrapper timeout recorded separately from its HTTP/link assertions.
+
+## Diagnostics and post-write review
+
+`lsp_diagnostics` is unavailable because TypeScript language server remains unconfigured and previous installation decision was declined. Jest and production build supplied executable TypeScript verification.
+
+Pure LOC: `scripts/check-project-frontmatter.js` is 16, healthy. File owns project-frontmatter validation only.
+
+- Responsibility: project frontmatter syntax and parser-regression coverage only.
+- Boundary: gray-matter remains single Markdown parsing boundary; validator uses its production parser.
+- Variants: none added.
+- Escape hatches: no `any`, assertions, non-null assertions, ignored errors, or skipped tests introduced.
+- Defensive layer: none added.
+- Helpers: no unnecessary helper added.
+- Validation: real-filesystem parser check fails if count differs or malformed frontmatter returns.
+- Parameter bloat, redundant post-action verification, and negative names: none introduced.
+
+Token usage: unavailable from runtime telemetry.
