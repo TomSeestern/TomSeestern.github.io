@@ -1,0 +1,160 @@
+# Task 11 — Shared markdown reader evidence
+
+Timestamp: 2026-07-19T19:25:30Z
+Task: `11. Deduplicate markdown-reading logic into shared lib (TDD)`
+Model: `9router/default`
+
+## Scope and pre-state
+
+- Dirty worktree was inherited. `git status --short` reported staged Nix files, 46 modified files, and unrelated untracked work before Task 11 changes.
+- Content source verified as `content/blog` (3 Markdown entries) and `content/projects` (21 Markdown entries); no reader reads former `app/*/entry` content paths.
+- Consumer contract preserved for `ArticleTeaser` and `ProjectTeaser`: `id`, `title`, `articleDate`, `articleContent`, `authorImgSrc`, `authorName`, `fullArticleLink`, and `technologies`.
+
+## Red
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest lib/markdown.test.ts --runInBand'
+```
+
+Exit: `1`
+
+Expected failure:
+
+```text
+Cannot find module './markdown' from 'lib/markdown.test.ts'
+```
+
+This proves test preceded implementation. Test suite could not load because shared module did not yet exist.
+
+## Green
+
+Implemented:
+
+- `lib/markdown.ts`: `MarkdownEntry` and `getAllMarkdownEntries(dirPath, urlPrefix)`.
+- Zod boundary schema with defaults/catches for all consumer fields.
+- `.md` file filtering, deterministic descending `articleDate` sorting, and `/entry/<slug>` URL convention.
+- Thin wrappers:
+  - `lib/blog.tsx`: `content/blog`, `/blog`
+  - `lib/projects.tsx`: `content/projects`, `/projects`
+- `lib/markdown.test.ts`: temporary filesystem fixtures cover valid data, missing defaults, malformed field defaults, empty directory, non-Markdown filtering, and sort order.
+
+Focused command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest lib/markdown.test.ts --runInBand'
+```
+
+Exit: `0`
+
+```text
+PASS lib/markdown.test.ts
+Tests: 6 passed, 6 total
+```
+
+## Full test attempt
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test -- --runInBand'
+```
+
+Exit: `1`
+
+Unrelated/blocking infrastructure error before test execution:
+
+```text
+Cannot parse .../.next/types/package.json as JSON: ENOENT: no such file or directory
+```
+
+Focused Task 11 suite passes independently.
+
+## Build
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+```
+
+Exit: `1`
+
+Markdown-reader result: production compilation passed:
+
+```text
+✓ Compiled successfully
+```
+
+Unrelated existing type-check blocker:
+
+```text
+./components/ArticleTeaser/ArticleTeaser.tsx:1:37
+Type error: Cannot find module 'date-fns' or its corresponding type declarations.
+```
+
+No `lib/markdown.ts`, `lib/blog.tsx`, or `lib/projects.tsx` error reported.
+
+## Manual QA
+
+Started controlled server:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec next dev -p 3011 > /tmp/task-11-next-dev-3011.log 2>&1 & echo $!'
+```
+
+PID: `2897902`
+
+Requests:
+
+```sh
+curl -fsS --max-time 30 http://localhost:3011/blog
+curl -fsS --max-time 30 http://localhost:3011/projects
+```
+
+Results:
+
+```text
+blog HTTP 200 bytes 19283
+projects HTTP 200 bytes 287315
+```
+
+- `/projects`: pass. Non-empty listing includes 21 `/projects/entry/...` links, sourced through `getAllProjects()` and `content/projects`.
+- `/blog`: HTTP 200 but failed non-empty-listing check. `app/blog/page.tsx` still contains its separate, stale inline reader for former `app/blog/entry`; replacing it is explicitly Todo 12, outside Todo 11 allowed files. Shared `getAllBlogPosts()` itself points at `content/blog` and is covered by reader tests.
+
+Cleanup:
+
+```sh
+kill 2897902
+curl -fsS --max-time 2 http://localhost:3011/ >/dev/null && exit 1 || exit 0
+```
+
+Exit: `0`; server stopped.
+
+## Adversarial QA
+
+- `stale_state`: pass for extracted reader/wrappers. Both resolve `content/blog` or `content/projects`; no former app-entry path used in `lib/`.
+- `dirty_worktree`: inherited dirty state recorded before work; Task 11 scopes only `lib/markdown.ts`, `lib/markdown.test.ts`, `lib/blog.tsx`, `lib/projects.tsx`, evidence, and learning note.
+- `misleading_success_output`: inspected HTTP payloads. Projects has real listing links. Blog empty result exposed stale Todo 12 inline reader rather than relying on HTTP 200 alone.
+- `malformed_input`: pass. Malformed `title`, `articleDate`, and `technologies` fixture resolves consumer-safe defaults.
+- `flaky_tests`: pass. Temporary fixture dirs, deterministic filenames/dates, no wall clock.
+- N/A: external text, cancellation/resume, generated cache, long external process beyond controlled dev server.
+
+## Diagnostics
+
+`lsp_diagnostics` attempted for all changed TypeScript files. TypeScript LSP is not installed; prior user decision declined installation. No install attempted.
+
+## Post-write review
+
+- Responsibility: `lib/markdown.ts` owns Markdown-entry discovery and frontmatter parsing; wrappers own source-specific configuration.
+- Boundary: frontmatter parsed exactly once with Zod.
+- No discriminated unions.
+- No `any`, assertions, non-null assertions, or error swallowing introduced.
+- Shared helper has two consumers.
+- Behavior locked by six focused tests.
+- `getAllMarkdownEntries` has exactly two required parameters; helper has three internal values only.
+- No redundant post-action verification or negative names introduced.
+- Pure LOC all changed TypeScript files remain below 200.
+
+Token usage: unavailable from runtime telemetry.
