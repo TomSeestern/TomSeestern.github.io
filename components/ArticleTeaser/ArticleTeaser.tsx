@@ -2,7 +2,6 @@ import { formatDistanceToNow } from "date-fns"
 import { Card } from "flowbite-react"
 import Image from "next/image"
 import Link from "next/link"
-import PropTypes from "prop-types"
 import React from "react"
 
 export interface ArticleProps {
@@ -89,15 +88,6 @@ const ArticleComponent: React.FC<ArticleProps> = ({
       </div>
     </Card>
   )
-}
-
-ArticleComponent.propTypes = {
-  title: PropTypes.string.isRequired,
-  articleDate: PropTypes.instanceOf(Date).isRequired,
-  articleContent: PropTypes.string.isRequired,
-  authorImgSrc: PropTypes.string.isRequired,
-  authorName: PropTypes.string.isRequired,
-  fullArticleLink: PropTypes.string.isRequired,
 }
 
 export default React.memo(ArticleComponent)
