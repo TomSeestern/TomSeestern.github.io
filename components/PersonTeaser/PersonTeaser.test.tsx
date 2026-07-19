@@ -2,24 +2,96 @@ import { render, screen } from "@testing-library/react"
 import PersonTeaser from "./PersonTeaser"
 
 describe("PersonTeaser", () => {
-  it("renders company details as one linked teaser with decorative logo", () => {
+  const companyName = "Example Company"
+  const companyDescription = "Example description"
+  const companyLink = "https://example.com"
+  const companyLogoSrc = "/img/example-company.png"
+
+  it("renders company name", () => {
     // Given
-    const companyLink = "https://example.com"
 
     // When
     render(
       <PersonTeaser
-        companyName="Example Company"
-        companyLogoSrc="/img/example-company.png"
-        companyDescription="Example description"
+        companyName={companyName}
+        companyLogoSrc={companyLogoSrc}
+        companyDescription={companyDescription}
         companyLink={companyLink}
-      />,
+      />
     )
 
     // Then
-    expect(screen.getByRole("link", { name: "Example Company Example description" })).toHaveAttribute("href", companyLink)
-    expect(screen.getByText("Example Company")).toBeInTheDocument()
-    expect(screen.getByText("Example description")).toBeInTheDocument()
+    expect(screen.getByText(companyName)).toBeInTheDocument()
+  })
+
+  it("renders company description", () => {
+    // Given
+
+    // When
+    render(
+      <PersonTeaser
+        companyName={companyName}
+        companyLogoSrc={companyLogoSrc}
+        companyDescription={companyDescription}
+        companyLink={companyLink}
+      />
+    )
+
+    // Then
+    expect(screen.getByText(companyDescription)).toBeInTheDocument()
+  })
+
+  it("links complete teaser to company URL", () => {
+    // Given
+
+    // When
+    render(
+      <PersonTeaser
+        companyName={companyName}
+        companyLogoSrc={companyLogoSrc}
+        companyDescription={companyDescription}
+        companyLink={companyLink}
+      />
+    )
+
+    // Then
+    expect(screen.getByRole("link", { name: `${companyName} ${companyDescription}` })).toHaveAttribute(
+      "href",
+      companyLink
+    )
+  })
+
+  it("renders company logo", () => {
+    // Given
+
+    // When
+    render(
+      <PersonTeaser
+        companyName={companyName}
+        companyLogoSrc={companyLogoSrc}
+        companyDescription={companyDescription}
+        companyLink={companyLink}
+      />
+    )
+
+    // Then
+    expect(screen.getByRole("img")).toBeInTheDocument()
+  })
+
+  it("keeps company logo decorative", () => {
+    // Given
+
+    // When
+    render(
+      <PersonTeaser
+        companyName={companyName}
+        companyLogoSrc={companyLogoSrc}
+        companyDescription={companyDescription}
+        companyLink={companyLink}
+      />
+    )
+
+    // Then
     expect(screen.getByRole("img")).toHaveAttribute("alt", "")
   })
 })
