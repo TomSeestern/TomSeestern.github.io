@@ -1,44 +1,18 @@
 import * as RadixTooltip from "@radix-ui/react-tooltip"
-import { cva, VariantProps } from "class-variance-authority"
 import React from "react"
 import { twMerge } from "tailwind-merge"
 
-const tooltipContent = cva([], {
-  variants: {
-    intent: {
-      primary: ["rounded-0.5md", "bg-zinc-700", "font-open-sans", "text-white"],
-    },
-    size: {
-      md: ["px-4", "py-2.5", "text-2xs"],
-    },
-  },
-  defaultVariants: {
-    intent: "primary",
-    size: "md",
-  },
-})
+const tooltipContentClassName = "rounded-0.5md bg-zinc-700 px-4 py-2.5 font-open-sans text-2xs text-white"
+const tooltipArrowClassName = "h-2 w-4 fill-zinc-700"
 
-const tooltipArrow = cva([], {
-  variants: {
-    intent: {
-      primary: ["fill-zinc-700"],
-    },
-    size: {
-      md: ["w-4", "h-2"],
-    },
-  },
-  defaultVariants: {
-    intent: "primary",
-    size: "md",
-  },
-})
-
-export interface TooltipProps extends VariantProps<typeof tooltipContent>, RadixTooltip.TooltipProps {
+export interface TooltipProps extends RadixTooltip.TooltipProps {
   explainer: React.ReactElement | string
   children: React.ReactElement
   className?: string
   withArrow?: boolean
   side?: "top" | "right" | "bottom" | "left"
+  intent?: "primary"
+  size?: "md"
 }
 
 export function Tooltip({
@@ -47,8 +21,6 @@ export function Tooltip({
   open,
   defaultOpen,
   onOpenChange,
-  intent,
-  size,
   side = "top",
   className,
   withArrow,
@@ -61,10 +33,10 @@ export function Tooltip({
           <RadixTooltip.Content
             side={side}
             sideOffset={5}
-            className={twMerge(tooltipContent({ intent, size, className }))}
+            className={twMerge(tooltipContentClassName, className)}
           >
             {explainer}
-            {withArrow ? <RadixTooltip.Arrow className={twMerge(tooltipArrow({ intent, size, className }))} /> : null}
+            {withArrow ? <RadixTooltip.Arrow className={twMerge(tooltipArrowClassName, className)} /> : null}
           </RadixTooltip.Content>
         </RadixTooltip.Portal>
       </RadixTooltip.Root>
