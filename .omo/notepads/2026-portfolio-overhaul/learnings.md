@@ -257,3 +257,67 @@ Used semantic Playwright locators (`getByRole`, accessible text matching) over b
 - Markdown LSP unavailable in environment, no server configured for `.md`.
 - Evidence: `.omo/evidence/task-15-2026-portfolio-overhaul.txt`.
 - No commit created. Human approval remains required.
+
+## 2026-07-19: Task 28 — Static Playwright coverage
+
+- Added `e2e/static-routes.spec.ts`: hydrated assertions for `/`, `/about`, `/contact`, and missing-route 404; each case records browser `console.error` messages.
+- Contact E2E uses `E2E_CONTACT_FORM_SUCCESS=true`; `sendEmail` returns success before constructing `Resend`. Test observes browser requests and asserts none reach `api.resend.com`.
+- `playwright.config.ts` now uses pnpm and port 3030. Its readiness URL is `/contact`, not `/`, because current homepage server render returns 500.
+- Static Chromium verification blocked before test navigation: Playwright package Chromium lacks host library `libglib-2.0.so.0` in Nix shell. Full detail: `.omo/evidence/task-28-2026-portfolio-overhaul.txt`.
+- Homepage remains independently blocked by malformed project Markdown YAML flowing through `lib/markdown.ts` and `getAllProjects`; affected titles contain unquoted colon values. Fix content before treating E2E suite as green.
+- TypeScript LSP remains unavailable; previous user decision declined installation.
+
+## 2026-07-19: Task 29 — Dynamic Playwright coverage
+
+- Added `e2e/dynamic-content.spec.ts`. Blog test discovers rendered `/blog/entry/*` links, requires exactly 3, validates a discovered detail page’s title/breadcrumb/prose, then uses breadcrumb navigation back to `/blog`. Project test uses same live-link strategy with ≥21 rendered `/projects/entry/*` links and breadcrumb navigation.
+- Selector red phase caught ambiguity: global `getByRole("link", { name: "Blog" })` matched header plus breadcrumb. Final tests scope Home/Blog/Projects links inside accessible breadcrumb navigation.
+- Focused fresh Chromium run with Nix pnpm passed blog journey. Project journey reliably failed before rendered-link discovery because `content/projects` has malformed YAML frontmatter; repeat-each=2 gave blog 2/2 pass and project 2/2 same failure. Do not treat E2E as green until content YAML is repaired.
+- Manual Playwright MCP browser unavailable: `/opt/google/chrome/chrome` absent. Package Chromium works only when unsetting `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` and setting `PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"`.
+- Evidence: `.omo/evidence/task-29-2026-portfolio-overhaul.txt`; no content or route implementation changed by Task 29.
+
+## 2026-07-19: Task 24 — Lib Jest coverage
+
+- Expanded `lib/markdown.test.ts` from 6 to 12 real-filesystem reader cases; tests cover valid/missing/malformed frontmatter, empty directories, non-Markdown files and directories, descending dates, slug URLs, technologies, and independent defaults.
+- Added `lib/sendEmail.test.tsx` with narrow `jest.mock("resend")`: mocked success, rejected send, and absent `RESEND_API_KEY`. No external call is possible; absent key now returns `false` before calling mocked `emails.send`.
+- Removed `--passWithNoTests`; `package.json` test script is now `cross-env FORCE_COLOR=1 jest`.
+- Focused Nix Jest proof: 2 suites, 15 tests passed. Full Nix Jest proof: 8 suites, 29 tests passed.
+- Build compiles Task 24 code, but static export remains blocked by malformed inherited project Markdown frontmatter (unquoted content/colon values); evidence records exact YAML errors. Do not mask by changing content in this task.
+- Nix pnpm requires `unset PNPM_HOME npm_config_prefix`; it logs an inherited null-path warning but commands execute.
+- Evidence: `.omo/evidence/task-24-2026-portfolio-overhaul.txt`.
+
+## 2026-07-19: YAML project-frontmatter repair
+
+- Baseline gray-matter inventory found nine malformed project frontmatter blocks among 21 files: five unquoted colon-bearing titles and four unlabeled teaser lines before `authorName`.
+- Minimal encoding repair: quote colon-bearing `title` values; convert unlabeled teaser lines to `articleContent: |-` without wording changes.
+- `lib/markdown.test.ts` now keeps exact 21 project IDs as real-filesystem regression coverage through `getAllMarkdownEntries` and gray-matter.
+- Nix command wrapper must unset `PNPM_HOME` and `npm_config_prefix`; its dev-shell initialization still prints a pnpm null-path error, but invoked commands run.
+- `pnpm build` exits 0 and statically generates all 36 pages. It still prints inherited `react-hooks` ESLint plugin-conflict output; distinguish warning output from process result.
+- Dev `/projects` verification yielded HTTP 200 and 21 unique `/projects/entry/` links. Wrapper timeout occurred only after assertions; trap cleanup succeeded and no port-3040 server remained.
+- Evidence: `.omo/evidence/task-yaml-frontmatter-repair.txt`.
+
+## 2026-07-19: Task 25 — Simple component Jest coverage
+
+- Added/expanded six component suites: Button (5), Footer (6), Header (6), PersonTeaser (5), TimelineEntry (5), Tooltip (5): 32 focused behavioral RTL cases total.
+- Focused Nix Jest command passed: 6 suites / 32 tests. Full `pnpm test` passed: 11 suites / 71 tests.
+- Footer locks real LinkedIn, Twitter, GitHub, and `/contact` hrefs plus prior accessible-name regression. Header locks brand/nav/contact CTA. Tooltip asserts trigger-level accessible behavior only.
+- PersonTeaser source-URL assertion deliberately removed after red proved it would inspect Next Image optimization output; visible decorative logo behavior remains covered.
+- `pnpm build-storybook` exits 0. Existing asset budget and no-MDX-story warnings remain non-fatal.
+- Nix pnpm commands require `unset PNPM_HOME npm_config_prefix`; shell prints a non-fatal null-path warning before command execution.
+- TypeScript LSP remains unavailable because prior user decision declined installation. Prettier check passes. Evidence: `.omo/evidence/task-25-2026-portfolio-overhaul.txt`.
+
+## 2026-07-19: Task 26 — ArticleTeaser behavioral Jest/RTL coverage
+
+- Expanded `components/ArticleTeaser/ArticleTeaser.test.tsx` from one broad case to 12 focused behavioral cases: title/content/author image/name, title and read-more URLs, deterministic relative date, long title, special characters, and dark-mode Tailwind contracts.
+- Red phase exposed actual optional author-image defect: `authorImgSrc={undefined}` made Next Image emit missing-src error and render empty source. `ArticleProps.authorImgSrc` is now optional; component uses `/img/placeholder.png` fallback with existing descriptive alt text.
+- Focused Nix Jest proof: `nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/ArticleTeaser/ArticleTeaser.test.tsx --runInBand'` — 1 suite, 12 tests passed.
+- Next Image transforms input source to `/_next/image?...`; assert encoded original path, not raw `src` equality.
+- TypeScript LSP remains unavailable because installation was previously declined. Both modified files remain below 250 pure LOC (85 test, 91 component).
+- Evidence: `.omo/evidence/task-26-2026-portfolio-overhaul.txt`.
+
+## 2026-07-19: Task 27 — ProjectTeaser behavioral Jest coverage
+
+- Replaced six shallow ProjectTeaser cases with ten deterministic Jest/RTL behavioral contracts: heading, description/link, Learn more href, date, mapped icon, unknown-icon text fallback, all icon-map lookups, empty technologies, long-title truncation, and card hover classes.
+- Uses only a narrow `jest.mock("../../lib/icon-map")`; no filesystem behavior, `fs.accessSync`, `process.cwd`, network, or Flowbite implementation internals are tested.
+- Initial red run exposed duplicated fallback text from Flowbite Tooltip. Changed singular `getByText("TypeScript")` to `getAllByText(...).not.toHaveLength(0)`; green focused Jest reports 1/1 suite and 10/10 tests passing.
+- Nix command: `nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/ProjectTeaser/ProjectTeaser.test.tsx --runInBand'`. Existing pnpm null-path noise appears but Jest exits 0.
+- TypeScript LSP remains unavailable under prior declined-install decision. Evidence: `.omo/evidence/task-27-2026-portfolio-overhaul.txt`.

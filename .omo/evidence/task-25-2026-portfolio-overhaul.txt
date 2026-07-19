@@ -1,0 +1,104 @@
+# Task 25 — Simple component Jest coverage evidence
+
+Timestamp: 2026-07-19T21:30:00Z
+Task: `25. Component tests (Button, Footer, Header, PersonTeaser, TimelineEntry, Tooltip)`
+Model: `9router/default`
+
+## Scope
+
+Added or expanded six Jest + React Testing Library suites. Production components were not changed.
+
+- `components/Button/Button.test.tsx`: 5 cases — children/link href, default primary variant, secondary variant, compact size, underline.
+- `components/Footer/Footer.test.tsx`: 6 cases — copyright link, all four real social/contact hrefs, accessible-name regression.
+- `components/Header/Header.test.tsx`: 6 cases — homepage logo link, logo alternative text, About, Projects, Blog, and contact CTA/navigation.
+- `components/PersonTeaser/PersonTeaser.test.tsx`: 5 cases — company name, description, containing link, decorative logo rendering, empty logo alt text.
+- `components/TimelineEntry/TimelineEntry.test.tsx`: 5 cases — time, heading title, title link, description, children.
+- `components/Tooltip/Tooltip.test.tsx`: 5 cases — trigger, hidden initial explainer, controlled open state, focus behavior, trigger/tooltip accessibility association.
+
+Every test has Given/When/Then blocks and asserts rendered user-observable behavior. No test probes Flowbite, Radix, or Next Image optimization internals. No dependencies or network calls added.
+
+## TDD evidence
+
+Existing components already met requested behavior, so added characterization tests directly to their real rendered contracts. During red phase, PersonTeaser logo source assertion failed because Next Image rewrites its browser `src`:
+
+```text
+Expected src="/img/example-company.png"
+Received src="/_next/image?url=%2Fimg%2Fexample-company.png&w=96&q=75"
+```
+
+That assertion violated task scope by testing Image optimization internals. Replaced it with visible logo rendering; green rerun passed. No production defect discovered.
+
+## Focused manual Jest proof
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/Button/Button.test.tsx components/Footer/Footer.test.tsx components/Header/Header.test.tsx components/PersonTeaser/PersonTeaser.test.tsx components/TimelineEntry/TimelineEntry.test.tsx components/Tooltip/Tooltip.test.tsx --runInBand'
+```
+
+Exit: `0`
+
+```text
+Test Suites: 6 passed, 6 total
+Tests:       32 passed, 32 total
+Snapshots:   0 total
+```
+
+## Full Jest suite
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test'
+```
+
+Exit: `0`
+
+```text
+Test Suites: 11 passed, 11 total
+Tests:       71 passed, 71 total
+Snapshots:   0 total
+```
+
+A separate `pnpm test -- --runInBand` attempt found no tests because pnpm forwards the extra `--` into Jest as a literal pattern. It is not a test failure; canonical `pnpm test` above passed.
+
+## Storybook build
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build-storybook'
+```
+
+Exit: `0`
+
+Storybook preview completed and output `storybook-static/`. It emitted existing large-asset budget warnings and an informational no-MDX-story warning; neither failed build.
+
+## Diagnostics and format
+
+- `lsp_diagnostics components`: TypeScript language server unavailable; installation was previously declined. No install attempted.
+- Prettier check passed for all six suites.
+- Pure LOC: Button 41; Footer 33; Header 28; PersonTeaser 66; TimelineEntry 49; Tooltip 50. All below 200.
+
+## Adversarial QA
+
+- `stale_state`: pass. Each test owns its render and uses static fixtures.
+- `dirty_worktree`: inherited broad dirty worktree retained untouched; task ownership limited to six test suites plus task records.
+- `misleading success output`: pass. Exact focused and full suite counts recorded; Storybook warnings distinguished from successful exit.
+- `flaky_tests`: pass. No network, timers, polling, random data, or implementation-internal assertions.
+- Other classes: N/A.
+
+## Post-write review
+
+- Responsibility: each suite owns one component's public rendered contract.
+- Boundary purity: no new production boundary.
+- Variants: no discriminated union logic introduced.
+- Escape hatches: no `any`, assertion escape, non-null assertion, ignored error, or skipped test added.
+- Helpers: no test-only abstraction added for one use.
+- Parameter bloat, redundant post-action verification, and negative names: none.
+
+## Cleanup receipt
+
+No server, browser, background process, temporary fixture, external connection, or dependency artifact was created by Task 25. Storybook's generated `storybook-static/` is local build output and remains intentionally untracked. Nothing requires termination.
+
+Token usage: unavailable from runtime telemetry.
