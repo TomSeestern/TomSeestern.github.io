@@ -93,6 +93,15 @@
 - ALL 40 rule categories in AGENTS.md now have body prose
 - AGENTS.md rule content is complete
 
+## 2026-07-19: Task 23 — Component cleanup
+
+- Removed redundant `prop-types` runtime validation from `ArticleTeaser`; TypeScript `ArticleProps` remains contract.
+- Replaced Tooltip's single-value CVAs with static class constants. Retained legacy `intent` and `size` props for caller compatibility.
+- Migrated PersonTeaser's decorative company logo to `next/image` with matching 48 × 48 intrinsic dimensions and original classes.
+- Focused characterization suite: 3/3 tests passed before and after refactor. Storybook build passed.
+- Full build and homepage QA remain blocked by existing ESLint `react-hooks` plugin conflict and malformed project Markdown YAML, not Task 23 code. Browser Playwright cannot launch because Chromium is absent.
+- Evidence: `.omo/evidence/task-23-2026-portfolio-overhaul.txt`.
+
 ## 2026-07-19: Rewrote dead e2e test (example.spec.ts → home.spec.ts)
 
 ### What was done
@@ -196,3 +205,55 @@ Used semantic Playwright locators (`getByRole`, accessible text matching) over b
 - Full test suite (`pnpm test`) non-operational due to `.next/types` infrastructure. All behavioral coverage lives in the focused test file.
 - LSP not installed; diagnostics unavailable. TypeScript correctness verified via Next.js compilation.
 - Evidence: `.omo/evidence/task-11-2026-portfolio-overhaul.txt`.
+
+## 2026-07-19: Task 12 — Blog listing uses shared reader
+
+- `app/blog/page.tsx` now imports `getAllBlogPosts()` from `lib/blog.tsx`; removed stale inline `path`/`fs`/`gray-matter` Markdown parsing for former `app/blog/entry` directory.
+- Keep listing JSX and every `ArticleComponent` prop unchanged. Shared reader preserves descending date order and `/blog/entry/<slug>` links.
+- Focused page characterization test (`app/blog/page.test.tsx`) proves page calls shared reader once and renders returned URLs in exact order. Red failed with zero calls before migration; Green passed after.
+- Live `/blog` QA on port 3014: HTTP 200; three unique post URLs in order 2024, 2020, 2019. Each URL appears twice in HTML because teaser has title plus “Read more” link; count unique URLs, not raw occurrences.
+- `nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'` compiles Todo 12 code, then stops on pre-existing missing `date-fns` types in `ArticleTeaser`; no blog-page error.
+- `nix develop` needs tracked `flake.nix`. It was tracked as intent-to-add during task only; pnpm emits inherited null-path warning yet command execution continues.
+
+## 2026-07-19: Boilerplate copy replaced (Todo 12b)
+
+### What was done
+- `app/blog/page.tsx` heading `"Our Blog"` → `"Blog"`, subtext `"We use an agile approach…"` → `"Thoughts on technology, homelabs, and software engineering."`
+- `app/page.tsx` hero `"Exploring Innovation and Creativity in Technology"` → `"Tom Segbers — Senior Developer"`, tagline `"Welcome to my digital space…"` → `"Building reliable systems and solving hard problems."`
+- Boilerplate scan confirmed zero matches: `grep "Our Blog\|We use an agile\|Exploring Innovation and Creativity\|Welcome to my digital space"` returns nothing in `app/`.
+
+### Verifications
+- `grep` for all four boilerplate strings across `app/*.tsx` — zero matches ✓
+- `nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'` — compiles successfully, type check blocks on unrelated `date-fns` in `ArticleTeaser.tsx` (pre-existing). No new errors from our edits. ✓
+
+## 2026-07-19: Task 13 — Blog voice rewrites
+
+- `2024-homelab-v2-transforming-homelab-with-advanced-automation.md`: rewrote body in first person around old tower PC, unRAID, Docker, Ubuntu VM, Automatic1111, ComfyUI, 50+ sensors, InfluxDB, Grafana, Home Assistant, cache/array/parity storage, onsite/offsite backups, local HTTPS, and OpenVPN.
+- `2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition.md`: rewrote body in first person around Raspberry Pi to Dell PowerEdge R710 upgrade, 48 CPU cores, 64 GB DDR3, 200 W idle use, ESXi to Ubuntu to unRAID, Docker services, GTX 970 passthrough, modified risers, power-supply short circuit, WiFi door sensors, local voice assistant, and LED actuator.
+- `2019-ebeltoft-cheesecake-recipe.md`: rewrote introduction and closing in first person around sailing trip to Ebeltoft and Cafe Moeslund. Preserved all ingredient quantities, preparation steps, image URL, refrigeration durations, and recipe structure.
+- All three frontmatter blocks, file names, IDs, dates, and URLs were preserved. No facts or versions were invented.
+
+## 2026-07-19: date-fns and prop-types installation repair
+
+- Root cause: `ArticleTeaser.tsx` imports `date-fns` and `prop-types`, but neither package was declared in `package.json` after pnpm migration.
+- Repair: `nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm add date-fns prop-types'` added runtime packages; added `@types/prop-types` as dev dependency because `prop-types` ships no declarations.
+- `pnpm-lock.yaml` updated by pnpm v10.15.1; no source files changed.
+- Verification: `nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'` exits 0. Date-fns and prop-types errors resolved. Build reports pre-existing `react-hooks` ESLint plugin conflict but completes successfully.
+
+## 2026-07-19: Task 14 — Project entries 2010–2017 rewrite
+
+- Rewrote body prose for all nine existing project files in `content/projects/` matching years 2010–2017. Frontmatter, IDs, filenames, and URLs remain unchanged.
+- Plan says 11 entries, but repository contains only nine matching files: 2010 (1), 2011 (1), 2012 (2), 2013 (1), 2014 (1), 2015 (1), 2016 (1), 2017 (1). No entries were invented.
+- Kept details grounded in original files: LEGO Mindstorms NXT and LabVIEW, Wenzelbots competition, sensor kits and PowerPoint, C++/Qt Creator, SQF Arma 3 missions, Altis Life with SQL/Windows Server 2012/TeamSpeak 3 and 300+ concurrent players, freelance features, SQLite/CSV time tracking, AT89C5131A Assembly motor and LCD work.
+- Human gate remains active. No commit made. Tom must approve prose before any commit.
+
+## 2026-07-19: Task 15 — Project entries 2018–2021 rewrite
+
+- Rewrote ten selected project entries from 2018 through 2021 in first-person, evidence-bound prose.
+- Left `2019-process-automation-in-proptech.md` and `2020-soudest-multimodal-travel-planner-frontend.md` unchanged because they contained less distinct substance or duplicated the fuller SouDest entry.
+- Each entry now includes at least three factual technical, architectural, or delivery details plus a candid retrospective tradeoff.
+- Preserved filenames, existing IDs, and dates. Refined titles and article summaries where original copy was generic.
+- Targeted formatting: `./node_modules/.bin/prettier --check` passes for all ten files; `git diff --check` passes.
+- Markdown LSP unavailable in environment, no server configured for `.md`.
+- Evidence: `.omo/evidence/task-15-2026-portfolio-overhaul.txt`.
+- No commit created. Human approval remains required.

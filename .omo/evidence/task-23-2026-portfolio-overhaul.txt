@@ -1,0 +1,108 @@
+# Task 23 — Component cleanup evidence
+
+Timestamp: 2026-07-19T20:49:36Z
+Task: `23. Component cleanup pass`
+Model: `9router/default`
+
+## Scope
+
+- `components/ArticleTeaser/ArticleTeaser.tsx`: removed obsolete runtime `prop-types` validation; TypeScript `ArticleProps` remains source of prop contract.
+- `components/Tooltip/Tooltip.tsx`: removed single-option CVA definitions; exact static Tailwind classes now use named constants. Legacy `intent?: "primary"` and `size?: "md"` props remain accepted for public API compatibility.
+- `components/PersonTeaser/PersonTeaser.tsx`: migrated decorative company logo from `<img>` to `next/image`, preserving CSS classes and 48 × 48 rendered dimensions.
+- Added characterization tests paired with each changed component.
+- Inherited dirty worktree contained unrelated changes. No unrelated files were edited for Task 23.
+
+## Characterization tests
+
+Before refactor:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/ArticleTeaser/ArticleTeaser.test.tsx components/Tooltip/Tooltip.test.tsx components/PersonTeaser/PersonTeaser.test.tsx --runInBand'
+```
+
+Exit: `0`
+
+```text
+Test Suites: 3 passed, 3 total
+Tests:       3 passed, 3 total
+```
+
+The tests lock ArticleTeaser link/rendering contract, Tooltip trigger/content contract, and PersonTeaser link/text/decorative-image contract.
+
+After refactor, same command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/ArticleTeaser/ArticleTeaser.test.tsx components/Tooltip/Tooltip.test.tsx components/PersonTeaser/PersonTeaser.test.tsx --runInBand'
+```
+
+Exit: `0`
+
+```text
+Test Suites: 3 passed, 3 total
+Tests:       3 passed, 3 total
+```
+
+## Storybook build
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build-storybook'
+```
+
+Exit: `0`
+
+```text
+info => Preview built
+info => Output directory: .../storybook-static
+```
+
+Warnings: existing no-MDX-story pattern and Webpack asset-size recommendations. No Task 23 component build error.
+
+## Production build attempt
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+```
+
+Exit: `1`
+
+Task 23 source compiled, then build stopped on existing repository issues:
+
+```text
+Plugin "react-hooks" was conflicted between ".eslintrc.js » eslint-config-react-app" and ".eslintrc.js » eslint-config-next » plugin:react-hooks/recommended".
+YAMLException: can not read a block mapping entry; a multiline key may not be an implicit key at line 6, column 11:
+    authorName: Tom
+```
+
+No error names ArticleTeaser, Tooltip, or PersonTeaser.
+
+## Runtime manual QA
+
+Controlled dev server:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm dev -p 3023' > /tmp/task-23-dev-server.log 2>&1 &
+```
+
+- `/about`: HTTP `200`; response includes `LAYZR.gg` and `HATtec GmbH`, proving PersonTeaser callers render.
+- `/`: HTTP `500`, blocked by pre-existing malformed Markdown YAML in `getAllProjects()` (`lib/markdown.ts:31`); unrelated to Task 23.
+- Browser Playwright UI QA could not run: installed Playwright server lacks Chromium at `/opt/google/chrome/chrome`. No browser installation was performed.
+
+Cleanup:
+
+```sh
+kill 677259
+```
+
+Exit: `0`; dev server stopped.
+
+## Diagnostics and diff checks
+
+- `GIT_MASTER=1 git diff --check`: exit `0`.
+- TypeScript LSP diagnostics unavailable. TypeScript server is not installed; prior user decision declined installation. No install attempted.
+- Nix pnpm repeatedly prints `The "paths[0]" argument must be of type string. Received null` before executing scripts; focused Jest and Storybook build still completed successfully.
+
+## Result
+
+Task 23 behavior is locked by focused component tests and Storybook build. Full build/runtime homepage verification remains blocked by pre-existing ESLint and malformed Markdown content issues.
+
+Token usage: unavailable from runtime telemetry.
