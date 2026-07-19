@@ -1,3 +1,4 @@
+import Image from "next/image"
 import React from "react"
 
 export type PersonTeaserProps = {
@@ -15,7 +16,13 @@ export default function PersonTeaser({
 }: Readonly<PersonTeaserProps>) {
   return (
     <a href={companyLink} className="flex items-center gap-3">
-      <img className="h-12 w-12 shrink-0 rounded-full object-cover" src={companyLogoSrc} alt="" />
+      <Image
+        className="h-12 w-12 shrink-0 rounded-full object-cover"
+        src={companyLogoSrc}
+        alt=""
+        width={48}
+        height={48}
+      />
       <div>
         <p className="text-lg font-medium leading-tight text-gray-900 dark:text-white">{companyName}</p>
         <p className="text-sm font-normal text-gray-500 dark:text-gray-400">{companyDescription}</p>
