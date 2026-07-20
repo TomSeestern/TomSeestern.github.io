@@ -82,7 +82,7 @@ export const sendEmail = async (formData: {
   message: string
 }): Promise<SendEmailResult> => {
   const ip = getClientIP()
-  if (!checkRateLimit(ip)) {
+  if (env.E2E_CONTACT_FORM_SUCCESS !== "true" && !checkRateLimit(ip)) {
     return {
       success: false,
       errors: { _form: "Too many messages. Please try again later." },
