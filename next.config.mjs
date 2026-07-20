@@ -16,7 +16,10 @@ const config = withPlugins([[withBundleAnalyzer({enabled: env.ANALYZE})]], {
         ]
     },
     images: {
-        domains: ["flowbite.s3.amazonaws.com", "placehold.co"],
+        remotePatterns: [
+            {protocol: "https", hostname: "flowbite.s3.amazonaws.com"},
+            {protocol: "https", hostname: "placehold.co"},
+        ],
     },
 })
 
