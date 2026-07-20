@@ -39,7 +39,7 @@ test.describe("contact form", () => {
     await expect(page.locator("#message-error")).toBeVisible()
 
     await expect(page.locator("#name-error")).toContainText("Please enter your name")
-    await expect(page.locator("#email-error")).toContainText("Please enter your email address")
+    await expect(page.locator("#email-error")).toContainText("Email address is missing an @ symbol")
     await expect(page.locator("#message-error")).toContainText("Please enter a message")
   })
 
