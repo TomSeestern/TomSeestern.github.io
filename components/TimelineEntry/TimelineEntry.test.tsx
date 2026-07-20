@@ -32,7 +32,7 @@ describe("TimelineEntry", () => {
     )
 
     // Then
-    expect(screen.getByRole("heading", { name: title, level: 4 })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: title, level: 3 })).toBeInTheDocument()
   })
 
   it("links title to entry destination", () => {

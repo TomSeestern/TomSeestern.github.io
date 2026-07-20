@@ -7,24 +7,36 @@ import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "About me",
+  description:
+    "A short overview of Tom Segbers' formal education and work experience — from freelance IT developer to Founder & Tech Lead at LAYZR.gg.",
+  openGraph: {
+    url: "https://tom.segbers.de/about",
+    siteName: "TomSegbers.de",
+    title: "About me | TomSegbers.de",
+    description:
+      "Formal education and work experience of Tom Segbers — freelance developer, B.Sc. Applied Computer Science, Founder & Tech Lead.",
+    images: [
+      {
+        url: "/img/logo.png",
+        width: 512,
+        height: 512,
+        alt: "TomSegbers.de logo",
+      },
+    ],
+  },
   twitter: {
     card: "summary_large_image",
-  },
-  openGraph: {
-    url: "https://Tom.Segbers.de/",
-    images: [],
+    images: ["/img/logo.png"],
   },
 }
 
 export default function About() {
   return (
-    <section className="bg-white antialiased dark:bg-gray-900">
-      <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-16 lg:px-6 lg:py-24">
+    <section className="bg-surface antialiased dark:bg-surface-dark">
+      <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
         <div id="header" className="mx-auto max-w-3xl space-y-4 text-center">
-          <h2 className="text-4xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">
-            About me
-          </h2>
-          <p className="text-xl font-medium leading-tight text-gray-500 dark:text-gray-400">
+          <h1 className="text-h1-sm text-foreground dark:text-foreground-dark sm:text-h1">About me</h1>
+          <p className="text-xl font-medium leading-tight text-muted dark:text-muted-dark">
             A short overview about my recent Formal Education and Work Experience.
           </p>
           <span className="inline-flex items-center rounded bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-primary-900 dark:text-primary-300">
@@ -46,7 +58,7 @@ export default function About() {
         </div>
         <div id="timeline" className="mt-12 grid grid-cols-1 gap-x-16 gap-y-12 lg:mt-16">
           <div className="space-y-8">
-            <h3 className="text-center text-2xl font-bold text-gray-900 dark:text-white">Formal Positions:</h3>
+            <h2 className="text-center text-h2-sm text-foreground dark:text-foreground-dark sm:text-h2">Formal Positions:</h2>
             <div>
               <TimelineEntry
                 time="2021 - 2024"
@@ -81,8 +93,8 @@ export default function About() {
                   Science."
                 link="https://rwu.de"
               >
-                <div className="space-y-4 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
-                  <div className="flex flex-col items-start text-base font-medium text-gray-500 dark:text-gray-400">
+                <div className="space-y-4 rounded-lg bg-muted-surface p-4 dark:bg-muted-surface-dark">
+                  <div className="flex flex-col items-start text-base font-medium text-muted dark:text-muted-dark">
                     <p> - Specialization in robotics and AI. </p>
                     <p> - Additional subjects in the areas of Deep Learning and Project Management. </p>
                   </div>
@@ -101,12 +113,15 @@ export default function About() {
                   companyLink="/projects"
                 />
 
-                <div className="flex flex-row items-center gap-2 text-base font-medium text-gray-500 hover:underline dark:text-gray-400">
-                  <a href="/projects" className="">
+                <div className="flex flex-row items-center gap-2 text-base font-medium text-muted dark:text-muted-dark">
+                  <a
+                    href="/projects"
+                    className="rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
+                  >
                     See Projects
                   </a>
                   <Image
-                    className={"h-4 w-4"}
+                    className={"h-4 w-4 dark:invert"}
                     src={"/icon/arrow-right.svg"}
                     alt="arrow right"
                     width={32}

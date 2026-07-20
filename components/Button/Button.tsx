@@ -10,15 +10,24 @@ const button = cva(
     "rounded-xl",
     "text-center",
     "border",
-    "border-blue-400",
+    "border-accent-light",
     "transition-colors",
-    "delay-50",
+    "duration-200",
+    "focus-visible:outline-none",
+    "focus-visible:ring-4",
+    "focus-visible:ring-accent-soft",
+    "dark:focus-visible:ring-accent-soft-dark",
   ],
   {
     variants: {
       intent: {
-        primary: ["bg-blue-400", "text-white", "hover:enabled:bg-blue-700"],
-        secondary: ["bg-transparent", "text-blue-400", "hover:enabled:bg-blue-400", "hover:enabled:text-white"],
+        primary: ["bg-accent-light", "text-foreground-dark", "hover:enabled:bg-accent-hover"],
+        secondary: [
+          "bg-transparent",
+          "text-accent-light",
+          "hover:enabled:bg-accent-light",
+          "hover:enabled:text-foreground-dark",
+        ],
       },
       size: {
         sm: ["min-w-20", "h-full", "min-h-10", "text-sm", "py-1.5", "px-4"],

@@ -1,58 +1,44 @@
 import ArticleComponent from "../../components/ArticleTeaser/ArticleTeaser"
-import path from "path"
-import fs from "fs"
-import matter from "gray-matter"
+import { getAllBlogPosts } from "../../lib/blog"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Blog - TomSegbers.de",
+  title: "Blog",
+  description:
+    "Thoughts on technology, homelabs, and software engineering. Personal blog by Tom Segbers covering AI, self-hosting, automation, and lessons learned from real projects.",
+  openGraph: {
+    url: "https://tom.segbers.de/blog",
+    siteName: "TomSegbers.de",
+    title: "Blog | TomSegbers.de",
+    description: "Thoughts on technology, homelabs, and software engineering by Tom Segbers.",
+    images: [
+      {
+        url: "/img/logo.png",
+        width: 512,
+        height: 512,
+        alt: "TomSegbers.de logo",
+      },
+    ],
+  },
   twitter: {
     card: "summary_large_image",
-  },
-  openGraph: {
-    url: "https://Tom.Segbers.de/",
-    images: [],
+    images: ["/img/logo.png"],
   },
 }
 
 function Articles() {
-  const postsDirectory = path.join(process.cwd(), "app/blog/entry/")
-  const filenames = fs.readdirSync(postsDirectory)
-
-  const articles = filenames
-    .map((filename) => {
-      const filePath = path.join(postsDirectory, filename)
-
-      // Check if filePath is a file, not a directory
-      if (fs.statSync(filePath).isFile()) {
-        const fileContents = fs.readFileSync(filePath, "utf8")
-        const { data } = matter(fileContents)
-
-        return {
-          id: filename.replace(/\.md?$/, ""),
-          title: data.title || "Untitled",
-          articleDate: new Date(data.articleDate || "1990-01-01"),
-          articleContent: data.articleContent || "Failed to load content",
-          authorImgSrc: data.authorImgSrc || "/img/placeholder.png",
-          authorName: data.authorName || "Anonymous",
-          fullArticleLink: "/blog/entry/" + filename.replace(/\.md?$/, ""),
-        }
-      }
-    })
-    .filter(Boolean) // Filter out undefined values (directories)
-    .sort((a, b) => b.articleDate.valueOf() - a.articleDate.valueOf()) // Sort by date, newest first (descending)
+  const articles = getAllBlogPosts()
 
   return (
-    <section className="bg-white dark:bg-gray-900">
-      <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
+    <section className="bg-surface dark:bg-surface-dark">
+      <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
         <div className="mx-auto mb-8 max-w-screen-sm text-center lg:mb-16">
-          <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white lg:text-4xl">
-            Our Blog
-          </h2>
-          <p className="font-light text-gray-500 dark:text-gray-400 sm:text-xl">
-            We use an agile approach to test assumptions and connect with the needs of your audience early and often.
+          <h1 className="mb-4 text-h1-sm text-foreground dark:text-foreground-dark lg:text-h1">Blog</h1>
+          <p className="font-light text-muted dark:text-muted-dark sm:text-xl">
+            Thoughts on technology, homelabs, and software engineering.
           </p>
         </div>
+        <h2 className="sr-only">Blog entries</h2>
         <div className="grid gap-8 lg:grid-cols-2">
           {articles.map((article, index) => (
             <ArticleComponent

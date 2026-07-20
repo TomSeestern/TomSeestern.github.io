@@ -23,7 +23,7 @@ export interface ArticleProps {
   /**
    * Source URL of the author's image.
    */
-  authorImgSrc: string
+  authorImgSrc?: string
 
   /**
    * Name of the author.
@@ -54,31 +54,42 @@ const ArticleComponent: React.FC<ArticleProps> = ({
   fullArticleLink,
 }) => {
   return (
-    <Card className="p-2">
-      <div className="mb-5 flex items-center justify-between text-gray-500">
-        <span className="inline-flex items-center rounded bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-primary-200 dark:text-primary-800">
+    <Card className="min-w-0 p-2 transition-colors duration-200 hover:bg-surface-muted motion-safe:hover:-translate-y-1 dark:hover:bg-muted-surface-dark">
+      <div className="mb-5 flex items-center justify-between text-muted">
+        <span className="inline-flex items-center rounded bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-soft-foreground dark:bg-accent-soft-dark dark:text-accent-soft-foreground-dark">
           <Image className={"h-3 w-3"} src={"/icon/article.svg"} alt={"Article Icon"} width={32} height={32} />
           Tutorial
         </span>
         <span className="text-sm">{formatDistanceToNow(articleDate, { addSuffix: true })}</span>
       </div>
-      <h2 className="mb-2 truncate text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-        <Link href={fullArticleLink}>{title}</Link>
-      </h2>
+        <h3 className="mb-2 truncate text-h3 text-foreground dark:text-foreground-dark">
+        <Link
+          href={fullArticleLink}
+          className="rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
+        >
+          {title}
+        </Link>
+      </h3>
       {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
-      <p className="mb-5 line-clamp-3 min-h-[4.5rem] font-light text-gray-500 dark:text-gray-400 ">{articleContent}</p>
+        <p className="mb-5 line-clamp-3 min-h-[4.5rem] font-light text-muted dark:text-muted-dark ">{articleContent}</p>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Image className="h-7 w-7 rounded-full" src={authorImgSrc} alt="Author's Picture" width={512} height={512} />
-          <span className="font-medium dark:text-white">{authorName}</span>
+          <Image
+            className="h-7 w-7 rounded-full"
+            src={authorImgSrc ?? "/img/placeholder.png"}
+            alt="Author's Picture"
+            width={512}
+            height={512}
+          />
+          <span className="font-medium dark:text-foreground-dark">{authorName}</span>
         </div>
         <Link
           href={fullArticleLink}
-          className="inline-flex items-center font-medium text-primary-600 hover:underline dark:text-primary-500"
+          className="inline-flex items-center rounded font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
         >
           Read more
           <Image
-            className={"ml-2 h-4 w-4"}
+            className={"ml-2 h-4 w-4 dark:invert"}
             src={"/icon/arrow-right.svg"}
             alt="Arrow right Icon"
             width={32}

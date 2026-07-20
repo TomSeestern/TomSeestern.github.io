@@ -2,9 +2,9 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 import ReactMarkdown from "react-markdown"
-import {Breadcrumb, BreadcrumbItem} from "flowbite-react"
-import {HiHome} from "react-icons/hi"
-import {Metadata, ResolvingMetadata} from "next"
+import { Breadcrumb, BreadcrumbItem } from "flowbite-react"
+import { HiHome } from "react-icons/hi"
+import { Metadata, ResolvingMetadata } from "next"
 
 /**
  * Interface representing the parameters expected by the page's `getStaticProps`.
@@ -26,7 +26,7 @@ export default function Page({ params }: Params): JSX.Element {
   let fileContent = null
 
   try {
-    const filePath = path.join(process.cwd(), "app/blog/entry/", params.slug + ".md")
+    const filePath = path.join(process.cwd(), "content/blog/", params.slug + ".md")
     const fileContents = fs.readFileSync(filePath, "utf8")
     fileContent = matter(fileContents)
   } catch (e) {
@@ -41,17 +41,20 @@ export default function Page({ params }: Params): JSX.Element {
   // Render the fileContent as is, or transform it to HTML as per your setup
   return (
     <>
-      <Breadcrumb className="py-2">
-        <BreadcrumbItem href="/" icon={HiHome}>
-          Home
-        </BreadcrumbItem>
-        <BreadcrumbItem href="/blog">Blog</BreadcrumbItem>
-        <BreadcrumbItem className="truncate">{fileContent.data.title || "Content "}</BreadcrumbItem>
-      </Breadcrumb>
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+        <Breadcrumb className="py-2">
+          <BreadcrumbItem href="/" icon={HiHome}>
+            Home
+          </BreadcrumbItem>
+          <BreadcrumbItem href="/blog">Blog</BreadcrumbItem>
+          <BreadcrumbItem className="truncate">{fileContent.data.title || "Content "}</BreadcrumbItem>
+        </Breadcrumb>
+      </div>
 
-      <div className="flex min-h-screen flex-col items-center justify-center py-2">
-        <article className="prose">
-          <ReactMarkdown className="">{fileContent.content}</ReactMarkdown>
+      <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
+        <article className="prose prose-lg max-w-none dark:prose-invert">
+          <h1 className="text-h1-sm sm:text-h1">{fileContent.data.title || "Blog Post"}</h1>
+          <ReactMarkdown components={{ h1: () => null }}>{fileContent.content}</ReactMarkdown>
         </article>
       </div>
     </>
@@ -59,14 +62,14 @@ export default function Page({ params }: Params): JSX.Element {
 }
 
 /**
- * Generates static params for each markdown file found in the 'app/blog/entry' directory.
+ * Generates static params for each markdown file found in the 'content/blog' directory.
  * This function is expected to be used in conjunction with Next.js' `getStaticPaths` to
  * specify the routes that need to be pre-rendered at build time.
  *
  * @returns {Promise<{ slug: string }[]>} - An array of objects, each containing the slug for a post.
  */
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  const postsDirectory = path.join(process.cwd(), "app/blog/entry")
+  const postsDirectory = path.join(process.cwd(), "content/blog")
   const filenames = fs.readdirSync(postsDirectory)
 
   return filenames.map((filename) => {
@@ -84,15 +87,29 @@ export async function generateMetadata({ params }: Params, parent: ResolvingMeta
   let fileContent = null
 
   try {
-    const filePath = path.join(process.cwd(), "app/blog/entry/", params.slug + ".md")
+    const filePath = path.join(process.cwd(), "content/blog/", params.slug + ".md")
     const fileContents = fs.readFileSync(filePath, "utf8")
     fileContent = matter(fileContents)
   } catch (e) {}
 
+  const title = fileContent?.data.title?.toString() || "Blog Post"
+  const description = fileContent?.data.articleContent?.toString() || ""
+
   return {
-    title: fileContent?.data.title?.toString() || "TomSegbers.de",
+    title,
+    description,
     openGraph: {
-      images: [],
+      title,
+      description,
+      type: "article",
+      images: [
+        {
+          url: "/img/logo.png",
+          width: 512,
+          height: 512,
+          alt: "TomSegbers.de logo",
+        },
+      ],
     },
   }
 }

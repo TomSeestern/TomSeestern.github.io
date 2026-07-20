@@ -125,4 +125,82 @@ describe("getAllMarkdownEntries", () => {
     // Then
     expect(entries.map(({id}) => id)).toEqual(["newer", "older"])
   })
+
+  it("uses filename slug for identifier and entry URL", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "reliable-slug.md", "title: Entry")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/projects")
+
+    // Then
+    expect(entry).toMatchObject({
+      id: "reliable-slug",
+      fullArticleLink: "/projects/entry/reliable-slug",
+    })
+  })
+
+  it("preserves multiple technology names", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "technology-stack.md", "technologies:\n  - TypeScript\n  - Next.js")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/blog")
+
+    // Then
+    expect(entry?.technologies).toEqual(["TypeScript", "Next.js"])
+  })
+
+  it("defaults malformed author fields independently", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "malformed-author.md", "authorImgSrc: 42\nauthorName: [invalid]")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/blog")
+
+    // Then
+    expect(entry).toMatchObject({
+      authorImgSrc: "/img/placeholder.png",
+      authorName: "Anonymous",
+    })
+  })
+
+  it("defaults malformed article content without discarding valid title", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "mixed-frontmatter.md", "title: Preserved title\narticleContent: [invalid]")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/blog")
+
+    // Then
+    expect(entry).toMatchObject({
+      title: "Preserved title",
+      articleContent: "Failed to load content",
+    })
+  })
+
+  it("ignores Markdown-looking directory names", () => {
+    // Given
+    fs.mkdirSync(path.join(fixtureDirectory, "nested.md"))
+    writeMarkdownEntry(fixtureDirectory, "actual-entry.md", "title: Entry")
+
+    // When
+    const entries = getAllMarkdownEntries(fixtureDirectory, "/blog")
+
+    // Then
+    expect(entries.map(({id}) => id)).toEqual(["actual-entry"])
+  })
+
+  it("includes entries with default date after dated entries", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "undated.md", "title: Undated")
+    writeMarkdownEntry(fixtureDirectory, "dated.md", "articleDate: 2024-01-01")
+
+    // When
+    const entries = getAllMarkdownEntries(fixtureDirectory, "/blog")
+
+    // Then
+    expect(entries.map(({id}) => id)).toEqual(["dated", "undated"])
+  })
+
 })

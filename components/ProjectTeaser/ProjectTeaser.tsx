@@ -1,10 +1,9 @@
-import {Card, Tooltip} from "flowbite-react"
+import { Card, Tooltip } from "flowbite-react"
 import React from "react"
-import fs from "fs"
-import path from "path"
-import {formatDistanceToNow} from "date-fns"
+import { formatDistanceToNow } from "date-fns"
 import Image from "next/image"
 import Link from "next/link"
+import { getIconPath } from "../../lib/icon-map"
 
 /**
  * Interface for the ProjectTeaser props
@@ -13,10 +12,7 @@ import Link from "next/link"
  * @property {string} title - The title of the project
  * @property {string} description - The description of the project
  * @property {string[]} technologies - An array of Technology names, must match the names of the icons in the public/icons folder
- * @property {string} ctaText - The text for the CTA
  * @property {string} ctaLink - The URL for the CTA
- * @property {string} buttonText - The text for the button
- * @property {string} buttonLink - The URL for the button
  * @property {Date} projectDate - The date of the project, only Year should be used others might be inaccurate
  */
 export interface ProjectProps {
@@ -24,10 +20,7 @@ export interface ProjectProps {
   title: string
   description: string
   technologies: string[]
-  ctaText: string
   ctaLink: string
-  buttonText: string
-  buttonLink: string
   projectDate: Date
 }
 
@@ -36,62 +29,59 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
   title,
   description,
   technologies,
-  ctaText,
   ctaLink,
-  buttonText,
-  buttonLink,
   projectDate,
 }) => {
-  // Check if we have the icons for the technologies, if not, use a placeholder
-  technologies = technologies.map((tech) => {
-    const relativePath = path.join("icon", (tech + ".svg").replace(" ", "").toLowerCase().trim())
-    const iconPath = path.join(process.cwd(), "public", relativePath)
-
-    try {
-      fs.accessSync(iconPath, fs.constants.F_OK)
-      return relativePath.replaceAll("\\", "/") // File exists
-    } catch (e) {
-      console.error("Missing iconPath", iconPath)
-      return "https://placehold.co/400x400.png?name=" + tech.toString().toLowerCase().trim() // File does not exist
-    }
-  })
-
   return (
-    <Card className="h-full w-full transform transition duration-500 ease-in-out hover:z-50 hover:-translate-y-1">
+    <Card className="h-full w-full transition-colors duration-200 hover:z-50 hover:bg-surface-muted motion-safe:hover:-translate-y-1 dark:hover:bg-muted-surface-dark">
       <div className="flex h-full flex-col justify-between gap-4">
         <div className="">
-          <Link className="hover:underline" href={ctaLink}>
-            <h3 className="truncate text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
+          <Link
+            className="rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
+            href={ctaLink}
+          >
+            <h3 className="truncate text-h3-sm text-foreground dark:text-foreground-dark">{title}</h3>
           </Link>
         </div>
         {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
-        <p className="line-clamp-3 min-h-[4.5rem] text-lg font-normal text-gray-500 dark:text-gray-400">
-          <Link href={ctaLink}>{description}</Link>
-        </p>
-        <div className="flex min-h-[2rem] items-center gap-2.5">
-          {technologies.map((tech, index) => (
-            <div key={tech} className="rounded-lg p-1 hover:bg-gray-50 dark:hover:bg-gray-800">
-              {/* Workaround to get a tooltip even if we just have a icon path, should be replaced with a text lookup */}
-              <Tooltip content={tech.replace("icon/", "").replace(".svg", "")}>
-                <img
-                  data-tooltip-target={`tooltip-logo-${tech}`}
-                  className="h-8 w-auto object-contain"
-                  src={tech}
-                  alt={"Tech Icon " + tech}
-                />
-              </Tooltip>
-            </div>
-          ))}
-        </div>
-        <div className="flex items-center justify-between">
-          <span className=" text-sm text-gray-500 ">{formatDistanceToNow(projectDate, { addSuffix: true })}</span>
+        <p className="line-clamp-3 min-h-[4.5rem] text-lg font-normal text-muted dark:text-muted-dark">
           <Link
             href={ctaLink}
-            className="inline-flex items-center font-medium text-primary-600 hover:underline dark:text-primary-500"
+            className="rounded transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+          >
+            {description}
+          </Link>
+        </p>
+        <div className="flex min-h-[2rem] items-center gap-2.5">
+          {technologies.map((tech) => {
+            const iconPath = getIconPath(tech)
+            return (
+              <div key={tech} className="rounded-lg p-1 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
+                <Tooltip content={tech}>
+                  {iconPath ? (
+                    <img
+                      data-tooltip-target={`tooltip-logo-${tech}`}
+                      className="h-8 w-auto object-contain"
+                      src={iconPath}
+                      alt={`Tech Icon ${tech}`}
+                    />
+                  ) : (
+                    <span className="text-sm text-muted dark:text-muted-dark">{tech}</span>
+                  )}
+                </Tooltip>
+              </div>
+            )
+          })}
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-muted dark:text-muted-dark">{formatDistanceToNow(projectDate, { addSuffix: true })}</span>
+          <Link
+            href={ctaLink}
+            className="inline-flex items-center rounded font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
           >
             Learn more
             <Image
-              className={"ml-2 h-4 w-4"}
+              className={"ml-2 h-4 w-4 dark:invert"}
               src={"/icon/arrow-right.svg"}
               alt="Arrow right Icon"
               width={32}

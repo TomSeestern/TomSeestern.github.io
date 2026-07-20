@@ -8,14 +8,9 @@ export default {
   argTypes: {
     imageUrl: { control: "text", description: "The URL of the project image" },
     title: { control: "text", description: "The title of the project" },
-    previewLink: { control: "text", description: "The URL for the live preview of the project" },
     description: { control: "text", description: "The description of the project" },
     technologies: { control: "array", description: "An array of Technology names" },
-    caseStudyLink: { control: "text", description: "The URL for the case study of the project" },
-    ctaText: { control: "text", description: "The text for the CTA" },
     ctaLink: { control: "text", description: "The URL for the CTA" },
-    buttonText: { control: "text", description: "The text for the button" },
-    buttonLink: { control: "text", description: "The URL for the button" },
   },
   decorators: [
     (Story) => (
@@ -37,8 +32,6 @@ Default.args = {
     "React",
     // Add more technologies as needed
   ],
-  ctaText: "View all projects",
   ctaLink: "/link/to/all-projects",
-  buttonText: "View case study",
-  buttonLink: "/link/to/case-study",
+  projectDate: new Date("2024-01-01"),
 }

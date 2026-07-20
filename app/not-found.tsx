@@ -1,15 +1,15 @@
 export default function NotFound() {
   return (
-    <section className="mx-auto content-center items-center bg-white dark:bg-gray-900">
+    <section className="mx-auto content-center items-center bg-surface dark:bg-surface-dark">
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
         <div className="mx-auto max-w-screen-sm text-center">
           <h1 className="mb-4 text-7xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500 lg:text-9xl">
             404
           </h1>
-          <p className="mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">
+          <p className="mb-4 text-3xl font-bold tracking-tight text-foreground dark:text-foreground-dark md:text-4xl">
             Etwas fehlt.
           </p>
-          <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
+          <p className="mb-4 text-lg font-light text-muted dark:text-muted-dark">
             Entschuldigung, wir können diese Seite nicht finden. <br /> Auf der Startseite gibt es aber viel zu
             entdecken.
           </p>

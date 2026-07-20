@@ -21,7 +21,7 @@ test("blog listing discovers a detail route and breadcrumb returns to blog", asy
   await expectNoBrowserErrors(page, async () => {
     // Given
     await page.goto("/blog")
-    const postLinks = page.locator('h2 a[href^="/blog/entry/"]')
+    const postLinks = page.locator('h3 a[href^="/blog/entry/"]')
 
     // Then
     await expect(postLinks).toHaveCount(3)
@@ -36,6 +36,7 @@ test("blog listing discovers a detail route and breadcrumb returns to blog", asy
     const breadcrumb = page.getByRole("navigation", { name: /breadcrumb/i })
     const breadcrumbBlogLink = breadcrumb.getByRole("link", { name: "Blog" })
     await expect(breadcrumb).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
     await expect(breadcrumb.getByRole("link", { name: "Home" })).toBeVisible()
     await expect(breadcrumbBlogLink).toBeVisible()
     await expect(page.locator("article.prose")).not.toBeEmpty()
@@ -65,11 +66,11 @@ test("project listing discovers a detail route and breadcrumb returns to project
     // When
     await page.goto(detailUrl ?? "")
 
-    // Then — project detail pages render the title in the breadcrumb, not an <h1>
-    // Markdown body renders in article.prose, title is in breadcrumb last item
+    // Then
     const breadcrumb = page.getByRole("navigation", { name: /breadcrumb/i })
     const breadcrumbProjectsLink = breadcrumb.getByRole("link", { name: "Projects" })
     await expect(breadcrumb).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
     await expect(breadcrumb.getByRole("link", { name: "Home" })).toBeVisible()
     await expect(breadcrumbProjectsLink).toBeVisible()
     // Last breadcrumb item is the project title (not a link)

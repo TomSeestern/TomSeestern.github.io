@@ -13,12 +13,12 @@ export function Header() {
           width={512}
           height={512}
         />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Tom Segbers</span>
+        <span className="self-center whitespace-nowrap text-xl font-semibold text-foreground dark:text-foreground-dark">Tom Segbers</span>
       </NavbarBrand>
       <div className="flex md:order-2">
         <a
           href="/contact"
-          className="mr-2 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 lg:px-5 lg:py-2.5"
+          className="mr-2 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus-visible:ring-primary-800 lg:px-5 lg:py-2.5"
         >
           Contact
         </a>

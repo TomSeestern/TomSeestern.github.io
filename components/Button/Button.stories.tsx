@@ -9,6 +9,7 @@ const meta: Meta<typeof Button> = {
     underline: false,
     children: "Button",
     size: "lg",
+    href: "#",
   },
   argTypes: {
     intent: {
