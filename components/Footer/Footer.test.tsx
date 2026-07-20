@@ -9,7 +9,7 @@ describe("Footer", () => {
     render(<Footer />)
 
     // Then
-    expect(screen.getByText(/© 2019-2024/)).toBeInTheDocument()
+    expect(screen.getByText(/© 2019-2026/)).toBeInTheDocument()
     expect(screen.getByRole("link", { name: "TomSegbers.de" })).toHaveAttribute("href", "https://tomsegbers.de/")
   })
 
