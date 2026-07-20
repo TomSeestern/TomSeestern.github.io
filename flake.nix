@@ -19,20 +19,53 @@
           pkgs = import nixpkgs { inherit system; };
         in
         {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nodejs_22
-              pnpm
-              git
-            ];
+          default =
+            let
+              chromeRuntimeLibs = with pkgs; [
+                alsa-lib
+                at-spi2-atk
+                at-spi2-core
+                cairo
+                cups
+                dbus
+                expat
+                fontconfig
+                freetype
+                glib
+                gtk3
+                libdrm
+                libgbm
+                libGL
+                libx11
+                libxcb
+                libxcomposite
+                libxdamage
+                libxext
+                libxfixes
+                libxkbcommon
+                libxrandr
+                mesa
+                nspr
+                nss
+                pango
+                udev
+              ];
+            in
+            pkgs.mkShell {
+              buildInputs = with pkgs; [
+                nodejs_22
+                pnpm
+                git
+              ] ++ chromeRuntimeLibs;
 
-            shellHook = ''
-              echo " TomSegbers.de dev shell"
-              echo "  node:  $(node --version)"
-              echo "  pnpm:  $(pnpm --version)"
-              echo "  git:   $(git --version 2>/dev/null | cut -d' ' -f3)"
-            '';
-          };
+              shellHook = ''
+                export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath chromeRuntimeLibs}''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+                echo " TomSegbers.de dev shell"
+                echo "  node:  $(node --version)"
+                echo "  pnpm:  $(pnpm --version)"
+                echo "  git:   $(git --version 2>/dev/null | cut -d' ' -f3)"
+              '';
+            };
         }
       );
     };
