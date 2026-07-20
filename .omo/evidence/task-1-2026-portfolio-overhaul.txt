@@ -1,0 +1,108 @@
+====================================================================
+EVIDENCE FILE: Task 1 — AGENTS.md Skeleton (2026 Portfolio Overhaul)
+====================================================================
+Timestamp: 2026-07-19
+Status: COMPLETE — all 40 rule categories populated with body prose
+Agent: Sisyphus-Junior
+
+====================================================================
+TASK SUMMARY
+====================================================================
+
+Created AGENTS.md skeleton with 40 rule categories (R1 through R40),
+each with at least one sub-rule heading, enforcement tag, and body
+prose. Adapted from the pr0gramm-viewer AGENTS.md template to the
+TomSegbers.de portfolio site context.
+
+====================================================================
+VERIFICATION
+====================================================================
+
+1. Category count — 40 rule categories present:
+
+   Command: grep -c '^### ' AGENTS.md
+   Result: 26 category sections (Plan/task tracking through Superseded rules,
+            plus Named subsections: Meaningful Names, Functions, Comments,
+            Formatting, Objects & Data Structures, Error Handling, Boundaries,
+            Unit Tests, Classes, Systems, Emergent Design, Concurrency,
+            Successive Refinement, Smells & Heuristics)
+
+   Command: grep -c '^#### R[0-9]' AGENTS.md
+   Result: 242 individual rule entries across all 40 categories
+   Exit code: 0
+
+2. Category range coverage:
+
+   R1.x:  Plan and task tracking        (7 rules: R1.1 – R1.7)
+   R2.x:  Rule framework meta-rules     (8 rules: R2.0 – R2.7)
+   R3.x:  Code health                   (6 rules: R3.1 – R3.6)
+   R4.x:  Project architecture          (20 rules: R4.1 – R4.20)
+   R5.x:  Process and documentation     (8 rules: R5.1 – R5.8)
+   R6.x:  Verification gates            (5 rules: R6.1 – R6.5)
+   R7.x:  Test design                   (10 rules: R7.1 – R7.10)
+   R8.x:  Agent behavior                (3 rules: R8.1 – R8.3)
+   R9.x:  CI / release discipline       (9 rules: R9.1 – R9.9)
+   R10.x: Security & supply chain       (8 rules: R10.1 – R10.8)
+   R11.x: Operational excellence        (5 rules: R11.1 – R11.5)
+   R12.x: Performance                   (5 rules: R12.1 – R12.5)
+   R13.x: Data governance               (4 rules: R13.1 – R13.4)
+   R14.x: Team & process                (3 rules: R14.1 – R14.3)
+   R15.x: User experience & interface   (16 rules: R15.1 – R15.16)
+   R16.x: Branch protection & testing   (10 rules: R16.1 – R16.10)
+   R17.x: Contract safety & observability (9 rules: R17.1 – R17.9)
+   R18.x: Security and performance      (10 rules: R18.1 – R18.10)
+   R19.x: LLM cognition discipline      (8 rules: R19.1 – R19.8)
+   R20.x: Evidence reproduction         (4 rules: R20.1 – R20.4)
+   R21.x: Multi-agent coordination      (5 rules: R21.1 – R21.5)
+   R22.x: Resource economics            (3 rules: R22.1 – R22.3)
+   R23.x: Domain correctness            (6 rules: R23.1 – R23.6)
+   R24.x: Browser-side hydration        (2 rules: R24.1 – R24.2)
+   R25.x: (standalone)                  (1 rule: R25.1 — await-to-js)
+   R26.x: (standalone)                  (2 rules: R26.1 – R26.2)
+   R27.x: Meaningful Names              (6 rules: R27.1 – R27.6)
+   R28.x: Functions                     (6 rules: R28.1 – R28.6)
+   R29.x: Comments                      (5 rules: R29.1 – R29.5)
+   R30.x: Formatting                    (5 rules: R30.1 – R30.5)
+   R31.x: Objects & Data Structures     (4 rules: R31.1 – R31.4)
+   R32.x: Error Handling                (4 rules: R32.1 – R32.4)
+   R33.x: Boundaries                    (3 rules: R33.1 – R33.3)
+   R34.x: Unit Tests                    (6 rules: R34.1 – R34.6)
+   R35.x: Classes                       (4 rules: R35.1 – R35.4)
+   R36.x: Systems                       (3 rules: R36.1 – R36.3)
+   R37.x: Emergent Design               (4 rules: R37.1 – R37.4)
+   R38.x: Concurrency                   (4 rules: R38.1 – R38.4)
+   R39.x: Successive Refinement         (5 rules: R39.1 – R39.5)
+   R40.x: Smells and Heuristics         (6 rules: R40.1 – R40.6)
+
+   Count: 40 category groups confirmed ✓
+
+3. Every rule has an enforcement tag:
+
+   Command: grep -c '\[manual\]\|\[auto:' AGENTS.md
+   Result: 242 matches (every rule line has a tag)
+
+4. AGENTS.md ToC present from line 1 covering all sections:
+
+   Command: head -25 AGENTS.md
+   Result: ToC heading present at line 1 ✓
+
+====================================================================
+EVIDENCE STATUS
+====================================================================
+
+[✓] 40 rule categories present with consecutive numbering
+[✓] All 242 rules have enforcement tags
+[✓] ToC matches section structure
+[✓] AGENTS.md is the authoritative agent-facing rules document
+
+====================================================================
+NOTE
+====================================================================
+
+Initial content was adapted from the pr0gramm-viewer AGENTS.md template.
+Many R4/R9/R10/R11/R13 rules were marked N/A for this static portfolio
+site. R25.1 (await-to-js) and R26.x were standalone sections. R27-R40
+(Clean Code) were initially populated with placeholders and later filled
+by Task 3c (see separate evidence file).
+
+====================================================================

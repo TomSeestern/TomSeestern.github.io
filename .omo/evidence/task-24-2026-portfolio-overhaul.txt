@@ -1,0 +1,175 @@
+# Task 24 — Lib unit coverage evidence
+
+Timestamp: 2026-07-19T20:30:00Z
+Task: `24. Unit tests for lib/ (TDD with Jest)`
+Model: `9router/default`
+
+## Scope and changed files
+
+- `lib/markdown.test.ts`: expanded deterministic reader coverage from 6 to 12 cases.
+- `lib/sendEmail.test.tsx`: added 3 isolated email-sender cases with a narrow `jest.mock("resend")` mock.
+- `lib/sendEmail.tsx`: returns `false` before sending when `RESEND_API_KEY` is absent; uses existing `await-to-js` handling for rejected sends.
+- `package.json`: removed `--passWithNoTests` from the `test` script.
+- Task records: `.omo/plans/2026-portfolio-overhaul.md`, `.omo/boulders/task-24-2026-portfolio-overhaul.md`, this evidence file, and portfolio learnings.
+
+Inherited dirty worktree was recorded before Task 24. `git status --short` reported 49 unrelated modified files and 33 unrelated untracked paths. Task files above are isolated from concurrent tasks.
+
+## TDD evidence
+
+### Red: missing key contract
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest lib/sendEmail.test.tsx --runInBand'
+```
+
+Exit: `1`
+
+Expected failure before production change:
+
+```text
+TypeError: Cannot read properties of undefined (reading 'then')
+  at to(resend.emails.send(emailData))
+```
+
+The new test set `RESEND_API_KEY` absent and proved the sender still attempted the mocked email call instead of failing safely.
+
+### Green: missing key guard
+
+Added the minimum guard in `sendEmail`: missing `env.RESEND_API_KEY` returns `false` before `resend.emails.send`. Existing rejection behavior remains via `await-to-js`.
+
+## Focused manual proof
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest lib/markdown.test.ts lib/sendEmail.test.tsx --runInBand'
+```
+
+Exit: `0`
+
+Observable output:
+
+```text
+PASS lib/markdown.test.ts
+PASS lib/sendEmail.test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       15 passed, 15 total
+Snapshots:   0 total
+```
+
+This is manual library-surface proof. Markdown fixtures use real temporary directories. Email tests have three contracts: mocked Resend success, mocked rejected send, and absent-key short circuit.
+
+## Full Jest suite
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test'
+```
+
+Exit: `0`
+
+Observable output:
+
+```text
+Test Suites: 8 passed, 8 total
+Tests:       29 passed, 29 total
+Snapshots:   0 total
+Time:        1.472 s
+Ran all test suites.
+```
+
+No test uses `.skip`; `--passWithNoTests` is absent.
+
+## Test-script contract
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; node -e "const script=require(\"./package.json\").scripts.test; if (script.includes(\"--passWithNoTests\")) process.exit(1); console.log(script)"'
+```
+
+Exit: `0`
+
+Output:
+
+```text
+cross-env FORCE_COLOR=1 jest
+```
+
+## Build attempt
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+```
+
+Exit: `1`
+
+New Todo 24 code compiled:
+
+```text
+✓ Compiled successfully
+```
+
+Build fails later during static export because pre-existing malformed project frontmatter is parsed by page data loading, outside Todo 24 scope:
+
+```text
+YAMLException: can not read a block mapping entry; a multiline key may not be an implicit key
+... authorName: Tom
+```
+
+A second inherited malformed title contains an unquoted colon:
+
+```text
+YAMLException: incomplete explicit mapping pair
+... title: ECB Hackathon: COICOP Product Classification ...
+```
+
+Next reports failed prerender paths `/` and `/projects`. An existing react-hooks ESLint plugin conflict is also reported, but compilation completes before malformed YAML aborts export. No Task 24 source or test error occurs.
+
+## No-network proof
+
+`lib/sendEmail.test.tsx` installs a module-level narrow mock for `resend`. The mocked `emails.send` function is the only send target. Success/rejection tests assert calls to this mock; missing-key test asserts it was not called. No HTTP client, URL, or real Resend credentials appear in the test. No network process was started.
+
+## Adversarial QA
+
+- `malformed_input`: pass. Markdown tests cover malformed frontmatter fields independently; sender tests cover rejected email promise and absent key.
+- `stale_state`: pass. Every email test resets modules and mock state. Every Markdown test gets/removes its own temporary directory.
+- `dirty_worktree`: recorded. Pre-existing unrelated modifications/untracked work remain untouched.
+- `misleading_success_output`: pass. Focused output proves exact 2 suites / 15 cases; full output proves exact 8 suites / 29 cases. Build exit is reported as failure despite successful compilation stage.
+- `flaky_tests`: pass. Fixed fixtures/dates and isolated mock state; no wall clock, network, polling, or randomness.
+- External text, cancellation/resume, and cache classes: N/A.
+
+## Diagnostics and post-write review
+
+`lsp_diagnostics` attempted on `lib/sendEmail.tsx`, `lib/sendEmail.test.tsx`, and `lib/markdown.test.ts`. TypeScript language server remains unavailable; user previously declined installation. No install attempted.
+
+Pure LOC:
+
+```text
+lib/sendEmail.tsx: 26
+lib/sendEmail.test.tsx: 53
+lib/markdown.test.ts: 129
+```
+
+All below 200.
+
+- Responsibility: sender owns mail-dispatch decision; reader tests own reader contracts; no scope expansion.
+- Boundary: no new untyped external data passes through production code.
+- Variants: none introduced.
+- Escape hatches: no `any`, unsafe assertions, non-null assertions, ignored errors, or skipped tests introduced.
+- Helpers: no new production helper introduced.
+- Tests: exact 15 focused cases lock the changed contracts.
+- Parameter bloat: no changed function exceeds 3 inputs.
+- No redundant post-action verification or negative names introduced.
+
+## Cleanup receipt
+
+No server, browser, background process, temporary artifact, or external connection was created by Task 24 verification. Markdown tests remove their `mkdtempSync` directories in `afterEach`; email tests reset Jest mocks before every test. Nothing remains to terminate.
+
+Token usage: unavailable from runtime telemetry.

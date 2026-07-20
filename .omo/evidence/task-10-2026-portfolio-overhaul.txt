@@ -1,0 +1,127 @@
+# Task 10 — Move Markdown Content
+
+- Task: `10. Move markdown content to content/ directory`
+- Collected: 2026-07-19
+- Model: `9router/default`
+
+## Scope and changes
+
+- Moved 3 blog files with `mv app/blog/entry/*.md content/blog/`.
+- Moved 21 project files with `mv app/projects/entry/*.md content/projects/`.
+- Preserved route handlers:
+  - `app/blog/entry/[slug]/page.tsx`
+  - `app/projects/entry/[slug]/page.tsx`
+- Updated every Markdown filesystem path in each handler's page render, `generateStaticParams`, and `generateMetadata` to `content/blog` or `content/projects`.
+- No Markdown prose, frontmatter, date, filename, or slug changed. SHA-256 inventory remained 24 files before and after move.
+- Existing tests do not cover dynamic slug discovery. Used before/after slug and file inventories instead.
+
+## Baseline characterization
+
+```sh
+for file in app/blog/entry/*.md; do basename "$file" .md; done | sort
+for file in app/projects/entry/*.md; do basename "$file" .md; done | sort
+sha256sum app/blog/entry/*.md app/projects/entry/*.md | sort
+```
+
+Exit: `0`.
+
+Baseline counts: `blog=3`, `projects=21`, `total=24`.
+
+Baseline slug list:
+
+```text
+2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms
+2011-first-competition-with-wenzelbots-team
+2012-elevating-robot-competition-performance
+2012-journey-into-cpp-desktop-application-development
+2013-journey-into-sqf-development
+2014-altis-life-roleplay-gamemode
+2015-arma-3-freelance-development-journey
+2016-from-c-plusplus-to-time-tracking-app-journey
+2017-insights-assembly-language-and-microcontroller-projects
+2018-data-analytics-municipal-administration
+2019-ebeltoft-cheesecake-recipe
+2019-ezb-nowcasting-inflation-project
+2019-hackathon-zeppelin-systems-classification
+2019-navigating-unknown-terrain-with-botboost
+2019-process-automation-in-proptech
+2020-digitizing-train-ticket-refunds-2020
+2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition
+2020-multimodal-travel-planning-app-development
+2020-soudest-backend-nodejs
+2020-soudest-multimodal-travel-planner-frontend
+2021-ai-drone-based-change-detection
+2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers
+2021-skinshark-nft-minecraft-skin-trading
+2024-homelab-v2-transforming-homelab-with-advanced-automation
+```
+
+## Structural verification
+
+```sh
+test -d content/blog && test -d content/projects
+test -d app/blog/entry/'[slug]' && test -d app/projects/entry/'[slug]'
+# Count old/new Markdown files and check stale source path references.
+```
+
+Exit: `0`.
+
+```text
+content_dirs=present
+route_dirs=preserved
+old_blog_md=0
+old_project_md=0
+new_blog_md=3
+new_project_md=21
+content_md_total=24
+SLUG_COUNT=24
+ROUTE_OLD_PATH_REFERENCES=0
+MOVED_CONTENT_HASH_COUNT=24
+```
+
+Before/after generated slug inventories matched: 3 blog + 21 project slugs. No Markdown remains directly under either old route directory.
+
+## Manual QA
+
+```sh
+nix develop --command pnpm dev > /tmp/task-10-next-dev.log 2>&1 &
+curl --silent --show-error --fail --output /tmp/task-10-blog-response.html --write-out 'BLOG_HTTP=%{http_code}\n' http://localhost:3000/blog/entry/2019-ebeltoft-cheesecake-recipe
+curl --silent --show-error --fail --output /tmp/task-10-project-response.html --write-out 'PROJECT_HTTP=%{http_code}\n' http://localhost:3000/projects/entry/2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms
+kill "$(cat /tmp/task-10-next-dev.pid)"
+```
+
+Exit: `0`.
+
+```text
+BLOG_HTTP=200
+PROJECT_HTTP=200
+```
+
+Dev log contained `Ready in 1212ms`, with no startup error. Responses contained Ebeltoft Cheesecake and LEGO Mindstorms/LabVIEW rendered content, respectively. No stale-path 404 observed. PASS.
+
+## Diagnostics
+
+`lsp_diagnostics` could not run because TypeScript language server is not installed and prior user decision declined installation. No LSP install attempted.
+
+## Production build
+
+```sh
+nix develop --command pnpm build
+```
+
+Exit: `1`.
+
+Compilation passed, then type checking stopped on pre-existing dependency installation state:
+
+```text
+./app/blog/entry/[slug]/page.tsx:6:22
+Type error: Cannot find module 'react-icons/hi' or its corresponding type declarations.
+```
+
+`package.json` declares `"react-icons": "^5.4.0"`, but `node_modules/react-icons/hi/index.d.ts` is absent. This task did not modify dependencies, lockfile, or imports; blocker belongs outside Task 10 scope.
+
+## Worktree and cleanup
+
+- Pre-worktree: existing staged, modified, and untracked changes from prior todos, including `.envrc`, flake files, workflow edits, component work, and `.omo/`.
+- Post-worktree: expected Task 10 Markdown move plus two dynamic route edits added to same pre-existing dirty worktree.
+- Cleanup receipt: terminated temporary dev server PID; temporary response/log files remain only under `/tmp/task-10-*`, outside repository. No duplicate Markdown files created.

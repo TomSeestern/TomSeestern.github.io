@@ -1,0 +1,79 @@
+# Task 26 — ArticleTeaser behavioral Jest/RTL coverage
+
+Timestamp: 2026-07-19
+Owner: Sisyphus-Junior
+Model: `9router/default` — focused component test and minimal defect repair.
+
+## Scope
+
+- Added 12 focused behavioral Jest/RTL cases in `components/ArticleTeaser/ArticleTeaser.test.tsx`.
+- Fixed missing optional-author-image handling in `components/ArticleTeaser/ArticleTeaser.tsx`:
+  - `authorImgSrc` now accepts absence.
+  - Missing value renders `/img/placeholder.png` while preserving `alt="Author's Picture"`.
+- No content, page, dependency, snapshot, or unrelated Todo 25 changes.
+
+## TDD evidence
+
+### Red
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/ArticleTeaser/ArticleTeaser.test.tsx --runInBand'
+```
+
+Initial result: 10 passed, 2 failed.
+
+- Author image assertion exposed Next Image URL transformation; test changed to assert encoded source contract rather than implementation URL shape.
+- Missing `authorImgSrc` emitted `Image is missing required "src" property` and rendered an empty `src`, proving missing optional-image fallback was absent.
+
+### Green / manual focused QA
+
+Repeated exact command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/ArticleTeaser/ArticleTeaser.test.tsx --runInBand'
+```
+
+Result: `PASS components/ArticleTeaser/ArticleTeaser.test.tsx`; 1 suite passed, 12 tests passed, 0 snapshots, exit code 0.
+
+Nix shell printed inherited pnpm null-path diagnostic (`The "paths[0]" argument must be of type string. Received null`) before Jest execution; Jest still ran and passed. Command explicitly unsets both documented variables.
+
+## Behavior covered
+
+1. Title appears in heading.
+2. Teaser content appears.
+3. Author name appears.
+4. Author image has descriptive alt text and supplied image source.
+5. Missing author image uses placeholder fallback.
+6. Title link targets `fullArticleLink`.
+7. Read-more link targets `fullArticleLink`.
+8. Frozen-time relative date renders `2 days ago` with suffix.
+9. Long title remains full accessible link text and preserves destination.
+10. Title and content special characters render as text.
+11. Title, teaser content, and author retain dark-mode class contract.
+12. Read-more control retains dark-mode class contract.
+
+## Static checks
+
+```sh
+awk '!/^[[:space:]]*$/ && !/^[[:space:]]*(\/\/|#|--)/' "components/ArticleTeaser/ArticleTeaser.test.tsx" | wc -l
+awk '!/^[[:space:]]*$/ && !/^[[:space:]]*(\/\/|#|--)/' "components/ArticleTeaser/ArticleTeaser.tsx" | wc -l
+```
+
+Result: 85 pure LOC test file; 91 pure LOC component. Both under 250 LOC.
+
+`lsp_diagnostics` attempted on both changed TSX files. TypeScript LSP is not installed because user previously declined installation; no installation attempted.
+
+## Architectural review
+
+- Single responsibility: test file owns ArticleTeaser observable contracts; component owns teaser rendering.
+- Boundary purity: no new untyped boundary data.
+- Variant discrimination: none added.
+- Escape hatches: none added.
+- Defensive layer: fallback protects genuinely optional `authorImgSrc`.
+- One-off helper: render helper reused by every case.
+- Regression lock: fallback test fails before component fix; all 12 focused assertions pass after.
+- Parameter bloat: none added.
+- Redundant verification: none added.
+- Negative names: none added.

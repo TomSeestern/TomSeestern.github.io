@@ -1,0 +1,252 @@
+====================================================================
+EVIDENCE FILE: Task 5 — Baseline Measurements (2026 Portfolio Overhaul)
+====================================================================
+Timestamp: 2026-07-19
+Status: COMPLETE — all 5 sections documented
+Agent: Sisyphus-Junior (measurement only, no fixes applied)
+
+====================================================================
+SECTION 1: LIGHTHOUSE AUDIT (7 routes)
+====================================================================
+
+Result: BLOCKED — dev server cannot start.
+
+Root cause:
+  instrumentation.ts loads @vercel/otel which depends on jaeger-client.
+  The jaeger-client package attempts to load a thrift definition file at:
+    .next/server/vendor-chunks/jaeger-idl/thrift/jaeger.thrift
+  This file does not exist in node_modules (missing sub-dependency).
+
+Error (full):
+  Error: An error occurred while loading instrumentation hook:
+  ENOENT: no such file or directory, open '.../.next/server/vendor-chunks/jaeger-idl/thrift/jaeger.thrift'
+
+Attempts to bypass:
+  1. NEXT_DISABLE_INSTRUMENTATION=1 — no effect (Next.js still loads instrumentation.ts)
+  2. OTEL_SDK_DISABLED=true — no effect (error occurs before OTel SDK init)
+  3. Port 3000, 3001, 3002, 3003 all tried; all crash identically
+
+Build attempt:
+  $ bash node_modules/.bin/next build → FAILS (see Section 4)
+  Even production build could not complete, so no static export available either.
+
+Dev server routes tested:
+  Could test NONE of the 7 routes. Server process crashes before
+  any HTTP listener becomes available.
+
+  Routes: /, /about, /blog, /blog/entry/[first-slug],
+          /projects, /projects/entry/[first-slug], /contact
+
+Lighthouse scores per route:
+  N/A — all routes unreachable.
+
+====================================================================
+SECTION 2: PLAYWRIGHT SCREENSHOTS (7 routes, 1280x720, light mode)
+====================================================================
+
+Result: BLOCKED — requires running dev server (see Section 1).
+
+Directory: tests/e2e/__snapshots__/baseline/ (created, empty)
+
+Screenshots attempted: 0 of 7 — no server to navigate against.
+
+Note: Playwright MCP available but cannot screenshot localhost:3000
+      when no process is listening.
+
+====================================================================
+SECTION 3: FLOWBITE APP ROUTER COMPATIBILITY AUDIT
+====================================================================
+
+Versions:
+  flowbite-react: ^0.7.0 (in package.json, confirmed in pnpm-lock.yaml)
+  flowbite:       ^2.2.0
+  react:          ^18.2.0
+  next:           ^14.0.3
+  reactStrictMode: true (next.config.mjs line 9)
+
+Flowbite components used across the app:
+
+  A) Header.tsx (layout → server component)
+     - Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle
+     - All from "flowbite-react"
+     - Used in RootLayout (server component, app/layout.tsx line 10)
+     - Risk: flowbite-react v0.7 Navbar components may trigger
+       hydration mismatches in strict mode. NavbarToggle uses
+       internal useState for mobile menu state — classic SSR/CSR
+       mismatch source.
+
+  B) ArticleTeaser.tsx (homepage → server-rendered)
+     - Card from "flowbite-react"
+     - Used in app/page.tsx (server component)
+     - Risk: Card in flowbite-react v0.7 renders complex DOM with
+       internal className logic. With reactStrictMode:true, double
+       render may expose state inconsistencies.
+
+  C) ProjectTeaser.tsx (homepage + projects → server-rendered)
+     - Card, Tooltip from "flowbite-react"
+     - NOTE: Tooltip import is flowbite-react Tooltip, NOT the
+       custom Radix-based components/Tooltip/Tooltip.tsx!
+     - CRITICAL: contains fs.accessSync() in render path (lines 46-57)
+       This is a server-only API. If this component is ever imported
+       in a "use client" context or accessed during client-side
+       hydration, it will crash with "fs is not defined".
+     - Also uses process.cwd() in render path (line 48).
+
+  D) Contact page (app/contact/page.tsx → "use client")
+     - Alert from "flowbite-react" (line 3)
+     - Used as client component with useState
+     - Risk: Mild. Alert is a simple presentational component.
+       Should work in client context.
+
+  E) Blog entry page (app/blog/entry/[slug]/page.tsx → server)
+     - Breadcrumb, BreadcrumbItem from "flowbite-react"
+     - NOTE: also imports HiHome from "react-icons/hi" — this
+       package is NOT installed (no entry in package.json or
+       pnpm-lock.yaml). This will fail at build time.
+
+  F) Projects entry page (app/projects/entry/[slug]/page.tsx → server)
+     - Breadcrumb, BreadcrumbItem from "flowbite-react"
+     - Also imports HiHome from "react-icons/hi" — same missing dep.
+
+Console errors:
+  Cannot verify at runtime (server doesn't start).
+  Expected static-analysis findings:
+
+  HYDRATION WARNINGS (predicted):
+    1. Navbar/NavbarToggle: flowbite-react v0.7 NavbarCollapse uses
+       client-side state. If server-rendered with reactStrictMode,
+       expect `did not match` warnings.
+    2. Card: flowbite-react v0.7 Card has complex internal DOM.
+       Tailwind classes may differ between server/client renders.
+
+  STRICT MODE ISSUES (predicted):
+    1. Double useEffect fires in Navbar may double-initialize
+       Flowbite's JavaScript behaviors (dropdown, collapse).
+    2. React 18 strict mode double-mounts components in dev.
+
+  MISSING DEPENDENCY:
+    - "react-icons" not in package.json dependencies.
+    - Both blog/entry and projects/entry pages import from it.
+    - This is a build-blocker (confirmed in Section 4).
+
+Severity classification:
+  ███ MAJOR — react-icons/hi missing (build-blocker)
+  ███ MAJOR — ProjectTeaser fs.accessSync in render path (SSR unsafe)
+  ██▓ MEDIUM — Flowbite Navbar + reactStrictMode hydration risk
+  ██▓ MEDIUM — Flowbite Breadcrumb in server components (untested)
+  █░░ MINOR  — Flowbite Alert in client component (likely fine)
+  █░░ MINOR  — Flowbite Card hydration (minor class variance risk)
+
+====================================================================
+SECTION 4: BUILD STATUS (pnpm build)
+====================================================================
+
+pnpm itself broken:
+  $ pnpm build
+  ERROR: The "paths[0]" argument must be of type string. Received null
+  
+  pnpm v10.15.1 is installed but all pnpm commands fail with this
+  error. Root cause unknown — may be Node 22 incompatibility or
+  corrupt pnpm installation.
+
+Workaround: Called next binary directly:
+  $ bash node_modules/.bin/next build
+
+Result: FAILED
+  Exit code: 1
+
+Two errors prevented compilation:
+
+  1) ESLint config conflict:
+     ⨯ ESLint: Plugin "react-hooks" was conflicted between
+       ".eslintrc.js » eslint-config-react-app" and
+       ".eslintrc.js » eslint-config-next » plugin:react-hooks/recommended".
+
+  2) Type error — missing dependency:
+     ./app/blog/entry/[slug]/page.tsx:6:22
+     Type error: Cannot find module 'react-icons/hi' or its
+     corresponding type declarations.
+     
+     Also affects: app/projects/entry/[slug]/page.tsx (same import)
+
+Additional warnings (non-blocking):
+  ⚠ Critical dependency: the request of a dependency is an
+    expression (opentelemetry/instrumentation)
+
+Additional issues NOT reached by compiler (blocked by errors above):
+  - app/page.tsx imports {getAllProjects} from "../lib/projects"
+    File does NOT exist: app/lib/projects.ts
+  - app/page.tsx imports {getAllBlogPosts} from "../lib/blog"
+    File does NOT exist: app/lib/blog.ts
+  - app/projects/page.tsx imports {getAllProjects} from "../../lib/projects"
+    Same missing file.
+  
+  These would become TypeScript errors after fixing the
+  react-icons/hi and ESLint issues.
+
+====================================================================
+SECTION 5: ENV.MJS BUILD-TIME REQUIREMENTS
+====================================================================
+
+File: env.mjs (18 lines)
+Library: @t3-oss/env-nextjs (^0.7.1)
+
+Schema:
+  Server vars:
+    RESEND_API_KEY: z.string().optional()   ← CHANGED to optional (Todo 4)
+    ANALYZE:       z.enum(["true","false"]).optional()
+
+  Client vars:
+    (none)
+
+  Runtime binds:
+    ANALYZE:         process.env.ANALYZE
+    RESEND_API_KEY:  process.env.RESEND_API_KEY
+
+Key finding:
+  RESEND_API_KEY is `.optional()` — build will NOT fail if missing.
+  This was changed from `.min(1)` (required) in a prior todo (Todo 4).
+
+  If RESEND_API_KEY is absent at runtime:
+    - Contact form's sendEmail() will fail silently or throw
+    - Alert in contact page shows "Failed to send email"
+    - No env-level validation error at build or startup
+
+  ANALYZE is also optional, defaults to false (transform logic).
+
+Build-time environment requirements:
+  None. Both variables are optional. The project can build
+  without any environment variables set.
+
+====================================================================
+APPENDIX: ENVIRONMENT DETAILS
+====================================================================
+
+Node:    v22.23.1 (via Nix flake)
+pnpm:    v10.15.1 (broken — all commands fail)
+Next.js: 14.2.35
+React:   18.3.1 (in node_modules, package.json says ^18.2.0)
+OS:      Linux (NixOS)
+Shell:   zsh
+
+Content inventory:
+  - app/blog/entry/:    24 markdown files
+  - app/projects/entry/: (not checked, but directory exists)
+  - content/:           empty (no files)
+
+Missing source files (imported but not present):
+  - app/lib/projects.ts  (getAllProjects)
+  - app/lib/blog.ts      (getAllBlogPosts)
+  - react-icons/hi       (HiHome icon for Breadcrumbs)
+
+====================================================================
+VERIFICATION CHECKLIST
+====================================================================
+
+[✗] Part 1: Lighthouse scores recorded → BLOCKED (no server)
+[✗] Part 2: 7 screenshots saved → BLOCKED (no server)
+[✓] Part 3: Flowbite audit complete → documented above
+[✓] Part 4: Build status recorded → FAIL (ESLint + type error)
+[✓] Part 5: env.mjs requirements → RESEND_API_KEY is optional
+
+====================================================================

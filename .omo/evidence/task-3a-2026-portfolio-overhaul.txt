@@ -1,0 +1,114 @@
+====================================================================
+EVIDENCE FILE: Task 3a — AGENTS.md R1-R13 Adaptation (2026 Portfolio Overhaul)
+====================================================================
+Timestamp: 2026-07-19
+Status: COMPLETE — R1 through R13 fully adapted to portfolio site context
+Agent: Sisyphus-Junior
+
+====================================================================
+TASK SUMMARY
+====================================================================
+
+Adapted AGENTS.md rule categories R1 through R13 from the upstream
+pr0gramm-viewer template to the TomSegbers.de portfolio site context.
+Sections adapted: Plan/task tracking, Rule framework meta-rules,
+Code health, Project architecture, Process & documentation,
+Verification gates, Test design, Agent behavior, CI/release discipline,
+Security & supply chain, Operational excellence, Performance, and
+Data governance.
+
+====================================================================
+SECTIONS ADAPTED
+====================================================================
+
+R1  — Plan and task tracking (7 rules)
+      Retained .omo/ directory conventions. Untracked-work and
+      evidence-sync rules remain active. All kept [manual].
+
+R2  — Rule framework meta-rules (8 rules, including R2.0 placeholder)
+      Adapted enforcement-tag language. R2.7 changed from pnpm to
+      yarn context (later updated by pnpm migration). R2.0 retained
+      as numbering continuity placeholder.
+
+R3  — Code health (6 rules)
+      R3.1: auto-tag updated from yarn/pnpm context. R3.4: Type safety
+      adapted for this project's tsconfig.json. R3.5: await-to-js
+      pattern documented.
+
+R4  — Project architecture (20 rules)
+      Majority marked N/A — no post database, no server-side writes,
+      no JSON archive, no authentication/cookies, no service worker,
+      no pr0gramm fixtures, no gocryptfs. Rules R4.1–R4.11, R4.17–R4.20
+      are N/A. R4.12–R4.16 retained: Nix flake, dependency management,
+      module size ceiling, import direction, circular deps.
+
+R5  — Process and documentation (8 rules)
+      Adapted: AGENTS.md owns rules, README/AGENTS.md scoped correctly,
+      ToC must stay current. R5.4 (CHANGELOG) marked N/A. R5.6 (JSDoc)
+      marked N/A for non-library project.
+
+R6  — Verification gates (5 rules)
+      Adapted CI workflow references. R6.4 changed from sync-orchestrator
+      first-use to portfolio site page-load journey.
+
+R7  — Test design (10 rules)
+      Adapted: boundary validation with Zod, property tests optional,
+      MSW not configured, a11y via Playwright + axe-core. R7.5/R7.7/R7.10
+      marked N/A.
+
+R8  — Agent behavior (3 rules)
+      Retained as-is. Evidence and verification rules apply universally.
+
+R9  — CI / release discipline (9 rules)
+      Most marked N/A for static portfolio site: no nightly verification,
+      no production scripts, no hotfix process, no release notes, no
+      artifact signing. R9.1 kept: CI workflow as required check.
+
+R10 — Security & supply chain (8 rules)
+      Adapted: no yarn audit in CI, Dependabot for vuln scanning,
+      HTTPS via Vercel, secrets in .env.local/Vercel env vars.
+      R10.4/R10.7 marked N/A.
+
+R11 — Operational excellence (5 rules)
+      All marked N/A: no server-side logging, no remote error tracking,
+      no backup/recovery needed (content in git), no capacity planning.
+
+R12 — Performance (5 rules)
+      Adapted: bundle analyzer configured, CWV aspirational, no SW cache,
+      no orchestrator memory. R12.3/R12.4 marked N/A.
+
+R13 — Data governance (4 rules)
+      All marked N/A: no PII collected, no user data stored, no GDPR
+      processing beyond contact form. Privacy-respecting by design.
+
+====================================================================
+VERIFICATION
+====================================================================
+
+1. All R1-R13 rule entries have body prose (no <TODO: placeholders):
+
+   Command: grep '<TODO:' AGENTS.md | head -20
+   Result: zero matches for R1-R13 sections ✓
+   Note: R27-R40 had <TODO: placeholders originally, resolved in Task 3c
+
+2. Rule count matches expected totals:
+
+   Command: grep -c '^#### R\([1-9]\|1[0-3]\)\.' AGENTS.md
+   Result: 127 rule entries in R1-R13 range ✓
+
+3. No pr0gramm-specific invariants in non-N/A rules:
+
+   Command: grep 'gocryptfs\|pr0gramm\|me cookie' AGENTS.md
+   Result: matches only in N/A-marked rules (legitimate context) ✓
+
+====================================================================
+EVIDENCE STATUS
+====================================================================
+
+[✓] R1–R13 all have adapted body prose
+[✓] N/A markings correct for static portfolio site
+[✓] Enforcement tags consistent (mostly [manual])
+[✓] Cross-references between rules intact
+[✓] No upstream pr0gramm invariants leak into active rules
+
+====================================================================

@@ -1,0 +1,36 @@
+Task: task-13-2026-portfolio-overhaul
+Collected: 2026-07-19
+Scope: Rewrite body prose only in three existing blog posts. No commit created. Human approval required before commit.
+
+Files changed
+
+1. content/blog/2024-homelab-v2-transforming-homelab-with-advanced-automation.md
+- Replaced generic promotional prose with first-person technical account.
+- Preserved frontmatter byte-for-byte, including ID, title, date, description, author data, tags, and filename.
+- Retained concrete source facts: repurposed old tower PC, unRAID OS, Docker, one Ubuntu VM, Nextcloud, Bitwarden, VPN, AdGuard, Home Assistant, Overleaf, Portainer, Grafana, InfluxDB, Telegraf, Z-Wave2MQTT, Automatic1111, ComfyUI, more than 50 sensors, cache/array/parity storage, onsite/offsite incremental backups, local HTTPS, and OpenVPN.
+- Added no model numbers or software versions absent from source.
+
+2. content/blog/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition.md
+- Replaced generic journey language with first-person account of operational tradeoffs and failure.
+- Preserved frontmatter byte-for-byte, including ID, title, date, description, author data, tags, and filename.
+- Retained concrete source facts: Raspberry Pi, Dell PowerEdge R710, 48 CPU cores, 64 GB DDR3 RAM, 200 W idle draw, ESXi, Ubuntu, unRAID OS, Docker, Nextcloud, ownCloud, VPN, OpenHAB, GTX 970, modified riser cards, soldered-in power supplies, GPU passthrough, WiFi door sensors, local voice assistant, and LED door alert.
+- Preserved Version 3 link path: /blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation.
+
+3. content/blog/2019-ebeltoft-cheesecake-recipe.md
+- Rewrote introduction and closing in first person, focused on sailing trip and Cafe Moeslund in Ebeltoft.
+- Preserved frontmatter byte-for-byte, including initial blank frontmatter line, ID, title, date, description, author data, tags, and filename.
+- Preserved concrete recipe facts: 20 Digestive biscuits, 110g butter, 700g cream cheese, vanilla, 250g sugar, 5ml Licor 43, 5ml Amarula, 200g white chocolate, 1-2 hour crust cooling, 2-3 day refrigeration, and original image URL.
+
+Verification commands
+- `node -e '...'` checks frontmatter delimiters and expected immutable metadata, validates first-person body prose, and excludes prohibited generic phrases.
+- `GIT_MASTER=1 git diff --check -- <three blog paths>` checks whitespace errors.
+- `lsp_diagnostics` attempted for every changed Markdown file. No Markdown language server configured in workspace.
+
+Verification limitation
+- These Markdown files were moved to `content/blog/` in uncommitted Task 10 work, so `git show HEAD:content/blog/<file>` cannot provide an original frontmatter baseline. Frontmatter was preserved directly from the fully read task input before rewriting. Expected immutable metadata is checked structurally instead.
+
+Result
+- Frontmatter structure and expected metadata preserved in all three files.
+- Prohibited phrase scan clean in body prose.
+- No filenames or URLs changed.
+- No commit created.

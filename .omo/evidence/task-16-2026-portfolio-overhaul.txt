@@ -1,0 +1,110 @@
+====================================================================
+EVIDENCE FILE: Task 16 — Content Smoke Check (2026 Portfolio Overhaul)
+====================================================================
+Timestamp: 2026-07-20
+Status: COMPLETE — build passes, all static routes generated
+Agent: Sisyphus-Junior
+
+====================================================================
+TASK SUMMARY
+====================================================================
+
+Verified that all content (blog posts, project entries) compiles without
+errors and generates the expected static routes. Content smoke check
+covers: Markdown frontmatter validity, gray-matter parsing, Zod schema
+validation, static route generation, and production build success.
+
+====================================================================
+CONTENT INVENTORY
+====================================================================
+
+Blog posts:   3 files in content/blog/
+Projects:     21 files in content/projects/
+Total:        24 Markdown files
+
+Blog slugs:
+  - 2019-ebeltoft-cheesecake-recipe
+  - 2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition
+  - 2024-homelab-v2-transforming-homelab-with-advanced-automation
+
+Project slugs: 21 entries spanning 2010-2020
+
+====================================================================
+VERIFICATION
+====================================================================
+
+1. Production build passes:
+
+   Command: pnpm build
+   (with unset PNPM_HOME npm_config_prefix)
+   Result: ✓ Compiled successfully
+   Exit code: 0
+
+2. Static routes generated:
+
+   Command: pnpm build | grep -c 'static'
+   Result: 36 static pages generated
+   Exit code: 0
+
+   Route breakdown:
+   - /                              (homepage)
+   - /about                         (about page)
+   - /blog                          (blog listing)
+   - /blog/entry/[slug] × 3        (blog detail pages)
+   - /projects                      (projects listing)
+   - /projects/entry/[slug] × 21   (project detail pages)
+   - /contact                       (contact page)
+   Plus not-found, 404, and other framework routes = 36 total
+
+3. YAML frontmatter validity:
+
+   All 24 files parse correctly through gray-matter.
+   Prior malformed frontmatter (9 project files) repaired
+   (see evidence: task-yaml-frontmatter-repair.txt):
+   - 5 unquoted colon-bearing titles → quoted
+   - 4 unlabeled teaser lines → converted to articleContent: |-
+
+   Command: node scripts/check-project-frontmatter.js
+   Result: all 21 project files validated successfully ✓
+   Exit code: 0
+
+4. Dev server serves content:
+
+   Blog detail:  curl /blog/entry/2019-ebeltoft-cheesecake-recipe → 200 ✓
+   Project detail: curl /projects/entry/2010-Journey-Into-Coding-... → 200 ✓
+   Blog listing:  curl /blog → 200, 3 unique post URLs ✓
+   Project listing: curl /projects → 200, 21 unique project URLs ✓
+
+5. No build errors from content:
+
+   Command: pnpm build 2>&1 | grep -i 'error.*content\|error.*markdown'
+   Result: zero content-related errors ✓
+   Pre-existing non-blocking warnings:
+   - ESLint react-hooks plugin conflict (documented, not content-related)
+   - Next.js image configuration deprecation notices
+
+====================================================================
+KNOWN ISSUES (pre-existing, not from content)
+====================================================================
+
+1. ESLint react-hooks plugin conflict:
+   Plugin "react-hooks" conflicted between eslint-config-react-app
+   and eslint-config-next. Non-fatal warning, build still succeeds.
+
+2. Next.js deprecation warnings:
+   images.domains deprecated — should become images.remotePatterns.
+   allowedDevOrigins deprecation notice. Non-fatal.
+
+====================================================================
+EVIDENCE STATUS
+====================================================================
+
+[✓] pnpm build exits 0
+[✓] 36 static routes generated
+[✓] All 24 Markdown files parse without errors
+[✓] YAML frontmatter repaired (9 files)
+[✓] Blog + project listing pages serve correct slug counts
+[✓] Detail pages return 200 with rendered content
+[✓] No new content-related build errors
+
+====================================================================

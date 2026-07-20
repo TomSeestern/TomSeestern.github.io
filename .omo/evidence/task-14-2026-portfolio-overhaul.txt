@@ -1,0 +1,38 @@
+Task: 14 — Project entries 2010–2017 rewrite
+Timestamp: 2026-07-19
+Status: pending verification and Tom approval
+Model: 9router/default, selected by runtime configuration.
+
+Scope discrepancy
+- Plan names 11 entries. Exact repository inventory contains nine matching files: one each for 2010, 2011, 2013–2017; two for 2012. No entries were invented.
+
+Files rewritten, frontmatter preserved
+1. `content/projects/2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms.md`
+   - Grounded details: after-school program, LabVIEW, LEGO Mindstorms NXT 1.0/2.0, maze navigation.
+2. `content/projects/2011-first-competition-with-wenzelbots-team.md`
+   - Grounded details: Wenzelbots, national competition, LEGO Mindstorms NXT, LabVIEW, multi-task run.
+3. `content/projects/2012-elevating-robot-competition-performance.md`
+   - Grounded details: team-lead role, LEGO Mindstorms, LabVIEW, sensor kits, PowerPoint presentation.
+4. `content/projects/2012-journey-into-cpp-desktop-application-development.md`
+   - Grounded details: C++, Qt Creator, self-study, memory management, object-oriented programming.
+5. `content/projects/2013-journey-into-sqf-development.md`
+   - Grounded details: Arma 3 Mission Editor, SQF, groups of 4–8 players, hostage rescue/reconnaissance/aerial missions.
+6. `content/projects/2014-altis-life-roleplay-gamemode.md`
+   - Grounded details: 2014–2016, SQF, SQL, Windows Server 2012, TeamSpeak 3, over 300 concurrent players.
+7. `content/projects/2015-arma-3-freelance-development-journey.md`
+   - Grounded details: 2014–2016, SQF/C++/Python, stock markets, factions, custom events, more than 300 concurrent players.
+8. `content/projects/2016-from-c-plusplus-to-time-tracking-app-journey.md`
+   - Grounded details: Technisches Gymnasium, C++, Qt Creator, SQLite, CSV export, Snake and Sinking Ships clones.
+9. `content/projects/2017-insights-assembly-language-and-microcontroller-projects.md`
+   - Grounded details: AT89C5131A, Assembly, PWM motor control, serial LCD output, 2016–2019 timeframe.
+
+Human gate
+- No commit made. Tom approval required before any commit or downstream content-smoke task.
+
+Verification
+- 2026-07-19: `nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'` completed successfully. Next.js compiled, generated 36 static pages, and listed all project entry routes, including rewritten 2010–2017 entries.
+- Build printed inherited `react-hooks` ESLint plugin-conflict message, but completed static generation and optimization.
+- 2026-07-19: `lsp_diagnostics content/projects` could not run because no Markdown LSP server is configured. Available configured servers do not handle `.md`; no source diagnostics were produced.
+
+Human gate
+- No commit made. Tom approval required before any commit or downstream content-smoke task.

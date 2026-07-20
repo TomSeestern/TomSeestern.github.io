@@ -1,0 +1,158 @@
+====================================================================
+EVIDENCE FILE: Task 3c — AGENTS.md R27-R40 Clean Code Rules (2026 Portfolio Overhaul)
+====================================================================
+Timestamp: 2026-07-19
+Status: COMPLETE — all 14 Clean Code categories filled with adapted prose
+Agent: Sisyphus-Junior
+
+====================================================================
+TASK SUMMARY
+====================================================================
+
+Filled all R27-R40 sections of AGENTS.md with adapted Clean Code prose.
+Previously these sections contained `<TODO: adapt to this project>`
+placeholders. All 14 categories now have project-specific, actionable
+body prose with correct enforcement tags.
+
+====================================================================
+SECTIONS FILLED
+====================================================================
+
+R27 — Meaningful Names (6 rules)
+      Intention-revealing, pronounceable, no encodings/member prefixes,
+      no puns, no generic placeholders, solution vs problem domain names.
+      Adapted from Clean Code Chapter 2.
+
+R28 — Functions (6 rules)
+      Small functions, do one thing, one abstraction level, parameter
+      count limits, no side effects, Command-Query Separation.
+      Adapted from Clean Code Chapter 3.
+
+R29 — Comments (5 rules)
+      Comments don't fix bad code, self-documenting code, delete dead
+      code, no redundant comments, explain "why" not "what".
+      Adapted from Clean Code Chapter 4.
+
+R30 — Formatting (5 rules)
+      Vertical density/separation, dependent functions nearby, max line
+      length (Prettier-enforced), no horizontal alignment, team
+      consistency. Adapted from Clean Code Chapter 5.
+
+R31 — Objects & Data Structures (4 rules)
+      Data abstraction, Law of Demeter, avoid hybrids, DTOs are pure data.
+      Adapted from Clean Code Chapter 6.
+
+R32 — Error Handling (4 rules)
+      Exceptions over return codes, unchecked exceptions, don't return
+      null, don't pass null. R32.1 adapted for project's await-to-js
+      convention.
+      Adapted from Clean Code Chapter 7.
+
+R33 — Boundaries (3 rules)
+      Wrap third-party APIs, write learning tests, avoid external APIs
+      in UI pages. Adapted with project examples: Resend via server
+      action, Flowbite via component layer.
+      Adapted from Clean Code Chapter 8.
+
+R34 — Unit Tests (6 rules)
+      Three Laws of TDD, keep tests clean, domain-specific testing
+      language, one concept per test, FIRST principles, no logic in
+      assertions.
+      Adapted from Clean Code Chapter 9.
+
+R35 — Classes (4 rules)
+      Small classes, Single Responsibility Principle, high cohesion,
+      Open-Closed Principle. Noted React/TypeScript projects use
+      classes less; principles apply when used.
+      Adapted from Clean Code Chapter 10.
+
+R36 — Systems (3 rules)
+      Separate construction from use, dependency injection, cross-cutting
+      concerns. Adapted with Next.js examples: generateStaticParams,
+      Context providers, middleware.ts, layouts.
+      Adapted from Clean Code Chapter 11.
+
+R37 — Emergent Design (4 rules)
+      Kent Beck's Four Rules: runs all tests, no duplication, expresses
+      intent, minimize classes/methods.
+      Adapted from Clean Code Chapter 12.
+
+R38 — Concurrency (4 rules)
+      Separate concurrency code, limit shared data, use copies,
+      understand execution model. Prefaced with aspirational note:
+      static portfolio site has minimal runtime concurrency.
+      Adapted from Clean Code Chapter 13.
+
+R39 — Successive Refinement (5 rules)
+      Write clean through refinement, Boy Scout Rule, no broken windows,
+      incremental refactoring, don't mix logic+refactoring.
+      Adapted from Clean Code Chapter 14.
+
+R40 — Smells and Heuristics (6 rules)
+      No magic numbers, no negative conditionals, no double negatives,
+      keep abstractions correct, minimal public API, prefer polymorphism.
+      Adapted from Clean Code Chapter 17.
+
+====================================================================
+VERIFICATION
+====================================================================
+
+1. No <TODO: placeholders remain in R27-R40:
+
+   Command: grep '<TODO:' AGENTS.md
+   Result: zero matches ✓
+   Exit code: 1 (no matches, as expected)
+
+2. No stale [auto: scripts/check-clean-code-ch*.mjs] tags remain:
+
+   Command: grep '\[auto: scripts/check-clean-code' AGENTS.md
+   Result: zero matches ✓
+   Exit code: 1 (no matches, as expected)
+   All converted to [manual] with proper <!-- manual: ... --> justifications.
+
+3. No Biome references (project uses Prettier, not Biome):
+
+   Command: grep 'Biome' AGENTS.md
+   Result: zero matches ✓
+   R30.4 changed from Biome to Prettier.
+
+4. No lefthook references (project uses pre-commit, not lefthook):
+
+   Command: grep 'lefthook' AGENTS.md
+   Result: 1 match — R3.2 manual justification: "(hook-runner choice
+           (pre-commit vs husky vs lefthook) has no...)"
+           This is legitimate context in a justification comment ✓
+
+5. pr0gramm references match only pre-existing N/A context:
+
+   Command: grep -c 'pr0gramm' AGENTS.md
+   Result: 5 matches, all in R4 N/A adaptation notes ✓
+   R27.6 changed from "pr0gramm" to "project-specific domain terminology" ✓
+
+6. R32.1 documents await-to-js convention:
+
+   Command: grep -A3 'await-to-js' AGENTS.md | grep 'R32.1'
+   Result: R32.1 contains await-to-js adaptation ✓
+
+====================================================================
+EVIDENCE STATUS
+====================================================================
+
+[✓] All 14 R27-R40 sections have body prose (no placeholders)
+[✓] All enforcement tags changed from [auto: scripts/...] to [manual]
+[✓] No upstream tool references (Biome, lefthook) leak through
+[✓] R32.1 adapted for project's await-to-js convention
+[✓] R33 adapted with Resend/Flowbite/server-action examples
+[✓] R36 adapted with Next.js-specific examples
+[✓] R38 prefaced with aspirational note for static site
+
+====================================================================
+LEARNINGS REFERENCE
+====================================================================
+
+Per learnings.md 2026-07-19 entry "AGENTS.md R27-R40 Clean Code rules
+(Todo 3c)": all verifications confirmed (zero <TODO:, zero [auto:
+scripts/check-clean-code, zero Biome). ALL 40 rule categories now
+have body prose. AGENTS.md rule content is complete.
+
+====================================================================

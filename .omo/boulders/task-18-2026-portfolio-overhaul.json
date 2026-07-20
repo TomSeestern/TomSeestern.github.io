@@ -1,0 +1,18 @@
+{
+  "task_id": "task-18-2026-portfolio-overhaul",
+  "plan": ".omo/plans/2026-portfolio-overhaul.md",
+  "title": "Semantic color tokens and Flowbite compatibility aliases",
+  "status": "in_progress",
+  "owner": "Sisyphus-Junior",
+  "started_at": "2026-07-20",
+  "file_locks": [
+    "tailwind.config.js",
+    "app/**/*.tsx",
+    "components/**/*.tsx",
+    "DESIGN.md",
+    ".omo/evidence/task-18-2026-portfolio-overhaul.txt",
+    ".omo/notepads/2026-portfolio-overhaul/learnings.md"
+  ],
+  "dependencies": ["task-17-2026-portfolio-overhaul"],
+  "evidence": ".omo/evidence/task-18-2026-portfolio-overhaul.txt"
+}

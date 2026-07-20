@@ -1,0 +1,71 @@
+# Task 28 — Static Playwright coverage evidence
+
+- collected: 2026-07-19
+- task status: blocked
+- owner: Sisyphus-Junior
+- model: 9router/default
+- model rationale: focused code and E2E verification task; default model sufficient.
+
+## Delivered coverage
+
+`e2e/static-routes.spec.ts` defines four Chromium E2E cases:
+
+1. `/`: hydrated semantic headings and logo alt text.
+2. `/about`: heading hierarchy and decorative image `alt=""`.
+3. `/contact`: hydrated form submission, visible success feedback, zero `api.resend.com` requests.
+4. missing static route: HTTP 404 and `<h1>404</h1>`.
+
+`playwright.config.ts` runs Next dev through pnpm at port 3030 and supplies `E2E_CONTACT_FORM_SUCCESS=true`. `lib/sendEmail.tsx` returns success before constructing Resend when this test-only flag is enabled, so E2E contact traffic cannot reach Resend.
+
+## Verification attempts
+
+### 1. Playwright server readiness repair
+
+Command:
+
+```bash
+env -u PNPM_HOME -u npm_config_prefix PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" nix develop --command pnpm exec playwright test e2e/static-routes.spec.ts --project=chromium --reporter=line
+```
+
+Initial Playwright `webServer.url` was `/`, whose current server-side rendering returns HTTP 500 from malformed Markdown frontmatter. Changed readiness target to `/contact`; Playwright then started its web server.
+
+### 2. Chromium suite
+
+Same command, after readiness repair.
+
+Result: exit 1, all four tests blocked before navigation because package Playwright Chromium cannot start on host:
+
+```text
+error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+```
+
+This is host/Nix browser-runtime setup, not a test assertion or route failure.
+
+### 3. Homepage server response
+
+Local Next dev logs show `/` returns HTTP 500 due to pre-existing malformed project frontmatter. Exact stack path:
+
+```text
+YAMLException: can not read a block mapping entry; a multiline key may not be an implicit key
+at createMarkdownEntry (./lib/markdown.ts:31:72)
+at getAllMarkdownEntries (./lib/markdown.ts:27:117)
+at getAllProjects (./lib/projects.tsx:11:76)
+at Web (./app/page.tsx:204:104)
+GET / 500
+```
+
+Further entries fail parsing for unquoted colon-containing titles, including `ECB Hackathon: COICOP Product Classification ...` and `BotBoost: Autonomous TurtleBot Navigatio ...`.
+
+## Diagnostics
+
+`lsp_diagnostics` could not run for changed TS/TSX/MJS files: TypeScript LSP is not installed; prior user decision declined installation.
+
+## Required follow-up
+
+1. Fix invalid YAML frontmatter in affected `content/projects` entries so `/` returns HTTP 200.
+2. Add Nix runtime library support for Playwright Chromium (`libglib-2.0.so.0`) or run suite in supported browser environment.
+3. Re-run Chromium suite and full `pnpm e2e:headless` with `PNPM_HOME` and `npm_config_prefix` unset.
+
+## Token usage
+
+Unavailable from runtime telemetry.

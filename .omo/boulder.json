@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "active_work_id": "2026-portfolio-overhaul-d227bbc8",
+  "works": {
+    "2026-portfolio-overhaul-d227bbc8": {
+      "work_id": "2026-portfolio-overhaul-d227bbc8",
+      "active_plan": "/home/tom/Nextcloud/notes/03 Projects/20XX TomSegbers.de - Personal Website/TomSegbers.de/.omo/plans/2026-portfolio-overhaul.md",
+      "plan_name": "2026-portfolio-overhaul",
+      "status": "completed",
+      "started_at": "2026-07-19T11:15:13.002Z",
+      "updated_at": "2026-07-20T02:39:58.501Z",
+      "session_ids": [
+        "opencode:ses_085e9a666ffeAVUWZS18j1H5Sb"
+      ],
+      "session_origins": {
+        "opencode:ses_085e9a666ffeAVUWZS18j1H5Sb": "direct"
+      },
+      "agent": "atlas",
+      "task_sessions": {},
+      "ended_at": "2026-07-20T02:39:58.501Z",
+      "elapsed_ms": 55485499
+    }
+  },
+  "active_plan": "/home/tom/Nextcloud/notes/03 Projects/20XX TomSegbers.de - Personal Website/TomSegbers.de/.omo/plans/2026-portfolio-overhaul.md",
+  "started_at": "2026-07-19T11:15:13.002Z",
+  "status": "completed",
+  "updated_at": "2026-07-20T02:39:58.501Z",
+  "session_ids": [
+    "opencode:ses_085e9a666ffeAVUWZS18j1H5Sb"
+  ],
+  "session_origins": {
+    "opencode:ses_085e9a666ffeAVUWZS18j1H5Sb": "direct"
+  },
+  "plan_name": "2026-portfolio-overhaul",
+  "task_sessions": {},
+  "agent": "atlas",
+  "ended_at": "2026-07-20T02:39:58.501Z",
+  "elapsed_ms": 55485499
+}

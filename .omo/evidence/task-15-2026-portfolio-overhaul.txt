@@ -1,0 +1,75 @@
+# Task 15 Evidence: Project Entries Rewrite
+
+**Task:** Rewrite ten 2018 to 2021 portfolio project entries in Tom's personal voice.
+**Timestamp:** 2026-07-19
+**Model:** 9router/default
+**Status:** Awaiting human approval. No commit created.
+
+## Scope
+
+Rewrote body prose and refined frontmatter titles and summaries for these ten files:
+
+1. `content/projects/2018-data-analytics-municipal-administration.md`
+2. `content/projects/2019-navigating-unknown-terrain-with-botboost.md`
+3. `content/projects/2019-hackathon-zeppelin-systems-classification.md`
+4. `content/projects/2019-ezb-nowcasting-inflation-project.md`
+5. `content/projects/2020-soudest-backend-nodejs.md`
+6. `content/projects/2020-multimodal-travel-planning-app-development.md`
+7. `content/projects/2020-digitizing-train-ticket-refunds-2020.md`
+8. `content/projects/2021-skinshark-nft-minecraft-skin-trading.md`
+9. `content/projects/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers.md`
+10. `content/projects/2021-ai-drone-based-change-detection.md`
+
+Read all twelve files in the 2018 to 2021 range before selecting ten. `2019-process-automation-in-proptech.md` and `2020-soudest-multimodal-travel-planner-frontend.md` remain unchanged because their factual detail was weaker or overlapped a fuller SouDest entry.
+
+## Content checks
+
+- Preserved all filenames and existing frontmatter IDs and dates.
+- Restored `authorName` and `authorImgSrc` fields in two files where an earlier draft accidentally dropped them.
+- Each rewritten entry includes at least three concrete technical, architectural, or delivery details drawn from original content.
+- Technical tradeoffs and retrospective improvements are stated without inventing outcomes, metrics, or undisclosed infrastructure.
+- Frontmatter summaries now use first-person, project-specific language.
+
+## Verification
+
+Commands run from repository root:
+
+```bash
+./node_modules/.bin/prettier --write \
+  content/projects/2018-data-analytics-municipal-administration.md \
+  content/projects/2019-navigating-unknown-terrain-with-botboost.md \
+  content/projects/2019-hackathon-zeppelin-systems-classification.md \
+  content/projects/2019-ezb-nowcasting-inflation-project.md \
+  content/projects/2020-soudest-backend-nodejs.md \
+  content/projects/2020-multimodal-travel-planning-app-development.md \
+  content/projects/2020-digitizing-train-ticket-refunds-2020.md \
+  content/projects/2021-skinshark-nft-minecraft-skin-trading.md \
+  content/projects/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers.md \
+  content/projects/2021-ai-drone-based-change-detection.md
+```
+
+Result: formatted all ten changed Markdown files.
+
+```bash
+./node_modules/.bin/prettier --check [same 10 paths] && git diff --check
+```
+
+Result: `All matched files use Prettier code style!`; `git diff --check` returned exit code 0.
+
+```bash
+grep -E "synergy|best-of-breed|delve|it's important to note|moving forward|circle back|at the end of the day|robust|streamline|facilitate|revolutioniz|cutting-edge|state-of-the-art|seamless" [same 10 paths]
+```
+
+Result: no matches.
+
+```text
+lsp_diagnostics content/projects
+```
+
+Result: no Markdown LSP server configured. This is an environment limitation, not a reported document diagnostic.
+
+## Notes
+
+- First `pnpm prettier` invocation failed because inherited `PNPM_HOME` and `npm_config_prefix` values were null. Used local `./node_modules/.bin/prettier` successfully instead.
+- Existing repository-wide Prettier issues remain outside this task. Targeted ten-file formatting check passes.
+- Human gate remains required before any commit.

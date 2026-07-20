@@ -1,0 +1,73 @@
+# react-icons installation repair evidence
+
+Timestamp: 2026-07-19
+Task: repair incomplete `react-icons` pnpm installation without application-source changes.
+
+## Initial state
+
+- `package.json` declares `"react-icons": "^5.4.0"`.
+- `pnpm-lock.yaml` was absent.
+- `node_modules/react-icons` was absent; `node -e` could not resolve `react-icons/package.json`, `react-icons/hi`, or `react-icons/hi/index.d.ts`.
+- `nix develop --command pnpm why react-icons` initially failed because inherited `PNPM_HOME=null` and `npm_config_prefix=null` make pnpm 11 crash with `The "paths[0]" argument must be of type string. Received null`.
+- After unsetting those inherited variables, Nix pnpm 10.15.1 worked. `pnpm why react-icons` showed only transitive `flowbite-react -> react-icons@5.0.1`; direct package was not installed because node_modules predated manifest/lock state.
+
+## Repair command
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; CI=1 pnpm install --force'
+```
+
+Result: exit 0. Recreated node_modules, created `pnpm-lock.yaml`, and installed direct `react-icons@5.7.0` from manifest range `^5.4.0`. No application source changed.
+
+## Resolution verification
+
+```sh
+nix develop --command env -u PNPM_HOME -u npm_config_prefix pnpm why react-icons
+nix develop --command env -u PNPM_HOME -u npm_config_prefix pnpm list react-icons
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; test -f node_modules/react-icons/hi/index.d.ts && pnpm exec node -e "console.log(require.resolve(\"react-icons/hi\"))"'
+```
+
+Results:
+
+- Direct dependency: `react-icons 5.7.0`.
+- Transitive dependency remains: `flowbite-react 0.7.8 -> react-icons 5.0.1`.
+- `node_modules/react-icons/hi/index.d.ts` exists.
+- `react-icons/hi` resolves to `node_modules/.pnpm/react-icons@5.7.0_react@18.3.1/node_modules/react-icons/hi/index.js`.
+
+## TypeScript / build verification
+
+Requested command:
+
+```sh
+nix develop --command pnpm exec tsc --noEmit
+```
+
+Result: blocked by pre-existing dependency-name collision: package `tsc@2.0.4` shadows TypeScript compiler and prints `This is not the tsc command you are looking for`. Alternate direct compiler command was run:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec node_modules/typescript/bin/tsc --noEmit'
+```
+
+Result: `react-icons/hi` error gone. Command now fails only on unrelated missing manifest dependencies:
+
+- `Cannot find module 'date-fns'` in `components/ArticleTeaser/ArticleTeaser.tsx` and `components/ProjectTeaser/ProjectTeaser.tsx`.
+- `Cannot find module 'prop-types'` in `components/ArticleTeaser/ArticleTeaser.tsx`.
+
+Build command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+```
+
+Result: compilation succeeds (`✓ Compiled successfully`) and `react-icons/hi` error is gone. Build then exits 1 during type validation on unrelated missing `date-fns`.
+
+## Worktree
+
+`git status --short` checked before and after repair. Worktree already contained staged, modified, and untracked overhaul files. This repair created untracked `pnpm-lock.yaml` and rebuilt ignored `node_modules`; no existing source file was changed.
+
+## Conclusion
+
+Cause: manifest declared direct `react-icons`, but dependency install state was incomplete/stale and no lockfile existed. Force-reinstalling through Nix pnpm restored direct package files and generated consistent lockfile. Remaining type/build failures are unrelated missing dependencies.
+
+Token usage: unavailable in current runtime.
+Model: 9router/default; rationale: assigned execution model.

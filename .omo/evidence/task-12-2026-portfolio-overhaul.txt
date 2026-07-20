@@ -1,0 +1,137 @@
+# Task 12 — Blog index shared-reader evidence
+
+Timestamp: 2026-07-19T20:18:00Z
+Task: `12. Fix blog index page to use lib function`
+Model: `9router/default`
+
+## Scope and baseline characterization
+
+- Inherited dirty worktree. Before Todo 12, `git status --short` reported 44 modified tracked files and 20 untracked paths. Task changes are limited to `app/blog/page.tsx`, `app/blog/page.test.tsx`, this evidence file, and the durable learning entry.
+- Todo 10 moved three posts to `content/blog`; Todo 11 verified `getAllBlogPosts()` reads that directory and sorts descending by `articleDate`.
+- Stale pre-change page reader used `path.join(process.cwd(), "app/blog/entry/")`, `fs.readdirSync`, `fs.statSync`, `fs.readFileSync`, and `gray-matter`. Its source directory contained no Markdown after Todo 10, so `/blog` returned HTTP 200 with an empty listing. Todo 11 recorded this stale state in `.omo/evidence/task-11-2026-portfolio-overhaul.txt:123-124`.
+- Shared reader baseline contract: three ordered post URLs: `/blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation`, `/blog/entry/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition`, `/blog/entry/2019-ebeltoft-cheesecake-recipe`.
+
+## Red
+
+Added `app/blog/page.test.tsx`, which mocks only `getAllBlogPosts()` and renders the real page with a lightweight `ArticleTeaser` test double. It asserts the function is called once and that resulting entry links retain exact returned order.
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest app/blog/page.test.tsx --runInBand'
+```
+
+Exit: `1`
+
+Expected failure:
+
+```text
+Expected number of calls: 1
+Received number of calls: 0
+```
+
+Reason: old page had no shared-reader import/call. This is intentional Red proof. `nix develop` printed an inherited pnpm null-path warning but Jest executed normally.
+
+## Green
+
+Changed `app/blog/page.tsx` only in listing data acquisition:
+
+- Removed `path`, `fs`, and `gray-matter` imports.
+- Imported `getAllBlogPosts` from `../../lib/blog`.
+- Replaced duplicate filesystem parsing, defaults, filtering, and sorting with `const articles = getAllBlogPosts()`.
+- Preserved JSX, article map, `ArticleComponent` props, and key.
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest app/blog/page.test.tsx --runInBand'
+```
+
+Exit: `0`
+
+```text
+PASS app/blog/page.test.tsx
+Tests: 1 passed, 1 total
+```
+
+## Structural and adversarial checks
+
+- `stale_state`: pass. `app/blog/page.tsx` has no `fs.readdirSync`, `fs`, `path`, or `gray-matter` import. It calls `getAllBlogPosts()`.
+- `misleading_success_output`: pass. Did not treat HTTP 200 alone as success; inspected rendered unique `href` values and counted exactly three distinct `/blog/entry/` links.
+- `dirty_worktree`: inherited dirty state recorded above. No unrelated files altered for Todo 12.
+- `flaky_tests`: pass. Characterization test injects fixed posts/dates and verifies deterministic returned order; no wall-clock or network dependency.
+- `malformed_input`: N/A here; Todo 11 owns and tests parsing/default behavior in `lib/markdown.test.ts`.
+
+## Build
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+```
+
+Exit: `1`
+
+Todo 12 result:
+
+```text
+✓ Compiled successfully
+```
+
+Unrelated existing blocker:
+
+```text
+./components/ArticleTeaser/ArticleTeaser.tsx:1:37
+Type error: Cannot find module 'date-fns' or its corresponding type declarations.
+```
+
+No `app/blog/page.tsx` error. Build passed compilation and reached type checking, satisfying Todo 12 build-path check until known external blocker.
+
+## Manual QA
+
+Started controlled server:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm dev -p 3014 > /tmp/task-12-next-dev-3014.log 2>&1 & echo $! > /tmp/task-12-next-dev.pid'
+```
+
+Parent PID receipt: `3404492`.
+
+Request:
+
+```sh
+curl -i --max-time 30 http://localhost:3014/blog
+```
+
+Result: HTTP `200`.
+
+Rendered unique entry links, in document order:
+
+```text
+/blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation
+/blog/entry/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition
+/blog/entry/2019-ebeltoft-cheesecake-recipe
+```
+
+Result: exactly `3` distinct `/blog/entry/` URLs. HTML has each link twice because `ArticleComponent` renders title and “Read more” links; unique URL count is acceptance metric.
+
+Cleanup receipt:
+
+```sh
+kill 3404492
+curl --connect-timeout 1 --max-time 2 -fsS http://localhost:3014/blog >/dev/null
+```
+
+Final probe: connection failed; port `3014` no longer responds. Controlled dev server stopped.
+
+## Diagnostics and post-write review
+
+- `lsp_diagnostics app/blog/page.tsx` and `app/blog/page.test.tsx`: TypeScript LSP unavailable; prior user decision declined installation. No install attempted.
+- `git diff --check`: pass.
+- Pure LOC: `app/blog/page.tsx` 44; `app/blog/page.test.tsx` 60. Both below 200.
+- Responsibility: page owns blog-list layout; `lib/blog.tsx` owns blog source selection; `lib/markdown.ts` owns parsing and sorting.
+- Boundary purity: no new boundary parsing in page.
+- No tagged variants, escape hatches, defensive layers, new helpers, parameter bloat, redundant verification, or negative names.
+- Regression behavior locked by focused Red/Green test.
+
+Token usage: unavailable from runtime telemetry.

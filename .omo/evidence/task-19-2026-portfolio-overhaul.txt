@@ -1,0 +1,266 @@
+# Task 19 — Typography scale and heading hierarchy
+
+- Collected: 2026-07-20T02:20:16+02:00
+- Owner: Sisyphus-Junior
+- Scope: typography tokens, heading semantics, prose rendering, Task 19 tests.
+
+## Changes verified
+
+- `tailwind.config.js`: semantic `h1`–`h4`, body, small, and caption scales define size, line-height, letter-spacing, and weight. Tailwind Typography now sets readable light/dark prose colors.
+- `app/layout.tsx` already loads Inter through `next/font/google`; no font-family change required.
+- Public listing and static pages have one h1 per page. Listing-card titles are h3 beneath visually-hidden h2 archive headings.
+- Blog and project detail pages render frontmatter title as page h1. Markdown source h1 is suppressed, retaining its nested h2+ hierarchy and preventing duplicate h1.
+- `TimelineEntry` closing tag corrected from `</h4>` to `</h3>`; timeline titles remain h3 under About h2.
+
+## Commands and results
+
+```text
+unset PNPM_HOME npm_config_prefix; pnpm test
+```
+
+Result: exit 0; 11 suites passed, 70 tests passed.
+
+```text
+unset PNPM_HOME npm_config_prefix; pnpm build
+```
+
+Result: exit 0; compiled successfully and generated 36 static pages. Existing ESLint `react-hooks` plugin-conflict diagnostic remains printed, but does not fail build.
+
+```text
+unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+pnpm exec playwright test e2e/dynamic-content.spec.ts --project=chromium --workers=1 --reporter=json
+```
+
+Result: blocked before navigation. Chromium exits 127 because required host library is missing:
+
+```text
+error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+```
+
+This is environment-only: every affected test failed in 1–2 ms at `browserType.launch`, before page code or heading assertions ran.
+
+## Diagnostics
+
+`lsp_diagnostics` cannot run because TypeScript LSP is not installed; prior user decision declined installation. Build type checking completed successfully.
+
+## Post-write review
+
+- Source files remain below 250 pure LOC individually; no new helper abstractions, error paths, casts, or tagged-union branching introduced.
+- Touched components retain single responsibilities: teaser heading semantics, timeline entry semantics, detail-page article presentation.
+- Tests cover changed heading assertions; full Jest suite passed.
+
+## 2026-07-20 Chromium runtime restoration
+
+### Root cause
+
+`playwright.config.ts` requires no change. Playwright resolves the matching local
+cache browser with `PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"`:
+
+```text
+executablePath=/home/tom/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome
+```
+
+Playwright launches its paired headless shell:
+
+```text
+/home/tom/.cache/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-linux64/chrome-headless-shell
+```
+
+`file` identifies that browser as a dynamically linked 64-bit ELF. Before the
+configuration repair, `ldd` showed the actual first unresolved dependency:
+
+```text
+libglib-2.0.so.0 => /nix/store/vx2aqxs99ii6pkzndddnbrsqbc4jwpb6-glib-2.88.1/lib/libglib-2.0.so.0
+libnspr4.so => not found
+libnss3.so => not found
+...
+```
+
+Minimal launch failed before navigation with exit 127:
+
+```text
+error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory
+```
+
+The prior `libglib-2.0.so.0` symptom was stale: GLib already resolved through
+the Nix shell. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` was also not selected by
+Playwright's bundled executable resolution, so the stale-path hypothesis was
+refuted. The real cause was `flake.nix` omitting several direct Chromium shared
+libraries from `LD_LIBRARY_PATH`, including `nspr` and `nss`.
+
+### Configuration remediation
+
+`flake.nix` now adds Chromium's direct runtime closure to `chromeRuntimeLibs`:
+`alsa-lib`, `cairo`, `cups`, `dbus`, `expat`, `fontconfig`, `freetype`, `gtk3`,
+`libdrm`, `libGL`, `libx11`, `libxcb`, `libxext`, `libxkbcommon`, `nspr`,
+`nss`, and `pango`, alongside existing dependencies. This source configuration
+change was necessary because runtime evidence showed an incomplete Nix library
+path; no application, route, typography, component, or test source changed.
+
+Minimal browser proof after `nix develop` rebuilt the shell:
+
+```text
+ldd "$HOME/.cache/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-linux64/chrome-headless-shell" | grep "not found"
+# no output
+executablePath=/home/tom/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome
+launch=ok
+```
+
+### End-to-end verification
+
+Both commands ran inside the repaired Nix dev shell, which supplies the host
+libraries. The command body deliberately unsets the Nix-null pnpm variables
+and stale Chromium override:
+
+```text
+unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+pnpm exec playwright test --project=chromium --workers=1
+```
+
+Result: exit 0; `7 passed (18.4s)`.
+
+```text
+unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+pnpm exec playwright test --project=chromium
+```
+
+Result: exit 0; `Running 7 tests using 7 workers`; `7 passed (13.9s)`.
+Parallel launches therefore are not the cause.
+
+The runs printed unrelated non-fatal Next.js deprecation warnings for
+`images.domains` and future `allowedDevOrigins` configuration. No browser,
+system package, or test changes were made.
+
+### Regression verification after configuration change
+
+```text
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build && pnpm test'
+```
+
+Result: exit 0; production build generated 36 static pages, then Jest reported
+`11 passed, 11 total` suites and `70 passed, 70 total` tests. The pre-existing
+non-fatal ESLint `react-hooks` plugin-conflict diagnostic remains printed during
+build.
+
+## 2026-07-20 Independent regression verification
+
+This section supersedes the prior unverified all-green claim only where it
+reported results not independently reproduced.
+
+### Reproduction and clean generated-state result
+
+The requested initial build command was captured outside the repository:
+
+```text
+unset PNPM_HOME npm_config_prefix
+pnpm build
+```
+
+Actual result: exit 0; `✓ Compiled successfully`; `✓ Generating static pages
+(36/36)`. The reported missing generated file
+`.next/types/app/about/page.ts` did not recur.
+
+To distinguish a stale generated artifact from a TypeScript source error, only
+the generated `.next/` directory was removed, then the exact build command was
+rerun:
+
+```text
+rm -rf .next
+unset PNPM_HOME npm_config_prefix
+pnpm build
+```
+
+Actual clean-state result: exit 0; `✓ Compiled successfully`; `✓ Generating
+static pages (36/36)`. This rules out a persistent source/type-manifest
+regression. `.next/` was regenerated by the successful build.
+
+### Chromium console-error regression reproduction
+
+The exact required fresh-shell Nix command was captured outside the repository:
+
+```text
+nix develop --command bash -c '
+  unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+  export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+  pnpm exec playwright test --project=chromium --reporter=line
+'
+```
+
+Actual result: exit 0; `7 passed (10.0s)`. The strict homepage and project-list
+`expect(browserErrors).toEqual([])` checks passed, so there was no unexpected
+browser console-error string to record.
+
+After the clean build:
+
+```text
+pnpm exec playwright test --project=chromium --workers=1 --reporter=line
+```
+
+Actual result: exit 0; `7 passed (18.0s)`.
+
+```text
+pnpm exec playwright test --project=chromium --reporter=line
+```
+
+Actual result: exit 0; `7 passed (13.9s)`.
+
+No E2E assertion, app source, typography, route, content, dependency, or
+browser runtime configuration changed during this investigation. The browser
+error regression also did not recur after the clean `.next` build, ruling out a
+persistent source or parallel-worker cause.
+
+### Final Jest verification
+
+```text
+unset PNPM_HOME npm_config_prefix
+pnpm test
+```
+
+Actual result: exit 0; `11 passed, 11 total` suites and `70 passed, 70 total`
+tests.
+
+## 2026-07-20 Final serialized verification
+
+`playwright.config.ts` starts `pnpm exec next dev --port 3030` as its
+`webServer`. This process writes dev artifacts under `.next/`; therefore the
+production build, Jest, and Playwright gates were run strictly in sequence.
+Before the run, `ss -ltn '( sport = :3030 )'` returned no listener.
+
+```text
+rm -rf .next
+unset PNPM_HOME npm_config_prefix
+pnpm build
+```
+
+Result: exit 0; `✓ Compiled successfully`; `✓ Generating static pages (36/36)`.
+The known non-fatal ESLint `react-hooks` plugin-conflict diagnostic was printed.
+
+```text
+unset PNPM_HOME npm_config_prefix
+pnpm test
+```
+
+Result: exit 0; `11 passed, 11 total` suites and `70 passed, 70 total` tests.
+
+```text
+nix develop --command bash -c '
+  unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+  export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+  pnpm exec playwright test --project=chromium --reporter=line
+'
+```
+
+Result: exit 0; `Running 7 tests using 7 workers`; `7 passed (12.8s)`. Nix
+printed its existing non-fatal pnpm paths-null warning before Playwright ran;
+the Playwright command completed successfully. Next printed existing
+`images.domains` and `allowedDevOrigins` deprecation warnings only.
+
+This serialized clean-state result confirms prior generated-type failure came
+from concurrent `.next/` ownership, not source, test, route, or browser errors.
+
+- Collected: 2026-07-20T03:18:00+02:00
+- Model: 9router/default; rationale: focused execution and verification.
+- Token usage: unavailable from runtime telemetry.

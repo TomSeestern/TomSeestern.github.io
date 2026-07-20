@@ -1,0 +1,88 @@
+# Task 18 — Semantic color tokens with Flowbite compatibility
+
+Timestamp: 2026-07-20
+Status: verified
+
+## Modified files
+
+- `DESIGN.md`
+- `tailwind.config.js`
+- `app/about/page.tsx`
+- `app/blog/page.tsx`
+- `app/contact/page.tsx`
+- `app/not-found.tsx`
+- `app/page.tsx`
+- `app/projects/page.tsx`
+- `components/ArticleTeaser/ArticleTeaser.test.tsx`
+- `components/ArticleTeaser/ArticleTeaser.tsx`
+- `components/Button/Button.test.tsx`
+- `components/Button/Button.tsx`
+- `components/Footer/Footer.tsx`
+- `components/PersonTeaser/PersonTeaser.tsx`
+- `components/ProjectTeaser/ProjectTeaser.tsx`
+- `components/TimelineEntry/TimelineEntry.tsx`
+- `.omo/boulders/task-18-2026-portfolio-overhaul.json`
+- `.omo/plans/2026-portfolio-overhaul.md`
+- `.omo/notepads/2026-portfolio-overhaul/learnings.md`
+
+## Color mapping
+
+| Existing utility | Semantic token | Exact rendered value |
+| --- | --- | --- |
+| `bg-white` | `bg-surface` | `#ffffff` |
+| `dark:bg-gray-900` | `dark:bg-surface-dark` | `#111827` |
+| `bg-gray-50` | `bg-surface-muted` | `#f9fafb` |
+| `dark:bg-gray-800` | `dark:bg-muted-surface-dark` | `#1f2937` |
+| `text-gray-900` | `text-foreground` | `#111827` |
+| `dark:text-white` | `dark:text-foreground-dark` | `#ffffff` |
+| `text-gray-500` | `text-muted` | `#6b7280` |
+| `dark:text-gray-400` | `dark:text-muted-dark` | `#9ca3af` |
+| `border-gray-300` | `border-border` | `#d1d5db` |
+| `dark:border-gray-600` | `dark:border-border-dark` | `#4b5563` |
+| `blue-400` | `accent-light` | `#60a5fa` |
+| `blue-700` | `accent-hover` | `#1d4ed8` |
+| `primary-600` | `accent` | `#2563eb` |
+| `primary-500` | `accent-dark` | `#3b82f6` |
+| `primary-100` | `accent-soft` | `#dbeafe` |
+
+`primary` remains a complete numeric `50`–`900` mapping backed by shared `primary` constants. Flowbite and Flowbite-pattern classes retain `primary-*`; custom components use semantic roles where behavior remains unchanged.
+
+## Verification
+
+1. Command:
+   ```bash
+   unset PNPM_HOME npm_config_prefix
+   pnpm build
+   ```
+   Exit code: `0`
+   Result: Next.js 14.2.35 compiled, type-checked, and generated 36 static pages. Existing ESLint `react-hooks` plugin conflict emitted as a warning only.
+
+2. Command:
+   ```bash
+   unset PNPM_HOME npm_config_prefix
+   pnpm test
+   ```
+   Exit code: `0`
+   Result: Jest `11/11` suites, `70/70` tests passed.
+
+3. Command:
+   ```bash
+   nix develop --command bash -c '
+     unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+     export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+     pnpm exec playwright test --project=chromium --reporter=line
+   '
+   ```
+   Exit code: `0`
+   Result: Chromium E2E `7/7` passed. Existing warnings: Nix-shell pnpm null-path message, deprecated `images.domains`, future `allowedDevOrigins` requirement. No test assertion weakened; browser console-error checks remained intact.
+
+4. LSP diagnostics:
+   ```text
+   LSP server 'typescript' is not installed; prior user decision declined installation.
+   ```
+   Type correctness covered by successful production build and Jest/E2E checks.
+
+## Notes
+
+- Build, Jest, and Playwright were run serially. Playwright never overlapped a build.
+- No typography, spacing, dark-mode strategy, dependencies, Flowbite version, interactions, or content changed.

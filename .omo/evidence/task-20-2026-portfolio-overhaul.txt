@@ -1,0 +1,74 @@
+# Task 20 — Normalize spacing and layout system
+
+- Collected: 2026-07-20
+- Owner: Sisyphus-Junior
+- Status: completed
+- Scope: public-route container rhythm, archive gaps, detail widths, home marquee containment, and design-system spacing contract.
+
+## Route-by-route spacing audit
+
+| Route | Content width and inset convention | Section rhythm / card gap | Result |
+| --- | --- | --- | --- |
+| `/` | `max-w-screen-xl px-4 sm:px-6` content wrappers; marquee track intentionally full-bleed inside normal section | `py-8 sm:py-16 lg:py-24`; blog grid `gap-8` | Pass |
+| `/about` | `max-w-screen-xl px-4 sm:px-6` | `py-8 sm:py-16 lg:py-24` | Pass |
+| `/blog` | `max-w-screen-xl px-4 sm:px-6` | `py-8 sm:py-16 lg:py-24`; listing grid `gap-8` | Pass |
+| `/blog/entry/[slug]` | Breadcrumb and article share `max-w-3xl px-4 sm:px-6` | `py-8 sm:py-16 lg:py-24` | Pass |
+| `/projects` | `max-w-screen-xl px-4 sm:px-6` | header `py-8 sm:py-16 lg:py-24`; archive grid `gap-8` | Pass |
+| `/projects/entry/[slug]` | Breadcrumb and article share `max-w-3xl px-4 sm:px-6` | `py-8 sm:py-16 lg:py-24` | Pass |
+| `/contact` | existing intentional `max-w-screen-md` form width with `px-4 sm:px-6` | `py-8 sm:py-16 lg:py-24` | Pass |
+
+## Changed files
+
+- `DESIGN.md`: codified default Tailwind spacing, public container, narrow-content, grid-gap, and full-bleed conventions.
+- `app/layout.tsx`: removed global max-width/padding shell; routes now own documented wrappers and full-bleed sections need no positional escape.
+- `app/page.tsx`: removed `inset-x-1/2 w-screen -translate-x-1/2`; marquee remains a normal full-bleed section with its track clipped by `overflow-hidden`. Applied shared section/container rhythm and `gap-8` listing grid.
+- `app/about/page.tsx`, `app/blog/page.tsx`, `app/contact/page.tsx`, `app/projects/page.tsx`: normalized public container insets and section rhythm; project archive uses `gap-8`.
+- `app/blog/entry/[slug]/page.tsx`, `app/projects/entry/[slug]/page.tsx`: aligned breadcrumb and article to the same narrow wrapper and shared responsive inset/rhythm.
+
+## Constraints audit
+
+| Check | Result |
+| --- | --- |
+| Semantic colors / `primary-*` Flowbite compatibility preserved | Pass; no Tailwind color changes |
+| Typography tokens / hierarchy preserved | Pass; no font-size token changes |
+| No arbitrary custom spacing token required | Pass; Tailwind default 4px scale expresses every change |
+| No home `w-screen` / horizontal translation workaround | Pass; search returned zero matches |
+| Responsive fixed desktop widths introduced | Pass; only existing responsive `max-w-*` containers remain |
+| Marquee track horizontal overflow escapes page | Pass by structure; track is inside normal full-bleed section with `overflow-hidden` |
+
+## Serialized commands and results
+
+```text
+rm -rf .next
+unset PNPM_HOME npm_config_prefix
+pnpm build
+```
+
+Exit code: 0. Next.js compiled successfully and generated 36 static pages. Existing non-fatal ESLint `react-hooks` plugin-conflict diagnostic printed during build.
+
+```text
+unset PNPM_HOME npm_config_prefix
+pnpm test
+```
+
+Exit code: 0. Jest: 11 suites passed, 70 tests passed.
+
+```text
+nix develop --command bash -c '
+  unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+  export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+  pnpm exec playwright test --project=chromium --reporter=line
+'
+```
+
+Exit code: 0. Chromium: 7 passed in 12.8s. Existing non-fatal warnings printed for `images.domains` deprecation and future `allowedDevOrigins`. Nix shell startup also printed its known null-path pnpm warning before the command body; Playwright test process completed successfully.
+
+## Diagnostics
+
+`lsp_diagnostics app/`: unavailable because TypeScript LSP is not installed; prior user decision declined installation. Production build performed TypeScript validation successfully.
+
+## Post-write review
+
+- Files remain below 250 pure LOC; no new helpers, casts, error paths, dependencies, or tagged-union branches.
+- Single responsibility preserved: root layout controls document chrome only; each route controls its own width and spacing; full-bleed marquee containment belongs to home section.
+- No test added: layout behavior is covered by existing Chromium route suite; task changes utility composition only.

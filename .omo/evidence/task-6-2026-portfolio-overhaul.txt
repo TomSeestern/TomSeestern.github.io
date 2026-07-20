@@ -1,0 +1,93 @@
+====================================================================
+EVIDENCE FILE: Task 6 — ProjectTeaser fs.accessSync Removal (2026 Portfolio Overhaul)
+====================================================================
+Timestamp: 2026-07-19
+Status: COMPLETE — fs.accessSync and process.cwd() removed from render path
+Agent: Sisyphus-Junior
+
+====================================================================
+TASK SUMMARY
+====================================================================
+
+Removed server-only Node.js APIs (fs.accessSync, process.cwd) from
+ProjectTeaser.tsx render path. These calls made the component SSR-unsafe
+and would crash if ever imported in a "use client" context or during
+client-side hydration. The icon-path resolution moved to lib/icon-map.ts
+which uses try/catch for browser compatibility.
+
+====================================================================
+ROOT CAUSE (from Task 5 baseline)
+====================================================================
+
+Original ProjectTeaser.tsx (lines 46-57) contained:
+
+  const iconPath = path.join(process.cwd(), "public/icon", `${tech.toLowerCase()}.svg`)
+  if (fs.existsSync(iconPath)) { ... }
+  else if (fs.existsSync(iconPath.replace(".svg", ".png"))) { ... }
+
+These Node.js server APIs would crash with "fs is not defined" in any
+browser or client context. The component was server-rendered, but the
+risk existed for hydration mismatches and Storybook compatibility.
+
+====================================================================
+FIX APPLIED
+====================================================================
+
+Icon-path resolution extracted to lib/icon-map.ts which:
+
+1. Uses a static Map of known technology→icon-path mappings
+2. Has try/catch around fs.readdirSync for server-side inventory
+3. Falls back to empty Set in browser/Storybook (no fs available)
+4. Returns null when icon not found → ProjectTeaser renders text label
+
+lib/icon-map.ts browser compatibility fix (from Task 30):
+  try { knownIcons = new Set(fs.readdirSync(...)); }
+  catch { knownIcons = new Set(); }  // empty fallback for browser
+
+====================================================================
+VERIFICATION
+====================================================================
+
+1. No fs.accessSync in components/ directory:
+
+   Command: grep -r 'fs\.accessSync' components/
+   Result: zero matches ✓
+   Exit code: 1 (no matches found, as expected)
+
+2. No fs.existsSync in components/ directory:
+
+   Command: grep -r 'fs\.existsSync' components/
+   Result: zero matches ✓
+   Exit code: 1 (no matches found)
+
+3. No process.cwd() in components/ ProjectTeaser:
+
+   Command: grep 'process\.cwd' components/ProjectTeaser/ProjectTeaser.tsx
+   Result: zero matches ✓
+   Exit code: 1 (no matches)
+
+4. ProjectTeaser.tsx current state confirms fix:
+
+   File: components/ProjectTeaser/ProjectTeaser.tsx (98 lines)
+   Imports: Card, Tooltip from flowbite-react, getIconPath from
+            ../../lib/icon-map
+   No fs, no path, no process imports ✓
+   Icon resolution delegates to getIconPath(tech) ✓
+
+5. Component still renders correctly:
+   - Jest: ProjectTeaser.test.tsx 10/10 pass (Task 27)
+   - Storybook: smoke tests pass (Task 30)
+   - Build: 36 static pages generated (Task 18)
+
+====================================================================
+EVIDENCE STATUS
+====================================================================
+
+[✓] fs.accessSync removed from ProjectTeaser.tsx
+[✓] fs.existsSync removed from ProjectTeaser.tsx
+[✓] process.cwd() removed from ProjectTeaser.tsx
+[✓] Icon resolution moved to lib/icon-map.ts
+[✓] lib/icon-map.ts has browser fallback (try/catch)
+[✓] Component tests, Storybook, and build all pass
+
+====================================================================

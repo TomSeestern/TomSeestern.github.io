@@ -1,0 +1,117 @@
+# Task 27 — ProjectTeaser behavioral Jest coverage evidence
+
+Timestamp: 2026-07-19T23:30:00Z
+Task: `27. Component test — ProjectTeaser (deep dive)`
+Model: `9router/default`
+
+## Scope and changed files
+
+- `components/ProjectTeaser/ProjectTeaser.test.tsx`: replaced six shallow/obsolete checks with ten deterministic RTL behavioral cases.
+- `.omo/boulders/task-27-2026-portfolio-overhaul.md`: task ownership and verification state.
+- `.omo/plans/2026-portfolio-overhaul.md`, `.omo/notepads/2026-portfolio-overhaul/learnings.md`, and this evidence file: completion records.
+
+No production component, icon-map, content, page, dependency, or package file changed.
+
+Inherited dirty worktree was present before Task 27. `git status --short` reported 49 modified and 35 untracked paths; Task 27 touched only scope files above.
+
+## TDD evidence
+
+### Baseline before additions
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/ProjectTeaser/ProjectTeaser.test.tsx --runInBand'
+```
+
+Exit: `0`
+
+Baseline: `1` suite, `6` tests. One obsolete test asserted removed `fs.accessSync`/`process.cwd` behavior and was removed because Task 27 must test observable component behavior only.
+
+### Red: fallback assertion shape
+
+After writing ten behavioral tests, focused Jest correctly failed once because Flowbite renders both fallback text and tooltip content:
+
+```text
+TestingLibraryElementError: Found multiple elements with the text: TypeScript
+```
+
+This was a test-selector defect, not production behavior. The assertion was changed from singular `getByText` to `getAllByText(...).not.toHaveLength(0)`, preserving observable fallback coverage without coupling to Flowbite tooltip internals.
+
+### Green
+
+Focused Jest then passed all ten contracts.
+
+## Focused manual proof
+
+Command:
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest components/ProjectTeaser/ProjectTeaser.test.tsx --runInBand'
+```
+
+Exit: `0`
+
+Observable output:
+
+```text
+PASS components/ProjectTeaser/ProjectTeaser.test.tsx
+  ProjectTeaser
+    ✓ renders project title as a level-three heading
+    ✓ renders description as a project link
+    ✓ renders a learn-more link with the project URL
+    ✓ renders relative project date
+    ✓ renders icon image for technology with mapped path
+    ✓ renders text fallback for technology without mapped icon
+    ✓ looks up every listed technology through icon map
+    ✓ renders no technology icons or fallbacks for empty technologies
+    ✓ keeps long project title visible and applies truncation class
+    ✓ keeps card hover elevation classes
+
+Test Suites: 1 passed, 1 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+```
+
+Nix shell emitted existing pnpm null-path noise before Jest:
+
+```text
+ERROR The "paths[0]" argument must be of type string. Received null
+```
+
+Jest still executed and exited `0`; prior project records identify this as inherited pnpm/Nix-shell noise.
+
+## Behavioral contracts
+
+- Title renders as an `h3` with accessible text.
+- Description and Learn more link each retain `ctaLink` href.
+- Relative date text is deterministic with fixed system time.
+- Narrow `jest.mock("../../lib/icon-map")` drives valid icon and unknown-tech text fallback paths.
+- Every configured technology reaches icon-map lookup.
+- Empty technologies renders no tech icon or fallback and makes no map lookup.
+- Long title retains full accessible name and `truncate` class.
+- Card retains `hover:z-50` and `hover:-translate-y-1` classes.
+- Removed filesystem behavior is intentionally not tested.
+
+## Diagnostics and post-write review
+
+- `lsp_diagnostics components/ProjectTeaser/ProjectTeaser.test.tsx`: TypeScript LSP unavailable; prior user decision declined installation. No install attempted.
+- `git diff --check -- components/ProjectTeaser/ProjectTeaser.test.tsx`: exit `0`.
+- Pure LOC: `84`, below 200.
+- Responsibility: test file owns ProjectTeaser observable contracts.
+- Boundary: narrow icon-map mock only; no filesystem or network mock.
+- Variants: none introduced.
+- Escape hatches: existing typed `jest.MockedFunction` retained; no `any`, ignored errors, non-null assertions, or skipped tests introduced.
+- Helpers: none introduced.
+- Parameter bloat, redundant post-action checks, and negative-form names: none.
+
+## Adversarial QA and cleanup
+
+- `stale_state`: pass. `jest.clearAllMocks()` and fake timer reset run for every test.
+- `dirty_worktree`: recorded; unrelated paths untouched.
+- `misleading_success_output`: pass. Exact focused suite/test counts captured above.
+- `flaky_tests`: pass. Fixed system time, isolated mock state, no network, polling, randomness, or filesystem assertions.
+- Other classes: N/A.
+- Cleanup: no server, browser, temp file, or external connection created. Jest restores real timers after each case.
+
+Token usage: unavailable from runtime telemetry.

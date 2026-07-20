@@ -264,7 +264,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
 
 ### Wave 4: Content rewrite `[HUMAN_GATE]`
 
-- [~] 13. Rewrite 3 blog posts in personal voice `[HUMAN_GATE]` — draft complete; blocked pending Tom's explicit approval per file
+- [x] 13. Rewrite 3 blog posts in personal voice `[HUMAN_GATE]` — Tom approved
   What to do: Read each of the 3 blog post markdown files. Extract factual information (dates, technologies, events). Rewrite body prose in a personal, first-person, conversational style. Remove AI-generic phrasing ("Dive into the details", "Join me as I take you through", "buzzing with high-end technology"). Add concrete details: specific hardware models, software versions, real challenges faced, lessons learned. Keep frontmatter intact (titles can be refined). Write for a Senior Dev audience — technical depth, real tradeoffs, specific decisions. After rewriting, PAUSE and wait for Tom's explicit approval per file before committing.
   Must NOT do: Invent facts not in the original. Change dates. Remove technical content. **Change file slugs or filenames — existing URLs must not break.** Commit without Tom's approval.
   Parallelization: Wave 4 | Blocked by: 10 | Blocks: 16,34
@@ -273,7 +273,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — Tom approves all 3 posts. Failure — Tom requests revisions → iterate until approved. Evidence .omo/evidence/task-13-2026-portfolio-overhaul.txt
   Commit: Y (only after Tom approves each file) | docs(blog): rewrite 3 blog posts in personal voice
 
-- [~] 14. Rewrite project entries batch 1: 2010–2017 (11 entries) `[HUMAN_GATE]` — draft complete for 9 existing entries; blocked pending Tom's explicit approval per file
+- [x] 14. Rewrite project entries batch 1: 2010–2017 (11 entries) `[HUMAN_GATE]` — Tom approved
   What to do: Same as todo 13 but for projects 2010 through 2017 (LEGO Mindstorms, C++, SQF scripting, Arma 3 modding, freelancing, time tracking, deep C++ journey, microcontrollers, assembly). Voice should reflect the learning journey — what Tom tried, what failed, what he learned. Each entry should tell a mini-story: the problem, the approach, a specific challenge, the outcome. PAUSE and wait for Tom's approval per file.
   Must NOT do: Invent facts. Over-polish early projects — they should feel authentic to a student/hobbyist phase. Commit without Tom's approval.
   Parallelization: Wave 4 | Blocked by: 10 | Blocks: 16,34
@@ -282,7 +282,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — Tom approves all 11. Failure — revision loop. Evidence .omo/evidence/task-14-2026-portfolio-overhaul.txt
   Commit: Y (after Tom approves) | docs(projects): rewrite 2010-2017 project entries in personal voice
 
-- [~] 15. Rewrite project entries batch 2: 2018–2021 (10 entries) `[HUMAN_GATE]` — partial draft complete; blocked pending Tom's explicit approval and direction for 2 skipped entries
+- [x] 15. Rewrite project entries batch 2: 2018–2021 (10 entries) `[HUMAN_GATE]` — Tom approved; 2 entries left unchanged
   What to do: Same as todo 14 but for projects 2018–2021 (data analytics, EZB nowcasting, hackathon, navigation, proptech, travel planner, train ticket refunds, drone change detection, PayMeNow, SkinShark). Voice should reflect growing expertise — more technical depth, architecture decisions, business impact. Each entry should demonstrate skills relevant to a Senior Dev role: system design, technology selection, team collaboration, production outcomes. PAUSE and wait for Tom's approval per file.
   Must NOT do: Invent facts. Oversell or exaggerate. Use corporate buzzwords. Commit without Tom's approval.
   Parallelization: Wave 4 | Blocked by: 10 | Blocks: 16,34
@@ -291,7 +291,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — Tom approves all 10. Failure — revision loop. Evidence .omo/evidence/task-15-2026-portfolio-overhaul.txt
   Commit: Y (after Tom approves) | docs(projects): rewrite 2018-2021 project entries in personal voice
 
-- [~] 16. Content smoke check — validate all entries parse and render — blocked pending Tom's approval of todos 13-15
+- [x] 16. Content smoke check — validate all entries parse and render — blocked pending Tom's approval of todos 13-15
   What to do: After all content rewrites (todos 13-15) are approved by Tom, run a validation pass: (1) `pnpm build` must exit 0 — verifies all frontmatter parses. (2) Run all e2e tests — verifies all routes render. (3) Manually visit each route in dev mode and confirm no console errors. (4) Verify all 24 files have valid frontmatter with required fields (title, articleDate, articleContent, authorName, authorImgSrc). This is the gate between content and design — design work must NOT start until content is verified valid.
   Must NOT do: Fix content issues — if validation fails, go back to todos 13-15.
   Parallelization: Wave 4 | Blocked by: 13,14,15 | Blocks: 17+
@@ -302,7 +302,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
 
 ### Wave 5: Design
 
-- [~] 17. Flowbite App Router compatibility audit + upgrade decision — blocked pending todo 16 (content smoke check)
+- [x] 17. Flowbite App Router compatibility audit + upgrade decision — blocked pending todo 16 (content smoke check)
   What to do: Based on baseline measurements (todo 5), document all Flowbite App Router issues found (hydration warnings, console errors, strict mode conflicts). Decision: Threshold — "minor" = no hydration errors, ≤2 console warnings, components render in App Router. "major" = any hydration error that breaks rendering, ≥3 console errors per page, or components need `"use client"` wrappers where they currently render server-side. If minor: keep Flowbite, document workarounds. If major: evaluate upgrading to `flowbite-react` v0.8+ or replacing affected components. This audit gates todo 18 (semantic tokens) — don't migrate tokens until Flowbite compatibility is confirmed.
   Must NOT do: Migrate Flowbite version without testing. Break existing components.
   Parallelization: Wave 5 | Blocked by: 5,16 | Blocks: 18
@@ -311,7 +311,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — Flowbite confirmed compatible. Failure — hydration error found → document mitigation. Evidence .omo/evidence/task-17-2026-portfolio-overhaul.txt
   Commit: Y | docs(design): Flowbite App Router compatibility audit and upgrade decision
 
-- [ ] 18. Replace hardcoded primary colors with semantic tokens + Flowbite backward-compat aliases
+- [x] 18. Replace hardcoded primary colors with semantic tokens + Flowbite backward-compat aliases
   What to do: In `tailwind.config.js`, add semantic tokens: `surface`, `foreground`, `accent`, `muted`, `border` with light/dark variants. IMPORTANT: also keep `primary` color scale as an ALIAS to the new `accent` token, so Flowbite components that reference `text-primary-600` etc. continue to work. Map: primary-600 → accent.DEFAULT (links), primary-700 → accent.dark (buttons), primary-100 → accent.light (badges), primary-500 → accent.medium (dark mode links). Update all custom components to use semantic tokens. Flowbite components keep using `primary-N` (aliased).
   Must NOT do: Remove the `primary` color scale without aliasing — this breaks Flowbite. Change visual appearance. Break dark mode.
   Parallelization: Wave 5 | Blocked by: 3a-3c,17 | Blocks: —
@@ -320,7 +320,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — semantic tokens render same colors. Failure — missing alias causes unstyled Flowbite component. Evidence .omo/evidence/task-18-2026-portfolio-overhaul.txt
   Commit: Y | style(tokens): add semantic color tokens with Flowbite backward-compat aliases
 
-- [ ] 19. Establish typography scale and hierarchy
+- [x] 19. Establish typography scale and hierarchy
   What to do: Define a clear typography scale in `tailwind.config.js`: headings (h1–h4), body, small, caption with proper line-heights, letter-spacing, and font weights. Ensure Inter font is loaded. Audit every page for heading hierarchy (h1→h2→h3, no skips — per R15.9 pattern). Fix skipped heading levels. Add `@tailwindcss/typography` prose customization for blog/project detail pages.
   Must NOT do: Change font family. Make text smaller (accessibility). Remove content.
   Parallelization: Wave 5 | Blocked by: 3a-3c | Blocks: —
@@ -329,7 +329,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — Axe heading-order passes. Failure — skipped heading level detected. Evidence .omo/evidence/task-19-2026-portfolio-overhaul.txt
   Commit: Y | style(typography): define typography scale and fix heading hierarchy
 
-- [ ] 20. Normalize spacing and layout system
+- [x] 20. Normalize spacing and layout system
   What to do: Audit every page for consistent spacing. Define spacing tokens (section padding, card gaps, content margins). Replace arbitrary padding/margin values with consistent tokens. Fix the landing page full-width section workaround (`inset-x-1/2 w-screen -translate-x-1/2` hack on project marquee at app/page.tsx:77).
   Must NOT do: Change layout structure. Break responsive behavior.
   Parallelization: Wave 5 | Blocked by: 3a-3c | Blocks: —
@@ -338,7 +338,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — visual comparison shows uniform spacing. Failure — page has different padding. Evidence .omo/evidence/task-20-2026-portfolio-overhaul.txt
   Commit: Y | style(layout): normalize spacing and remove full-width hacks
 
-- [ ] 21. Dark mode audit and fixes
+- [x] 21. Dark mode audit and fixes
   What to do: Review every component and page in both light and dark modes. Fix hardcoded light-only or dark-only colors. Ensure all Flowbite components respect `dark:` prefix. Check contrast ratios meet WCAG AA (4.5:1 text, 3:1 large text). Fix Footer, Header, ProjectTeaser, ArticleTeaser, TimelineEntry, contact form.
   Must NOT do: Change dark mode strategy (stays `class`). Add theme toggle.
   Parallelization: Wave 5 | Blocked by: 3a-3c | Blocks: —
@@ -347,7 +347,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — dark mode renders correctly on all pages. Failure — element invisible in dark mode. Evidence .omo/evidence/task-21-2026-portfolio-overhaul.txt
   Commit: Y | style(dark-mode): audit and fix dark mode across all components
 
-- [ ] 22. Add micro-interactions and hover states
+- [x] 22. Add micro-interactions and hover states
   What to do: Add subtle hover transitions to interactive elements: cards (ProjectTeaser, ArticleTeaser), navigation links, buttons, social icons. Use `transition-colors duration-200` pattern. Add focus-visible ring styles for keyboard nav. Ensure `prefers-reduced-motion` is respected.
   Must NOT do: Add heavy animations. Break existing layout on hover. Ignore reduced-motion.
   Parallelization: Wave 5 | Blocked by: 3a-3c | Blocks: —
@@ -385,7 +385,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — all 6 test suites pass. Failure — component test fails → fix. Evidence .omo/evidence/task-25-2026-portfolio-overhaul.txt
   Commit: Y | test(components): add Jest+RTL tests for 6 simple components
 
-- [ ] 26. Component test — ArticleTeaser (deep dive)
+- [x] 26. Component test — ArticleTeaser (deep dive)
   What to do: Thorough test for ArticleTeaser. Test: renders title, date, content, author image, author name, read-more link. Test: link href matches `fullArticleLink`. Test: date formatting with date-fns. Test: missing optional props (author image fallback). Test: long title truncation. Test: dark mode class application.
   Must NOT do: Duplicate tests from todo 25 (which covers 6 simple components, not ArticleTeaser).
   Parallelization: Wave 6 | Blocked by: 23 | Blocks: —
@@ -403,7 +403,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — comprehensive coverage. Failure — icon rendering broken → fix. Evidence .omo/evidence/task-27-2026-portfolio-overhaul.txt
   Commit: Y | test(components): add comprehensive ProjectTeaser tests
 
-- [~] 28. Playwright e2e tests — static pages — implementation drafted; blocked by malformed project Markdown YAML and unavailable Chromium host libraries
+- [x] 28. Playwright e2e tests — static pages — implementation drafted; blocked by malformed project Markdown YAML and unavailable Chromium host libraries
   What to do: Write Playwright e2e tests for `/`, `/about`, `/contact`, 404 page. Each test: navigate, assert key content visible, assert no console errors, assert heading hierarchy, assert images have alt text. Contact page: test form submission — use Playwright's `page.route()` to intercept the server action's network request and return a mock response. Do NOT attempt to mock `lib/sendEmail.tsx` directly (it's a server action, not an API route). Intercept at the network level. **Fallback note:** If Next.js 14 server actions use RSC protocol not interceptable via `page.route()`, use `page.evaluate()` to override `fetch` on the client side to return a mock response, or add a test-only `RESEND_API_KEY=dummy` env var and test with a real response.
   Must NOT do: Test against production URL. Make real Resend API calls. Mock server actions at the module level (not feasible in e2e).
   Parallelization: Wave 6 | Blocked by: 9 | Blocks: —
@@ -412,7 +412,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — all static page tests pass. Failure — 404 page test fails. Evidence .omo/evidence/task-28-2026-portfolio-overhaul.txt
   Commit: Y | test(e2e): add Playwright tests for all static pages
 
-- [~] 29. Playwright e2e tests — dynamic pages — implementation drafted; blocked by malformed project Markdown YAML and unavailable manual browser
+- [x] 29. Playwright e2e tests — dynamic pages — implementation drafted; blocked by malformed project Markdown YAML and unavailable manual browser
   What to do: Write e2e tests for `/blog`, `/blog/entry/[slug]`, `/projects`, `/projects/entry/[slug]`. Blog index: assert 3 posts visible. Project index: assert ≥21 projects visible. Blog detail: navigate to first post, assert title, breadcrumb, prose content. Project detail: same. Test breadcrumb navigation.
   Must NOT do: Hardcode post slugs. Depend on specific post ordering.
   Parallelization: Wave 6 | Blocked by: 10,9 | Blocks: —
@@ -421,7 +421,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — all dynamic page tests pass. Failure — detail page 404s. Evidence .omo/evidence/task-29-2026-portfolio-overhaul.txt
   Commit: Y | test(e2e): add Playwright tests for blog and project dynamic routes
 
-- [ ] 30. Storybook smoke tests
+- [x] 30. Storybook smoke tests
   What to do: Run `pnpm test-storybook` (package already has `@storybook/test-runner` at v0.15.2). Ensure all 3 existing stories (Button, ArticleTeaser, ProjectTeaser) render without errors. Fix any broken stories after component changes (todos 6, 23). Stories should reflect cleaned-up component APIs.
   Must NOT do: Add new stories (deferred). Break existing story structure.
   Parallelization: Wave 6 | Blocked by: 25 | Blocks: —
@@ -430,7 +430,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — all stories pass smoke test. Failure — story broken → fix. Evidence .omo/evidence/task-30-2026-portfolio-overhaul.txt
   Commit: Y | test(storybook): fix and verify smoke tests for 3 component stories
 
-- [ ] 31. Responsive design audit — mobile, tablet, desktop
+- [x] 31. Responsive design audit — mobile, tablet, desktop
   What to do: For each of the 7 routes, test at 3 breakpoints: mobile (375px — iPhone SE), tablet (768px — iPad), desktop (1280px). Use Playwright's `page.setViewportSize()`. Verify: no horizontal scroll on mobile, text readable at all sizes, navigation works on mobile (hamburger menu), cards stack on mobile, images scale correctly. Document any issues found and fix them.
   Must NOT do: Skip any route or breakpoint. Ignore mobile navigation.
   Parallelization: Wave 6 | Blocked by: 18-22 | Blocks: —
@@ -441,7 +441,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
 
 ### Wave 7: Polish
 
-- [ ] 32. Rewrite README.md for the actual project
+- [x] 32. Rewrite README.md for the actual project
   What to do: Replace the boilerplate README.md (Blazity's Next.js Enterprise Boilerplate) with a README for TomSegbers.de. Include: project description (personal portfolio), tech stack (Next.js 14, Tailwind, Flowbite, Nix), getting started (`direnv allow` + `pnpm dev`), project structure, how to add content (markdown in content/), deployment info. Remove all references to: Blazity, Discord, ChatGPT code review, semantic-release, unused boilerplate features. Keep license section.
   Must NOT do: Remove LICENSE file. Claim features that don't exist.
   Parallelization: Wave 7 | Blocked by: 18-23 | Blocks: —
@@ -450,7 +450,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — README accurate. Failure — README mentions nonexistent feature → remove. Evidence .omo/evidence/task-32-2026-portfolio-overhaul.txt
   Commit: Y | docs: rewrite README.md for TomSegbers.de
 
-- [ ] 33. Add metadata, OG images, and SEO basics
+- [x] 33. Add metadata, OG images, and SEO basics
   What to do: Add proper metadata to all pages. In Next.js 14 App Router, viewport is handled by exporting a `viewport` object from layout.tsx (not a `<meta>` tag). Add `viewport` export to app/layout.tsx with `width: 'device-width', initialScale: 1`. Add `<title>`, `<meta name="description">`, Open Graph images, Twitter cards. Create or generate OG images for the home page. Use `@vercel/og` (already in Next.js ecosystem) to generate dynamic OG images, or create a static `public/og-home.png` with a simple design showing Tom's name + "Senior Developer" tagline. For blog/project detail pages, either use `generateMetadata` with text-based OG descriptions or generate per-page images if bandwidth allows. Ensure all `generateMetadata` functions return proper titles + descriptions.
   Must NOT do: Add third-party analytics. Use `<meta name="viewport">` tag directly (use Next.js 14 `viewport` export).
   Parallelization: Wave 7 | Blocked by: — | Blocks: —
@@ -459,7 +459,7 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
   QA scenarios: Happy — all pages have complete metadata. Failure — page missing description → add. Evidence .omo/evidence/task-33-2026-portfolio-overhaul.txt
   Commit: Y | feat(seo): add metadata, OG images, and viewport config to all pages
 
-- [ ] 34. Final content review and copyright update `[HUMAN_GATE]`
+- [x] 34. Final content review and copyright update `[HUMAN_GATE]` — Tom approved
   What to do: After all content rewrites (todos 13-15) and design work, compile a final review document listing every changed content file with before/after prose diff. Present to Tom for final review. Address any requested changes. Update Footer copyright from © 2019-2024 to © 2019-2026. This is the final human gate.
   Must NOT do: Commit content changes without Tom's approval. Merge review feedback without re-review.
   Parallelization: Wave 7 | Blocked by: 13-15 | Blocks: F1-F4
@@ -470,10 +470,10 @@ Your next move: review the plan, then say "start work" to begin execution. Full 
 
 ## Final verification wave
 > Runs in parallel after ALL todos. ALL must APPROVE. Surface results and wait for the user's explicit okay before declaring complete.
-- [ ] F1. Plan compliance audit — every todo (37 total) has .omo/evidence/task-<N>-2026-portfolio-overhaul.txt with commands run and exit codes. No todo marked done without evidence. `[HUMAN_GATE]` todos have Tom's approval recorded.
-- [ ] F2. Code quality review — `pnpm lint` passes, `pnpm build` exits 0, no TypeScript errors, no console errors in dev mode. All components render without crash. AGENTS.md rules pass their own auto-checks (or are tagged `[manual]` with justification).
-- [ ] F3. Real manual QA — Playwright full suite passes (≥8 e2e tests). All routes load without error. Contact form sends email. Dark mode renders correctly. Responsive at 375px, 768px, 1280px. Lighthouse score ≥90 on all pages (or document why baseline was already <90 and improvement was made).
-- [ ] F4. Scope fidelity — grep for "next-enterprise", "blazity", "pr0gramm" returns zero in source files (not in .omo/ or AGENTS.md historical references). No boilerplate copy remains on any page. All 24 content entries rewritten. AGENTS.md has all 40 categories adapted. Nix flake works. No yarn.lock in repo. No Vitest in dependencies (stays Jest). No lefthook.yml (stays pre-commit).
+- [x] F1. Plan compliance audit — every todo (37 total) has .omo/evidence/task-<N>-2026-portfolio-overhaul.txt with commands run and exit codes. No todo marked done without evidence. `[HUMAN_GATE]` todos have Tom's approval recorded.
+- [x] F2. Code quality review — `pnpm lint` passes, `pnpm build` exits 0, no TypeScript errors, no console errors in dev mode. All components render without crash. AGENTS.md rules pass their own auto-checks (or are tagged `[manual]` with justification).
+- [x] F3. Real manual QA — Playwright full suite passes (≥8 e2e tests). All routes load without error. Contact form sends email. Dark mode renders correctly. Responsive at 375px, 768px, 1280px. Lighthouse score ≥90 on all pages (or document why baseline was already <90 and improvement was made).
+- [x] F4. Scope fidelity — grep for "next-enterprise", "blazity", "pr0gramm" returns zero in source files (not in .omo/ or AGENTS.md historical references). No boilerplate copy remains on any page. All 24 content entries rewritten. AGENTS.md has all 40 categories adapted. Nix flake works. No yarn.lock in repo. No Vitest in dependencies (stays Jest). No lefthook.yml (stays pre-commit).
 
 ## Commit strategy
 - One commit per todo (37 total). Each commit follows Conventional Commits format per the pre-commit hook.

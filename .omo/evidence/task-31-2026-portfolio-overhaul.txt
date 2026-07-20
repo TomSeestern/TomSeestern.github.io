@@ -1,0 +1,70 @@
+# Task 31 — Responsive design audit
+## Date: 2026-07-20
+## Model: 9router/default
+
+### Scope
+- Audited `/`, `/about`, `/blog`, discovered blog detail, `/projects`, discovered project detail, and `/contact`.
+- Viewports: 375×812, 768×1024, 1280×960.
+- Added responsive E2E coverage and fixed browser-confirmed mobile overflow only.
+
+### Browser-confirmed defect and fix
+- At 375px, `/blog` expanded document width to 1033px. Geometry identified the Flowbite article card and descendants as overflow sources.
+- `components/ArticleTeaser/ArticleTeaser.tsx`: added `min-w-0` to the Card root. This permits the grid item to shrink within the mobile content width.
+- `/` marquee elements extend beyond viewport while moving, but enclosing marquee region has local `overflow-hidden`; after the card fix document width remains within viewport. No global overflow suppression added.
+
+### Responsive matrix
+| Route class | 375px | 768px | 1280px |
+| --- | --- | --- | --- |
+| `/` | PASS | PASS | PASS |
+| `/about` | PASS | PASS | PASS |
+| `/blog` | PASS | PASS | PASS |
+| discovered `/blog/entry/[slug]` | PASS | PASS | PASS |
+| `/projects` | PASS | PASS | PASS |
+| discovered `/projects/entry/[slug]` | PASS | PASS | PASS |
+| `/contact` | PASS | PASS | PASS |
+| mobile hamburger keyboard navigation | PASS | n/a | n/a |
+
+### Commands and results
+1. Focused responsive Chromium run:
+```bash
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH; export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"; pnpm exec playwright test e2e/responsive.spec.ts --project=chromium --reporter=line'
+```
+EXIT_CODE=0 — 22 passed.
+
+2. Production build:
+```bash
+rm -rf .next
+unset PNPM_HOME npm_config_prefix
+pnpm build
+```
+EXIT_CODE=0 — 36 static pages generated. Non-fatal inherited ESLint react-hooks plugin conflict emitted.
+
+3. Jest plus full Chromium suite, serialized after build:
+```bash
+unset PNPM_HOME npm_config_prefix
+pnpm test
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH; export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"; pnpm exec playwright test --project=chromium --reporter=line'
+```
+EXIT_CODE=0 — Jest: 11 suites / 70 tests passed. Chromium: 32 passed. Non-fatal Next warnings: deprecated `images.domains`, future `allowedDevOrigins`, Fast Refresh reload, unavailable external `placehold.co` image.
+
+### Diagnostics
+- TypeScript LSP unavailable; prior user decision declined installation.
+- Source-file LSP diagnostics therefore unavailable.
+- Changed source files remain below 250 pure LOC: `components/ArticleTeaser/ArticleTeaser.tsx` 96; `e2e/responsive.spec.ts` 135.
+
+### Visual evidence
+- `.omo/evidence/task-31-screenshots/home-375.png`
+- `.omo/evidence/task-31-screenshots/blog-768.png`
+- `.omo/evidence/task-31-screenshots/projects-1280.png`
+- Independent read-only visual review: PASS. No clipping, overlap, broken grids, or cut-off controls. Blog/project ellipses are intentional `truncate` treatment, not responsive defects.
+
+### Modified files
+- `e2e/responsive.spec.ts`
+- `components/ArticleTeaser/ArticleTeaser.tsx`
+- `.omo/boulders/task-31-2026-portfolio-overhaul.md`
+- `.omo/evidence/task-31-2026-portfolio-overhaul.txt`
+- `.omo/notepads/2026-portfolio-overhaul/learnings.md`
+
+### Token usage
+- Model: 9router/default.
+- Exact token metering unavailable in this environment.

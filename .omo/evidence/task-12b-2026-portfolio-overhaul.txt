@@ -1,0 +1,53 @@
+# Task 12b — Boilerplate copy replacement evidence
+
+Timestamp: 2026-07-19T20:45:00Z
+Task: `12b. Replace boilerplate copy on blog page and landing page`
+Model: `9router/default`
+
+## Scope
+
+Changed only visible boilerplate copy; page structure, imports, components, and data flow remain unchanged.
+
+- `app/blog/page.tsx`: `Our Blog` → `Blog`; agile-audience template copy → `Thoughts on technology, homelabs, and software engineering.`
+- `app/page.tsx`: hero → `Tom Segbers — Senior Developer`; tagline → `Building reliable systems and solving hard problems.`
+- `.omo/notepads/2026-portfolio-overhaul/learnings.md`: durable task finding appended.
+- `.omo/plans/2026-portfolio-overhaul.md`: Todo 12b marked complete.
+
+## Verification
+
+### Boilerplate string scan
+
+```sh
+grep -E 'Our Blog|We use an agile|Exploring Innovation and Creativity|Welcome to my digital space' app/**/*.tsx
+```
+
+Exit: `0`; output: none. All four target boilerplate fragments are absent from application page files.
+
+### Build
+
+```sh
+nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+```
+
+Exit: `1` due to existing unrelated dependency blocker after successful production compilation:
+
+```text
+✓ Compiled successfully
+./components/ArticleTeaser/ArticleTeaser.tsx:1:37
+Type error: Cannot find module 'date-fns' or its corresponding type declarations.
+```
+
+No errors from `app/blog/page.tsx` or `app/page.tsx`.
+
+### Diagnostics
+
+`lsp_diagnostics` could not run: TypeScript LSP is not installed; prior user decision declined installation. No installation attempted.
+
+## Post-write review
+
+- Pure LOC unchanged except string content; no new functions, types, branches, parameters, imports, or escape hatches.
+- Responsibilities remain page layout and presentation only.
+- No changed behavior requiring a new test; task changes static copy only.
+- Build compilation passed before known `date-fns` type-check blocker.
+
+Token usage: unavailable from runtime telemetry.

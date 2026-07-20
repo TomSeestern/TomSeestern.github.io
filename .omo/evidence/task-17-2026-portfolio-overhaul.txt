@@ -1,0 +1,158 @@
+# Task 17 — Flowbite App Router compatibility audit
+Date: 2026-07-20
+Audit type: read-only (no source changes)
+Auditor: Sisyphus-Junior
+
+## flowbite-react version
+
+- package.json declares: `"flowbite-react": "^0.7.0"`, `"flowbite": "^2.2.0"`
+- Installed (node_modules/flowbite-react/package.json): **0.7.8**
+- Next.js: `^14.0.3` (App Router, static export)
+- React: `^18.2.0`
+
+## Flowbite components in use (6 source files import flowbite-react)
+
+| File | Flowbite imports | Boundary |
+| --- | --- | --- |
+| `components/Header/Header.tsx` | Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle | Server component (no "use client") |
+| `components/ArticleTeaser/ArticleTeaser.tsx` | Card | Server component |
+| `components/ProjectTeaser/ProjectTeaser.tsx` | Card, Tooltip | Server component |
+| `app/contact/page.tsx` | Alert | **Client component** (`"use client"` at line 1) |
+| `app/blog/entry/[slug]/page.tsx` | Breadcrumb, BreadcrumbItem | Server component |
+| `app/projects/entry/[slug]/page.tsx` | Breadcrumb, BreadcrumbItem | Server component |
+
+Note: `components/Tooltip/Tooltip.tsx` is a SEPARATE custom component that wraps `@radix-ui/react-tooltip`, NOT flowbite-react. ProjectTeaser imports Tooltip from `flowbite-react` directly (line 1), not from the local Tooltip component. These two Tooltip implementations coexist:
+  - `components/Tooltip/Tooltip.tsx` — Radix-based, used by… no current consumer (dead code candidate for later cleanup).
+  - `flowbite-react` Tooltip — used inside `components/ProjectTeaser/ProjectTeaser.tsx`.
+
+`components/Button/Button.tsx` and `components/Footer/Footer.tsx` do NOT import flowbite-react. Button uses CVA + tailwind-merge; Footer is hand-rolled markup.
+
+## Build warnings
+
+Command: `unset PNPM_HOME npm_config_prefix; pnpm build`
+
+- Exit code: **0**
+- 36 static routes generated (3 blog + 21 project detail + home/about/contact/blog/projects listings + not-found + api/health + icon/apple icons)
+- Grep for `hydrat|flowbite|warn|error|mismatch|did not match` in full build log: **0 matches**
+- No ESLint react-hooks plugin conflict surfaced in this build run (prior learnings noted it as pre-existing warning, not error; build still exits 0)
+- No `metadataBase` warnings (Task 33 fixed those)
+- **Verdict: zero Flowbite or hydration warnings at build time**
+
+## Runtime console errors (from Playwright e2e)
+
+Command: `unset PNPM_HOME npm_config_prefix; export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; pnpm exec playwright test --project=chromium`
+
+- Result: **7 passed, 0 failed, 10.8s**, exit 0
+- webServer auto-started `pnpm exec next dev --port 3030` with `E2E_CONTACT_FORM_SUCCESS=true`
+- Grep for `hydrat|flowbite|console|warn|error|mismatch|did not match` in e2e log: only test-name strings matched (e.g. "homepage renders hydrated primary content accessibly"); zero actual error or warning lines
+- `e2e/static-routes.spec.ts` (lines 10-27) collects all browser `console.error` messages per page and asserts `expectNoUnexpectedBrowserConsoleErrors(consoleErrors)` — tests pass, so **zero unexpected console errors on /, /about, /contact, and 404**
+- `e2e/dynamic-content.spec.ts` (blog + project detail journeys with breadcrumb nav) passes — Breadcrumb component renders and navigates without console errors
+- `e2e/home.spec.ts` passes — Navbar renders as `<nav>`, logo link, hero h1, projects marquee, blog section all verified
+- **Verdict: zero Flowbite-related console errors at runtime**
+
+## Hydration analysis
+
+Per-component analysis of server/client render behavior:
+
+| Component | `"use client"` in flowbite-react source? | Used in server component? | Hydration risk |
+| --- | --- | --- | --- |
+| **Navbar** (Header) | YES — `node_modules/flowbite-react/lib/esm/components/Navbar/Navbar.js` line 1 | YES — `components/Header/Header.tsx` has no "use client", rendered in `app/layout.tsx` server component | **Low.** Flowbite marks Navbar "use client" itself, so Next.js treats it as a client component boundary even when imported into a server component. Navbar uses `useState` for mobile collapse toggle — expected client behavior. Server renders initial HTML (expanded state); client hydrates and adds interactivity. No mismatch because initial server render matches default `open=false` state. E2e confirms no console errors. |
+| **Card** (ArticleTeaser, ProjectTeaser) | NO — `Card.js` has no "use client" directive | YES — both teasers are server components | **None.** Card is a pure presentational wrapper (div + className). No state, no effects, no browser-only APIs. Renders identically on server and client. |
+| **Alert** (contact form) | NO — `Alert.js` has no "use client" directive | Used in `app/contact/page.tsx` which IS "use client" | **None.** Alert renders conditionally (`showConfirmation && <Alert>`) inside an already-client component. Flowbite Alert's `onDismiss` prop is client-only but only fires on click. Server render omits the Alert (showConfirmation defaults false); client renders it only after submit. No mismatch. |
+| **Tooltip** (ProjectTeaser) | NO — `Tooltip.js` has no "use client" directive | YES — ProjectTeaser is a server component | **Low.** Flowbite Tooltip internally uses `Floating` component which DOES have "use client" (`Floating.js`). Tooltip positions via Popper.js on client. Server renders trigger element; client adds floating content on hover. No mismatch because floating content is not in initial server HTML. E2e confirms no console errors on homepage projects marquee. |
+| **Breadcrumb** (blog + project detail) | NO — `Breadcrumb.js` has no "use client" directive | YES — both detail pages are server components | **None.** Breadcrumb is pure presentational (nav + links). No state, no effects. Renders identically server and client. E2e breadcrumb navigation tests pass. |
+| **NavbarToggle / NavbarCollapse / NavbarLink / NavbarBrand** | Navbar sub-components — NavbarCollapse, NavbarLink, NavbarBrand, NavbarToggle all carry "use client" | All used within Header (server) | **Low.** Same as Navbar — client boundary is respected. |
+
+**Flowbite `theme-store`**: Tooltip, Breadcrumb, Card, and others import `getTheme` from `../../theme-store`. This is a module-level singleton initialized at import time. In App Router, server and client have separate module graphs, so the theme store is instantiated once per environment — no cross-boundary state leak. No hydration issue observed.
+
+**No `"use client"` wrapper needed**: Flowbite-react v0.7.8 self-marks interactive components (Navbar, Dropdown, Modal, etc.) with `"use client"` at the source level. Components like Card, Alert, Breadcrumb, Tooltip do not need wrapping — they either are pure or delegate client-only behavior to internal client subcomponents (Floating). This is the correct App Router pattern.
+
+## Strict mode conflicts
+
+- React 18 strict mode double-renders in dev. Flowbite components use `useState` (Navbar, Tooltip/Floating) — double-render does not cause mismatches because:
+  1. Pure components (Card, Alert, Breadcrumb) have no state — double render is a no-op.
+  2. Stateful components (Navbar, Floating) use `useState` with deterministic initial values — double render produces the same output.
+- No `useEffect` cleanup issues observed in e2e (which runs against dev server with strict mode behavior).
+- **Verdict: no strict mode conflicts detected**
+
+## App Router compatibility
+
+Server-side rendering (no "use client" in consumer file):
+
+| Consumer file | Flowbite components | Renders server-side? |
+| --- | --- | --- |
+| `components/Header/Header.tsx` | Navbar family | YES (imported by `app/layout.tsx` server component) |
+| `components/ArticleTeaser/ArticleTeaser.tsx` | Card | YES (imported by `app/page.tsx`, `app/blog/page.tsx` server components) |
+| `components/ProjectTeaser/ProjectTeaser.tsx` | Card, Tooltip | YES (imported by `app/page.tsx`, `app/projects/page.tsx` server components) |
+| `app/blog/entry/[slug]/page.tsx` | Breadcrumb, BreadcrumbItem | YES (server component with generateStaticParams) |
+| `app/projects/entry/[slug]/page.tsx` | Breadcrumb, BreadcrumbItem | YES (server component with generateStaticParams) |
+
+Client-side rendering (consumer has "use client"):
+
+| Consumer file | Flowbite components | Why client? |
+| --- | --- | --- |
+| `app/contact/page.tsx` | Alert | Uses `useState` for `showConfirmation`, `onSubmit` form handler, `sendEmail` server action call |
+
+No Flowbite component forces a server component to become a client component. Flowbite's own `"use client"` directives on Navbar/Floating create correct client boundaries internally without polluting the consumer's module graph.
+
+## Decision: KEEP
+
+**Keep Flowbite at current version (v0.7.8 / flowbite ^2.2.0).**
+
+### Rationale
+
+The audit threshold from the plan defines "minor" as: no hydration errors, ≤2 console warnings, components render in App Router → keep Flowbite, document workarounds.
+
+Actual findings:
+1. **Hydration errors**: **0** — no hydration mismatches. Flowbite self-marks interactive components with `"use client"`, creating correct client boundaries. Pure components (Card, Alert, Breadcrumb) render identically server and client.
+2. **Console warnings/errors at runtime**: **0** — Playwright e2e (7/7 pass) collects `console.error` messages and asserts none unexpected. All pass. Zero Flowbite-related console output.
+3. **Build warnings**: **0** — `pnpm build` exits 0, zero matches for hydration/flowbite/warn/error in build log.
+4. **App Router compatibility**: All 6 Flowbite-using files render correctly. 5 are server components, 1 is client (`app/contact/page.tsx` — client by necessity of `useState` + form handler, not because Flowbite forced it). No `"use client"` wrappers needed — Flowbite handles the boundary internally.
+5. **Strict mode**: No conflicts detected.
+
+All thresholds met for "minor" classification. No workarounds needed beyond Flowbite's built-in `"use client"` directives.
+
+### Not upgraded because
+- No symptoms warrant an upgrade. v0.7.8 is compatible with Next.js 14 App Router, React 18, and static export.
+- Upgrading to v0.8+ would introduce API changes (Flowbite v0.8 changed theme customization API and component props) requiring a migration effort disproportionate to the zero observed issues.
+- Risk of regression vs. zero benefit at this time.
+
+## If UPGRADE: target version and testing plan
+
+N/A — decision is KEEP. If a future feature requires Flowbite v0.8+ (e.g., new components, RSC support improvements), the plan would be:
+1. Pin `flowbite-react@^0.8.0` in package.json
+2. Run `pnpm install --frozen-lockfile` and resolve peer dependency conflicts
+3. Migrate theme customization (v0.8 changed `customTheme` API)
+4. Re-run this full audit (build + e2e + per-component hydration check)
+5. Verify all 6 consuming files still render correctly
+
+## Verification commands (reproducible)
+
+```bash
+# 1. Build (must unset Nix devShell env vars)
+unset PNPM_HOME npm_config_prefix
+pnpm build
+# Expected: exit 0, 36 static routes, zero hydration/flowbite warnings
+
+# 2. E2e (must point Playwright at local browser cache)
+unset PNPM_HOME npm_config_prefix
+export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
+pnpm exec playwright test --project=chromium
+# Expected: 7 passed, 0 failed, ~11s, zero console errors
+
+# 3. Verify flowbite-react version
+cat node_modules/flowbite-react/package.json | grep version
+# Expected: "version": "0.7.8"
+
+# 4. Verify which flowbite components self-declare "use client"
+grep -l '"use client"' node_modules/flowbite-react/lib/esm/components/*/*.js
+# Expected: Navbar (6 files), Floating, Dropdown (5), Modal (5), Sidebar (9),
+# Accordion (5), Carousel, DarkThemeToggle, Datepicker (2), Popover, Rating (3),
+# Table (9), Tabs (2), Timeline (10), Toast (3), BannerCollapseButton
+# NOT in list: Card, Alert, Breadcrumb, Tooltip (these are server-compatible)
+```
+
+## Token usage
+
+- Approx 18k input tokens (file reads + build/e2e logs)
+- Approx 1.5k output tokens (this evidence file)

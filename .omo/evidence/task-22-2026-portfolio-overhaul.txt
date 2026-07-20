@@ -1,0 +1,70 @@
+Task 22 — Hover, focus-visible, and reduced-motion support
+
+Timestamp: 2026-07-20
+Owner: Sisyphus-Junior
+Model: 9router/default — focused UI accessibility implementation and browser verification.
+
+Scope completed
+- Added restrained `transition-colors duration-200` feedback to custom CTAs, teaser links/cards, timeline and person links, footer social controls, and contact-form controls.
+- Added visible `focus-visible` affordances to every touched custom anchor, button, and form control; primary Flowbite-pattern CTAs retain compatible `primary-*` focus rings.
+- Kept transforms composited and limited to `motion-safe:hover:-translate-y-1` on teaser cards; non-motion color feedback remains available.
+- Updated home marquee wrappers to retain their normal animation utilities plus `motion-reduce:animate-none`, so CSS reduced-motion preference disables continuous movement while preserving all project links.
+- Added focused Chromium coverage for visible keyboard focus and reduced-motion marquee behavior. Every new E2E test collects and asserts zero unexpected browser console errors; existing console-error checks remain untouched.
+
+Interactive inventory and applied state treatment
+- Header custom Contact CTA: color transition, hover background, `focus-visible` primary ring.
+- Footer copyright link and LinkedIn/Twitter/GitHub/Email controls: color transition plus accent focus rings.
+- Button component: standard color transition plus semantic accent focus rings across variants.
+- Homepage CTAs and archive links: color transitions, hover feedback, semantic/primary focus rings.
+- ArticleTeaser and ProjectTeaser: card tonal hover; motion-safe transform lift; each custom link receives underline/color hover and focus rings.
+- PersonTeaser and TimelineEntry links: background/text or underline/color hover, accent focus rings.
+- Contact email, subject, message, and submit controls: transition and focus-visible border/ring treatment.
+- Home marquee: `animate-marquee` / `animate-marquee2` paired with `motion-reduce:animate-none`.
+- Flowbite Navbar links, Navbar toggle, cards, tooltips, breadcrumbs, and alert internals: deliberately left to Flowbite defaults.
+
+Changed files
+- `DESIGN.md`
+- `app/about/page.tsx`
+- `app/contact/page.tsx`
+- `app/page.tsx`
+- `components/ArticleTeaser/ArticleTeaser.tsx`
+- `components/Button/Button.tsx`
+- `components/Footer/Footer.tsx`
+- `components/Header/Header.tsx`
+- `components/PersonTeaser/PersonTeaser.tsx`
+- `components/ProjectTeaser/ProjectTeaser.test.tsx`
+- `components/ProjectTeaser/ProjectTeaser.tsx`
+- `components/TimelineEntry/TimelineEntry.tsx`
+- `e2e/interactions.spec.ts` (new)
+- `.omo/boulders/task-22-2026-portfolio-overhaul.md`
+- `.omo/notepads/2026-portfolio-overhaul/learnings.md`
+- `.omo/evidence/task-22-2026-portfolio-overhaul.txt`
+
+Verification
+1. Command
+   `rm -rf .next && unset PNPM_HOME npm_config_prefix && pnpm build`
+   Result: exit 0. Next.js 14.2.35 compiled, generated 36 static pages. Non-fatal inherited ESLint `react-hooks` plugin-conflict diagnostic remains.
+
+2. Command
+   `unset PNPM_HOME npm_config_prefix && pnpm test`
+   Result: exit 0. 11 suites passed, 70 tests passed.
+
+3. Command
+   `nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH; export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"; pnpm exec playwright test --project=chromium --reporter=line'`
+   Result: exit 0. Chromium: 10 passed in 16.2s, including both new interaction tests.
+
+Known non-fatal output
+- Build: inherited ESLint `react-hooks` plugin conflict.
+- E2E: Next warns `images.domains` is deprecated and reports future `allowedDevOrigins` configuration guidance; no test recorded unexpected browser console errors.
+- Nix shell: `PNPM_HOME` / `npm_config_prefix` must be unset as documented.
+
+LSP diagnostics
+- TypeScript language server unavailable because prior user decision declined installation. No server installation attempted.
+
+Post-write review
+- Changed UI files remain under 250 lines and each retains a single component/page responsibility.
+- No new external boundary, union discrimination, type assertion, non-null assertion, package, color token, typography token, spacing convention, or Flowbite internals changed.
+- New observable behavior is locked by Chromium focus and reduced-motion E2E tests; adjusted ProjectTeaser characterization assertion preserves motion-safe elevation contract.
+
+Resource note
+- No delegated model calls. Main session used 9router/default.

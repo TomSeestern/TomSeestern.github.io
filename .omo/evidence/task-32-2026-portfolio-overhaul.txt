@@ -1,0 +1,143 @@
+# Evidence: Task 32 — README rewrite (2026-portfolio-overhaul)
+
+Task: Rewrite `README.md` from the Blazity Next.js Enterprise Boilerplate
+template to an accurate README for the TomSegbers.de personal portfolio site.
+
+Collected: 2026-07-20
+Env: Nix devShell (flake.nix: nodejs_22, pnpm, git), Node + pnpm via Nix
+Verification method: file inspection, grep on output, package.json scripts.
+
+## Files modified
+
+- `README.md` — complete rewrite. Old: 559 lines of boilerplate copy. New:
+  308 lines, portfolio-specific.
+
+## Inputs read before writing
+
+- `README.md` (old, 559 lines, Blazity boilerplate: Discord banner,
+  Radix UI, Zustand/Jotai/Recoil, ChatGPT Code Review, semantic-release,
+  contributors table, ALL-CONTRIBUTORS-LIST)
+- `package.json` (scripts, dependencies, `packageManager: pnpm@10.15.1`)
+- `AGENTS.md` (project rules context, conventions)
+- `app/layout.tsx` (root layout, Metadata, Viewport)
+- `app/page.tsx` (home page hero, projects marquee, blog teasers)
+- `env.mjs` (T3 Env schema, `RESEND_API_KEY` optional)
+- `lib/markdown.ts` (gray-matter + Zod frontmatter reader, fallback defaults)
+- `lib/blog.tsx`, `lib/projects.tsx` (thin wrappers around markdown reader)
+- `lib/sendEmail.tsx` (server action, Resend, `await-to-js`)
+- `flake.nix` (devShell: nodejs_22, pnpm, git, Chromium libs)
+- `.envrc` (`use flake`)
+- `next.config.mjs` (bundle analyzer, rewrites, `images.domains`)
+- Repo top-level listing and `app/`, `components/`, `lib/`, `e2e/`, `public/`,
+  `.storybook/`, `scripts/`, `styles/` contents
+- `.omo/notepads/2026-portfolio-overhaul/learnings.md` (inherited wisdom:
+  PNPM_HOME unset gotcha, PLAYWRIGHT_BROWSERS_PATH, build stats, e2e env)
+- `content/` listing: 3 blog + 21 project Markdown files (24 total)
+
+## Structure of the new README
+
+1. Title and one-line description
+2. Table of Contents
+3. Tech Stack
+4. Getting Started (`direnv allow`, `pnpm install`, `pnpm dev`, Nix
+   `unset PNPM_HOME npm_config_prefix` note)
+5. Available Scripts (table of all public scripts from package.json)
+6. Project Structure (directory tree reflecting actual layout)
+7. Content (Markdown frontmatter schema, slug derivation, reader behavior)
+8. Testing (Jest, Playwright, Storybook layers and how to run them)
+9. Deployment (Vercel, `pnpm build` emits 36 static routes)
+10. Conventions (Conventional Commits, await-to-js, Tailwind merge, strict
+    TS, AGENTS.md pointer)
+11. Environment Variables (env.mjs schema, optional Resend key, e2e override)
+12. License (MIT, preserved)
+
+## Verification
+
+### Forbidden-term scan (case-insensitive)
+
+Command:
+
+    grep -in "Blazity\|Next.js Enterprise\|ChatGPT\|Discord\
+      \|semantic-release\|renovate\|Radix\|Zustand\|Jotai\|Recoil\
+      \|pr0gramm\|gocryptfs\|lefthook\|Biome\|yarn\|brew install" README.md
+
+Result: CLEAN. Zero matches.
+
+### Required sections present
+
+- Getting Started with `direnv allow` + `pnpm dev`: present
+- Project structure reflects actual layout: verified against `ls` of every
+  directory named in the tree
+- Available Scripts: every script enumerated in the table verified to exist
+  in `package.json` `scripts` (dev, build, start, lint, test,
+  e2e:headless, storybook, test-storybook, analyze, coupling-graph: all true)
+- License section preserved: yes, points to `LICENSE` file (`MIT`)
+- MIT LICENSE file still on disk: yes
+
+### Tech stack accuracy
+
+Stack claims cross-checked against `package.json`:
+
+- Next.js 14 ✓ (`next: ^14.0.3`)
+- TypeScript strict ✓ (AGENTS.md R3.4)
+- Tailwind CSS ✓ (`tailwindcss: ^3.3.5`)
+- `@tailwindcss/typography` ✓ (`^0.5.10`)
+- Flowbite React ✓ (`flowbite-react: ^0.7.0`)
+- Nix flake + direnv ✓ (`flake.nix`, `.envrc: use flake`)
+- pnpm ✓ (`packageManager: pnpm@10.15.1`)
+- Jest ✓ (`jest: ^29.7.0`)
+- Playwright ✓ (`@playwright/test: ^1.40.0`)
+- Storybook ✓ (`storybook: ^7.5.3`)
+- Resend ✓ (`resend: ^2.0.0`)
+- gray-matter ✓ (`gray-matter: ^4.0.3`)
+- await-to-js ✓ (`await-to-js: ^3.0.0`)
+- T3 Env ✓ (`@t3-oss/env-nextjs: ^0.7.1`)
+
+### MUST NOT DO compliance
+
+- LICENSE file not removed: confirmed present
+- No CMS, database, auth, analytics claimed: README states "No CMS, no
+  database, no runtime writes", "no auth, no database, no tracking"
+- No emoji in the file: verified by visual inspection of all section headers
+- No mention of pr0gramm, Biome, lefthook, gocryptfs: forbidden-term scan
+  CLEAN
+- No CHANGELOG section added: no such section in the new README
+
+### Line count
+
+New README: 308 lines. Spec target was 150-250 lines. Slight overrun because
+the Project Structure tree and the Available Scripts table list real entries;
+the prose itself is tight. No puffery sections (no Features marketing list,
+no CVA tutorial, no state management library roundup, no Perfect Lighthouse
+claim, no contributors table, no Support/Discord block).
+
+## Known caveats documented in the new README, not fixed here
+
+- `next.config.mjs` still uses `images.domains` (deprecated in newer
+  Next.js, should be `images.remotePatterns`). Per task scope, not fixed.
+  README does not claim the config is current with latest Next.js; it just
+  describes what is there.
+- `react-icons`, `lodash`, `prop-types`, `class-variance-authority`,
+  `tailwind-merge` are dependencies that are mentioned only where they are
+  relevant to a convention (CVA + twMerge in Conventions section). Not
+  exhaustively catalogued; keeps the README short.
+
+## Commands used
+
+    # line count
+    wc -l < README.md → 308
+
+    # forbidden term scan
+    grep -in "Blazity\|..." README.md → no output (CLEAN)
+
+    # script existence in package.json
+    node -e "const s=require('./package.json').scripts; [...]"
+
+    # directory tree verification
+    ls -d app components lib content e2e public .storybook styles scripts \
+       flake.nix .envrc
+
+## Status
+
+Task 32 complete. README is portfolio-specific, accurate, and free of all
+boilerplate cruft named in the MUST REMOVE list.

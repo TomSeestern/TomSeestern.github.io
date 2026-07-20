@@ -1,0 +1,64 @@
+# Task 30 — Storybook smoke test verification
+## Date: 2026-07-20
+
+### Commands run
+
+#### 1. pnpm build-storybook
+```
+unset PNPM_HOME npm_config_prefix; pnpm build-storybook
+```
+EXIT_CODE=0
+Warnings (non-fatal): asset size limits exceeded (463, 840, 548, 455 bundles), no .stories.mdx files found.
+
+#### 2. pnpm test-storybook (first attempt — failed)
+```
+unset PNPM_HOME npm_config_prefix; pnpm test-storybook
+```
+EXIT_CODE=1
+Root cause: Nix devShell sets PLAYWRIGHT_BROWSERS_PATH to stale nix-store path
+(/nix/store/.../chromium_headless_shell-1228/...) which doesn't exist.
+Error: "Executable doesn't exist at .../chrome-headless-shell"
+
+#### 3. pnpm test-storybook (with local cache override — 1 failure)
+```
+unset PNPM_HOME npm_config_prefix; export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"; pnpm test-storybook
+```
+EXIT_CODE=1
+Results: 2 passed (Button, ArticleTeaser), 1 failed (ProjectTeaser)
+Failure: ProjectTeaser story crashed — `fs.readdirSync is not a function` in `lib/icon-map.ts`.
+Root cause: `lib/icon-map.ts` called `fs.readdirSync(ICONS_DIR)` at module load time.
+In browser/Storybook environment, `fs` is not available.
+
+#### 4. Fix: lib/icon-map.ts — browser-safe icon loading
+Changed `const knownIcons = new Set(fs.readdirSync(...))` to `let knownIcons` with
+try/catch fallback to empty Set when fs is unavailable.
+
+#### 5. pnpm build-storybook (after fix)
+```
+unset PNPM_HOME npm_config_prefix; pnpm build-storybook
+```
+EXIT_CODE=0
+
+#### 6. pnpm test-storybook (after fix — all pass)
+```
+unset PNPM_HOME npm_config_prefix; export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"; pnpm test-storybook
+```
+EXIT_CODE=0
+Results: 3 passed, 0 failed, 6 tests total
+- Button/Button.stories.tsx: PASS
+- ProjectTeaser/ProjectTeaser.stories.tsx: PASS
+- ArticleTeaser/ArticleTeaser.stories.tsx: PASS
+
+### Files changed
+- `lib/icon-map.ts`: Made `knownIcons` initialization browser-safe with try/catch
+
+### Stories inspected (no changes needed)
+- `components/Button/Button.stories.tsx`: Matches current Button API (intent, size, underline, href, children)
+- `components/ArticleTeaser/ArticleTeaser.stories.tsx`: Matches current ArticleProps (title, articleDate, articleContent, authorImgSrc?, authorName, fullArticleLink)
+- `components/ProjectTeaser/ProjectTeaser.stories.tsx`: Matches current ProjectProps (imageUrl, title, description, technologies, ctaLink, projectDate)
+
+### Verification
+- `pnpm build-storybook`: EXIT_CODE=0 ✓
+- `pnpm test-storybook`: EXIT_CODE=0, 3/3 suites, 6/6 tests ✓
+- No story files modified (only lib/icon-map.ts for browser compatibility)
+- No new stories added

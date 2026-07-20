@@ -1,0 +1,81 @@
+# Task 21 — Dark-mode audit and fixes
+
+- Collected: 2026-07-20
+- Owner: Sisyphus-Junior
+- Status: completed
+- Strategy: preserved Tailwind `darkMode: "class"`; no toggle, dependency, typography, spacing, content, Flowbite-version, or primary-alias changes.
+
+## Token and contrast basis
+
+| Role | Light | Dark | Use |
+| --- | --- | --- | --- |
+| Page surface | `#ffffff` | `#111827` | `surface` / `surface-dark` |
+| Foreground | `#111827` | `#ffffff` | `foreground` / `foreground-dark` |
+| Muted copy | `#6b7280` | `#9ca3af` | `muted` / `muted-dark` |
+| Border | `#d1d5db` | `#4b5563` | `border` / `border-dark` |
+| Accent | `#2563eb` | `#3b82f6` | `accent` / `accent-dark` |
+| Soft badge | `#dbeafe` + `#1e40af` | `#1e3a8a` + `#93c5fd` | `accent-soft*` roles |
+
+Dark foreground (`#ffffff`) over dark surface (`#111827`), muted copy (`#9ca3af`) over dark surface, accent (`#3b82f6`) over dark surface, and soft-badge foreground (`#93c5fd`) over soft dark badge (`#1e3a8a`) retain readable separation. Body now owns the semantic page surface, so transparent route fragments cannot expose an unintended light canvas.
+
+## Audit and corrections
+
+| Surface | Audit result / correction |
+| --- | --- |
+| `/`, `/about`, `/blog`, `/projects`, `/contact` | Existing semantic route surfaces and foreground/muted pairs reviewed. `app/layout.tsx` now gives the document body semantic surface and foreground colors in both modes. |
+| `/blog/entry/[slug]`, `/projects/entry/[slug]` | Existing `prose` plus `dark:prose-invert` remains correct; body fallback now remains dark behind transparent article wrappers. |
+| Header | Brand name now uses semantic foreground pair; Flowbite primary CTA intentionally retains full `primary-*` aliases. |
+| Footer | Four social controls migrated from raw gray utilities to semantic muted/surface/foreground/border roles. SVG social marks now invert in dark mode because source SVG paths are black and do not inherit CSS text color. |
+| ProjectTeaser | Relative-date metadata now has its required `dark:text-muted-dark`; arrow icon inverts in dark mode. Existing semantic text/link/hover roles retained. |
+| ArticleTeaser | Badge dark state corrected from light-only `accent-soft-contrast` to `accent-soft-dark`, with matching `accent-soft-foreground-dark`; arrow icon inverts in dark mode. |
+| TimelineEntry | Existing semantic text and subtle-border dark pairs were correct; no source change required. |
+| Contact form | Existing semantic surface, labels, inputs, placeholders, borders, focus, and Flowbite primary submit states were correct; no source change required. |
+| Home secondary CTA | Replaced raw `border-gray-*`, `bg-white`, `text-gray-*`, and gray hover/focus utilities with semantic border/surface/foreground/accent-soft variants. |
+
+## Regression coverage
+
+Added `e2e/dark-mode.spec.ts`.
+
+- Uses `page.emulateMedia({ colorScheme: "dark" })` and adds the required `.dark` class after each navigation.
+- Exercises `/`, `/about`, `/blog`, discovered blog detail, `/projects`, discovered project detail, and `/contact`.
+- Asserts `body` computes to dark semantic surface `rgb(17, 24, 39)`, heading visibility after hydration, and ArticleTeaser badge computes to `rgb(30, 58, 138)`.
+- Collects browser `console.error` messages and requires none. Remote `placehold.co` placeholder image is intercepted locally to prevent unrelated image-loading noise.
+
+## Serialized verification
+
+```text
+rm -rf .next
+unset PNPM_HOME npm_config_prefix
+pnpm build
+```
+
+Exit code: 0. Next.js compiled successfully and generated 36 static pages. Existing non-fatal ESLint `react-hooks` plugin-conflict diagnostic printed.
+
+```text
+unset PNPM_HOME npm_config_prefix
+pnpm test
+```
+
+Exit code: 0. Jest: 11 suites passed, 70 tests passed.
+
+```text
+nix develop --command bash -c '
+  unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+  export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+  pnpm exec playwright test --project=chromium --reporter=line
+'
+```
+
+Exit code: 0. Chromium: 8 passed in 15.2s, including the new all-route dark-mode test. Existing non-fatal `images.domains` and future `allowedDevOrigins` warnings printed.
+
+## Diagnostics and QA constraints
+
+- `lsp_diagnostics` requested for all changed TSX/TS files. TypeScript LSP remains unavailable because the server is not installed and prior user decision declined installation. Production build completed TypeScript validation.
+- Playwright MCP visual browser could not launch its configured Chrome distribution (`/opt/google/chrome/chrome` absent). Required Nix-shell Playwright Chromium run above completed real-browser assertions and console checks.
+- `dark-mode.spec.ts` was red before the body semantic surface fix: computed `body` background was transparent, then light (`rgb(255, 255, 255)`), proving the regression coverage exercised a real issue. Green after fix: 1/1 focused test passed; full serialized suite passed after icon dark-mode corrections.
+
+## Post-write review
+
+- Changed modules remain under 250 pure LOC individually; no new dependency, type assertion, tagged union, error path, or one-off production helper.
+- Single responsibility retained: layout sets document canvas, components own their local semantic visual states, and E2E owns user-visible dark-mode contracts.
+- No strategy/toggle change and no Flowbite primary aliases changed.
