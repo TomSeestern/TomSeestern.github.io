@@ -1,3 +1,11 @@
+/**
+ * Technology-to-icon mapping for project portfolio.
+ *
+ * Reads the `public/icon/` directory at module load to build a set of known
+ * icon filenames. `getIconPath` matches a technology name (case-insensitive,
+ * space-normalized) to its SVG file and returns the public URL path, or `null`
+ * when no icon exists.
+ */
 import fs from "fs"
 import path from "path"
 

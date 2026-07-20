@@ -12,6 +12,10 @@ const markdownFrontmatterSchema = z.object({
   technologies: z.array(z.string()).default([]).catch([]),
 })
 
+/** Parsed frontmatter + computed fields for a single markdown content file.
+ *  All fields carry Zod `.default()` / `.catch()` fallbacks, so malformed
+ *  frontmatter never breaks the build — missing values resolve to safe
+ *  placeholders instead. */
 export type MarkdownEntry = {
   readonly id: string
   readonly title: string
@@ -23,12 +27,54 @@ export type MarkdownEntry = {
   readonly technologies: string[]
 }
 
+/**
+ * Reads every `.md` file in a content directory, parses frontmatter through
+ * the Zod schema, and returns entries sorted newest-first.
+ *
+ * @param dirPath   — Absolute filesystem path (e.g. `path.join(process.cwd(), "content/blog")`).
+ * @param urlPrefix — URL segment prepended to each entry's `fullArticleLink` (e.g. `"/blog"`).
+ * @returns Readonly array of validated MarkdownEntry records, each with safe
+ *          fallbacks for missing frontmatter fields. Empty array if the
+ *          directory contains no `.md` files.
+ */
 export function getAllMarkdownEntries(dirPath: string, urlPrefix: string): readonly MarkdownEntry[] {
   return fs
     .readdirSync(dirPath, { withFileTypes: true })
     .filter((entry) => entry.isFile() && path.extname(entry.name) === ".md")
     .map((entry) => createMarkdownEntry(dirPath, urlPrefix, entry.name))
     .sort((left, right) => right.articleDate.valueOf() - left.articleDate.valueOf())
+}
+
+/**
+ * Reads a single markdown file and parses its frontmatter with gray-matter.
+ * Returns the parsed result (with `.data` and `.content`), or `null` if the
+ * file does not exist or cannot be read.
+ *
+ * @param slug - File name without `.md` extension
+ * @param dir  - Content directory path relative to the project root (e.g. "content/blog")
+ */
+export function getMarkdownEntry(slug: string, dir: string): matter.GrayMatterFile<string> | null {
+  try {
+    const filePath = path.join(process.cwd(), dir, slug + ".md")
+    const fileContents = fs.readFileSync(filePath, "utf8")
+    return matter(fileContents)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Lists all markdown slugs in a content directory.
+ * Returns an array of `{ slug }` objects suitable for Next.js `generateStaticParams`.
+ *
+ * @param dir - Content directory path relative to the project root (e.g. "content/blog")
+ */
+export function getMarkdownSlugs(dir: string): { slug: string }[] {
+  const postsDirectory = path.join(process.cwd(), dir)
+  const filenames = fs.readdirSync(postsDirectory)
+  return filenames.map((filename) => ({
+    slug: filename.replace(/\.md$/, ""),
+  }))
 }
 
 function createMarkdownEntry(dirPath: string, urlPrefix: string, filename: string): MarkdownEntry {
