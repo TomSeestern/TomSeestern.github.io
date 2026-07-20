@@ -158,8 +158,6 @@ test("mobile header exposes keyboard-operable navigation through its hamburger m
   await page.keyboard.press("Enter")
   await expect(page).toHaveURL(/\/about$/)
   await expectDocumentFitsViewport(page)
-  const relevantErrors = browserErrors.filter(
-    (err) => !err.includes("placehold.co") && !err.includes("Image corrupt")
-  )
+  const relevantErrors = browserErrors.filter((err) => !err.includes("placehold.co") && !err.includes("Image corrupt"))
   expect(relevantErrors).toEqual([])
 })
