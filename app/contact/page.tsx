@@ -68,7 +68,7 @@ export default function Contact() {
           </Alert>
         )}
 
-        <form onSubmit={handleAction} className="space-y-8">
+        <form onSubmit={handleAction} className="space-y-8" noValidate>
           <div>
             <label
               htmlFor="name"
@@ -84,7 +84,11 @@ export default function Contact() {
               placeholder="Your full name"
               required={true}
             />
-            {fieldErrors.name && <p id="name-error" className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.name}</p>}
+            {fieldErrors.name && (
+              <p id="name-error" className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {fieldErrors.name}
+              </p>
+            )}
           </div>
           <div>
             <label
@@ -101,7 +105,11 @@ export default function Contact() {
               placeholder="your.email@example.com"
               required={true}
             />
-            {fieldErrors.email && <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.email}</p>}
+            {fieldErrors.email && (
+              <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {fieldErrors.email}
+              </p>
+            )}
           </div>
           <div className="sm:col-span-2">
             <label
@@ -119,7 +127,9 @@ export default function Contact() {
               defaultValue={""}
             />
             {fieldErrors.message && (
-              <p id="message-error" className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.message}</p>
+              <p id="message-error" className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {fieldErrors.message}
+              </p>
             )}
           </div>
           <button
