@@ -18,6 +18,27 @@ function expectNoUnexpectedBrowserConsoleErrors(consoleErrors: readonly string[]
 }
 
 test.describe("interactive accessibility", () => {
+  test("skip link becomes visible on Tab and moves focus to main content on Enter", async ({ page }) => {
+    // Given
+    const consoleErrors = collectBrowserConsoleErrors(page)
+    await page.goto("/")
+
+    // When: Tab to focus the skip link (first focusable element after page load)
+    await page.keyboard.press("Tab")
+    const skipLink = page.locator('a[href="#main-content"]')
+
+    // Then: skip link visible and focused
+    await expect(skipLink).toBeVisible()
+    await expect(skipLink).toBeFocused()
+
+    // When: Enter activates the skip link
+    await page.keyboard.press("Enter")
+
+    // Then: focus moves to #main-content
+    await expect(page.locator("#main-content")).toBeFocused()
+    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+  })
+
   test("keyboard focus gives the custom contact CTA a visible indicator", async ({ page }) => {
     // Given
     const consoleErrors = collectBrowserConsoleErrors(page)
