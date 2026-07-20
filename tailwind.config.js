@@ -3,6 +3,19 @@ const { pick, omit } = require("lodash")
 const colors = require("tailwindcss/colors")
 const defaultTheme = require("tailwindcss/defaultTheme")
 
+const primary = {
+  50: "#eff6ff",
+  100: "#dbeafe",
+  200: "#bfdbfe",
+  300: "#93c5fd",
+  400: "#60a5fa",
+  500: "#3b82f6",
+  600: "#2563eb",
+  700: "#1d4ed8",
+  800: "#1e40af",
+  900: "#1e3a8a",
+}
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
@@ -18,19 +31,86 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e40af",
-          900: "#1e3a8a",
+        surface: {
+          DEFAULT: "#ffffff",
+          muted: "#f9fafb",
+          elevated: "#ffffff",
+          dark: "#111827",
+          "muted-dark": "#1f2937",
+          "elevated-dark": "#1f2937",
         },
+        foreground: {
+          DEFAULT: "#111827",
+          muted: "#6b7280",
+          dark: "#ffffff",
+          "muted-dark": "#9ca3af",
+          "foreground-muted-dark": "#d1d5db",
+        },
+        accent: {
+          DEFAULT: primary[600],
+          light: primary[400],
+          hover: primary[700],
+          soft: primary[100],
+          "soft-contrast": primary[200],
+          "soft-foreground": primary[800],
+          dark: primary[500],
+          "hover-dark": primary[400],
+          "soft-dark": primary[900],
+          "soft-foreground-dark": primary[300],
+        },
+        muted: {
+          DEFAULT: "#6b7280",
+          surface: "#f3f4f6",
+          dark: "#9ca3af",
+          "surface-dark": "#1f2937",
+        },
+        border: {
+          DEFAULT: "#d1d5db",
+          subtle: "#e5e7eb",
+          dark: "#4b5563",
+          "subtle-dark": "#374151",
+        },
+        primary,
       },
+      // ── Typography scale ────────────────────────────────────────────────
+      // Semantic font-size tokens. Use these (or the matching utility
+      // class) instead of ad-hoc text-* values so every page shares one
+      // scale. Line-height and letter-spacing are baked in via the tuple
+      // form [fontSize, { lineHeight, letterSpacing, fontWeight }].
+      // See `.omo/evidence/task-19-2026-portfolio-overhaul.txt` for the
+      // audit that established this scale.
+      fontSize: {
+        // Page-level headings ──────────────────────────────────────────────
+        h1: ["3rem", { lineHeight: "1", letterSpacing: "-0.025em", fontWeight: "800" }],
+        "h1-sm": ["2.25rem", { lineHeight: "1.1", letterSpacing: "-0.025em", fontWeight: "800" }],
+        h2: ["2.25rem", { lineHeight: "1.15", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "h2-sm": ["1.875rem", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+        h3: ["1.5rem", { lineHeight: "1.25", fontWeight: "600" }],
+        "h3-sm": ["1.25rem", { lineHeight: "1.3", fontWeight: "600" }],
+        h4: ["1.125rem", { lineHeight: "1.4", fontWeight: "600" }],
+        // Body & ancillary ─────────────────────────────────────────────────
+        body: ["1rem", { lineHeight: "1.625" }],
+        "body-lg": ["1.125rem", { lineHeight: "1.75" }],
+        small: ["0.875rem", { lineHeight: "1.5" }],
+        caption: ["0.75rem", { lineHeight: "1.4" }],
+      },
+      typography: ({ theme }) => ({
+        DEFAULT: {
+          css: {
+            color: theme("colors.gray.700"),
+            maxWidth: "none",
+            h2: { color: theme("colors.gray.900") },
+            h3: { color: theme("colors.gray.900") },
+          },
+        },
+        invert: {
+          css: {
+            color: theme("colors.gray.300"),
+            h2: { color: theme("colors.white") },
+            h3: { color: theme("colors.white") },
+          },
+        },
+      }),
       fontFamily: {
         body: [
           "Inter",
