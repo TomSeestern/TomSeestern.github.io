@@ -1,559 +1,308 @@
-# Next.js Enterprise Boilerplate
+# TomSegbers.de — Personal Portfolio of Tom Segbers, Senior Developer
 
-![Project intro image](./project-logo.png)
-
-Welcome to the _Next.js Enterprise Boilerplate_, an open-source template for enterprise projects! It's loaded with
-features that'll help you build a high-performance, maintainable, and enjoyable app. We've done all the heavy lifting
-for you, so sit back, relax, and get ready to conquer the world with your incredible app! 🌍
-
-<br />
-<a href="https://discord.gg/fyWtyNKmfX" style="width: 100%; display: flex; justify-content: center;">
-  <img src="https://discordapp.com/api/guilds/1111676875782234175/widget.png?style=banner2" alt="Blazity Discord Banner"/>
-</a>
-<br />
-
-## 📚 Features
-
-With this template, you get all the awesomeness you need:
-
-- 🏎️ **[Next.js](https://nextjs.org/)** - Fast by default, with config optimized for performance (with **App Directory
-  **)
-- 💅 **[Tailwind CSS](https://tailwindcss.com/)** - A utility-first CSS framework for rapid UI development
-- ✨ **[ESlint](https://eslint.org/)** and **[Prettier](https://prettier.io/)** - For clean, consistent, and error-free
-  code
-- 🛠️ **[Extremely strict TypeScript](https://www.typescriptlang.org/)** -
-  With [`ts-reset`](https://github.com/total-typescript/ts-reset) library for ultimate type safety
-- 📊 **[Bundle analyzer plugin](https://www.npmjs.com/package/@next/bundle-analyzer)** - Keep an eye on your bundle size
-- 🧪 **[Jest](https://jestjs.io/)** and **[React Testing Library](https://testing-library.com/react)** - For rock-solid
-  unit and integration tests
-- 🎭 **[Playwright](https://playwright.dev/)** - Write end-to-end tests like a pro
-- 📕 **[Storybook](https://storybook.js.org/)** - Create, test, and showcase your components
-- 🌬️ **Smoke Testing** and **Acceptance Tests** - For confidence in your deployments
-- 📝 **[Conventional commits git hook](https://www.conventionalcommits.org/)** - Keep your commit history neat and tidy
-- 🔍 **[Observability](https://opentelemetry.io/)** - Open Telemetry integration for seamless monitoring
-- 🎯 **[Absolute imports](https://nextjs.org/docs/advanced-features/module-path-aliases)** - No more spaghetti imports
-- ⚕️ *
-  *[Health checks](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
-  ** - Kubernetes-compatible for robust deployments
-- 🧩 **[Radix UI](https://www.radix-ui.com/)** - Headless UI components for endless customization
-- 💎 **[CVA](http://cva.style/)** - Create a consistent, reusable, and atomic design system
-- 🤖 **[Renovate BOT](https://www.whitesourcesoftware.com/free-developer-tools/renovate)** - Auto-updating dependencies,
-  so you can focus on coding
-- 🩹 **[Patch-package](https://www.npmjs.com/package/patch-package)** - Fix external dependencies without losing your
-  mind
-- 📈 **Components coupling and cohesion graph** - A tool for managing component relationships
-- 🚀 **[GitHub Actions](https://github.com/features/actions)** - Pre-configured actions for smooth workflows, including
-  Bundle Size and performance stats
-- 🤖🧠 **[Automated ChatGPT Code Reviews](https://openai.com/chatgpt)** - **Stay on the cutting edge with AI-powered code
-  reviews!**
-- 💯 **Perfect Lighthouse score** - Because performance matters
-- 🚢 **[Semantic Release](https://github.com/semantic-release/semantic-release)** - for automatic changelog
-- 💻 **[T3 Env](https://env.t3.gg/)** - Manage your environment variables with ease
+Source for [tom.segbers.de](https://tom.segbers.de), a personal portfolio site.
+Static, no auth, no database, no tracking. Content lives as Markdown files under
+`content/`. The site is built with the Next.js App Router and statically exported
+on deploy.
 
 ## Table of Contents
 
-- [Next.js Enterprise Boilerplate](#nextjs-enterprise-boilerplate)
-    - [📚 Features](#-features)
-    - [Table of Contents](#table-of-contents)
-    - [🎯 Getting Started](#-getting-started)
-    - [🚀 Deployment](#-deployment)
-    - [📃 Scripts Overview](#-scripts-overview)
-    - [🔗 Coupling Graph](#-coupling-graph)
-    - [🧪 Testing](#-testing)
-        - [Running Tests](#running-tests)
-        - [Acceptance Tests](#acceptance-tests)
-        - [Smoke Testing](#smoke-testing)
-    - [🎨 Styling and Design System](#-styling-and-design-system)
-        - [CVA - A New Approach to Variants](#cva---a-new-approach-to-variants)
-    - [💾 State Management](#-state-management)
-        - [Zustand](#zustand)
-        - [Jotai](#jotai)
-        - [Recoil](#recoil)
-    - [🤖 ChatGPT Code Review](#-chatgpt-code-review)
-    - [💻 Environment Variables handling](#-environment-variables-handling)
-    - [🤝 Contribution](#-contribution)
-    - [💌 Support](#support)
-    - [📜 License](#-license)
-    - [Contributors](#contributors)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Available Scripts](#available-scripts)
+- [Project Structure](#project-structure)
+- [Content](#content)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Conventions](#conventions)
+- [Environment Variables](#environment-variables)
+- [License](#license)
 
-## 🎯 Getting Started
+## Tech Stack
 
-To get started with this boilerplate, follow these steps:
+- **[Next.js 14](https://nextjs.org/)** with the App Router, static export
+- **[TypeScript](https://www.typescriptlang.org/)** in `strict` mode,
+  `noUncheckedIndexedAccess` on, `unknown` over `any`, Zod at boundaries
+- **[Tailwind CSS](https://tailwindcss.com/)** with
+  [`@tailwindcss/typography`](https://tailwindcss.com/docs/typography-plugin)
+  for Markdown body text
+- **[Flowbite React](https://flowbite-react.com/)** for UI primitives
+  (navbar, footer, buttons, alerts, tooltips)
+- **[Nix flake](https://nixos.org/)** + **[direnv](https://direnv.net/)** for a
+  reproducible dev shell (Node 22, pnpm, git, Playwright Chromium libs)
+- **[pnpm](https://pnpm.io/)** as the package manager
+  (`packageManager: pnpm@10.15.1`)
+- **[Jest](https://jestjs.io/)** with
+  [React Testing Library](https://testing-library.com/react) for unit and
+  component tests
+- **[Playwright](https://playwright.dev/)** for end-to-end tests
+- **[Storybook](https://storybook.js.org/)** for component visual smoke tests
+- **[Resend](https://resend.com/)** for the contact form server action
+- **[gray-matter](https://github.com/jonschlinkert/gray-matter)** for Markdown
+  frontmatter parsing
+- **[await-to-js](https://github.com/scopsy/await-to-js)** for explicit async
+  error tuples
+- **[T3 Env](https://env.t3.gg/)** for type-safe environment variables
 
-1. Fork & clone repository:
-
-```bash
-## Don't forget to ⭐ star and fork it first :)
-git clone https://github.com/<your_username)/next-enterprise.git
-```
-
-2. Install the dependencies:
-
-```bash
-yarn install --frozen-lockfile
-```
-
-3. Run the development server:
+## Getting Started
 
 ```bash
-yarn dev
+git clone <repo-url> TomSegbers.de
+cd TomSegbers.de
+direnv allow          # activates the Nix devShell with Node 22 + pnpm
+pnpm install --frozen-lockfile
+pnpm dev              # http://localhost:3000
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`direnv allow` loads the Nix flake declared in `flake.nix` and `.envrc`, which
+provides `nodejs_22`, `pnpm`, `git`, and the shared libraries Playwright
+Chromium needs. If you skip Nix, install Node.js >= 18.17 and pnpm yourself.
 
-5. This project uses a git hook to enforce [conventional commits](https://github.com/qoomon/git-conventional-commits).
-   To install the git hook, run the following command in the root directory of the project:
-
-```sh
-brew install pre-commit
-pre-commit install -t commit-msg
-```
-
-## 🚀 Deployment
-
-Easily deploy your Next.js app
-with [Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=github&utm_campaign=next-enterprise)
-by clicking the button below:
-
-[![Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/Blazity/next-enterprise)
-
-### Typescript
-
-This boilerplate uses TypeScript for type safety and better developer experience. To learn more about TypeScript, check
-out the [official documentation](https://www.typescriptlang.org/docs/).
-
-#### await-to-js
-
-This Project uses [await-to-js](https://github.com/scopsy/await-to-js) to handle async/await errors. It's a great way to
-handle errors in async functions without using try/catch blocks.
-Example (Before and After):
-
-```ts
-// Before
-try {
-    const user = await getUser()
-    const posts = await getPosts(user.id)
-    const comments = await getComments(posts[0].id)
-    console.log(comments[0])
-} catch (err) {
-    console.error(err)
-}
-
-// After
-const [err, user] = await to(getUser())
-if (err) console.error(err)
-
-const [err, posts] = await to(getPosts(user.id))
-if (err) console.error(err)
-
-const [err, comments] = await to(getComments(posts[0].id))
-if (err) console.error(err)
-
-console.log(comments[0])
-```
-
-### Icons
-
-We put the Icons in the /public/icons folder. To use them, we utilize the nextJS Image component.
-
-```ts
-import Image from 'next/image'
-
-...
-
-<Image src = "/icons/nextjs.svg"
-alt = "NextJS Logo"
-width = {500}
-height = {500}
-/>
-```
-
-## 📃 Scripts Overview
-
-The following scripts are available in the `package.json`:
-
-- `dev`: Starts the development server with colorized output
-- `build`: Builds the app for production
-- `start`: Starts the production server
-- `lint`: Lints the code using ESLint
-- `lint:fix`: Automatically fixes linting errors
-- `prettier`: Checks the code for proper formatting
-- `prettier:fix`: Automatically fixes formatting issues
-- `analyze`: Analyzes the bundle sizes for Client, Server and Edge environments
-- `storybook`: Starts the Storybook server
-- `build-storybook`: Builds the Storybook for deployment
-- `test`: Runs unit and integration tests
-- `e2e:headless`: Runs end-to-end tests in headless mode
-- `e2e:ui`: Runs end-to-end tests with UI
-- `format`: Formats the code with Prettier
-- `postinstall`: Applies patches to external dependencies
-- `preinstall`: Ensures the project is installed with Yarn
-- `coupling-graph`: **Generates a coupling and cohesion graph for the components**
-
-## 🔗 Coupling Graph
-
-The `coupling-graph` script is a useful tool that helps visualize the coupling and connections between your project's
-internal modules. It's built using the [Madge](https://github.com/pahen/madge) library. To generate the graph, simply
-run the following command:
+Note on the Nix devShell: it exports `PNPM_HOME` and `npm_config_prefix` as
+`null`, which crashes pnpm 11. When running pnpm inside the devShell, unset
+them first:
 
 ```bash
-yarn coupling-graph
+unset PNPM_HOME npm_config_prefix
 ```
 
-This will create a `graph.svg` file, which contains a graphical representation of the connections between your
-components. You can open the file with any SVG-compatible viewer.
+A pre-commit hook enforces
+[Conventional Commits](https://www.conventionalcommits.org/) via
+`.pre-commit-config.yaml`. It is installed automatically by `pre-commit install
+-t commit-msg` once `pre-commit` is available in your shell.
 
-![graph](https://user-images.githubusercontent.com/28964599/233662744-3ba89713-8466-49cd-9be7-e6fb38191f58.png)
+## Available Scripts
 
-## 🧪 Testing
+From `package.json`:
 
-This boilerplate comes with various testing setups to ensure your application's reliability and robustness.
+| Script | Purpose |
+| --- | --- |
+| `pnpm dev` | Start the dev server with colorized output |
+| `pnpm build` | Production build, generates static pages |
+| `pnpm start` | Run the production build locally |
+| `pnpm lint` | Run `next lint` (ESLint) |
+| `pnpm lint:fix` | Auto-fix lint errors |
+| `pnpm prettier` | Check formatting |
+| `pnpm prettier:fix` | Apply Prettier fixes |
+| `pnpm test` | Run Jest unit and component tests |
+| `pnpm e2e:headless` | Run Playwright e2e tests in headless mode |
+| `pnpm e2e:ui` | Run Playwright e2e tests with the interactive UI |
+| `pnpm storybook` | Start Storybook on port 6006 |
+| `pnpm build-storybook` | Build a static Storybook bundle |
+| `pnpm test-storybook` | Run Storybook smoke tests against the built bundle |
+| `pnpm analyze` | Build with `@next/bundle-analyzer` enabled |
+| `pnpm coupling-graph` | Render module dependency graph to `graph.svg` via Madge |
+| `pnpm format` | Apply Prettier to `*.ts`, `*.tsx`, `*.md` |
 
-### Running Tests
+For e2e tests, Playwright needs a Chromium browser. Inside the Nix devShell,
+set `PLAYWRIGHT_BROWSERS_PATH` to the local cache so Playwright finds a
+matching build:
 
-- **Unit and integration tests**: Run Jest tests using `yarn test`
-- **End-to-end tests (headless mode)**: Run Playwright tests in headless mode with `yarn e2e:headless`
-- **End-to-end tests (UI mode)**: Run Playwright tests with UI using `yarn e2e:ui`
-
-<img width="1392" alt="image" src="https://user-images.githubusercontent.com/28964599/233666655-93b7d08b-2fd8-406a-b43c-44d4d96cf387.png">
-
-### Acceptance Tests
-
-To write acceptance tests, we leverage
-Storybook's [`play` function](https://storybook.js.org/docs/react/writing-stories/play-function#writing-stories-with-the-play-function).
-This allows you to interact with your components and test various user flows within Storybook.
-
-```ts
-/*
- * See https://storybook.js.org/docs/react/writing-stories/play-function#working-with-the-canvas
- * to learn more about using the canvasElement to query the DOM
- */
-export const FilledForm: Story = {
-    play: async ({canvasElement}) => {
-        const canvas = within(canvasElement)
-
-        const emailInput = canvas.getByLabelText("email", {
-            selector: "input",
-        })
-
-        await userEvent.type(emailInput, "example-email@email.com", {
-            delay: 100,
-        })
-
-        const passwordInput = canvas.getByLabelText("password", {
-            selector: "input",
-        })
-
-        await userEvent.type(passwordInput, "ExamplePassword", {
-            delay: 100,
-        })
-        // See https://storybook.js.org/docs/react/essentials/actions#automatically-matching-args to learn how to setup logging in the Actions panel
-        const submitButton = canvas.getByRole("button")
-
-        await userEvent.click(submitButton)
-    },
-}
+```bash
+export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ```
 
-### Smoke Testing
+## Project Structure
 
-In this boilerplate, we use Storybook's out-of-the-box support for smoke testing to verify that components render
-correctly without any errors. Just run `yarn test-storybook` to perform smoke testing. Remember to write stories in JSX
-or TSX format only. Smoke testing and a lot of other functionalities dont work well with MDX stories.
-
-## 🎨 Styling and Design System
-
-This boilerplate uses Tailwind CSS for styling and CVA for creating a powerful, easy-to-use design system. If you want
-to learn more about the setup, check out this fantastic video by Vercel:
-
-[![Styling and Design System](https://img.youtube.com/vi/T-Zv73yZ_QI/0.jpg)](https://www.youtube.com/watch?v=T-Zv73yZ_QI&ab_channel=Vercel)
-
-### CVA - A New Approach to Variants
-
-While CSS-in-TS libraries such as [Stitches](https://stitches.dev/)
-and [Vanilla Extract](https://vanilla-extract.style/) are great for building type-safe UI components, they might not be
-the perfect fit for everyone. You may prefer more control over your stylesheets, need to use a framework like Tailwind
-CSS, or simply enjoy writing your own CSS.
-
-Creating variants using traditional CSS can be a tedious task, requiring you to manually match classes to props and add
-types. CVA is here to take that pain away, allowing you to focus on the enjoyable aspects of UI development. By
-providing an easy and type-safe way to create variants, CVA simplifies the process and helps you create powerful design
-systems without compromising on the flexibility and control of CSS.
-
-#### Using `class-variance-authority` (CVA)
-
-CVA provides a structured way to handle class variants in components. It's particularly useful for creating component
-libraries or scalable UI elements.
-
-##### Basic Usage
-
-1. **Import CVA**:
-
-    ```typescript
-    import { cva, type VariantProps } from 'class-variance-authority';
-    ```
-
-2. **Define Your Component with Variants**:
-
-   Create a base style for your component and define variants for different styles.
-
-    ```typescript
-    const button = cva(
-      // Base classes
-      ['base-class-1', 'base-class-2'],
-      {
-        variants: {
-          size: {
-            small: ['size-small'],
-            large: ['size-large']
-          },
-          color: {
-            primary: ['color-primary'],
-            secondary: ['color-secondary']
-          },
-        },
-        defaultVariants: {
-          size: 'large',
-          color: 'primary'
-        },
-      }
-    );
-    ```
-
-3. **Create Component Props**:
-
-   Use `VariantProps` to include the variant types in your component props.
-
-    ```typescript
-    interface ButtonProps extends VariantProps<typeof button> {
-      // Your additional props here
-    }
-    ```
-
-#### Using `tailwind-merge` (twMerge)
-
-`twMerge` is a utility function for merging Tailwind CSS classes, ensuring that similar classes are overridden
-correctly.
-
-##### Basic Usage
-
-1. **Import twMerge**:
-
-    ```typescript
-    import { twMerge } from 'tailwind-merge';
-    ```
-
-2. **Merge Classes in Component**:
-
-   Use `twMerge` to merge base classes with dynamic ones based on props.
-
-    ```typescript
-    const MyComponent = ({ className, ...props }) => {
-      const mergedClasses = twMerge('base-class', className);
-      return <div className={mergedClasses} {...props}></div>;
-    };
-    ```
-
-#### Example: Creating a New Button Component
-
-Here's a quick example of how you can use both CVA and twMerge together:
-
-```typescript
-import {cva, type VariantProps} from 'class-variance-authority';
-import {twMerge} from 'tailwind-merge';
-
-const button = cva(
-    ['base-class'],
-    {
-        variants: {
-            size: {
-                small: ['size-small'],
-                large: ['size-large']
-            },
-            color: {
-                primary: ['color-primary'],
-                secondary: ['color-secondary']
-            },
-        },
-        defaultVariants: {
-            size: 'large',
-            color: 'primary'
-        },
-    }
-);
-
-interface ButtonProps extends VariantProps<typeof button> {
-    additionalProp?: string;
-}
-
-const Button = ({className, ...props}: ButtonProps) => {
-    return <button className = {twMerge(button(props), className
-)
-}
-    {...
-        props
-    }
-    />;
-};
 ```
-
-## Best Practices
-
-- **Consistency**: Stick to predefined variants for consistency across components.
-- **Documentation**: Document your variants and their usage within your component library.
-- **Performance**: Be mindful of the number of variants; excessive variants can lead to performance issues.
-
-We hope this guide helps you get up to speed with CVA and twMerge. Feel free to reach out to the team for any
-clarifications or assistance. Happy coding!
-
-### Flowbite
-
-This Project comes with a the [Flowbite](https://flowbite.com/) design system. Flowbite is a beautiful, modern, and
-responsive UI kit that's built with Tailwind CSS. It's a great starting point for creating your own design system.
-We use various elements from Flowbite in the Project, including the navbar, footer, and buttons. You can find the full
-documentation for Flowbite [here](https://flowbite.com/docs/).
-
-### @tailwindcss/typography
-
-This Project uses the [`@tailwindcss/typography`](https://tailwindcss.com/docs/typography-plugin) plugin to style the
-typography. It's a great way to add beautiful typography to your app without writing any CSS. You can find the full
-documentation for `@tailwindcss/typography` [here](https://tailwindcss.com/docs/typography-plugin).
-We use it to style the markdown files in the Blog section.
-
-## 💾 State Management
-
-While this boilerplate doesn't include a specific state management library, we believe it's essential for you to choose
-the one that best suits your project's needs. Here are some libraries we recommend for state management:
-
-### Zustand
-
-[Zustand](https://github.com/pmndrs/zustand) is a small, fast, and scalable state management library. It's designed to
-be simple and intuitive, making it a great choice for small to medium-sized projects. It's also optimized for bundle
-size, ensuring minimal impact on your app's performance.
-
-### Jotai
-
-[Jotai](https://github.com/pmndrs/jotai) is an atom-based state management library for React that focuses on providing a
-minimal and straightforward API. Its atom-based approach allows you to manage your state in a granular way while still
-being highly optimized for bundle size.
-
-### Recoil
-
-[Recoil](https://recoiljs.org/) is a state management library developed by Facebook, specifically designed for React
-applications. By utilizing atoms and selectors, Recoil allows you to efficiently manage state and derived state. Its key
-benefit is the ability to update components only when the state they're subscribed to changes, reducing unnecessary
-re-renders and keeping your application fast and efficient. Recoil also offers great developer experience with built-in
-debugging tools.
-
-Choose the library that best fits your requirements and project structure to ensure an efficient state management
-solution for your application.
-
-## 🤖 ChatGPT Code Review
-
-We've integrated the innovative [ChatGPT Code Review](https://github.com/anc95/ChatGPT-CodeReview) for AI-powered,
-automated code reviews. This feature provides real-time feedback on your code, helping improve code quality and catch
-potential issues.
-
-To use ChatGPT Code Review, add an `OPENAI_API_KEY` environment variable with an appropriate key from the OpenAI
-platform. For setup details, refer to
-the [Using GitHub Actions](https://github.com/anc95/ChatGPT-CodeReview#using-github-actions) section in the
-documentation.
-
-![image](https://user-images.githubusercontent.com/28964599/233685071-e1371edf-6359-41c3-a989-335d6ee09cb7.png)
-
-## 💻 Environment Variables handling
-
-[T3 Env](https://env.t3.gg/) is a library that provides environmental variables checking at build time, type validation
-and transforming. It ensures that your application is using the correct environment variables and their values are of
-the expected type. You’ll never again struggle with runtime errors caused by incorrect environment variable usage.
-
-Config file is located at `env.mjs`. Simply set your client and server variables and import `env` from any file in your
-project.
-
-```ts
-export const env = createEnv({
-    server: {
-        // Server variables
-        SECRET_KEY: z.string(),
-    },
-    client: {
-        // Client variables
-        API_URL: z.string().url(),
-    },
-    runtimeEnv: {
-        // Assign runtime variables
-        SECRET_KEY: process.env.SECRET_KEY,
-        API_URL: process.env.NEXT_PUBLIC_API_URL,
-    },
-})
-```
-
-If the required environment variables are not set, you'll get an error message:
-
-```sh
-  ❌ Invalid environment variables: { SECRET_KEY: [ 'Required' ] }
+.
+├── AGENTS.md                  # Agent-facing project rules and conventions
+├── README.md
+├── LICENSE
+├── flake.nix                  # Nix devShell: Node 22, pnpm, git, Chromium libs
+├── flake.lock
+├── .envrc                     # direnv entry: `use flake`
+├── package.json
+├── pnpm-lock.yaml
+├── next.config.mjs
+├── env.mjs                    # T3 Env schema (server + client vars)
+├── tsconfig.json
+├── jest.config.js
+├── jest.setup.js
+├── playwright.config.ts
+├── tailwind.config.js
+├── postcss.config.js
+├── prettier.config.js
+├── .eslintrc.js
+├── git-conventional-commits.yaml
+├── .pre-commit-config.yaml
+├── app/
+│   ├── layout.tsx             # Root layout: Header, Footer, metadata, viewport
+│   ├── page.tsx               # Home: hero, projects marquee, blog teasers
+│   ├── not-found.tsx
+│   ├── about/page.tsx
+│   ├── contact/page.tsx       # Contact form ("use client")
+│   ├── blog/page.tsx          # Blog listing
+│   ├── blog/entry/[slug]/page.tsx   # Blog detail, generateStaticParams
+│   ├── projects/page.tsx      # Projects listing
+│   └── projects/entry/[slug]/page.tsx  # Project detail, generateStaticParams
+├── components/
+│   ├── ArticleTeaser/         # Blog post card
+│   ├── Button/
+│   ├── Footer/
+│   ├── Header/                # Flowbite Navbar
+│   ├── PersonTeaser/
+│   ├── ProjectTeaser/         # Project card with technology icons
+│   ├── TimelineEntry/
+│   └── Tooltip/
+├── lib/
+│   ├── markdown.ts            # Shared gray-matter + Zod frontmatter reader
+│   ├── blog.tsx               # getAllBlogPosts(): wraps markdown reader
+│   ├── projects.tsx           # getAllProjects(): wraps markdown reader
+│   ├── icon-map.ts            # Maps technology strings to icon paths
+│   ├── sendEmail.tsx          # Server action, Resend contact form
+│   ├── markdown.test.ts
+│   └── sendEmail.test.tsx
+├── content/
+│   ├── blog/*.md              # Blog posts
+│   └── projects/*.md          # Project entries
+├── e2e/
+│   ├── home.spec.ts
+│   ├── static-routes.spec.ts
+│   └── dynamic-content.spec.ts
+├── tests/                     # Jest test helpers
+├── public/
+│   ├── img/                   # Photos and the OG logo
+│   └── icon/                  # SVG icons used in components
+├── .storybook/
+│   ├── main.ts
+│   └── preview.ts
+├── styles/
+│   └── tailwind.css           # Tailwind entry, imports Flowbite
+└── scripts/
+    └── check-project-frontmatter.js  # Validates project Markdown frontmatter
 ```
 
 ## Content
 
-### Blog Posts
+All site content is Markdown with YAML frontmatter, loaded at build time by
+`lib/markdown.ts`. No CMS, no database, no runtime writes. Files live in two
+collections:
 
-The Website includes a Blog section, for this the site uses [Gray-Matter](https://github.com/jonschlinkert/gray-matter)
-to parse the markdown files and [MDX](https://mdxjs.com/) to render the markdown files as React components.
-Each Blog post is a markdown file located in `content/blog` and has the following frontmatter:
+- `content/blog/` for blog posts, served under `/blog/entry/<slug>`
+- `content/projects/` for project entries, served under `/projects/entry/<slug>`
+
+The slug is the file name without the `.md` extension. `lib/blog.tsx` and
+`lib/projects.tsx` are thin wrappers around the shared reader.
+
+Each Markdown file requires this frontmatter:
 
 ```md
+---
+title: Story Title
+articleDate: 2024-01-15
+articleContent: Short teaser shown on listings and OG descriptions.
+authorImgSrc: /img/example.png
+authorName: Tom Segbers
+# Projects only:
+technologies:
+  - TypeScript
+  - Next.js
+---
 
+Body of the post or project write-up in Markdown.
 ```
 
-The file located under `content/blog/index.mdx` is the Blog page itself, it uses the `BlogPost` component to render the
-list of posts.
-It Parses each markdown file and renders the `BlogPost` under the corresponding URL.
+`lib/markdown.ts` parses frontmatter with `gray-matter` and validates it
+through a Zod schema. Every field has a `.default()` and `.catch()` fallback so
+malformed frontmatter never breaks the build; missing values fall back to
+placeholder strings. Entries are sorted by `articleDate` descending.
 
-## 🤝 Contribution
+The body is rendered as Markdown on the detail pages via `react-markdown`, and
+the `@tailwindcss/typography` plugin styles the rendered HTML through the
+`prose` class family.
 
-Contributions are always welcome! To contribute, please follow these steps:
+## Testing
 
-1. Fork the repository.
-2. Create a new branch with a descriptive name.
-3. Make your changes, and commit them using the [Conventional Commits](https://www.conventionalcommits.org/) format.
-4. Push your changes to the forked repository.
-5. Create a pull request, and we'll review your changes.
+Three layers, each with a dedicated runner:
 
-## Support
+**Jest** for unit and component logic (`pnpm test`). Component tests use
+React Testing Library and assert behavior through accessible queries. The
+shared Markdown reader and the contact form server action have their own
+focused suites in `lib/`.
 
-If you're looking for help or simply want to share your thoughts about the project, we encourage you to join our Discord
-community. Here's the link: [https://blazity.com/discord](https://blazity.com/discord). It's a space where we exchange
-ideas and help one another. Everyone's input is appreciated, and we look forward to welcoming you.
+**Playwright** for end-to-end coverage (`pnpm e2e:headless`). Specs live in
+`e2e/` and assert post-hydration DOM, not just server HTML. The contact form
+spec sets `E2E_CONTACT_FORM_SUCCESS=true` so `sendEmail` succeeds without
+calling Resend. Playwright's `webServer` boots `next dev` on port 3030
+automatically.
 
-## 📜 License
+**Storybook** for visual smoke (`pnpm build-storybook && pnpm test-storybook`).
+The test runner verifies each story renders without errors. Stories are
+written in TSX; MDX stories are not supported by the smoke runner.
 
-This project is licensed under the MIT License. For more information, see the [LICENSE](./LICENSE) file.
+## Deployment
 
-## Contributors
+Deployed on [Vercel](https://vercel.com/) via the GitHub integration. A push
+to `main` triggers a build and a production deploy; rollbacks are performed
+through the Vercel dashboard.
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://bstefanski.com/"><img src="https://avatars.githubusercontent.com/u/28964599?v=4?s=100" width="100px;" alt="Bart Stefanski"/><br /><sub><b>Bart Stefanski</b></sub></a><br /><a href="https://github.com/Blazity/next-enterprise/commits?author=bmstefanski" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jjablonski-it"><img src="https://avatars.githubusercontent.com/u/51968772?v=4?s=100" width="100px;" alt="Jakub Jabłoński"/><br /><sub><b>Jakub Jabłoński</b></sub></a><br /><a href="#infra-jjablonski-it" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <td align="center" size="13px" colspan="7">
-        <img src="https://raw.githubusercontent.com/all-contributors/all-contributors-cli/1b8533af435da9854653492b1327a23a4dbd0a10/assets/logo-small.svg">
-          <a href="https://all-contributors.js.org/docs/en/bot/usage">Add your contributions</a>
-        </img>
-      </td>
-    </tr>
-  </tfoot>
-</table>
+`pnpm build` runs `next build` and statically generates all pages; the build
+currently emits 36 static routes. The only server-side runtime code is the
+contact form server action, which calls the Resend API. The site has no
+middleware, no instrumentation hook, no OpenTelemetry, and no custom API
+routes beyond the Next.js health-check rewrites in `next.config.mjs`.
 
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
+For local production verification:
 
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+```bash
+pnpm build
+pnpm start         # http://localhost:3000
+```
+
+## Conventions
+
+- **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/)
+  and are enforced by the `commit-msg` hook in `.pre-commit-config.yaml`.
+- **Async error handling** uses [await-to-js](https://github.com/scopsy/await-to-js).
+  Async functions that can fail return `[error, result]` tuples rather than
+  throwing. Example from the codebase:
+
+  ```ts
+  import to from "await-to-js"
+  const [error] = await to(resend.emails.send(emailData))
+  if (error) {
+    console.error(error)
+    return false
+  }
+  ```
+
+- **Tailwind class merging** uses `tailwind-merge`, and component variants
+  use `class-variance-authority`. See the `Button` component for the pattern.
+- **Type safety** is strict. `tsconfig.json` has `strict` and
+  `noUncheckedIndexedAccess` enabled. `@total-typescript/ts-reset` tightens
+  built-in types. Runtime validation at trust boundaries (Markdown
+  frontmatter, env vars, contact form input) uses Zod schemas.
+- **Project rules** for agents and contributors live in
+  [AGENTS.md](./AGENTS.md). Read it before non-trivial changes.
+
+## Environment Variables
+
+Environment variables are validated at build time with
+[T3 Env](https://env.t3.gg/). The schema lives in `env.mjs`:
+
+```ts
+export const env = createEnv({
+  server: {
+    RESEND_API_KEY: z.string().optional(),
+    E2E_CONTACT_FORM_SUCCESS: z.enum(["true"]).optional(),
+    ANALYZE: z.enum(["true", "false"]).optional().transform((v) => v === "true"),
+  },
+  client: {},
+  runtimeEnv: {
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    E2E_CONTACT_FORM_SUCCESS: process.env.E2E_CONTACT_FORM_SUCCESS,
+    ANALYZE: process.env.ANALYZE,
+  },
+})
+```
+
+`RESEND_API_KEY` is optional so the build passes in CI and local dev without
+a key. It is required in production for the contact form to actually deliver
+mail. Set it in `.env.local` (gitignored) or as a Vercel environment variable.
+`E2E_CONTACT_FORM_SUCCESS` is a test-only override that makes the contact
+form server action short-circuit success without hitting Resend.
+
+## License
+
+MIT. See [LICENSE](./LICENSE) for details.
