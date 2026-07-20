@@ -3,8 +3,8 @@ id: elevating-robot-competition-performance
 title: Elevating Performance in National Robotics Competitions
 articleDate: 2012-12-31
 articleContent: In this reflective piece, I share my journey of participating in rigorous national robotics competitions, detailing the challenges faced, the strategies employed to overcome them, and the learning experience it provided for my team and myself.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - Robotics
   - Programming

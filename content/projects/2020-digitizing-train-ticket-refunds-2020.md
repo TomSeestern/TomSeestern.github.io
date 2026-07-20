@@ -4,8 +4,8 @@ title: RefundHero - Transforming Train Ticket Reimbursements with Refund Hero
 articleDate: 2020-12-31
 articleContent: |-
   I built Refund Hero as a full-stack prototype for identifying eligible Deutsche Bahn delay refunds and preparing reimbursement requests. I stopped the project when DB announced a parallel initiative.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - Digital Transformation
   - Startup Projects

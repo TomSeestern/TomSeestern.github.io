@@ -3,8 +3,8 @@ id: process-automation-proptech-journey
 title: Harnessing Tech for Efficiency - My Journey in Automating PropTech
 articleDate: 2019-12-31
 articleContent: Dive into how I streamlined the property management world by automating and digitizing manual processes, ensuring data consistency, and enhancing self-service platforms for a smarter approach to PropTech.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - Process Automation
   - PropTech

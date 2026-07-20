@@ -3,8 +3,8 @@ id: first-competition-with-wenzelbots-team
 title: Venturing into Robotics - My Early Days with the 'Wenzelbots' Team
 articleDate: 2011-12-31
 articleContent: As a young budding developer, I stepped into the realm of robotics competitions with the 'Wenzelbots' team, navigating challenges and developing key skills in the process.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - Robotics
   - Youth Competitions

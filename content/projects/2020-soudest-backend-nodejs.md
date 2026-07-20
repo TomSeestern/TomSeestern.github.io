@@ -3,8 +3,8 @@ title: SouDest Backend - A Multimodal Travel Planner Backend With NodeJS
 articleDate: 2020-12-30
 articleContent: |-
   I co-developed a Node.js and Express backend for SouDest, separating travel-planning API concerns from authentication, sessions, and persistent SQL data.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - NodeJS
   - BackendDevelopment

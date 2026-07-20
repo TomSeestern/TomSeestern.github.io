@@ -3,8 +3,8 @@ id: nowcasting-inflation-project
 title: "ECB Hackathon: COICOP Product Classification for Inflation Nowcasting"
 articleDate: 2019-09-01
 articleContent: I built a Python and scikit-learn product classifier for 5000+ COICOP categories at a three-day ECB hackathon. Word embeddings and logistic regression reached 99.82% accuracy, outperforming more complex alternatives.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - ArtificialIntelligence
   - DataScience

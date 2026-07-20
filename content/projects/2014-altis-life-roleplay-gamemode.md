@@ -3,8 +3,8 @@ id: 2014-altis-life-roleplay-gamemode
 title: "Revolutionizing Roleplay in Arma 3: Altis Life Gamemode Journey"
 articleDate: 2014-12-31
 articleContent: In 2014, with a tight-knit team, I developed a unique multiplayer roleplay gamemode called Altis Life on Arma 3, attracting over 300 concurrent players and contributing significantly to the gaming landscape.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - Game Development
   - Arma 3

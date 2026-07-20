@@ -3,8 +3,8 @@ id: journey-into-sqf-development
 title: Venturing into SQF Game Development - From Hobbyist to Expert
 articleDate: 2013-12-31
 articleContent: Discover the exciting journey of a passionate developer as he delves into SQF game development, starting with simple mission files in Arma 3 and evolving into a seasoned programmer. The post recounts the humble beginnings, the challenges of a unique language, and the joy of creating engaging multiplayer experiences.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - SQF
   - Game Development

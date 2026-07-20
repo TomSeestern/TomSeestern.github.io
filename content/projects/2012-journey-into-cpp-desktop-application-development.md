@@ -4,7 +4,7 @@ title: Journey into C++ - Crafting Desktop Applications
 articleDate: 2012-12-31
 articleContent: From the eager beginnings of a self-taught developer journey to the exciting realm of desktop applications, discover how I embraced the C++ language to unlock new potentials in coding and creation.
 authorName: Tom Segbers
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorImgSrc: /img/logo.png
 tags:
   - C++
   - Desktop Applications

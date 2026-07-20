@@ -4,7 +4,7 @@ title: Crafting User-Centric Multimodal Travel Planning with SouDest
 articleDate: 2020-04-20
 articleContent: As part of my university endeavor, I took on the challenge to create SouDest, a responsive React-based frontend application, aimed at revolutionizing travel planning by integrating various modes of transport. Leveraging cutting-edge technologies and a user-centric approach, my team's creation facilitates smarter travel decisions based on customizable criteria such as cost, time, and environmental impact.
 authorName: Tom Segbers
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorImgSrc: /img/logo.png
 tags:
   - React
   - Multimodal Transportation

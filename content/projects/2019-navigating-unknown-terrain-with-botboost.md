@@ -3,8 +3,8 @@ id: navigating-unknown-terrain-with-botboost
 title: "BotBoost: Autonomous TurtleBot Navigation with A* and ROS"
 articleDate: 2019-02-16
 articleContent: Led a university project team building autonomous navigation for a TurtleBot with ROS, Python, LIDAR, GPS, and the A* pathfinding algorithm.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - Robotics
   - Artificial Intelligence
