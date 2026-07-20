@@ -49,7 +49,9 @@ export default function Web() {
               {/* Project Section */}
               <div className="mb-8 flex-1 text-muted dark:text-muted-dark sm:mb-0">
                 {/* TODO: Replace with your project image and details */}
-                <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">Latest Project: LAYZR.gg</h2>
+                <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
+                  Latest Project: LAYZR.gg
+                </h2>
                 <p className="mb-4 line-clamp-3 min-h-[4.5rem] font-light ">
                   Dive into the details of my recent project, LAYZR.gg, where I explore digital collectibles and the
                   unique digital identity they provide.
@@ -63,7 +65,9 @@ export default function Web() {
               </div>
               {/* Blog Section */}
               <div className="mb-0 flex-1 text-muted dark:text-muted-dark">
-                <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">Recent Blog Posts</h2>
+                <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
+                  Recent Blog Posts
+                </h2>
                 <p className="mb-4 line-clamp-3 min-h-[4.5rem] font-light ">
                   Explore my latest thoughts and insights on Tech, AI and sometimes a bit about software development.
                   Mostly lessons learned from my projects.
@@ -102,7 +106,7 @@ export default function Web() {
           </div>
         </div>
         <div className="relative flex overflow-hidden py-2">
-          <div className="flex animate-marquee motion-reduce:animate-none space-x-4">
+          <div className="flex animate-marquee space-x-4 motion-reduce:animate-none">
             {getAllProjects().map((article) => (
               <div key={article.id} className="h-96 w-96">
                 <ProjectTeaser
@@ -118,7 +122,7 @@ export default function Web() {
             ))}
           </div>
 
-          <div className="absolute flex animate-marquee2 motion-reduce:animate-none space-x-4 px-2">
+          <div className="absolute flex animate-marquee2 space-x-4 px-2 motion-reduce:animate-none">
             {getAllProjects().map((article) => (
               <div key={article.id} className="h-96 w-96">
                 <ProjectTeaser

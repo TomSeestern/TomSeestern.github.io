@@ -30,11 +30,7 @@ export function Tooltip({
       <RadixTooltip.Root open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange} delayDuration={200}>
         <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
         <RadixTooltip.Portal>
-          <RadixTooltip.Content
-            side={side}
-            sideOffset={5}
-            className={twMerge(tooltipContentClassName, className)}
-          >
+          <RadixTooltip.Content side={side} sideOffset={5} className={twMerge(tooltipContentClassName, className)}>
             {explainer}
             {withArrow ? <RadixTooltip.Arrow className={twMerge(tooltipArrowClassName, className)} /> : null}
           </RadixTooltip.Content>

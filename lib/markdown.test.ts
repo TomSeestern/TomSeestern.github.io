@@ -1,7 +1,7 @@
 import fs from "fs"
 import os from "os"
 import path from "path"
-import {getAllMarkdownEntries} from "./markdown"
+import { getAllMarkdownEntries } from "./markdown"
 
 const TEST_DIRECTORY_PREFIX = "tomsegbers-markdown-reader-"
 
@@ -17,7 +17,7 @@ describe("getAllMarkdownEntries", () => {
   })
 
   afterEach(() => {
-    fs.rmSync(fixtureDirectory, {recursive: true, force: true})
+    fs.rmSync(fixtureDirectory, { recursive: true, force: true })
   })
 
   it("parses valid frontmatter and preserves article teaser fields", () => {
@@ -33,7 +33,7 @@ describe("getAllMarkdownEntries", () => {
         "authorName: Tom",
         "technologies:",
         "  - TypeScript",
-      ].join("\n"),
+      ].join("\n")
     )
 
     // When
@@ -79,7 +79,7 @@ describe("getAllMarkdownEntries", () => {
     writeMarkdownEntry(
       fixtureDirectory,
       "malformed-fields.md",
-      ["title:", "  - unexpected", "articleDate: not-a-date", "technologies: TypeScript"].join("\n"),
+      ["title:", "  - unexpected", "articleDate: not-a-date", "technologies: TypeScript"].join("\n")
     )
 
     // When
@@ -111,7 +111,7 @@ describe("getAllMarkdownEntries", () => {
     const entries = getAllMarkdownEntries(fixtureDirectory, "/blog")
 
     // Then
-    expect(entries.map(({id}) => id)).toEqual(["post"])
+    expect(entries.map(({ id }) => id)).toEqual(["post"])
   })
 
   it("sorts entries by article date descending", () => {
@@ -123,7 +123,7 @@ describe("getAllMarkdownEntries", () => {
     const entries = getAllMarkdownEntries(fixtureDirectory, "/blog")
 
     // Then
-    expect(entries.map(({id}) => id)).toEqual(["newer", "older"])
+    expect(entries.map(({ id }) => id)).toEqual(["newer", "older"])
   })
 
   it("uses filename slug for identifier and entry URL", () => {
@@ -188,7 +188,7 @@ describe("getAllMarkdownEntries", () => {
     const entries = getAllMarkdownEntries(fixtureDirectory, "/blog")
 
     // Then
-    expect(entries.map(({id}) => id)).toEqual(["actual-entry"])
+    expect(entries.map(({ id }) => id)).toEqual(["actual-entry"])
   })
 
   it("includes entries with default date after dated entries", () => {
@@ -200,7 +200,6 @@ describe("getAllMarkdownEntries", () => {
     const entries = getAllMarkdownEntries(fixtureDirectory, "/blog")
 
     // Then
-    expect(entries.map(({id}) => id)).toEqual(["dated", "undated"])
+    expect(entries.map(({ id }) => id)).toEqual(["dated", "undated"])
   })
-
 })

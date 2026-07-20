@@ -1,5 +1,5 @@
-import {render, screen} from "@testing-library/react"
-import {getAllBlogPosts} from "../../lib/blog"
+import { render, screen } from "@testing-library/react"
+import { getAllBlogPosts } from "../../lib/blog"
 
 jest.mock("../../components/ArticleTeaser/ArticleTeaser", () => {
   return function ArticleTeaser({
@@ -66,7 +66,7 @@ describe("Articles", () => {
     // Then
     expect(mockGetAllBlogPosts).toHaveBeenCalledTimes(1)
     expect(screen.getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual(
-      blogPosts.map((post) => post.fullArticleLink),
+      blogPosts.map((post) => post.fullArticleLink)
     )
   })
 })

@@ -1,7 +1,7 @@
 import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
-import {z} from "zod"
+import { z } from "zod"
 
 const markdownFrontmatterSchema = z.object({
   title: z.string().default("Untitled").catch("Untitled"),
@@ -25,7 +25,7 @@ export type MarkdownEntry = {
 
 export function getAllMarkdownEntries(dirPath: string, urlPrefix: string): readonly MarkdownEntry[] {
   return fs
-    .readdirSync(dirPath, {withFileTypes: true})
+    .readdirSync(dirPath, { withFileTypes: true })
     .filter((entry) => entry.isFile() && path.extname(entry.name) === ".md")
     .map((entry) => createMarkdownEntry(dirPath, urlPrefix, entry.name))
     .sort((left, right) => right.articleDate.valueOf() - left.articleDate.valueOf())
@@ -33,7 +33,7 @@ export function getAllMarkdownEntries(dirPath: string, urlPrefix: string): reado
 
 function createMarkdownEntry(dirPath: string, urlPrefix: string, filename: string): MarkdownEntry {
   const slug = path.basename(filename, ".md")
-  const {data} = matter(fs.readFileSync(path.join(dirPath, filename), "utf8"))
+  const { data } = matter(fs.readFileSync(path.join(dirPath, filename), "utf8"))
   const frontmatter = markdownFrontmatterSchema.parse(data)
 
   return {

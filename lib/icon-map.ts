@@ -7,9 +7,7 @@ const ICONS_DIR = path.join(process.cwd(), "public", "icon")
  *  Falls back to empty set when fs is unavailable (e.g. browser/Storybook). */
 let knownIcons: Set<string>
 try {
-  knownIcons = new Set(
-    fs.readdirSync(ICONS_DIR).map((f: string) => f.toLowerCase()),
-  )
+  knownIcons = new Set(fs.readdirSync(ICONS_DIR).map((f: string) => f.toLowerCase()))
 } catch {
   knownIcons = new Set()
 }

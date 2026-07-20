@@ -13,7 +13,9 @@ export function Header() {
           width={512}
           height={512}
         />
-        <span className="self-center whitespace-nowrap text-xl font-semibold text-foreground dark:text-foreground-dark">Tom Segbers</span>
+        <span className="self-center whitespace-nowrap text-xl font-semibold text-foreground dark:text-foreground-dark">
+          Tom Segbers
+        </span>
       </NavbarBrand>
       <div className="flex md:order-2">
         <a

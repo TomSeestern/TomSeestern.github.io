@@ -58,7 +58,9 @@ export default function About() {
         </div>
         <div id="timeline" className="mt-12 grid grid-cols-1 gap-x-16 gap-y-12 lg:mt-16">
           <div className="space-y-8">
-            <h2 className="text-center text-h2-sm text-foreground dark:text-foreground-dark sm:text-h2">Formal Positions:</h2>
+            <h2 className="text-center text-h2-sm text-foreground dark:text-foreground-dark sm:text-h2">
+              Formal Positions:
+            </h2>
             <div>
               <TimelineEntry
                 time="2021 - 2024"
