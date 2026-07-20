@@ -1,29 +1,48 @@
 "use client"
-import React, { useState } from "react"
 import { Alert } from "flowbite-react"
-import { sendEmail } from "../../lib/sendEmail"
+import React, { useState } from "react"
+import { sendEmail, type SendEmailResult } from "../../lib/sendEmail"
 
 export default function Contact() {
   const [showConfirmation, setShowConfirmation] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [formError, setFormError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
   const handleAction = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setFieldErrors({})
+    setFormError(null)
+    setSubmitting(true)
 
-    const target = event.target as typeof event.target & {
-      email: { value: string }
-      subject: { value: string }
-      message: { value: string }
-    }
+    const form = event.target as HTMLFormElement
+    const formData = new FormData(form)
+    const name = (formData.get("name") as string) ?? ""
+    const email = (formData.get("email") as string) ?? ""
+    const message = (formData.get("message") as string) ?? ""
 
-    const email = target.email.value ?? "website@tomsegbers.de"
-    const subject = target.subject.value ?? "Failed to parse subject"
-    const message = target.message.value ?? "Failed to parse message"
+    const result: SendEmailResult = await sendEmail({ name, email, message })
 
-    const success = await sendEmail({ email: email, subject: subject, message: message })
-    if (success) {
+    setSubmitting(false)
+
+    if (result.success) {
       setShowConfirmation(true)
+      form.reset()
     } else {
-      alert("Failed to send email, please contact me via contact@tomsegbers.de")
+      const { errors } = result
+      const fieldAcc: Record<string, string> = {}
+      let formErr: string | null = null
+
+      for (const [key, value] of Object.entries(errors)) {
+        if (key === "_form") {
+          formErr = value
+        } else {
+          fieldAcc[key] = value
+        }
+      }
+
+      setFieldErrors(fieldAcc)
+      if (formErr) setFormError(formErr)
     }
   }
 
@@ -39,11 +58,34 @@ export default function Contact() {
           Get in Touch
         </h1>
         <p className="mb-8 text-center font-light text-muted dark:text-muted-dark sm:text-xl lg:mb-16">
-          {
-            "Whether you have a collaboration idea, a project proposal, or just want to say hello, I'd love to hear from you. Drop me a message, and I'll get back to you soon."
-          }
+          Whether you have a collaboration idea, a project proposal, or just want to say hello, I&apos;d love to hear
+          from you. Drop me a message, and I&apos;ll get back to you soon.
         </p>
+
+        {formError && (
+          <Alert color="failure" onDismiss={() => setFormError(null)} className="mb-6">
+            {formError}
+          </Alert>
+        )}
+
         <form onSubmit={handleAction} className="space-y-8">
+          <div>
+            <label
+              htmlFor="name"
+              className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark"
+            >
+              Your Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:shadow-sm-light dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
+              placeholder="Your full name"
+              required={true}
+            />
+            {fieldErrors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.name}</p>}
+          </div>
           <div>
             <label
               htmlFor="email"
@@ -54,25 +96,12 @@ export default function Contact() {
             <input
               type="email"
               id="email"
+              name="email"
               className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:shadow-sm-light dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
               placeholder="your.email@example.com"
               required={true}
             />
-          </div>
-          <div>
-            <label
-              htmlFor="subject"
-              className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark"
-            >
-              Subject
-            </label>
-            <input
-              type="text"
-              id="subject"
-              className="block w-full rounded-lg border border-border bg-surface-muted p-3 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:shadow-sm-light dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
-              placeholder="Subject of your message"
-              required={true}
-            />
+            {fieldErrors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.email}</p>}
           </div>
           <div className="sm:col-span-2">
             <label
@@ -83,21 +112,25 @@ export default function Contact() {
             </label>
             <textarea
               id="message"
+              name="message"
               rows={6}
               className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
               placeholder="What would you like to talk about?"
               defaultValue={""}
             />
+            {fieldErrors.message && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.message}</p>
+            )}
           </div>
           <button
             type="submit"
             className={
-              "rounded-lg bg-primary-700 px-5 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus-visible:ring-primary-800 sm:w-fit " +
+              "rounded-lg bg-accent-hover px-5 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground sm:w-fit " +
               (showConfirmation ? "!bg-green-700" : "")
             }
-            disabled={showConfirmation}
+            disabled={showConfirmation || submitting}
           >
-            {showConfirmation ? "Done" : "Send Message"}
+            {submitting ? "Sending..." : showConfirmation ? "Done" : "Send Message"}
           </button>
         </form>
       </div>
