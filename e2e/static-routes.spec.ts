@@ -75,8 +75,8 @@ test.describe("static routes", () => {
 
     // When
     await page.goto("/contact")
+    await page.getByLabel("Your Name").fill("E2E Tester")
     await page.getByLabel("Your Email").fill("e2e@example.test")
-    await page.getByLabel("Subject").fill("E2E contact test")
     await page.getByLabel("Your Message").fill("This message must never reach Resend.")
     await page.getByRole("button", { name: "Send Message" }).click()
 
