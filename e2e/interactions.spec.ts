@@ -1,0 +1,53 @@
+import { expect, test } from "@playwright/test"
+import type { Page } from "@playwright/test"
+
+function collectBrowserConsoleErrors(page: Page): readonly string[] {
+  const consoleErrors: string[] = []
+
+  page.on("console", (message) => {
+    if (message.type() === "error") {
+      consoleErrors.push(message.text())
+    }
+  })
+
+  return consoleErrors
+}
+
+function expectNoUnexpectedBrowserConsoleErrors(consoleErrors: readonly string[]): void {
+  expect(consoleErrors).toEqual([])
+}
+
+test.describe("interactive accessibility", () => {
+  test("keyboard focus gives the custom contact CTA a visible indicator", async ({ page }) => {
+    // Given
+    const consoleErrors = collectBrowserConsoleErrors(page)
+    await page.goto("/")
+    const contactCallToAction = page.locator("nav").getByRole("link", { name: "Contact", exact: true }).first()
+
+    // When
+    await contactCallToAction.focus()
+
+    // Then
+    await expect(contactCallToAction).toBeFocused()
+    await expect(contactCallToAction).toHaveCSS("outline-style", "solid")
+    await expect(contactCallToAction).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+  })
+
+  test("reduced motion stops marquee animation while retaining project navigation", async ({ page }) => {
+    // Given
+    const consoleErrors = collectBrowserConsoleErrors(page)
+    await page.emulateMedia({ reducedMotion: "reduce" })
+
+    // When
+    await page.goto("/")
+    const marquee = page.locator(".animate-marquee").first()
+
+    // Then
+    await expect(marquee).toBeVisible()
+    await expect(marquee).toHaveCSS("animation-name", "none")
+    await page.getByRole("link", { name: "View all Projects" }).click()
+    await expect(page).toHaveURL(/\/projects$/)
+    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+  })
+})
