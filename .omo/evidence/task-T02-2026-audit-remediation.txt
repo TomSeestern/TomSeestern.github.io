@@ -1,0 +1,33 @@
+=== T02: CSP + Security headers report-then-enforce ===
+Timestamp: 2026-07-20
+Plan: .omo/plans/2026-audit-remediation.md (Wave 1)
+
+=== CHANGED FILES ===
+1. next.config.mjs (lines 18-31)
+   - Added async headers() function returning security headers for all routes (source: "/(.*)")
+   - Content-Security-Policy-Report-Only: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'
+   - X-Content-Type-Options: nosniff
+   - X-Frame-Options: DENY
+   - Referrer-Policy: strict-origin-when-cross-origin
+   - Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+=== VERIFICATION ===
+1. pnpm build: exit 0, 36 static pages
+2. curl -sSI http://localhost:3000 (production):
+   Content-Security-Policy-Report-Only: default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'
+   X-Content-Type-Options: nosniff
+   X-Frame-Options: DENY
+   Referrer-Policy: strict-origin-when-cross-origin
+   Permissions-Policy: camera=(), microphone=(), geolocation=()
+3. All 5 headers confirmed present.
+
+=== ASSERTIONS ===
+- [x] CSP-Report-Only header active (report phase, not enforced)
+- [x] X-Content-Type-Options: nosniff present
+- [x] X-Frame-Options: DENY present
+- [x] Referrer-Policy: strict-origin-when-cross-origin present
+- [x] Permissions-Policy restricts camera/microphone/geolocation
+- [x] style-src allows 'unsafe-inline' for Tailwind/Flowbite inline styles
+- [x] script-src allows 'unsafe-inline' for theme init script
+- [x] No nonces invented
+- [x] pnpm build succeeds

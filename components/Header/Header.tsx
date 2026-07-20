@@ -1,8 +1,20 @@
-import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react"
+"use client"
+
+import { DarkThemeToggle, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 import React from "react"
 
+const navItems = [
+  { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
+] as const
+
 export function Header() {
+  const pathname = usePathname()
+
   return (
     <Navbar fluid={true} rounded={true}>
       <NavbarBrand href="/">
@@ -20,17 +32,22 @@ export function Header() {
       <div className="flex md:order-2">
         <a
           href="/contact"
-          className="mr-2 rounded-lg bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus-visible:ring-primary-800 lg:px-5 lg:py-2.5"
+          className="mr-2 rounded-lg bg-accent-hover px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground lg:px-5 lg:py-2.5"
         >
           Contact
         </a>
+        <DarkThemeToggle className="mr-2" />
         <NavbarToggle />
       </div>
       <NavbarCollapse>
-        <NavbarLink href="/about">About</NavbarLink>
-        <NavbarLink href="/projects">Projects</NavbarLink>
-        <NavbarLink href="/blog">Blog</NavbarLink>
-        <NavbarLink href="/contact">Contact</NavbarLink>
+        {navItems.map(({ href, label }) => {
+          const isActive = pathname.startsWith(href)
+          return (
+            <NavbarLink key={href} href={href} active={isActive} aria-current={isActive ? "page" : undefined}>
+              {label}
+            </NavbarLink>
+          )
+        })}
       </NavbarCollapse>
     </Navbar>
   )

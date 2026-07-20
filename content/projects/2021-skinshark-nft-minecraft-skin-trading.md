@@ -3,8 +3,8 @@ id: skinshark-nft-minecraft-skin-trading
 title: "SkinShark: NFT Marketplace for Minecraft Skin Trading"
 articleDate: 2021-01-01
 articleContent: I led development of an Ethereum NFT MVP where Minecraft players could upload, claim, and trade skins through a Next.js and TypeScript application.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - NFTs
   - EthereumBlockchain

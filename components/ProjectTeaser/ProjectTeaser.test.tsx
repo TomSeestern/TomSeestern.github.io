@@ -81,10 +81,10 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockImplementation((technology) => (technology === "React" ? "/icon/react.svg" : null))
 
     // When
-    render(<ProjectTeaser {...baseProps} />)
+    const { container } = render(<ProjectTeaser {...baseProps} />)
 
     // Then
-    expect(screen.getByRole("img", { name: "Tech Icon React" })).toHaveAttribute("src", "/icon/react.svg")
+    expect(container.querySelector('img[src="/icon/react.svg"]')).toBeInTheDocument()
   })
 
   it("renders text fallback for technology without mapped icon", () => {

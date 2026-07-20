@@ -32,11 +32,52 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html lang="en" className={`${inter.className} dark`} suppressHydrationWarning>
       <body className="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "TomSegbers.de",
+              url: "https://tom.segbers.de",
+            }),
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+(function() {
+  try {
+    var mode = localStorage.getItem("flowbite-theme-mode");
+    if (mode === "dark") {
+      document.documentElement.classList.add("dark");
+    } else if (mode === "light") {
+      document.documentElement.classList.remove("dark");
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("flowbite-theme-mode", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("flowbite-theme-mode", "light");
+    }
+  } catch (e) {}
+})();
+`,
+          }}
+        />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black"
+        >
+          Skip to main content
+        </a>
         <Header />
 
-        <main className="grow">{children}</main>
+        <main id="main-content" tabIndex={-1} className="grow">
+          {children}
+        </main>
 
         <Footer />
       </body>

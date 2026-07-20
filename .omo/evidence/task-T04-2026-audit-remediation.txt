@@ -1,0 +1,46 @@
+# Evidence: task-T04-2026-audit-remediation
+# Timestamp: 2026-07-20
+# Task: Wave 2 — Add robots.txt, sitemap.xml, JSON-LD structured data
+
+## Files Changed
+- app/sitemap.ts (new)
+- app/robots.ts (new)
+- app/layout.tsx (edited — JSON-LD script)
+- app/blog/entry/[slug]/page.tsx (edit — fix import path to @/lib/markdown)
+- app/projects/entry/[slug]/page.tsx (edit — fix import path to @/lib/markdown)
+- tsconfig.json (edit — add @/* paths alias)
+
+## Build Verification
+pnpm build → exit 0
+38 static pages generated including:
+- /sitemap.xml
+- /robots.txt
+- All 5 static + 3 blog + 21 project entry routes
+
+## Sitemap Verification
+curl http://localhost:3000/sitemap.xml → valid XML, 29 routes:
+  5 static: /, /about, /blog, /projects, /contact
+  3 blog entries: 2019-ebeltoft-cheesecake-recipe, 2020-homelab-v2-*, 2024-homelab-v2-*
+  21 project entries: 2010 through 2021, all slugs present
+  All entries have <loc>, <lastmod>, <changefreq>, <priority>
+
+## Robots.txt Verification
+curl http://localhost:3000/robots.txt →
+  User-Agent: *
+  Allow: /
+  Sitemap: https://tom.segbers.de/sitemap.xml
+
+## JSON-LD Verification
+curl http://localhost:3000/ →
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"TomSegbers.de","url":"https://tom.segbers.de"}
+  </script>
+
+## LSP Diagnostics
+TypeScript LSP not installed (user declined). Build passed all type checks and lint warnings.
+No errors from changed files.
+
+## Bonus Fixes
+- Fixed import path in app/blog/entry/[slug]/page.tsx: changed wrong-depth relative import to @/lib/markdown
+- Fixed import path in app/projects/entry/[slug]/page.tsx: changed wrong-depth relative import to @/lib/markdown
+- Added @/* path alias to tsconfig.json (baseUrl: ".", paths: { "@/*": ["./*"] })

@@ -48,13 +48,13 @@ function Articles() {
             <a
               href="/projects"
               title="View all projects"
-              className="flex items-center text-base font-medium text-primary-600 hover:underline dark:text-primary-500"
+              className="flex items-center rounded text-base font-medium text-accent hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:focus-visible:ring-accent-soft-dark"
             >
               View all projects
               <Image
                 className={"ml-2 h-4 w-4 dark:invert"}
                 src={"/icon/arrow-right.svg"}
-                alt="Arrow right Icon"
+                alt=""
                 width={32}
                 height={32}
               />
@@ -62,13 +62,13 @@ function Articles() {
             <a
               href="/blog"
               title="View all Projects"
-              className="flex items-center text-base font-medium text-primary-600 hover:underline dark:text-primary-500"
+              className="flex items-center rounded text-base font-medium text-accent hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:focus-visible:ring-accent-soft-dark"
             >
               View Blog posts
               <Image
                 className={"ml-2 h-4 w-4 dark:invert"}
                 src={"/icon/arrow-right.svg"}
-                alt="Arrow right Icon"
+                alt=""
                 width={32}
                 height={32}
               />

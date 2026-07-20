@@ -4,7 +4,7 @@ title: "ISeeUNet: Real-Time Drone Change Detection in Scrubland"
 articleDate: 2021-03-30
 articleContent: For my bachelor thesis, I built ISeeUNet, a modified U-Net trained on hybrid real and synthetic datasets for real-time change detection on Nvidia Jetson NX hardware.
 authorName: Tom Segbers
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorImgSrc: /img/logo.png
 tags:
   - Artificial Intelligence
   - Drone Technology

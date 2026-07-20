@@ -1,0 +1,41 @@
+# T03 Evidence — Skip link + accessible root landmark (C7)
+# Timestamp: 2026-07-20
+
+## Changes Made
+
+### `app/layout.tsx`
+- Added skip link `<a href="#main-content" className="sr-only focus:not-sr-only ...">Skip to main content</a>` as first focusable element in `<body>`, after theme init script, before `<Header />`.
+- Added `id="main-content"` and `tabIndex={-1}` to `<main>` element (retained `className="grow"`).
+- Did NOT modify theme init script, `<html>` className, Header component, or add deps.
+
+### `e2e/interactions.spec.ts`
+- Added test: "skip link becomes visible on Tab and moves focus to main content on Enter"
+  - Given: page.goto("/")
+  - When: Tab pressed → skip link visible + focused
+  - When: Enter pressed → focus moves to #main-content
+  - Then: no console errors
+
+## Verification
+
+### pnpm build
+- Exit code: 0
+- 36 static pages generated successfully
+- No new warnings introduced
+
+### Playwright e2e tests (production build)
+- Command: `pnpm start --port 3030` (production), then `pnpm exec playwright test e2e/interactions.spec.ts --project=chromium`
+- Result: 3 passed, 0 failed
+  - ✓ skip link becomes visible on Tab and moves focus to main content on Enter
+  - ✓ keyboard focus gives the custom contact CTA a visible indicator
+  - ✓ reduced motion stops marquee animation while retaining project navigation
+- Exit code: 0
+
+NOTE: Tests fail against `next dev` due to preexisting CSS MIME type issue in dev server (`Refused to apply style ... MIME type ('text/html')`). All 3 tests pass against production build (`next start`).
+
+### curl verification (production)
+- `curl -s http://127.0.0.1:3040/` confirms:
+  - "Skip to main content" present in HTML
+  - `id="main-content"` present on `<main>`
+  - `tabindex="-1"` present on `<main>`
+
+## Task status: COMPLETED

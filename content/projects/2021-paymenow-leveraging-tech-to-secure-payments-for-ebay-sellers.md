@@ -3,8 +3,8 @@ id: leveraging-tech-to-secure-payments-for-ebay-sellers
 title: "PayMeNow: Payment Status Application for eBay Sellers"
 articleDate: 2021-12-31
 articleContent: I built a React and AWS application for eBay sellers, focused on making transaction status and outstanding payment actions clear and traceable.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - eBay
   - Payment

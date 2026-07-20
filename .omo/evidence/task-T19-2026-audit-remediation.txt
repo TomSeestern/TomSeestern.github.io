@@ -1,0 +1,32 @@
+# T19 Audit Remediation Evidence — min-h-teaser Token
+
+**Date**: 2026-07-20
+**Task**: T19 — H7 min-h token audit finding and fix
+**Status**: Completed
+
+## Token Definition
+
+`minHeight.teaser: '4.5rem'` added to `tailwind.config.js` theme extension.
+This replaces the hardcoded `min-h-[4.5rem]` arbitrary value with a named
+design token `min-h-teaser`.
+
+## Locations Migrated
+
+| # | File | Line | Change |
+|---|------|------|--------|
+| 1 | `app/page.tsx` | blog teaser section | `min-h-[4.5rem]` → `min-h-teaser` + `min-h-8` |
+| 2 | `app/projects/page.tsx` | project listing | `min-h-[4.5rem]` → `min-h-teaser` + `min-h-8` |
+| 3 | `app/projects/page.tsx` | project listing (second) | `min-h-[4.5rem]` → `min-h-teaser` + `min-h-8` |
+| 4 | `components/ArticleTeaser/ArticleTeaser.tsx` | line 74 | `min-h-[4.5rem]` → `min-h-teaser` |
+
+## Addendum: ArticleTeaser Fix (2026-07-20)
+
+`components/ArticleTeaser/ArticleTeaser.tsx:74` was missed in the original T19
+pass. Found during 2026-07-20 audit. Fixed: `min-h-[4.5rem]` → `min-h-teaser`.
+Comment on line 73 updated to reference the token name.
+
+## Verification
+
+- `grep -r 'min-h-\[' app/ components/` → zero matches
+- `pnpm build` passes
+- `pnpm test` passes

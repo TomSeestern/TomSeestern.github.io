@@ -1,0 +1,42 @@
+# T09 Evidence — Hero WebP conversion + heading hierarchy audit
+Timestamp: 2026-07-20T20:55:00Z
+
+## Image Conversion
+- Source: public/img/Tom_Segbers_Frontal.jpg (1091x1368, 443KB JPEG)
+- Target: public/img/Tom_Segbers_Frontal.webp (1091x1368, 31KB WebP, q=85)
+- Tool: cwebp v1.6.0
+- Command: cwebp -q 85 "public/img/Tom_Segbers_Frontal.jpg" -o "public/img/Tom_Segbers_Frontal.webp"
+- Result: 93% size reduction (443KB → 31KB), no visible quality loss
+
+## Code Change
+- app/page.tsx L87: src="/img/Tom_Segbers_Frontal.jpg" → src="/img/Tom_Segbers_Frontal.webp"
+- app/page.tsx L89-90: width/height corrected from 1100x1100 → 1091x1368 (match actual dimensions)
+- No other changes to page structure or layout
+
+## Heading Hierarchy Audit
+- Single <h1> on homepage: "Tom Segbers — Senior Developer" (L42)
+- h2s: "Latest Project: LAYZR.gg", "Recent Blog Posts", "My Recent Projects", "My Recent Blog Posts"
+- h3s: from ProjectTeaser and ArticleTeaser child components (no skips)
+- Hierarchy: h1 → h2 → h3, no skips, no duplicate h1
+- Verified in built HTML: .next/server/app/index.html contains exactly 1 <h1>, no h4/h5/h6
+
+## Build Verification
+- pnpm build: PASSED (38 static routes, 0 errors)
+- TypeScript type checking: PASSED
+- ESLint: warnings only (pre-existing import-order and tailwind shorthands)
+
+## E2E Test
+- pnpm exec playwright test e2e/home.spec.ts --project=chromium: PASSED (1/1)
+  - h1 heading check: PASSED ("Tom Segbers — Senior Developer")
+  - h2 heading checks: PASSED ("My Recent Projects", "My Recent Blog Posts")
+  - Blog card rendering: PASSED
+  - Nav visibility: PASSED
+
+## Built Output Verification
+- grep "Tom_Segbers_Frontal" .next/server/app/index.html → 4 matches (.webp)
+- Hero image now served as WebP
+
+## Token Usage
+- Model: default (9router)
+- Approx input: ~28K tokens (AGENTS.md + plan + file reads)
+- Approx output: ~2K tokens

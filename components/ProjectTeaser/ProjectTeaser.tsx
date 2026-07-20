@@ -1,5 +1,6 @@
-import { Card, Tooltip } from "flowbite-react"
+import { Card } from "flowbite-react"
 import React from "react"
+import { Tooltip } from "../Tooltip/Tooltip"
 import { formatDistanceToNow } from "date-fns"
 import Image from "next/image"
 import Link from "next/link"
@@ -43,8 +44,8 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
             <h3 className="truncate text-h3-sm text-foreground dark:text-foreground-dark">{title}</h3>
           </Link>
         </div>
-        {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
-        <p className="line-clamp-3 min-h-[4.5rem] text-lg font-normal text-muted dark:text-muted-dark">
+        {/* Using min-h-teaser here to force the component to keep 3 Lines of space even is text is not long enough */}
+        <p className="line-clamp-3 min-h-teaser text-lg font-normal text-muted dark:text-muted-dark">
           <Link
             href={ctaLink}
             className="rounded transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
@@ -52,19 +53,14 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
             {description}
           </Link>
         </p>
-        <div className="flex min-h-[2rem] items-center gap-2.5">
+        <div className="flex min-h-8 items-center gap-2.5">
           {technologies.map((tech) => {
             const iconPath = getIconPath(tech)
             return (
               <div key={tech} className="rounded-lg p-1 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
-                <Tooltip content={tech}>
+                <Tooltip explainer={tech}>
                   {iconPath ? (
-                    <img
-                      data-tooltip-target={`tooltip-logo-${tech}`}
-                      className="h-8 w-auto object-contain"
-                      src={iconPath}
-                      alt={`Tech Icon ${tech}`}
-                    />
+                    <img className="h-8 w-auto object-contain" src={iconPath} alt="" />
                   ) : (
                     <span className="text-sm text-muted dark:text-muted-dark">{tech}</span>
                   )}
@@ -82,13 +78,7 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
             className="inline-flex items-center rounded font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
           >
             Learn more
-            <Image
-              className={"ml-2 h-4 w-4 dark:invert"}
-              src={"/icon/arrow-right.svg"}
-              alt="Arrow right Icon"
-              width={32}
-              height={32}
-            />
+            <Image className={"ml-2 h-4 w-4 dark:invert"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
           </Link>
         </div>
       </div>

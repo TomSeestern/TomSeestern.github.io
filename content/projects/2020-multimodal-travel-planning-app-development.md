@@ -4,8 +4,8 @@ title: Charting New Routes with the SouDest Multimodal Travel Planner App
 articleDate: 2020-12-01
 articleContent: |-
   I developed SouDest as a full-stack travel planner spanning Android, React web, and Node.js backend clients, letting users compare multimodal routes by price, travel time, and CO2 emissions.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - AndroidAppDevelopment
   - FullStackWebDevelopment

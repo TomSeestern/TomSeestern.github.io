@@ -1,0 +1,41 @@
+# task-T20-2026-audit-remediation: Add JSDoc to lib module exports
+
+Timestamp: 2026-07-20
+
+## Goal
+Add JSDoc @param/@returns to every exported function and description
+comments to every exported type/interface across five lib modules.
+
+## Changes
+
+### lib/markdown.ts
+- Added JSDoc to `MarkdownEntry` type (Zod fallback guarantees)
+- Added JSDoc to `getAllMarkdownEntries()` with @param dirPath, @param urlPrefix, @returns
+- `getMarkdownEntry()` and `getMarkdownSlugs()` already had JSDoc — unchanged
+
+### lib/blog.tsx
+- Added JSDoc to `getAllBlogPosts()` — thin wrapper doc with @returns
+
+### lib/projects.tsx
+- Added JSDoc to `getAllProjects()` — thin wrapper doc with @returns
+
+### lib/sendEmail.tsx
+- Added JSDoc to `SendEmailResult` discriminated union type (success/error shapes)
+- Added JSDoc to `sendEmail()` server action with @param formData, @returns,
+  documenting Zod validation, rate limiting, E2E shortcut, Resend delivery
+
+### lib/icon-map.ts
+- Added module-level JSDoc header explaining technology-to-icon mapping purpose
+- `getIconPath()` already had JSDoc — unchanged
+- No `iconMap` export exists in the file (task specified it but only `getIconPath` is exported)
+
+## Verification
+
+Command: `unset PNPM_HOME npm_config_prefix && pnpm build`
+Result: ✓ Compiled successfully, 38 static pages generated
+        All lint warnings are pre-existing (import order, tailwind shorthands,
+        unused vars in unrelated files). No new warnings from JSDoc changes.
+        Zero errors.
+
+## Token usage
+~8K tokens (reads + edits + build verification)

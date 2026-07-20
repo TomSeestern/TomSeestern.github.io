@@ -3,8 +3,8 @@ id: hackathon-zeppelin-systems-classification
 title: Mobile Bulk Goods Classification — Zeppelin Systems Hackathon
 articleDate: 2019-09-30
 articleContent: I worked in a five-engineer team at a Zeppelin Systems hackathon to prototype a portable bulk-goods analysis station with a Revolution Pi, Bosch XDK sensors, Python, and a Java companion app.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - Hackathon
   - Innovation

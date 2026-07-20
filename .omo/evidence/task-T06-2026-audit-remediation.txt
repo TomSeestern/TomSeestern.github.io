@@ -1,0 +1,60 @@
+# Task T06 — Extract shared Markdown detail loader/renderer
+## Evidence ledger
+**Date:** 2026-07-20
+**Plan:** `.omo/plans/2026-audit-remediation.md`
+**Wave:** Wave 2
+**Related findings:** C6
+
+## Changes
+
+### `lib/markdown.ts` — (+32 lines, 2 new exports)
+- **`getMarkdownEntry(slug, dir)`**: Reads a single `.md` file at `process.cwd()/dir/slug.md`, parses with `gray-matter`, returns `GrayMatterFile<string> | null`. Returns `null` on any error (file missing, read failure). Eliminates the duplicated `fs.readFileSync` + `matter()` + try/catch pattern repeated 4× across both detail routes.
+- **`getMarkdownSlugs(dir)`**: Lists `.md` filenames in a directory, strips extensions, returns `{ slug }[]`. Eliminates the duplicated `generateStaticParams` pattern across both routes.
+
+### `app/blog/entry/[slug]/page.tsx` — (115 → 76 lines, -39)
+- Replaced `fs`, `path`, `matter` imports with `getMarkdownEntry`, `getMarkdownSlugs` from `../../../../lib/markdown`.
+- Page component: single `getMarkdownEntry()` call replaces try/catch block + null check.
+- `generateStaticParams`: delegates to `getMarkdownSlugs("content/blog")`.
+- `generateMetadata`: single `getMarkdownEntry()` call replaces try/catch block.
+- Removed 13 lines of JSDoc on now-trivial functions.
+
+### `app/projects/entry/[slug]/page.tsx` — (118 → 71 lines, -47)
+- Same refactoring pattern as blog, using `"content/projects"` directory.
+- Removed stale JSDoc referencing "Blog Post" in projects context.
+
+## Verification
+
+### Tests
+```
+pnpm test --testPathPattern=markdown
+PASS lib/markdown.test.ts
+  ✓ 12 passed, 0 failed
+```
+All 12 existing markdown tests pass unchanged — no regression.
+
+### Build
+```
+pnpm build → exit 0
+Routes emitted:
+  ● /blog/entry/[slug] (3 entries)
+  ● /projects/entry/[slug] (21 entries)
+```
+Same route count as before refactoring. Blog: 3 posts. Projects: 21 entries.
+
+### Lint
+Only pre-existing warnings remain (unused `Props` type, unused `parent` parameter in `generateMetadata`). No new lint warnings introduced.
+
+### Behavioral parity
+- Both detail pages render same JSX structure, breadcrumbs, prose Markdown.
+- Frontmatter schema unchanged — Zod `.default()`/`.catch()` fallbacks preserved.
+- 404 rendering unchanged (`<div>404</div>`, to be addressed in T07).
+- No visual output changes.
+
+## Duplication eliminated
+| Pattern | Before | After |
+|---------|--------|-------|
+| `fs.readFileSync` + `matter()` in try/catch | 4 occurrences (Page×2, Metadata×2) | 0 — replaced by `getMarkdownEntry()` |
+| `fs.readdirSync` + map slugs in `generateStaticParams` | 2 occurrences | 0 — replaced by `getMarkdownSlugs()` |
+| `fs`/`path`/`matter` imports | 6 imports total (3 each) | 0 — removed |
+
+Net code reduction: ~86 lines across both detail routes.

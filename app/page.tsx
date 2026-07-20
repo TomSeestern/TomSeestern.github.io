@@ -52,13 +52,13 @@ export default function Web() {
                 <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
                   Latest Project: LAYZR.gg
                 </h2>
-                <p className="mb-4 line-clamp-3 min-h-[4.5rem] font-light ">
+                <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
                   Dive into the details of my recent project, LAYZR.gg, where I explore digital collectibles and the
                   unique digital identity they provide.
                 </p>
                 <a
                   href="/projects"
-                  className="inline-flex items-center rounded-lg bg-primary-700 px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus-visible:ring-primary-800"
+                  className="inline-flex items-center rounded-lg bg-accent-hover px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground"
                 >
                   Learn More
                 </a>
@@ -68,7 +68,7 @@ export default function Web() {
                 <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
                   Recent Blog Posts
                 </h2>
-                <p className="mb-4 line-clamp-3 min-h-[4.5rem] font-light ">
+                <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
                   Explore my latest thoughts and insights on Tech, AI and sometimes a bit about software development.
                   Mostly lessons learned from my projects.
                 </p>
@@ -84,10 +84,10 @@ export default function Web() {
           <div className="absolute right-0 top-0 hidden h-full w-1/3 xl:block">
             <Image
               className="h-full w-full object-cover"
-              src="/img/Tom_Segbers_Frontal.jpg"
+              src="/img/Tom_Segbers_Frontal.webp"
               alt="Frontal image of Tom Segbers"
-              height={1100}
-              width={1100}
+              height={1368}
+              width={1091}
             />
           </div>
         </div>
@@ -142,16 +142,10 @@ export default function Web() {
           <a
             href="/projects"
             title="View all Projects"
-            className="flex items-center rounded text-base font-medium text-primary-600 transition-colors duration-200 hover:text-primary-700 hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-100 dark:text-primary-500 dark:hover:text-primary-400 dark:focus-visible:ring-primary-900"
+            className="flex items-center rounded text-base font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-light dark:focus-visible:ring-accent-soft-dark"
           >
             View all Projects
-            <Image
-              className={"ml-2 h-4 w-4 dark:invert"}
-              src={"/icon/arrow-right.svg"}
-              alt="Arrow right Icon"
-              width={32}
-              height={32}
-            />
+            <Image className={"ml-2 h-4 w-4 dark:invert"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
           </a>
         </div>
       </section>
@@ -185,13 +179,13 @@ export default function Web() {
             <a
               href="/blog"
               title="View all Blog Posts"
-              className="flex items-center rounded text-base font-medium text-primary-600 transition-colors duration-200 hover:text-primary-700 hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-100 dark:text-primary-500 dark:hover:text-primary-400 dark:focus-visible:ring-primary-900"
+              className="flex items-center rounded text-base font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-light dark:focus-visible:ring-accent-soft-dark"
             >
               View all Blog Posts
               <Image
                 className={"ml-2 h-4 w-4 dark:invert"}
                 src={"/icon/arrow-right.svg"}
-                alt="Arrow right Icon"
+                alt=""
                 width={32}
                 height={32}
               />

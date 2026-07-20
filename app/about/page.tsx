@@ -39,7 +39,7 @@ export default function About() {
           <p className="text-xl font-medium leading-tight text-muted dark:text-muted-dark">
             A short overview about my recent Formal Education and Work Experience.
           </p>
-          <span className="inline-flex items-center rounded bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-primary-900 dark:text-primary-300">
+          <span className="inline-flex items-center rounded bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-soft-foreground dark:bg-accent-soft-dark dark:text-accent-soft-foreground-dark">
             <svg
               aria-hidden="true"
               className="mr-1 h-3 w-3"
@@ -125,7 +125,7 @@ export default function About() {
                   <Image
                     className={"h-4 w-4 dark:invert"}
                     src={"/icon/arrow-right.svg"}
-                    alt="arrow right"
+                    alt=""
                     width={32}
                     height={32}
                   ></Image>

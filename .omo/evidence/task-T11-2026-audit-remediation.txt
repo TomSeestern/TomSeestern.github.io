@@ -1,0 +1,46 @@
+# T11 — Prose semantic color tokens (C19)
+## Date: 2026-07-20
+## Status: COMPLETED
+
+### Audit findings
+
+1. **Prose wrapper classes** — Both detail pages already use semantic prose classes:
+   - `app/blog/entry/[slug]/page.tsx:36` — `prose prose-lg max-w-none dark:prose-invert`
+   - `app/projects/entry/[slug]/page.tsx:36` — `prose prose-lg max-w-none dark:prose-invert`
+   - No hardcoded text colors inside `<article>` prose areas. ✅
+
+2. **Non-prose pages** — `app/about/page.tsx` and `app/page.tsx` do NOT render markdown prose.
+   They use semantic tokens (`text-foreground`, `text-muted`, `text-accent-*`) with dark variants
+   throughout. No hardcoded `text-gray-*` or `text-white` in content areas. ✅
+
+3. **tailwind.config.js prose config** — Used raw `colors.gray.*` and `colors.white` instead of
+   semantic tokens. This was the only violation.
+
+### Change made
+
+**File:** `tailwind.config.js` (lines 97-113)
+
+Replaced hardcoded gray/white color references in `typography` config with semantic tokens:
+
+| Element | Light (was) | Light (now) | Dark (was) | Dark (now) |
+|---------|-------------|-------------|------------|------------|
+| body color | `colors.gray.700` | `colors.foreground.DEFAULT` | `colors.gray.300` | `colors.foreground.foreground-muted-dark` |
+| h2 | `colors.gray.900` | `colors.foreground.DEFAULT` | `colors.white` | `colors.foreground.dark` |
+| h3 | `colors.gray.900` | `colors.foreground.DEFAULT` | `colors.white` | `colors.foreground.dark` |
+| a (links) | (not set) | `colors.accent.DEFAULT` | (not set) | `colors.accent.dark` |
+| strong | (not set) | `colors.foreground.DEFAULT` | (not set) | `colors.foreground.dark` |
+
+Added `a` and `strong` element styling for completeness — prose links now use accent color,
+strong text uses foreground color, both with dark mode variants.
+
+### Verification
+
+- `pnpm build` — ✅ exit 0, 38 static pages generated
+- ESLint — ✅ 0 errors (only pre-existing warnings, none from this change)
+- TypeScript — ✅ compiled successfully
+- No new dependencies added
+- No content or layout changes
+
+### Token usage
+
+~12K tokens (exploration + edit + build + evidence)

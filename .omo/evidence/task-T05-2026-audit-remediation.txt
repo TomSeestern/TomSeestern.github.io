@@ -1,0 +1,75 @@
+# Task T05 — Contact Form: Zod validation, typed Result, rate-limit disposition
+## Metadata
+- Task ID: T05 (from `.omo/plans/2026-audit-remediation.md`)
+- Date: 2026-07-20
+- Status: completed
+- Agent: Sisyphus-Junior
+- Findings addressed: C3, C17, C20, H9, H10, H11
+
+## Verification commands executed
+```bash
+unset PNPM_HOME npm_config_prefix && pnpm test -- sendEmail
+# PASS — 10/10 tests passed, 1 suite
+
+unset PNPM_HOME npm_config_prefix && pnpm build
+# exit 0 — 36 static pages generated, including /contact (5.69 kB)
+```
+
+## Changes summary
+
+### 1. `lib/sendEmail.tsx`
+- Added Zod schema `contactFormSchema` with `name`, `email`, `message` fields
+- Typed return: `SendEmailResult = { success: true } | { success: false; errors: Record<string, string> }`
+- `_form` key in errors for form-level issues (rate limit, API errors, missing config)
+- In-process rate limiter: `Map<IP, timestamp[]>` — 5 requests per 15-minute window
+- Documented serverless limitation (per-instance, resets on cold start — needs Redis/Upstash for production)
+- IP extraction: `x-forwarded-for` → `x-real-ip` → fallback `127.0.0.1`
+- Preserved: `"use server"`, `await-to-js` (`to()`), `E2E_CONTACT_FORM_SUCCESS` shortcut
+- Changed signature from `{ email, subject, message }` to `{ name, email, message }`
+- Email subject auto-generated: `Portfolio contact from {name}`
+- Email body includes name, email, message in plaintext
+
+### 2. `lib/sendEmail.test.tsx`
+- 10 tests, all passing:
+  1. valid input → success (Resend accepts)
+  2. missing name → field error "Please enter your name"
+  3. missing email → field error "Email address is missing an @ symbol"
+  4. invalid email → field error "Email address is missing an @ symbol"
+  5. empty message → field error "Please enter a message"
+  6. Resend API reject → form error "Failed to send email..."
+  7. missing RESEND_API_KEY → form error "Email service is not configured."
+  8. E2E shortcut → success without calling Resend
+  9. rate limit exceeded → form error "Too many messages..."
+  10. IP extraction from x-forwarded-for header
+- Mocked `next/headers` via `jest.mock("next/headers", ...)`
+- Mocked `env.mjs` for env var control
+- `jest.resetModules()` in `beforeEach` ensures fresh `rateLimitMap` per test
+
+### 3. `app/contact/page.tsx`
+- Replaced `subject` field with `name` field (matches new server action signature)
+- Added states: `fieldErrors: Record<string, string>`, `formError: string | null`, `submitting: boolean`
+- Red error text below each input field when `fieldErrors[name]`, `fieldErrors[email]`, `fieldErrors[message]` present
+- Form-level error banner using Flowbite `Alert color="failure"` when `formError` set
+- Submit button shows "Sending..." text while `submitting === true`
+- Submit button `disabled={showConfirmation || submitting}` prevents double-submission
+- Form resets on successful submission via `form.reset()`
+- Uses `FormData` API instead of manual event.target casting
+- Success confirmation retained (green Alert, "Done" button state)
+
+## Edge cases covered
+- Empty string passed as name, email, message → Zod `.min(1)` catches
+- Non-email string in email field → Zod `.email()` catches
+- Resend API throws → caught by `await-to-js`, returned as `_form` error (no stack leak)
+- Missing `RESEND_API_KEY` env var → `_form` error, no Resend call attempted
+- Rate limit exceeded → 6th call in 15-min window returns `_form` error
+- IP header absent → falls back to `127.0.0.1` (documented in code)
+- `headers()` throws outside request context → caught by try/catch
+
+## Detractions
+- Rate limiter is per-instance only; documented in code with recommendation for Redis/Upstash at scale
+- No persistent storage for rate-limit state across deployments
+
+## Token usage
+- Input: ~35K tokens (plan, 3 source files, AGENTS.md, README.md)
+- Output: ~8K tokens (3 file writes, 2 bash runs, 1 evidence file)
+- Total: ~43K tokens

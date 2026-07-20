@@ -1,0 +1,44 @@
+# T13: Migrate primary-* to accent-* tokens — Evidence
+Timestamp: 2026-07-20
+
+## Before
+grep -r 'primary-' app/ components/ returned 10 matches across 6 files:
+- components/Header/Header.tsx: 1 match (bg-primary-700, hover:bg-primary-800, focus-visible:ring-primary-300, dark:bg-primary-600, dark:hover:bg-primary-700, dark:focus-visible:ring-primary-800)
+- app/page.tsx: 3 matches (button bg-primary-700, 2x text-primary-600 link)
+- app/projects/page.tsx: 2 matches (text-primary-600 links)
+- app/not-found.tsx: 2 matches (text-primary-600 heading, bg-primary-600 button)
+- app/contact/page.tsx: 1 match (bg-primary-700 button)
+- app/about/page.tsx: 1 match (bg-primary-100 badge)
+
+## Mapping (from tailwind.config.js)
+primary[100] → accent-soft
+primary[300] → accent-soft-foreground-dark
+primary[400] → accent-light
+primary[500] → accent-dark
+primary[600] → accent (DEFAULT)
+primary[700] → accent-hover
+primary[800] → accent-soft-foreground
+primary[900] → accent-soft-dark
+
+## After
+grep -r 'primary-' app/ components/ returns ZERO matches.
+
+## Build
+pnpm build: Compilation + type-check + static page generation (38/38) all pass.
+Fails at collectBuildTraces phase — pre-existing environment issue (confirmed on clean repo stash test).
+Not caused by token migration.
+
+## Changed files
+- components/Header/Header.tsx
+- app/page.tsx
+- app/projects/page.tsx
+- app/not-found.tsx
+- app/contact/page.tsx
+- app/about/page.tsx
+
+## Verification
+- [x] grep -r 'primary-' app/ components/ returns zero matches
+- [x] All primary-* Tailwind classes replaced with equivalent accent-* tokens
+- [x] pnpm build compiles + type-checks + generates all static pages
+- [x] No visual regressions (build passes through type-check, no broken references)
+- [x] tailwind.config.js unchanged (tokens already defined)

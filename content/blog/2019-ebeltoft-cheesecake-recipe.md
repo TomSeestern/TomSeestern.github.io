@@ -3,7 +3,7 @@ id: 2019-ebeltoft-cheesecake-recipe
 title: Memorable Ebeltoft Cheesecake – A Sweet Souvenir
 articleDate: 2019-08-21
 articleContent: Discover how to create the delightful Ebeltoft Cheesecake I first tasted in a little café in Denmark. This simple yet irresistible dessert is sure to make a lasting impression on your taste buds, just as it did mine.
-authorName: Tom
+authorName: Tom Segbers
 authorImgSrc: /img/logo.png
 tags:
   - Recipes

@@ -4,8 +4,8 @@ title: Cloud Data Warehouse for Municipal Administration
 articleDate: 2018-12-31
 articleContent: |-
   I designed a cloud data warehouse for municipal administration, connected it to existing systems, migrated historical records, and delivered department-specific Power BI reporting through Office 365.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - Data-Warehousing
   - Digital-Transformation

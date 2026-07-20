@@ -3,21 +3,20 @@ export default function NotFound() {
     <section className="mx-auto content-center items-center bg-surface dark:bg-surface-dark">
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
         <div className="mx-auto max-w-screen-sm text-center">
-          <h1 className="mb-4 text-7xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500 lg:text-9xl">
+          <h1 className="mb-4 text-7xl font-extrabold tracking-tight text-accent dark:text-accent-dark lg:text-9xl">
             404
           </h1>
-          <p className="mb-4 text-3xl font-bold tracking-tight text-foreground dark:text-foreground-dark md:text-4xl">
-            Etwas fehlt.
-          </p>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground dark:text-foreground-dark md:text-4xl">
+            Something&apos;s missing.
+          </h2>
           <p className="mb-4 text-lg font-light text-muted dark:text-muted-dark">
-            Entschuldigung, wir können diese Seite nicht finden. <br /> Auf der Startseite gibt es aber viel zu
-            entdecken.
+            Sorry, we can&apos;t find that page. <br /> You&apos;ll find plenty to explore on the home page.
           </p>
           <a
             href="/"
-            className="my-4 inline-flex rounded-lg bg-primary-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+            className="my-4 inline-flex rounded-lg bg-accent px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark"
           >
-            Zurück zur Startseite
+            Back to Home
           </a>
         </div>
       </div>

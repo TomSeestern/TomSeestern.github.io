@@ -1,0 +1,47 @@
+T12: Replace Flowbite Tooltip with Radix UI Tooltip in ProjectTeaser
+============================================================================
+Timestamp: 2026-07-20
+Task: Wave 3, T12 from .omo/plans/2026-audit-remediation.md
+
+CHANGES
+-------
+File: components/ProjectTeaser/ProjectTeaser.tsx
+- Replaced `import { Card, Tooltip } from "flowbite-react"` with:
+  `import { Card } from "flowbite-react"` + `import { Tooltip } from "../Tooltip/Tooltip"`
+- Changed `<Tooltip content={tech}>` to `<Tooltip explainer={tech}>`
+- Removed Flowbite-specific `data-tooltip-target` attribute on `<img>`
+- No other changes (props interface, icon rendering, all other JSX untouched)
+
+RATIONALE
+---------
+- `components/Tooltip/Tooltip.tsx` already provides a Radix UI Tooltip wrapper
+  using `@radix-ui/react-tooltip` (already in package.json, v1.0.7)
+- Radix Tooltip offers: keyboard dismiss (Escape), hover reveal, focus management,
+  portal-based rendering — all built into the Radix primitives
+- No new dependency needed
+
+VERIFICATION
+------------
+1. Jest: `pnpm test -- ProjectTeaser` — 10/10 passed (0.863s)
+   - All existing tests pass: title rendering, description link, learn-more link,
+     relative date, icon image rendering, text fallback, icon map calls,
+     empty technologies, title truncation, hover elevation classes
+2. Build: `pnpm build` — exit 0, 38 static pages generated
+   - All lint warnings pre-existing (import/order, tailwind shorthands, no-img-element)
+3. TypeScript: compiled successfully, no new type errors
+
+RADIX TOOLTIP BEHAVIOR (provided by components/Tooltip/Tooltip.tsx wrapper)
+---------------------------------------------------------------------------
+- Hover trigger with 200ms delayDuration
+- Content rendered in Portal (avoids z-index issues)
+- Arrow support via `withArrow` prop (not used in ProjectTeaser — tooltips are simple text)
+- Keyboard: Escape dismisses, tooltip accessible via focus
+- Side positioning: defaults to "top" with 5px sideOffset
+
+NOTES
+-----
+- Flowbite Tooltip import removed from ProjectTeaser. Flowbite still used for
+  Card component (unchanged).
+- The Radix Tooltip wrapper uses `<RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>`,
+  which requires a single ReactElement child — the ternary expression in
+  ProjectTeaser (`iconPath ? <img/> : <span/>`) satisfies this requirement.

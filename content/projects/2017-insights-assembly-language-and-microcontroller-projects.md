@@ -3,8 +3,8 @@ id: insights-assembly-language-and-microcontroller-projects
 title: Diving Deep into Microcontrollers - My Assembly Language Projects
 articleDate: 2017-12-30
 articleContent: Delving into the intricate world of IT and development, I recount my hands-on experiences with Assembly language, detailing the creations of microcontroller-driven projects—from motor control to dynamic LCD displays.
-authorName: Tom
-authorImgSrc: https://placehold.co/512x512.png?text=Tom
+authorName: Tom Segbers
+authorImgSrc: /img/logo.png
 tags:
   - AssemblyLanguage
   - Microcontrollers

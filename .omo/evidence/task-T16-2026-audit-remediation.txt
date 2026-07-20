@@ -1,0 +1,76 @@
+T16: Blog content fidelity — H2-H6 findings
+================================================================
+Date: 2026-07-20
+Status: COMPLETED (pre-existing build trace failure unrelated)
+
+## Findings Disposition
+
+### H2 — authorName normalization
+- File: `content/blog/2019-ebeltoft-cheesecake-recipe.md`
+- Finding: `authorName: Tom` should be `Tom Segbers`
+- Source: Dell audit finding; T15 already applied same fix to 21 project files
+- Disposition: **FIXED** — changed `authorName: Tom` → `authorName: Tom Segbers`
+- Evidence: grep confirms only match for `authorName: Tom$` in blog/ is gone
+- Other blog files already had `authorName: Tom Segbers` (verified via grep)
+
+### H3 — factual fix (R710 CPU cores)
+- File: `content/blog/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition.md`
+- Finding: Body says "Dell PowerEdge R710 with 48 CPU cores"
+- Source evidence: Dell PowerEdge R710 Technical Guide (i.dell.com) shows max 2× Intel Xeon 5600 series (6-core max each) = 12 physical cores, 24 threads. 48 cores impossible for R710.
+- Disposition: **BLOCKED-NO-EVIDENCE** — claim is factually incorrect but replacement value is unknown. R710 spec: max 12 cores. Author may have meant 48 GB RAM or confused with a different server. No source available to determine correct replacement. Per task guardrail: "do NOT invent facts."
+
+### H4 — date rename
+- File: `content/blog/2024-homelab-v2-transforming-homelab-with-advanced-automation.md`
+- Finding: `articleDate: 2023-12-31` does not match filename year (2024)
+- Source: Audit finding labeled "date rename"
+- Disposition: **BLOCKED-NO-EVIDENCE** — discrepancy confirmed but correct date is unknown. Filename rename forbidden by task constraint ("Do NOT change filenames or slugs"). Date could be 2023-12-31 (actual publish date) or 2024-xx-xx (to match filename). No source evidence to determine which.
+
+### H5 — missing id
+- Target: `content/projects/2020-soudest-backend-nodejs.md` (project file, not blog)
+- Finding: Missing id field in frontmatter
+- Disposition: **OUT-OF-SCOPE** — T16 scope is blog content files only. H5 target is a project file. T15 already validated all 21 project files via `check-project-frontmatter.js` (all PASS). id field is not required by the Zod schema in `lib/markdown.ts` (derived from filename slug).
+
+### H6 — broken image
+- File: `content/blog/2019-ebeltoft-cheesecake-recipe.md`
+- Finding: Image URL `https://plantoeat.s3.amazonaws.com/recipes/27780019/...` is broken
+- Source evidence: `curl -sI` → HTTP 200 OK, Content-Type: image/jpeg, Content-Length: 146329 bytes
+- Disposition: **ALREADY-CORRECT** — image is live and serving. No fix needed.
+
+## Verification
+
+### frontmatter validator
+```
+$ unset PNPM_HOME npm_config_prefix && node scripts/check-project-frontmatter.js
+PASS (all 21 files)
+COUNT 21
+```
+Exit: 0 ✓
+
+### build
+```
+$ rm -rf .next && unset PNPM_HOME npm_config_prefix && pnpm build
+  ▲ Next.js 14.2.35
+ ✓ Compiled successfully
+   Linting and checking validity of types ... (warnings only, no errors)
+   Collecting page data ...
+ ✓ Generating static pages (38/38)
+   Finalizing page optimization ...
+   Collecting build traces ...
+Error: ENOENT: .../_app.js.nft.json  ← PRE-EXISTING, unrelated to content
+```
+- Compilation: ✓
+- Type checking: ✓  
+- Static pages: ✓ 38/38 generated
+- Traces collection: FAIL (pre-existing, also seen in T15 evidence)
+
+## Files changed: 1
+- `content/blog/2019-ebeltoft-cheesecake-recipe.md` — authorName frontmatter only
+
+## Summary
+| Finding | File | Disposition |
+|---------|------|-------------|
+| H2 | 2019-ebeltoft-cheesecake-recipe.md | FIXED (authorName normalized) |
+| H3 | 2020-homelab-v2-...md | BLOCKED (R710 cores: 48 impossible, replacement unknown) |
+| H4 | 2024-homelab-v2-...md | BLOCKED (date 2023-12-31 vs filename 2024, correct date unknown) |
+| H5 | projects/2020-soudest-backend-...md | OUT-OF-SCOPE (project file, not blog) |
+| H6 | 2019-ebeltoft-cheesecake-recipe.md | ALREADY-CORRECT (image HTTP 200) |
