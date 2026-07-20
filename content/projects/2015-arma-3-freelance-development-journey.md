@@ -2,7 +2,7 @@
 id: arma-3-freelance-development-journey
 title: Forging Virtual Worlds - My Journey as an Arma 3 Freelance Developer
 articleDate: 2015-12-31
-articleContent: Dive into the heart of virtual life simulation with my personal tale of developing one of the most popular multiplayer game modes in Arma 3, where roleplay, realism, and creativity collide.
+articleContent: I developed one of the most popular Altis Life multiplayer game modes for Arma 3 — a virtual world where roleplay, realism, and custom SQF scripting combined into a thriving community experience.
 authorName: Tom Segbers
 authorImgSrc: https://placehold.co/512x512.png?text=Tom
 tags:

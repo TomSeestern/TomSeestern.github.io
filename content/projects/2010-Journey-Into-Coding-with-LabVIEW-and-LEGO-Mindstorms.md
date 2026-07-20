@@ -2,7 +2,7 @@
 id: labview-lego-mindstorms-journey
 title: The Building Blocks of My Tech Journey - LabVIEW & LEGO Mindstorms
 articleDate: 2010-12-15
-articleContent: Dive into how my pursuit of technology began with the playful yet powerful tools of LabVIEW & LEGO Mindstorms in an after-school program. Discover my initial steps as I ventured into programming and problem-solving that ignited a life-long passion for innovation.
+articleContent: LabVIEW and LEGO Mindstorms taught me programming fundamentals. Building robots and solving problems at an after-school program sparked my interest in technology.
 authorName: Tom
 authorImgSrc: https://placehold.co/512x512.png?text=Tom
 tags:
