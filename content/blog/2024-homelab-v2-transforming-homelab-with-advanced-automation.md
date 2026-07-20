@@ -2,7 +2,7 @@
 id: transforming-homelab-with-advanced-automation
 title: Transforming my Homelab with Advanced Automation - The 3rd Iteration Journey
 articleDate: 2023-12-31
-articleContent: Dive into the latest version of my Homelab, featuring the integration of AI and advanced automation buzzing with high-end technology. Join me as I take you through my passion-filled journey of unending innovation in the realm of home servers automation.
+articleContent: Third homelab iteration — unRAID, Docker, AI automation, and what I learned from three generations of home server tinkering.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
 tags:

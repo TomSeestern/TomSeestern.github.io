@@ -2,7 +2,7 @@
 id: from-c-plusplus-to-time-tracking-app-journey
 title: From C++ Courses to Crafting a Time Tracking App
 articleDate: 2016-07-10
-articleContent: Join me on my journey from learning C++ in high school to the development of a comprehensive time tracking application. Dive into the world of coding with a fresh perspective, witnessing the challenges and successes along the way.
+articleContent: High school C++ courses led to building a full time tracking application with Qt Creator — from textbook exercises to shipping real software.
 authorName: Tom
 authorImgSrc: https://placehold.co/512x512.png?text=Tom
 tags:
