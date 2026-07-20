@@ -74,7 +74,9 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
           })}
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted dark:text-muted-dark">{formatDistanceToNow(projectDate, { addSuffix: true })}</span>
+          <span className="text-sm text-muted dark:text-muted-dark">
+            {formatDistanceToNow(projectDate, { addSuffix: true })}
+          </span>
           <Link
             href={ctaLink}
             className="inline-flex items-center rounded font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"

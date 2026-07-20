@@ -63,7 +63,7 @@ describe("ArticleTeaser", () => {
     // Then
     expect(screen.getByAltText("Author's Picture")).toHaveAttribute(
       "src",
-      expect.stringContaining(encodeURIComponent("/img/author.png")),
+      expect.stringContaining(encodeURIComponent("/img/author.png"))
     )
   })
 
@@ -75,7 +75,7 @@ describe("ArticleTeaser", () => {
     // Then
     expect(screen.getByAltText("Author's Picture")).toHaveAttribute(
       "src",
-      expect.stringContaining(encodeURIComponent("/img/placeholder.png")),
+      expect.stringContaining(encodeURIComponent("/img/placeholder.png"))
     )
   })
 
@@ -108,7 +108,8 @@ describe("ArticleTeaser", () => {
 
   it("renders long title without changing its link destination", () => {
     // Given
-    const longTitle = "A title long enough to verify article teaser preserves complete link text even when visual CSS truncates it"
+    const longTitle =
+      "A title long enough to verify article teaser preserves complete link text even when visual CSS truncates it"
 
     // When
     renderArticleTeaser({ title: longTitle })

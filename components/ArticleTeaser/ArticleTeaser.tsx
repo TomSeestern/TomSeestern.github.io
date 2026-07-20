@@ -62,7 +62,7 @@ const ArticleComponent: React.FC<ArticleProps> = ({
         </span>
         <span className="text-sm">{formatDistanceToNow(articleDate, { addSuffix: true })}</span>
       </div>
-        <h3 className="mb-2 truncate text-h3 text-foreground dark:text-foreground-dark">
+      <h3 className="mb-2 truncate text-h3 text-foreground dark:text-foreground-dark">
         <Link
           href={fullArticleLink}
           className="rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
@@ -71,7 +71,7 @@ const ArticleComponent: React.FC<ArticleProps> = ({
         </Link>
       </h3>
       {/* Using min-h-[4.5rem] here to force the component to keep 3 Lines of space even is text is not long enough */}
-        <p className="mb-5 line-clamp-3 min-h-[4.5rem] font-light text-muted dark:text-muted-dark ">{articleContent}</p>
+      <p className="mb-5 line-clamp-3 min-h-[4.5rem] font-light text-muted dark:text-muted-dark ">{articleContent}</p>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Image

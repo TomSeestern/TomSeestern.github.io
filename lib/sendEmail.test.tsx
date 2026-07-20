@@ -1,18 +1,18 @@
-import {jest} from "@jest/globals"
+import { jest } from "@jest/globals"
 
 const mockSend = jest.fn()
 
 jest.mock("resend", () => ({
   Resend: jest.fn(() => ({
-    emails: {send: mockSend},
+    emails: { send: mockSend },
   })),
 }))
 
-const mockEnv: {RESEND_API_KEY: string | undefined} = {
+const mockEnv: { RESEND_API_KEY: string | undefined } = {
   RESEND_API_KEY: "test-resend-key",
 }
 
-jest.mock("../env.mjs", () => ({env: mockEnv}))
+jest.mock("../env.mjs", () => ({ env: mockEnv }))
 
 let sendEmail: typeof import("./sendEmail").sendEmail
 
@@ -27,12 +27,12 @@ describe("sendEmail", () => {
     mockEnv.RESEND_API_KEY = "test-resend-key"
     mockSend.mockReset()
     jest.resetModules()
-    ;({sendEmail} = await import("./sendEmail"))
+    ;({ sendEmail } = await import("./sendEmail"))
   })
 
   it("returns true and forwards contact details when Resend accepts email", async () => {
     // Given
-    mockSend.mockResolvedValue({id: "email-id"})
+    mockSend.mockResolvedValue({ id: "email-id" })
 
     // When
     const sent = await sendEmail(emailRequest)

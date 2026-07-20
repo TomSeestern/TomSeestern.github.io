@@ -1,7 +1,7 @@
-import {formatDistanceToNow} from "date-fns"
+import { formatDistanceToNow } from "date-fns"
 import React from "react"
-import {render, screen} from "@testing-library/react"
-import {getIconPath} from "../../lib/icon-map"
+import { render, screen } from "@testing-library/react"
+import { getIconPath } from "../../lib/icon-map"
 
 jest.mock("../../lib/icon-map", () => ({
   getIconPath: jest.fn(),
@@ -39,7 +39,7 @@ describe("ProjectTeaser", () => {
     render(<ProjectTeaser {...baseProps} />)
 
     // Then
-    expect(screen.getByRole("heading", {level: 3, name: baseProps.title})).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 3, name: baseProps.title })).toBeInTheDocument()
   })
 
   it("renders description as a project link", () => {
@@ -50,7 +50,7 @@ describe("ProjectTeaser", () => {
     render(<ProjectTeaser {...baseProps} />)
 
     // Then
-    expect(screen.getByRole("link", {name: baseProps.description})).toHaveAttribute("href", baseProps.ctaLink)
+    expect(screen.getByRole("link", { name: baseProps.description })).toHaveAttribute("href", baseProps.ctaLink)
   })
 
   it("renders a learn-more link with the project URL", () => {
@@ -61,13 +61,13 @@ describe("ProjectTeaser", () => {
     render(<ProjectTeaser {...baseProps} />)
 
     // Then
-    expect(screen.getByRole("link", {name: /learn more/i})).toHaveAttribute("href", baseProps.ctaLink)
+    expect(screen.getByRole("link", { name: /learn more/i })).toHaveAttribute("href", baseProps.ctaLink)
   })
 
   it("renders relative project date", () => {
     // Given
     mockGetIconPath.mockReturnValue(null)
-    const expectedDate = formatDistanceToNow(projectDate, {addSuffix: true})
+    const expectedDate = formatDistanceToNow(projectDate, { addSuffix: true })
 
     // When
     render(<ProjectTeaser {...baseProps} />)
@@ -84,7 +84,7 @@ describe("ProjectTeaser", () => {
     render(<ProjectTeaser {...baseProps} />)
 
     // Then
-    expect(screen.getByRole("img", {name: "Tech Icon React"})).toHaveAttribute("src", "/icon/react.svg")
+    expect(screen.getByRole("img", { name: "Tech Icon React" })).toHaveAttribute("src", "/icon/react.svg")
   })
 
   it("renders text fallback for technology without mapped icon", () => {
@@ -96,7 +96,7 @@ describe("ProjectTeaser", () => {
 
     // Then
     expect(screen.getAllByText("TypeScript")).not.toHaveLength(0)
-    expect(screen.queryByRole("img", {name: "Tech Icon TypeScript"})).not.toBeInTheDocument()
+    expect(screen.queryByRole("img", { name: "Tech Icon TypeScript" })).not.toBeInTheDocument()
   })
 
   it("looks up every listed technology through icon map", () => {
@@ -120,7 +120,7 @@ describe("ProjectTeaser", () => {
 
     // Then
     expect(mockGetIconPath).not.toHaveBeenCalled()
-    expect(screen.queryByRole("img", {name: /tech icon/i})).not.toBeInTheDocument()
+    expect(screen.queryByRole("img", { name: /tech icon/i })).not.toBeInTheDocument()
     expect(screen.queryByText("React")).not.toBeInTheDocument()
   })
 
@@ -133,7 +133,7 @@ describe("ProjectTeaser", () => {
     render(<ProjectTeaser {...baseProps} title={longTitle} />)
 
     // Then
-    expect(screen.getByRole("heading", {level: 3, name: longTitle})).toHaveClass("truncate")
+    expect(screen.getByRole("heading", { level: 3, name: longTitle })).toHaveClass("truncate")
   })
 
   it("keeps card hover elevation classes", () => {
@@ -141,7 +141,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockReturnValue(null)
 
     // When
-    const {container} = render(<ProjectTeaser {...baseProps} />)
+    const { container } = render(<ProjectTeaser {...baseProps} />)
 
     // Then
     expect(container.querySelector(".h-full.w-full")).toHaveClass("hover:z-50", "motion-safe:hover:-translate-y-1")

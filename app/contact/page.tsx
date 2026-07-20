@@ -35,7 +35,9 @@ export default function Contact() {
         </Alert>
       )}
       <div className="mx-auto max-w-screen-md px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
-        <h1 className="mb-4 text-center text-h1-sm text-foreground dark:text-foreground-dark sm:text-h1">Get in Touch</h1>
+        <h1 className="mb-4 text-center text-h1-sm text-foreground dark:text-foreground-dark sm:text-h1">
+          Get in Touch
+        </h1>
         <p className="mb-8 text-center font-light text-muted dark:text-muted-dark sm:text-xl lg:mb-16">
           {
             "Whether you have a collaboration idea, a project proposal, or just want to say hello, I'd love to hear from you. Drop me a message, and I'll get back to you soon."
@@ -43,7 +45,10 @@ export default function Contact() {
         </p>
         <form onSubmit={handleAction} className="space-y-8">
           <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark">
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark"
+            >
               Your Email
             </label>
             <input
@@ -55,7 +60,10 @@ export default function Contact() {
             />
           </div>
           <div>
-            <label htmlFor="subject" className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark">
+            <label
+              htmlFor="subject"
+              className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark"
+            >
               Subject
             </label>
             <input
@@ -67,7 +75,10 @@ export default function Contact() {
             />
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark">
+            <label
+              htmlFor="message"
+              className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark"
+            >
               Your Message
             </label>
             <textarea
