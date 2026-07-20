@@ -11,9 +11,9 @@ test.describe("contact form", () => {
     await page.click('button[type="submit"]')
 
     // Success alert should appear
-    await expect(page.getByText("Message sent.")).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText("Email sent successfully.")).toBeVisible({ timeout: 10000 })
     // Submit button should reflect sent state
-    await expect(page.getByRole("button", { name: "Sent" })).toBeVisible()
+    await expect(page.getByRole("button", { name: "Done" })).toBeVisible()
   })
 
   test("shows inline error for invalid email", async ({ page }) => {
@@ -66,7 +66,7 @@ test.describe("contact form", () => {
     await page.click('button[type="submit"]')
 
     // Button should show "Sending…" and be disabled during submission
-    await expect(page.getByRole("button", { name: /Sending|Sent/ })).toBeVisible({ timeout: 5000 })
+    await expect(page.getByRole("button", { name: /Sending|Done/ })).toBeVisible({ timeout: 5000 })
   })
 
   test("clear errors on resubmission after failed attempt", async ({ page }) => {
