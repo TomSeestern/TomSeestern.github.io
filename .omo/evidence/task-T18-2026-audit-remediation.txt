@@ -1,0 +1,62 @@
+# T18 — Storybook Rebuild + Artifact Disposition
+## Timestamp: 2026-07-20T19:30:00+02:00
+## Status: PASS
+
+### Verification Commands
+```bash
+# Build static Storybook
+pnpm build-storybook
+# Exit code: 0, SUCCESS
+
+# Check output exists
+ls storybook-static/index.html  # EXISTS
+
+# Smoke tests (against running dev server on :6006)
+pnpm test-storybook --url http://127.0.0.1:6006
+# Exit code: 0, SUCCESS
+
+# Gitignore check
+git check-ignore storybook-static/  # EXIT 0 = gitignored
+```
+
+### Build Result
+- `pnpm build-storybook` → SUCCESS (8.24s)
+- Storybook v7.6.24, Webpack 5, Babel compiler
+- Output: `storybook-static/`
+- Only warning: `components/**/*.stories.mdx` pattern finds no files (expected — no MDX stories exist)
+- Asset size warnings (non-blocking): 463.js (582 KiB), 14.js (451 KiB), 548.js (967 KiB), 455.js (728 KiB), main entry (1.17 MiB)
+
+### Smoke Test Result
+```
+Test Suites: 3 passed, 3 total
+Tests:       6 passed, 6 total
+Time:        2.231 s
+```
+
+Test breakdown:
+| Story File | Status |
+|---|---|
+| components/Button/Button.stories.tsx | PASS |
+| components/ArticleTeaser/ArticleTeaser.stories.tsx | PASS |
+| components/ProjectTeaser/ProjectTeaser.stories.tsx | PASS |
+
+### Story Inventory
+- **Button** (CSF3, `StoryObj`): Default variant — primary/lg/underline=false/href="#". Controls: intent (primary/secondary), size (sm/lg). ✓
+- **ArticleTeaser** (CSF2, `Template.bind`): Default, WithLongTitle, WithLongContent, WithShortContent. ✓
+- **ProjectTeaser** (CSF2, `Template.bind`): Default with React, TypeScript, Next.js, Tailwind CSS technologies. ✓
+
+### Config State
+- `.storybook/main.ts`: stories glob includes `components/**/*.stories.mdx` + `.stories.@(js|jsx|ts|tsx)`, addons: links/essentials/interactions, framework: @storybook/nextjs, typescript.check: false, autodocs: tag
+- `.storybook/preview.ts`: imports `styles/tailwind.css`, actions.argTypesRegex, controls.color/date matchers
+
+### Gitignore
+- `storybook-static/` was NOT in `.gitignore` at task start
+- Added `storybook-static/` entry to `.gitignore` under new `# storybook` section
+- `git check-ignore storybook-static/` now returns exit 0 (ignored)
+- `storybook-static/` was untracked (not committed), so no cleanup needed
+
+### Disposition
+- Storybook static output is a disposable QA artifact — not tracked by git
+- Build and smoke tests pass without any story modifications needed
+- All 3 component stories render correctly post-remediation
+- No broken stories to fix

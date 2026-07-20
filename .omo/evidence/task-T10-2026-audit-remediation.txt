@@ -1,0 +1,57 @@
+# Task T10 — Projects Page Test + Focus-Visible Rings
+## Evidence Ledger — 2026 Audit Remediation (Wave 4)
+
+**Timestamp:** 2026-07-20
+**Task ID:** T10
+**Findings:** C11, H1
+**Agent:** Sisyphus-Junior
+
+---
+
+### Scope
+- Add Jest component test for projects listing page (`app/projects/page.test.tsx`)
+- Ensure all interactive elements in `app/projects/page.tsx` and `components/ProjectTeaser/ProjectTeaser.tsx` have visible `focus-visible:ring-*` styles
+
+### Verification
+
+#### 1. Test Suite (new: `app/projects/page.test.tsx`)
+- 5 tests, all passing:
+  - renders page heading
+  - renders project cards from getAllProjects results
+  - renders view-all anchor with focus-visible ring styles
+  - renders blog link anchor with focus-visible ring styles
+  - renders empty grid when no projects returned
+
+#### 2. Full Test Suite
+- 81/82 tests pass
+- 1 pre-existing failure in `components/Footer/Footer.test.tsx` (copyright year mismatch, unrelated to T10)
+- New tests (app/projects/page.test.tsx): 5/5 pass
+
+#### 3. Production Build
+- `pnpm build` exit 0
+- 38 static pages generated
+- 0 TypeScript errors, 0 ESLint errors
+- Only pre-existing ESLint warnings (import order, Tailwind shorthands, unused vars)
+
+#### 4. Focus-Visible Rings Status
+
+**`components/ProjectTeaser/ProjectTeaser.tsx`** — Already had focus-visible styles (from prior work):
+- Title Link (line 41): `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft` + dark variant
+- Description Link (line 51): `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft` + dark variant
+- Learn More Link (line 82): `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft` + dark variant
+
+**`app/projects/page.tsx`** — Added focus-visible rings:
+- "View all projects" anchor: `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark` + `rounded`
+- "View Blog posts" anchor: `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark` + `rounded`
+
+### Changed Files
+| File | Change |
+|---|---|
+| `app/projects/page.test.tsx` | NEW — 5 Jest tests for projects listing page |
+| `app/projects/page.tsx` | Added focus-visible rings to 2 anchor links |
+
+### Token Usage
+~9000 tokens
+
+### Disposition
+✓ T10 complete — test coverage added, focus-visible rings on all interactive elements

@@ -1,0 +1,55 @@
+# Task T08: Image alt Attribute Audit — Evidence Ledger
+Timestamp: 2026-07-20
+Task: Wave 5 T08 from .omo/plans/2026-audit-remediation.md
+
+## Audit Summary
+Total images found: 17 (across 8 files in app/ and components/)
+  - Content images (kept descriptive alt): 4
+  - Decorative images (changed to alt=""): 13
+  - No images missing alt attribute: 17/17 ✓
+
+## Per-Image Audit Table
+
+| # | File | Line | Type | Src | Old Alt | New Alt | Classification |
+|---|------|------|------|-----|---------|---------|----------------|
+| 1 | app/page.tsx | 85 | Image | /img/Tom_Segbers_Frontal.webp | "Frontal image of Tom Segbers" | (kept) | Content — photo of person |
+| 2 | app/page.tsx | 148 | Image | /icon/arrow-right.svg | "Arrow right Icon" | "" | Decorative — inline CTA arrow icon |
+| 3 | app/page.tsx | 191 | Image | /icon/arrow-right.svg | "Arrow right Icon" | "" | Decorative — inline CTA arrow icon |
+| 4 | app/projects/page.tsx | 54 | Image | /icon/arrow-right.svg | "Arrow right Icon" | "" | Decorative — inline CTA arrow icon |
+| 5 | app/projects/page.tsx | 68 | Image | /icon/arrow-right.svg | "Arrow right Icon" | "" | Decorative — inline CTA arrow icon |
+| 6 | app/about/page.tsx | 125 | Image | /icon/arrow-right.svg | "arrow right" | "" | Decorative — inline CTA arrow icon |
+| 7 | components/ProjectTeaser/ProjectTeaser.tsx | 63 | img | dynamic (tech icon) | `Tech Icon ${tech}` | "" | Decorative — tech icon next to text label |
+| 8 | components/ProjectTeaser/ProjectTeaser.tsx | 85 | Image | /icon/arrow-right.svg | "Arrow right Icon" | "" | Decorative — inline CTA arrow icon |
+| 9 | components/PersonTeaser/PersonTeaser.tsx | 22 | Image | dynamic (company logo) | "" | (kept) | Decorative — company logo, already alt="" |
+| 10 | components/Header/Header.tsx | 21 | Image | /img/logo.png | "Tom Segbers Logo" | (kept) | Content — site logo, brand identity |
+| 11 | components/Footer/Footer.tsx | 28 | Image | /icon/linkedin.svg | "LinkedIn Logo" | "" | Decorative — social icon, sr-only label |
+| 12 | components/Footer/Footer.tsx | 41 | Image | /icon/twitter.svg | "Twitter Logo" | "" | Decorative — social icon, sr-only label |
+| 13 | components/Footer/Footer.tsx | 54 | Image | /icon/github.svg | "GitHub Logo" | "" | Decorative — social icon, sr-only label |
+| 14 | components/Footer/Footer.tsx | 67 | Image | /icon/mail.svg | "Email" | "" | Decorative — social icon, sr-only label |
+| 15 | components/ArticleTeaser/ArticleTeaser.tsx | 60 | Image | /icon/article.svg | "Article Icon" | "" | Decorative — badge icon next to "Tutorial" text |
+| 16 | components/ArticleTeaser/ArticleTeaser.tsx | 77 | Image | dynamic (author photo) | "Author's Picture" | (kept) | Content — author portrait photo |
+| 17 | components/ArticleTeaser/ArticleTeaser.tsx | 91 | Image | /icon/arrow-right.svg | "Arrow right Icon" | "" | Decorative — inline CTA arrow icon |
+
+## Classification Rationale
+- **Decorative**: Icons, arrows, small badges that accompany text labels. These convey no independent information — the adjacent text or sr-only span provides the meaning. Set to alt="" so screen readers skip them.
+- **Content**: Photos of people (hero, author), site logo (brand identifier). These convey information not available elsewhere in the DOM. Keep descriptive alt text.
+
+## Build Verification
+- `pnpm build`: Compiled ✓, Types ✓, Static pages 38/38 ✓
+- ENOENT error in collect-build-traces phase is pre-existing (reproduces on clean stash, unrelated to alt changes)
+- No new lint warnings introduced by alt changes
+
+## Files Changed (8 files, 13 edits)
+- app/page.tsx — 2 arrow icons → alt=""
+- app/projects/page.tsx — 2 arrow icons → alt=""
+- app/about/page.tsx — 1 arrow icon → alt=""
+- components/ProjectTeaser/ProjectTeaser.tsx — 1 tech icon + 1 arrow → alt=""
+- components/Footer/Footer.tsx — 4 social icons → alt=""
+- components/ArticleTeaser/ArticleTeaser.tsx — 1 badge icon + 1 arrow → alt=""
+- components/PersonTeaser/PersonTeaser.tsx — already alt="" (no change)
+- components/Header/Header.tsx — kept "Tom Segbers Logo" (no change)
+
+## Compliance
+- R27.1 (Meaningful names): alt text classifications follow clear decorative vs content criteria
+- R15.4 (Focus indicators): no focus-related changes in this task
+- R15.15 (Image alt text): all images now have appropriate alt attributes

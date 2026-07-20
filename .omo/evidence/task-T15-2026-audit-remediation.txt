@@ -1,0 +1,31 @@
+T15: Fix placehold.co image references + normalize authorName
+================================================================
+Date: 2026-07-20
+Status: COMPLETED (build pre-existing failure unrelated)
+
+## Changes
+
+### placehold.co → /img/logo.png
+BEFORE: 21 files had `authorImgSrc: https://placehold.co/512x512.png?text=Tom`
+AFTER:  21 files have `authorImgSrc: /img/logo.png`
+Command: `sed -i 's|authorImgSrc: https://placehold\.co/512x512\.png?text=Tom|authorImgSrc: /img/logo.png|g' content/projects/*.md`
+Verification: `grep -r 'placehold.co' content/` → empty (0 matches)
+
+### authorName normalization
+BEFORE: 17 files had `authorName: Tom`, 4 files already had `authorName: Tom Segbers`
+AFTER:  21 files have `authorName: Tom Segbers`
+Command: `sed -i 's/^authorName: Tom$/authorName: Tom Segbers/' content/projects/*.md`
+Verification: `grep -r 'authorName: Tom$' content/projects/` → empty (0 matches)
+              `grep -c 'authorName: Tom Segbers' content/projects/` → 21 matches
+
+### Validator
+`node scripts/check-project-frontmatter.js` → COUNT 21, all PASS
+
+### Build
+Pre-existing build failure: `Module not found: Can't resolve '@/lib/markdown'`
+in app/blog/entry/[slug]/page.tsx and app/projects/entry/[slug]/page.tsx.
+NOT caused by T15 changes (content-only frontmatter edits).
+
+## Files changed: 21
+All in content/projects/*.md — frontmatter fields only.
+No filenames, slugs, dates, or body prose changed.

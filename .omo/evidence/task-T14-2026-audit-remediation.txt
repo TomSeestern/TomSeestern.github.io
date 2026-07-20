@@ -1,0 +1,46 @@
+# Evidence: T14 — aria-current on active nav link + English not-found page
+# Timestamp: 2026-07-20T21:03:00Z
+# Plan: .omo/plans/2026-audit-remediation.md (Wave 4)
+
+## Changes Made
+
+### 1. components/Header/Header.tsx
+- Added `"use client"` directive (required for `usePathname()`)
+- Added `usePathname` import from `next/navigation`
+- Extracted nav items into `navItems` const array
+- Each `NavbarLink` now receives `active={isActive}` and `aria-current={isActive ? "page" : undefined}`
+- Active detection: `pathname.startsWith(href)` — matches `/blog`, `/blog/entry/slug`, etc.
+
+### 2. jest.setup.js
+- Added global mock: `jest.mock("next/navigation", () => ({ usePathname: jest.fn(() => "/") }))`
+- Required because Header is now a client component using `usePathname`
+
+### 3. app/not-found.tsx
+- Replaced German text with English:
+  - "Etwas fehlt." → "Something's missing."
+  - "Entschuldigung, wir können diese Seite nicht finden." → "Sorry, we can't find that page."
+  - "Zurück zur Startseite" → "Back to Home"
+- Changed `<p>` heading to `<h2>` for proper heading hierarchy (h1=404, h2=title)
+- Changed `focus:outline-none focus:ring-4` → `focus-visible:outline-none focus-visible:ring-4` on back-link
+- Added `focus-visible:ring-primary-300 dark:focus-visible:ring-primary-900` for dark mode
+
+## Verification
+
+### Build
+- `pnpm build` exit 0 (after `rm -rf .next` to clear stale trace cache)
+- 38 static pages generated successfully
+- No new ESLint errors introduced (only pre-existing warnings)
+- English text confirmed in build output: `grep` on `.next/server/app/_not-found/page.js` shows "Something's missing" and "Back to Home"
+
+### Tests
+- `pnpm test`: Header tests PASS (5/5)
+- 1 pre-existing Footer test failure (year text mismatch, unrelated to T14)
+- 81/82 tests pass overall
+
+### aria-current
+- `aria-current="page"` is applied client-side via `usePathname()` — not visible in static server HTML
+- Flowbite's `NavbarLink` accepts `aria-current` (extends `ComponentProps<"a">`)
+- `active` prop triggers Flowbite's active styling
+
+## Token Usage
+- Approx 12k tokens for exploration + implementation + verification

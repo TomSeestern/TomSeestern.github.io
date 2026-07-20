@@ -1,0 +1,79 @@
+# T07 Evidence — notFound + safe metadata + canonical/Twitter on detail pages
+
+## Task
+Wave 3: T07 from `.omo/plans/2026-audit-remediation.md`
+Implementation: `notFound()`, safe metadata, canonical URL, Twitter Card on blog & project detail pages.
+
+## Timestamp
+2026-07-20
+
+## Changes
+
+### app/blog/entry/[slug]/page.tsx
+- Added `notFound` import from `next/navigation`
+- Replaced `<div>404</div>` with `notFound()` when `getMarkdownEntry` returns null
+- `generateMetadata()`: early null guard returns `{ title: "Not Found", description: "Blog post not found" }`
+- Safe metadata: uses `||` defaults (`"Blog Post"`, `""`) instead of bare `?.toString()`
+- Added `alternates: { canonical: "https://tomsegbers.de/blog/entry/${params.slug}" }`
+- Added `twitter: { card: "summary_large_image", title, description, images: [...] }`
+
+### app/projects/entry/[slug]/page.tsx
+- Added `notFound` import from `next/navigation`
+- Replaced `<div>404</div>` with `notFound()` when `getMarkdownEntry` returns null
+- `generateMetadata()`: early null guard returns `{ title: "Not Found", description: "Project not found" }`
+- Safe metadata: uses `||` defaults (`"Project"`, `""`) instead of bare `?.toString()`
+- Added `alternates: { canonical: "https://tomsegbers.de/projects/entry/${params.slug}" }`
+- Added `twitter: { card: "summary_large_image", title, description, images: [...] }`
+
+## Verification
+
+### Build
+```
+pnpm build → exit 0
+✓ Compiled successfully
+✓ Generating static pages (38/38)
+```
+
+### 404 behavior
+```
+curl -I http://localhost:3002/blog/entry/nonexistent → HTTP/1.1 404 Not Found
+curl -I http://localhost:3002/projects/entry/nonexistent → HTTP/1.1 404 Not Found
+```
+
+### Valid slugs still work
+```
+/blog/entry/2019-ebeltoft-cheesecake-recipe → HTTP 200
+/projects/entry/2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms → HTTP 200
+```
+
+### Metadata (blog)
+- `<title>`: "Memorable Ebeltoft Cheesecake – A Sweet Souvenir"
+- `<meta name="description">`: blog-specific description
+- `<link rel="canonical" href="https://tomsegbers.de/blog/entry/2019-ebeltoft-cheesecake-recipe"/>`
+- `<meta property="og:title">`, `og:description`, `og:image`, `og:type: article`
+- `<meta name="twitter:card" content="summary_large_image"/>`
+- `<meta name="twitter:title">`, `twitter:description`
+
+### Metadata (projects)
+- `<title>`: "The Building Blocks of My Tech Journey - LabVIEW & LEGO Mindstorms"
+- `<meta name="description">`: project-specific description
+- `<link rel="canonical" href="https://tomsegbers.de/projects/entry/2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms"/>`
+- `<meta property="og:title">`, `og:description`, `og:image`, `og:type: article`
+- `<meta name="twitter:card" content="summary_large_image"/>`
+- `<meta name="twitter:title">`, `twitter:description`
+
+### Distinct metadata (no content-type leakage)
+- Blog canonical: `/blog/entry/...` vs projects canonical: `/projects/entry/...`
+- Blog fallback title: "Blog Post" vs projects fallback: "Project"
+- Descriptions come from actual file content, distinct per entry
+
+## Checklist
+- [x] `notFound()` called for missing slugs (both blog and projects)
+- [x] Metadata safe — null guard in `generateMetadata` before accessing `fileContent.data`
+- [x] Canonical URL in `<head>` via `alternates.canonical`
+- [x] Twitter Card (`summary_large_image`) in `<head>` via `twitter` metadata
+- [x] Blog and project metadata distinct (different canonical paths, different fallback titles)
+- [x] `pnpm build` exits 0
+- [x] `curl -I /blog/entry/nonexistent` → 404
+- [x] `curl -I /projects/entry/nonexistent` → 404
+- [x] Valid slugs continue to render (HTTP 200 with correct content)
