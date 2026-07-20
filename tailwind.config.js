@@ -97,17 +97,21 @@ module.exports = {
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
-            color: theme("colors.gray.700"),
+            color: theme("colors.foreground.DEFAULT"),
             maxWidth: "none",
-            h2: { color: theme("colors.gray.900") },
-            h3: { color: theme("colors.gray.900") },
+            a: { color: theme("colors.accent.DEFAULT") },
+            h2: { color: theme("colors.foreground.DEFAULT") },
+            h3: { color: theme("colors.foreground.DEFAULT") },
+            strong: { color: theme("colors.foreground.DEFAULT") },
           },
         },
         invert: {
           css: {
-            color: theme("colors.gray.300"),
-            h2: { color: theme("colors.white") },
-            h3: { color: theme("colors.white") },
+            color: theme("colors.foreground.foreground-muted-dark"),
+            a: { color: theme("colors.accent.dark") },
+            h2: { color: theme("colors.foreground.dark") },
+            h3: { color: theme("colors.foreground.dark") },
+            strong: { color: theme("colors.foreground.dark") },
           },
         },
       }),
@@ -158,6 +162,7 @@ module.exports = {
       },
       minHeight: {
         ...defaultTheme.height,
+        teaser: "4.5rem",
       },
       minWidth: {
         ...defaultTheme.width,
