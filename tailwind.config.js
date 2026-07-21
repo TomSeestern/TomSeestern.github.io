@@ -4,16 +4,16 @@ const colors = require("tailwindcss/colors")
 const defaultTheme = require("tailwindcss/defaultTheme")
 
 const primary = {
-  50: "#eff6ff",
-  100: "#dbeafe",
-  200: "#bfdbfe",
-  300: "#93c5fd",
-  400: "#60a5fa",
-  500: "#3b82f6",
-  600: "#2563eb",
-  700: "#1d4ed8",
-  800: "#1e40af",
-  900: "#1e3a8a",
+  50: "#FEF2EE",
+  100: "#FDE4DA",
+  200: "#FBC8B6",
+  300: "#F8A48C",
+  400: "#F48062",
+  500: "#E85D3A",
+  600: "#C2410C",
+  700: "#9A3412",
+  800: "#7C2D12",
+  900: "#431407",
 }
 
 /** @type {import('tailwindcss').Config} */
@@ -32,19 +32,19 @@ module.exports = {
     extend: {
       colors: {
         surface: {
-          DEFAULT: "#ffffff",
-          muted: "#f9fafb",
-          elevated: "#ffffff",
-          dark: "#111827",
-          "muted-dark": "#1f2937",
-          "elevated-dark": "#1f2937",
+          DEFAULT: "#FAF9F6",
+          muted: "#F5F0E8",
+          elevated: "#FFFFFF",
+          dark: "#1C1917",
+          "muted-dark": "#292524",
+          "elevated-dark": "#292524",
         },
         foreground: {
-          DEFAULT: "#111827",
-          muted: "#6b7280",
-          dark: "#ffffff",
-          "muted-dark": "#9ca3af",
-          "foreground-muted-dark": "#d1d5db",
+          DEFAULT: "#1C1917",
+          muted: "#78716C",
+          dark: "#FAF9F6",
+          "muted-dark": "#A8A29E",
+          "foreground-muted-dark": "#A8A29E",
         },
         accent: {
           DEFAULT: primary[600],
@@ -59,16 +59,16 @@ module.exports = {
           "soft-foreground-dark": primary[300],
         },
         muted: {
-          DEFAULT: "#6b7280",
-          surface: "#f3f4f6",
-          dark: "#9ca3af",
-          "surface-dark": "#1f2937",
+          DEFAULT: "#78716C",
+          surface: "#F5F0E8",
+          dark: "#A8A29E",
+          "surface-dark": "#292524",
         },
         border: {
-          DEFAULT: "#d1d5db",
-          subtle: "#e5e7eb",
-          dark: "#4b5563",
-          "subtle-dark": "#374151",
+          DEFAULT: "#D6D3D1",
+          subtle: "#E7E5E4",
+          dark: "#44403C",
+          "subtle-dark": "#292524",
         },
         primary,
       },
@@ -116,6 +116,7 @@ module.exports = {
         },
       }),
       fontFamily: {
+        heading: ["Cinzel", "serif"],
         body: [
           "Inter",
           "ui-sans-serif",

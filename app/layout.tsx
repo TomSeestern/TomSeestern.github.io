@@ -3,9 +3,16 @@ import React from "react"
 import { Footer } from "../components/Footer/Footer"
 import { Header } from "../components/Header/Header"
 import type { Metadata, Viewport } from "next"
-import { Inter } from "next/font/google"
+import { Cinzel, Inter } from "next/font/google"
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-heading",
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tom.segbers.de"),
@@ -32,8 +39,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.className} dark`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.className} ${cinzel.variable} dark`} suppressHydrationWarning>
       <body className="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">
+        <style
+          dangerouslySetInnerHTML={{
+            __html: "h1, h2, h3, h4 { font-family: var(--font-heading), serif; }",
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
