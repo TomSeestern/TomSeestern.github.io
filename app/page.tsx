@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import Image from "next/image"
 import React from "react"
 import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
+import { Button } from "../components/Button/Button"
 import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
 import { getAllProjects } from "../lib/projects"
 import { getAllBlogPosts } from "../lib/blog"
@@ -56,12 +57,9 @@ export default function Web() {
                   Dive into the details of my recent project, LAYZR.gg, where I explore digital collectibles and the
                   unique digital identity they provide.
                 </p>
-                <a
-                  href="/projects"
-                  className="inline-flex items-center rounded-lg bg-accent-hover px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground"
-                >
+                <Button intent="primary" size="lg" href="/projects">
                   Learn More
-                </a>
+                </Button>
               </div>
               {/* Blog Section */}
               <div className="mb-0 flex-1 text-muted dark:text-muted-dark">
@@ -72,12 +70,9 @@ export default function Web() {
                   Explore my latest thoughts and insights on Tech, AI and sometimes a bit about software development.
                   Mostly lessons learned from my projects.
                 </p>
-                <a
-                  href="/blog"
-                  className="inline-flex items-center rounded-lg border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors duration-200 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-surface-elevated-dark dark:text-foreground-dark dark:hover:border-border-dark dark:hover:bg-muted-surface-dark dark:focus-visible:ring-accent-soft-dark"
-                >
+                <Button intent="secondary" size="lg" href="/blog">
                   Read the Blog
-                </a>
+                </Button>
               </div>
             </div>
           </div>
@@ -112,7 +107,6 @@ export default function Web() {
                 <ProjectTeaser
                   key={article.id}
                   title={article.title}
-                  imageUrl={article.fullArticleLink}
                   description={article.articleContent}
                   technologies={article.technologies}
                   ctaLink={article.fullArticleLink}
@@ -128,7 +122,6 @@ export default function Web() {
                 <ProjectTeaser
                   key={article.id}
                   title={article.title}
-                  imageUrl={article.fullArticleLink}
                   description={article.articleContent}
                   technologies={article.technologies}
                   ctaLink={article.fullArticleLink}

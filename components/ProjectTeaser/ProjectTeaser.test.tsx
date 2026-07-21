@@ -12,7 +12,6 @@ import ProjectTeaser from "./ProjectTeaser"
 const mockGetIconPath = getIconPath as jest.MockedFunction<typeof getIconPath>
 const projectDate = new Date("2024-01-01T00:00:00.000Z")
 const baseProps = {
-  imageUrl: "/img/test.png",
   title: "Test Project",
   description: "A test project description",
   technologies: ["React", "TypeScript"],

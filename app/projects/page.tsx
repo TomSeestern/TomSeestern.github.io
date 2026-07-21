@@ -86,7 +86,6 @@ function Articles() {
               <ProjectTeaser
                 key={article.id}
                 title={article.title}
-                imageUrl={article.fullArticleLink}
                 description={article.articleContent}
                 technologies={article.technologies}
                 ctaLink={article.fullArticleLink}

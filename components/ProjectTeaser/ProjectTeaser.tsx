@@ -9,7 +9,6 @@ import { getIconPath } from "../../lib/icon-map"
 /**
  * Interface for the ProjectTeaser props
  * @interface ProjectProps
- * @property {string} imageUrl - The URL of the project image
  * @property {string} title - The title of the project
  * @property {string} description - The description of the project
  * @property {string[]} technologies - An array of Technology names, must match the names of the icons in the public/icons folder
@@ -17,22 +16,14 @@ import { getIconPath } from "../../lib/icon-map"
  * @property {Date} projectDate - The date of the project, only Year should be used others might be inaccurate
  */
 export interface ProjectProps {
-  imageUrl: string
-  title: string
-  description: string
-  technologies: string[]
-  ctaLink: string
-  projectDate: Date
+  readonly title: string
+  readonly description: string
+  readonly technologies: readonly string[]
+  readonly ctaLink: string
+  readonly projectDate: Date
 }
 
-const ProjectTeaser: React.FC<ProjectProps> = ({
-  imageUrl,
-  title,
-  description,
-  technologies,
-  ctaLink,
-  projectDate,
-}) => {
+const ProjectTeaser: React.FC<ProjectProps> = ({ title, description, technologies, ctaLink, projectDate }) => {
   return (
     <Card className="h-full w-full transition-colors duration-200 hover:z-50 hover:bg-surface-muted motion-safe:hover:-translate-y-1 dark:hover:bg-muted-surface-dark">
       <div className="flex h-full flex-col justify-between gap-4">

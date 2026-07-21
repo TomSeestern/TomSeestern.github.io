@@ -1,0 +1,26 @@
+# task-2-peak-website evidence — 2026-07-21
+
+## Verdict: PASS
+
+## Verification commands
+
+```bash
+pnpm lint    # exit 0 (pre-existing warnings only; no new warnings)
+pnpm test    # exit 0 (12 suites, 84 tests, 0 snapshots — added 2 tests from readonly enforcement)
+pnpm build   # exit 0 (38 static pages, 0 errors)
+```
+
+## Changed files
+
+| File | Change |
+|------|--------|
+| `app/blog/entry/[slug]/page.tsx` | canonical `tom.segbers.de` (was `tomsegbers.de`) |
+| `app/projects/entry/[slug]/page.tsx` | canonical `tom.segbers.de` (was `tomsegbers.de`) |
+| `app/page.tsx` | imported Button; replaced 2 inline hero anchors with `<Button>`; removed `imageUrl` from 4 ProjectTeaser usages |
+| `app/projects/page.tsx` | removed `imageUrl` from 1 ProjectTeaser usage |
+| `components/ProjectTeaser/ProjectTeaser.tsx` | removed `imageUrl` from interface, destructure, JSDoc; applied `readonly` to interface |
+| `components/ProjectTeaser/ProjectTeaser.test.tsx` | removed `imageUrl` from test fixture |
+| `components/ProjectTeaser/ProjectTeaser.stories.tsx` | removed `imageUrl` from argTypes and default args |
+| `public/img/Tom_Segbers_Frontal.jpg` | deleted (duplicate of `.webp`) |
+| `.omo/notepads/roman-redesign/learnings.md` | appended T2 summary |
+| `.omo/boulders/task-2-peak-website.md` | created and updated |
