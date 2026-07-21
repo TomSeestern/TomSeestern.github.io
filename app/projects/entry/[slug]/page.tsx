@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: Params, parent: ResolvingMeta
     title,
     description,
     alternates: {
-      canonical: `https://tomsegbers.de/projects/entry/${params.slug}`,
+      canonical: `https://tom.segbers.de/projects/entry/${params.slug}`,
     },
     openGraph: {
       title,
