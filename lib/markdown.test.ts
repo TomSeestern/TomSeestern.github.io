@@ -50,6 +50,7 @@ describe("getAllMarkdownEntries", () => {
         authorName: "Tom",
         fullArticleLink: "/blog/entry/valid-entry",
         technologies: ["TypeScript"],
+        tags: [],
       },
     ])
   })
@@ -71,6 +72,7 @@ describe("getAllMarkdownEntries", () => {
       authorName: "Anonymous",
       fullArticleLink: "/projects/entry/missing-fields",
       technologies: [],
+      tags: [],
     })
   })
 

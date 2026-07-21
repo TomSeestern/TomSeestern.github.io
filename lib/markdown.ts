@@ -10,6 +10,7 @@ const markdownFrontmatterSchema = z.object({
   authorImgSrc: z.string().default("/img/placeholder.png").catch("/img/placeholder.png"),
   authorName: z.string().default("Anonymous").catch("Anonymous"),
   technologies: z.array(z.string()).default([]).catch([]),
+  tags: z.array(z.string()).default([]).catch([]),
 })
 
 /** Parsed frontmatter + computed fields for a single markdown content file.
@@ -25,6 +26,7 @@ export type MarkdownEntry = {
   readonly authorName: string
   readonly fullArticleLink: string
   readonly technologies: string[]
+  readonly tags: string[]
 }
 
 /**
@@ -75,6 +77,30 @@ export function getMarkdownSlugs(dir: string): { slug: string }[] {
   return filenames.map((filename) => ({
     slug: filename.replace(/\.md$/, ""),
   }))
+}
+
+/**
+ * Estimates reading time for a markdown content string.
+ * Assumes 200 words per minute, always returns at least "1 min read".
+ */
+export function getReadingTime(content: string): string {
+  const wordsPerMinute = 200
+  const words = content.trim().split(/\s+/).length
+  const minutes = Math.max(1, Math.ceil(words / wordsPerMinute))
+  return `${minutes} min read`
+}
+
+/**
+ * Converts a string into a URL-safe slug by lowercasing,
+ * stripping non-word characters, and collapsing whitespace.
+ */
+export function toSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim()
 }
 
 function createMarkdownEntry(dirPath: string, urlPrefix: string, filename: string): MarkdownEntry {

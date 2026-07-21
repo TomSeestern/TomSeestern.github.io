@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* rehype-pretty-code */
+pre[data-theme] {
+  @apply rounded-lg border border-border dark:border-border-dark;
+}
+
+pre[data-theme] code {
+  display: grid;
+}
+
+pre[data-theme] code[data-line-numbers] > [data-line]::before {
+  content: attr(data-line-number);
+  @apply mr-4 inline-block w-4 text-right text-muted;
+}
+
+code[data-theme] span[data-highlighted-line] {
+  @apply border-l-4 border-accent bg-accent-soft/20;
+}

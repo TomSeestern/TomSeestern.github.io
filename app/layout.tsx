@@ -4,6 +4,7 @@ import { Footer } from "../components/Footer/Footer"
 import { Header } from "../components/Header/Header"
 import type { Metadata, Viewport } from "next"
 import { Cinzel, Inter } from "next/font/google"
+import PageTransition from "../components/PageTransition/PageTransition"
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
 
@@ -29,6 +30,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+  },
+  alternates: {
+    types: { "application/rss+xml": [{ url: "/feed.xml", title: "TomSegbers.de RSS Feed" }] },
   },
 }
 
@@ -87,9 +91,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <Header />
 
-        <main id="main-content" tabIndex={-1} className="grow">
-          {children}
-        </main>
+        <PageTransition>{children}</PageTransition>
 
         <Footer />
       </body>

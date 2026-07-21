@@ -1,0 +1,39 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    name: Lighthouse Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - run: echo "node_version=$(cat .github/nodejs.version)" >> $GITHUB_ENV
+      - name: "use node ${{ env.node_version }}"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "${{ env.node_version }}"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: Start server
+        run: |
+          npx http-server out --port 8080 --silent &
+          npx wait-on tcp:127.0.0.1:8080
+      - name: Audit URLs
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://127.0.0.1:8080/
+            http://127.0.0.1:8080/about
+            http://127.0.0.1:8080/blog
+            http://127.0.0.1:8080/projects
+            http://127.0.0.1:8080/contact
+            http://127.0.0.1:8080/now
+          uploadArtifacts: true
+          temporaryPublicStorage: true

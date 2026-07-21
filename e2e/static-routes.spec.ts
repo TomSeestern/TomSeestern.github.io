@@ -1,11 +1,17 @@
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
+import AxeBuilder from "@axe-core/playwright"
 
 const missingRoute = "/__e2e_missing_static_route__"
 const transparentPng = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL6zAAAAABJRU5ErkJggg==",
   "base64"
 )
+
+async function checkA11y(page: Page, routeName: string): Promise<void> {
+  const results = await new AxeBuilder({ page }).analyze()
+  expect(results.violations, `Accessibility violations on ${routeName}`).toEqual([])
+}
 
 function collectBrowserConsoleErrors(page: Page): readonly string[] {
   const consoleErrors: string[] = []
@@ -39,6 +45,7 @@ test.describe("static routes", () => {
 
     // When
     await page.goto("/")
+    await checkA11y(page, "homepage")
 
     // Then
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tom Segbers — Senior Developer")
@@ -55,6 +62,7 @@ test.describe("static routes", () => {
     // When
     await interceptUnavailablePlaceholderImage(page)
     await page.goto("/about")
+    await checkA11y(page, "about")
 
     // Then
     await expect(page.getByRole("heading", { level: 1, name: "About me" })).toBeVisible()
@@ -75,6 +83,7 @@ test.describe("static routes", () => {
 
     // When
     await page.goto("/contact")
+    await checkA11y(page, "contact")
     await page.getByLabel("Your Name").fill("E2E Tester")
     await page.getByLabel("Your Email").fill("e2e@example.test")
     await page.getByLabel("Your Message").fill("This message must never reach Resend.")
@@ -93,6 +102,7 @@ test.describe("static routes", () => {
 
     // When
     const response = await page.goto(missingRoute)
+    await checkA11y(page, "404")
 
     // Then
     expect(response?.status()).toBe(404)

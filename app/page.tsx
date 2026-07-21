@@ -6,6 +6,7 @@ import { Button } from "../components/Button/Button"
 import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
 import { getAllProjects } from "../lib/projects"
 import { getAllBlogPosts } from "../lib/blog"
+import { HeroContainer, HeroH1, HeroItem, HeroP } from "../components/HeroStagger/HeroStagger"
 
 export const metadata: Metadata = {
   title: {
@@ -40,41 +41,42 @@ export default function Web() {
       <section className="relative overflow-hidden bg-surface dark:bg-surface-dark">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24 xl:grid xl:grid-cols-12 xl:gap-8">
           <div className="col-span-8">
-            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-foreground dark:text-foreground-dark md:text-5xl lg:text-6xl">
-              Tom Segbers — Senior Developer
-            </h1>
-            <p className="mb-6 font-light text-muted dark:text-muted-dark md:text-lg lg:mb-8 lg:text-xl">
-              Building reliable systems and solving hard problems.
-            </p>
-            <div className="flex flex-col items-center gap-8 sm:flex-row">
-              {/* Project Section */}
-              <div className="mb-8 flex-1 text-muted dark:text-muted-dark sm:mb-0">
-                {/* TODO: Replace with your project image and details */}
-                <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
-                  Latest Project: LAYZR.gg
-                </h2>
-                <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
-                  Dive into the details of my recent project, LAYZR.gg, where I explore digital collectibles and the
-                  unique digital identity they provide.
-                </p>
-                <Button intent="primary" size="lg" href="/projects">
-                  Learn More
-                </Button>
-              </div>
-              {/* Blog Section */}
-              <div className="mb-0 flex-1 text-muted dark:text-muted-dark">
-                <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
-                  Recent Blog Posts
-                </h2>
-                <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
-                  Explore my latest thoughts and insights on Tech, AI and sometimes a bit about software development.
-                  Mostly lessons learned from my projects.
-                </p>
-                <Button intent="secondary" size="lg" href="/blog">
-                  Read the Blog
-                </Button>
-              </div>
-            </div>
+            <HeroContainer>
+              <HeroH1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-foreground dark:text-foreground-dark md:text-5xl lg:text-6xl">
+                Tom Segbers — Senior Developer
+              </HeroH1>
+              <HeroP className="mb-6 font-light text-muted dark:text-muted-dark md:text-lg lg:mb-8 lg:text-xl">
+                Building reliable systems and solving hard problems.
+              </HeroP>
+              <HeroItem className="flex flex-col items-center gap-8 sm:flex-row">
+                {/* Project Section */}
+                <div className="mb-8 flex-1 text-muted dark:text-muted-dark sm:mb-0">
+                  <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
+                    Latest Project: LAYZR.gg
+                  </h2>
+                  <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
+                    Dive into the details of my recent project, LAYZR.gg, where I explore digital collectibles and the
+                    unique digital identity they provide.
+                  </p>
+                  <Button intent="primary" size="lg" href="/projects">
+                    Learn More
+                  </Button>
+                </div>
+                {/* Blog Section */}
+                <div className="mb-0 flex-1 text-muted dark:text-muted-dark">
+                  <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
+                    Recent Blog Posts
+                  </h2>
+                  <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
+                    Explore my latest thoughts and insights on Tech, AI and sometimes a bit about software development.
+                    Mostly lessons learned from my projects.
+                  </p>
+                  <Button intent="secondary" size="lg" href="/blog">
+                    Read the Blog
+                  </Button>
+                </div>
+              </HeroItem>
+            </HeroContainer>
           </div>
           <div className="absolute right-0 top-0 hidden h-full w-1/3 xl:block">
             <Image
