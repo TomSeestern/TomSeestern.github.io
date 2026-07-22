@@ -1,5 +1,3 @@
-const fs = require("fs")
-const path = require("path")
 const { FlatCompat } = require("@eslint/eslintrc")
 const js = require("@eslint/js")
 const typescriptEslint = require("@typescript-eslint/eslint-plugin")
@@ -11,23 +9,45 @@ const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
 })
 
-const ignoredDirectoryNames = new Set([".git", ".next", ".vscode", "node_modules"])
-const sortedDirectories = getSortedDirectories()
+const lintFiles = [
+  "app/**/*.{js,jsx,ts,tsx}",
+  "components/**/*.{js,jsx,ts,tsx}",
+  "e2e/**/*.{js,jsx,ts,tsx}",
+  "lib/**/*.{js,jsx,ts,tsx}",
+  "env.mjs",
+  "eslint.config.js",
+  "jest.config.js",
+  "jest.setup.js",
+  "next.config.mjs",
+  "playwright.config.ts",
+  "postcss.config.js",
+  "prettier.config.js",
+  "tailwind.config.js",
+]
 
 module.exports = [
   {
-    ignores: [".eslintignore", ".next/**", "coverage/**", "node_modules/**", "playwright-report/**", "test-results/**"],
+    // Generated output and local tooling state never belong to authored-code linting.
+    ignores: [
+      ".codegraph/**",
+      ".direnv/**",
+      ".next/**",
+      ".omo/**",
+      "coverage/**",
+      "node_modules/**",
+      "playwright-report/**",
+      "test-results/**",
+    ],
   },
   ...compat.extends("next"),
   eslintConfigPrettier,
   ...tailwindcss.configs["flat/recommended"],
   {
+    files: lintFiles,
     plugins: {
       "@typescript-eslint": typescriptEslint,
     },
     rules: {
-      "@next/next/no-html-link-for-pages": "off",
-      "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -40,23 +60,10 @@ module.exports = [
         {
           groups: ["external", "builtin", "internal", "sibling", "parent", "index"],
           pathGroups: [
-            ...sortedDirectories.map((directory) => ({
-              pattern: `${directory}/**`,
-              group: "internal",
-            })),
-            {
-              pattern: "env",
-              group: "internal",
-            },
-            {
-              pattern: "theme",
-              group: "internal",
-            },
-            {
-              pattern: "public/**",
-              group: "internal",
-              position: "after",
-            },
+            { pattern: "@/**", group: "internal" },
+            { pattern: "env", group: "internal" },
+            { pattern: "theme", group: "internal" },
+            { pattern: "public/**", group: "internal", position: "after" },
           ],
           pathGroupsExcludedImportTypes: ["internal"],
           alphabetize: {
@@ -72,16 +79,13 @@ module.exports = [
           ignoreDeclarationSort: true,
         },
       ],
-      "tailwindcss/classnames-order": "off",
+    },
+  },
+  {
+    // Test fixtures intentionally pass arbitrary class names through component props.
+    files: ["**/*.test.{js,jsx,ts,tsx}", "e2e/**/*.{js,jsx,ts,tsx}"],
+    rules: {
       "tailwindcss/no-custom-classname": "off",
-      "testing-library/prefer-screen-queries": "off",
     },
   },
 ]
-
-function getSortedDirectories() {
-  return fs
-    .readdirSync(__dirname)
-    .filter((entry) => !ignoredDirectoryNames.has(entry))
-    .filter((entry) => fs.statSync(path.join(__dirname, entry)).isDirectory())
-}
