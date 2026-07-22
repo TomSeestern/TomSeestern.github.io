@@ -20,7 +20,7 @@ export default function PersonTeaser({
       className="flex items-center gap-3 rounded-lg transition-colors duration-200 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:bg-muted-surface-dark dark:focus-visible:ring-accent-soft-dark"
     >
       <Image
-        className="h-12 w-12 shrink-0 rounded-full object-cover"
+        className="size-12 shrink-0 rounded-full object-cover"
         src={companyLogoSrc}
         alt=""
         width={48}
