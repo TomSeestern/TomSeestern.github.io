@@ -27,7 +27,7 @@ export default function Page(): JSX.Element {
       </div>
 
       <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
-        <article className="prose prose-lg max-w-none dark:prose-invert">
+        <article className="prose prose-lg max-w-none font-body dark:prose-invert">
           <h1 className="text-h1-sm sm:text-h1">{fileContent.data.title || "Uses"}</h1>
           <ReactMarkdown components={{ h1: () => null }}>{fileContent.content}</ReactMarkdown>
         </article>

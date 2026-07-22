@@ -80,7 +80,7 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
               })}`}
           </p>
 
-          <article className="prose prose-lg max-w-none dark:prose-invert">
+          <article className="prose prose-lg max-w-none font-body dark:prose-invert">
             <MarkdownAsync
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[

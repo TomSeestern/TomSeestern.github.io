@@ -54,7 +54,7 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
             ))}
           </div>
         )}
-        <article className="prose prose-lg max-w-none dark:prose-invert">
+        <article className="prose prose-lg max-w-none font-body dark:prose-invert">
           <h1 className="mb-2 text-h1-sm text-foreground dark:text-foreground-dark sm:text-h1">
             {fileContent.data.title || "Project"}
           </h1>
