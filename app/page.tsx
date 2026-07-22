@@ -3,10 +3,10 @@ import Image from "next/image"
 import React from "react"
 import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
 import { Button } from "../components/Button/Button"
-import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
-import { getAllProjects } from "../lib/projects"
-import { getAllBlogPosts } from "../lib/blog"
 import { HeroContainer, HeroH1, HeroItem, HeroP } from "../components/HeroStagger/HeroStagger"
+import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
+import { getAllBlogPosts } from "../lib/blog"
+import { getAllProjects } from "../lib/projects"
 
 export const metadata: Metadata = {
   title: {
@@ -80,7 +80,7 @@ export default function Web() {
           </div>
           <div className="absolute right-0 top-0 hidden h-full w-1/3 xl:block">
             <Image
-              className="h-full w-full object-cover"
+              className="size-full object-cover"
               src="/img/Tom_Segbers_Frontal.webp"
               alt="Frontal image of Tom Segbers"
               height={1368}
@@ -105,7 +105,7 @@ export default function Web() {
         <div className="relative flex overflow-hidden py-2">
           <div className="flex animate-marquee space-x-4 motion-reduce:animate-none">
             {getAllProjects().map((article) => (
-              <div key={article.id} className="h-96 w-96">
+              <div key={article.id} className="size-96">
                 <ProjectTeaser
                   key={article.id}
                   title={article.title}
@@ -120,7 +120,7 @@ export default function Web() {
 
           <div className="absolute flex animate-marquee2 space-x-4 px-2 motion-reduce:animate-none">
             {getAllProjects().map((article) => (
-              <div key={article.id} className="h-96 w-96">
+              <div key={article.id} className="size-96">
                 <ProjectTeaser
                   key={article.id}
                   title={article.title}
@@ -140,7 +140,7 @@ export default function Web() {
             className="flex items-center rounded text-base font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-light dark:focus-visible:ring-accent-soft-dark"
           >
             View all Projects
-            <Image className={"ml-2 h-4 w-4 dark:invert"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
+            <Image className={"ml-2 size-4 dark:invert"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
           </a>
         </div>
       </section>
@@ -178,7 +178,7 @@ export default function Web() {
             >
               View all Blog Posts
               <Image
-                className={"ml-2 h-4 w-4 dark:invert"}
+                className={"ml-2 size-4 dark:invert"}
                 src={"/icon/arrow-right.svg"}
                 alt=""
                 width={32}

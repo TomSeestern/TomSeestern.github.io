@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 export default function NotFound() {
   return (
     <section className="mx-auto content-center items-center bg-surface dark:bg-surface-dark">
@@ -12,12 +14,12 @@ export default function NotFound() {
           <p className="mb-4 text-lg font-light text-muted dark:text-muted-dark">
             Sorry, we can&apos;t find that page. <br /> You&apos;ll find plenty to explore on the home page.
           </p>
-          <a
+          <Link
             href="/"
             className="my-4 inline-flex rounded-lg bg-accent px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark"
           >
             Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </section>

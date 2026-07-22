@@ -1,9 +1,8 @@
-import path from "path"
-import TimelineEntry from "../../components/TimelineEntry/TimelineEntry"
-import PersonTeaser from "../../components/PersonTeaser/PersonTeaser"
+import { Metadata } from "next"
 import Image from "next/image"
 import React from "react"
-import { Metadata } from "next"
+import PersonTeaser from "../../components/PersonTeaser/PersonTeaser"
+import TimelineEntry from "../../components/TimelineEntry/TimelineEntry"
 
 export const metadata: Metadata = {
   title: "About me",
@@ -42,7 +41,7 @@ export default function About() {
           <span className="inline-flex items-center rounded bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-soft-foreground dark:bg-accent-soft-dark dark:text-accent-soft-foreground-dark">
             <svg
               aria-hidden="true"
-              className="mr-1 h-3 w-3"
+              className="mr-1 size-3"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
@@ -123,7 +122,7 @@ export default function About() {
                     See Projects
                   </a>
                   <Image
-                    className={"h-4 w-4 dark:invert"}
+                    className={"size-4 dark:invert"}
                     src={"/icon/arrow-right.svg"}
                     alt=""
                     width={32}
