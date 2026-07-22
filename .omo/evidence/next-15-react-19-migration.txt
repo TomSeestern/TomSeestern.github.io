@@ -52,3 +52,32 @@ Migration hydration behavior passed: reduced-motion navigation and no unexpected
 ## Freshness and reproduction
 
 Run commands from repository root after `pnpm install --frozen-lockfile`. No secret inputs needed. Token usage unavailable from runtime telemetry.
+
+## Task 5 E2E baseline and accessibility repair
+
+- Collected: `2026-07-22T17:34:53+02:00`
+- Model: `9router/default` — selected by session configuration.
+- Roman token values replaced obsolete blue/default E2E assertions.
+- `foreground.muted.DEFAULT` changed from `#78716C` to `#706963`: `#706963` on `#F5F0E8` has 4.76:1 contrast, clearing WCAG AA body-text threshold.
+- Primary CTA uses warm foreground on `accent.light`; secondary CTA uses contrast-safe `text-accent` in light mode and `text-accent-light` in dark mode. Axe no longer reports homepage contrast violations.
+- Axe scan waits for `main` page-transition opacity `1`; avoids scanning transition-composited text.
+- Playwright runs Chromium serially: local `next dev` failed concurrent first-visit compilation; Firefox and WebKit binaries absent from local cache.
+
+### Reproduced commands
+
+```sh
+pnpm test
+pnpm lint
+pnpm prettier
+unset PNPM_HOME npm_config_prefix PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH && export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" && pnpm e2e:headless
+pnpm build
+```
+
+### Results
+
+- `pnpm test`: pass — 15 suites, 91 tests.
+- `pnpm lint`: pass — existing import-order warning in `lib/sendEmail.tsx` only.
+- `pnpm prettier`: pass.
+- `pnpm e2e:headless`: pass — 40 Chromium tests in 1.9m.
+- `pnpm build`: pass — static and SSG routes generated.
+- TypeScript LSP unavailable; user previously declined server installation. Production build performed TypeScript validation.
