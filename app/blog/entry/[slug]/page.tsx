@@ -123,7 +123,7 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return getMarkdownSlugs(CONTENT_DIR)
 }
 
-export async function generateMetadata({ params }: Params, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: Params, _parent: ResolvingMetadata): Promise<Metadata> {
   const { slug } = await params
   const fileContent = getMarkdownEntry(slug, CONTENT_DIR)
   if (!fileContent) return { title: "Not Found", description: "Blog post not found" }
