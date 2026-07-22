@@ -2,10 +2,10 @@
 
 ## 1. Atmosphere & Identity
 
-Warm, Roman-inspired portfolio surface with terracotta action color and
-marble-white-to-warm-charcoal contrast. Signature is restrained
-content-first hierarchy: warm marble surfaces, warm gray supporting
-text, and terracotta reserved for links, calls to action, and focus.
+Warm, Roman-inspired portfolio surface with Pompeian-red action color and
+marble-to-warm-charcoal contrast. Signature is restrained content-first
+hierarchy: warm marble surfaces, warm gray supporting text, and Pompeian red
+reserved for links, calls to action, and focus.
 
 The site evokes Roman materiality — travertine warmth, aged terracotta,
 carved inscription headings — without literal ancient-Rome theming.
@@ -18,40 +18,44 @@ deliberate?
 
 | Role | Tailwind token | Light | Dark | Usage |
 | --- | --- | --- | --- | --- |
-| Primary surface | `surface` | `#FAF9F6` | `#1C1917` | Page backgrounds (warm marble) |
-| Muted surface | `surface-muted` | `#F5F0E8` | `#292524` | Section and hover surfaces |
-| Elevated surface | `surface-elevated` | `#FFFFFF` | `#292524` | Cards and overlays |
-| Foreground | `foreground` | `#1C1917` | `#FAF9F6` | Headings and primary text (warm charcoal) |
-| Muted foreground | `foreground-muted` | `#78716C` | `#A8A29E` | Supporting text and metadata |
-| Accent | `accent` | `#C2410C` | `#E85D3A` | Links, CTAs, focus rings (terracotta) |
-| Accent hover | `accent-hover` | `#9A3412` | `#F48062` | Link/button hover |
-| Accent soft | `accent-soft` | `#FDE4DA` | `#431407` | Badges, soft backgrounds |
-| Accent soft foreground | `accent-soft-foreground` | `#7C2D12` | `#F8A48C` | Text on soft backgrounds |
-| Muted | `muted` | `#78716C` | `#A8A29E` | General muted text |
-| Border | `border` | `#D6D3D1` | `#44403C` | Inputs and dividers |
-| Border subtle | `border-subtle` | `#E7E5E4` | `#292524` | Light separators |
+| Primary surface | `surface` / `marble` | `#F5F0E6` | `#1C1917` | Page backgrounds (warm marble) |
+| Muted surface | `surface-muted` | `#EEE7DA` | `#292524` | Section and hover surfaces |
+| Elevated surface | `surface-elevated` | `#FFFCF6` | `#292524` | Cards and overlays |
+| Foreground | `foreground` / `charcoal` | `#2A2017` | `#F5F0E6` | Headings and primary text (warm charcoal) |
+| Muted foreground | `foreground-muted` | `#625B54` | `#C8C1B5` | Supporting text and metadata |
+| Accent | `accent` / `pompeian` | `#A82A38` | `#A82A38` | Links, CTAs, focus rings (Pompeian red) |
+| Accent hover | `accent-hover` | `#8B202D` | `#D57E8B` | Link/button hover |
+| Accent soft | `accent-soft` | `#F1CDD2` | `#4B0F18` | Badges, soft backgrounds |
+| Accent soft foreground | `accent-soft-foreground` | `#6F1723` | `#E4A8B1` | Text on soft backgrounds |
+| Muted | `muted` | `#625B54` | `#C8C1B5` | General muted text |
+| Border | `border` | `#D7CFC1` | `#4B4540` | Inputs and dividers |
+| Border subtle | `border-subtle` | `#E6DED1` | `#292524` | Light separators |
+| Decorative gold | `gold` | `#C9A34F` | `#C9A34F` | Rules, dividers, icon strokes only — never text or backgrounds |
 
-The `primary-50` through `primary-900` scale maps to the terracotta
+The `primary-50` through `primary-900` scale maps to the Pompeian-red
 gradient:
 
 | Key | Hex |
 | --- | --- |
-| `primary-50` | `#FEF2EE` |
-| `primary-100` | `#FDE4DA` |
-| `primary-200` | `#FBC8B6` |
-| `primary-300` | `#F8A48C` |
-| `primary-400` | `#F48062` |
-| `primary-500` | `#E85D3A` |
-| `primary-600` | `#C2410C` ← accent |
-| `primary-700` | `#9A3412` ← accent-hover |
-| `primary-800` | `#7C2D12` |
-| `primary-900` | `#431407` |
+| `primary-50` | `#F9E8EA` |
+| `primary-100` | `#F1CDD2` |
+| `primary-200` | `#E4A8B1` |
+| `primary-300` | `#D57E8B` |
+| `primary-400` | `#C55B6A` |
+| `primary-500` | `#B73C4D` |
+| `primary-600` | `#A82A38` ← accent / Pompeian |
+| `primary-700` | `#8B202D` ← accent-hover |
+| `primary-800` | `#6F1723` |
+| `primary-900` | `#4B0F18` |
 
 ### Rules
 
 - Use semantic tokens (`accent`, `surface`, `foreground`, `border`) for
   custom presentation.
 - Retain `primary-*` on Flowbite-owned or Flowbite-pattern utilities.
+- Gold is decorative-only. Never use `text-gold`, map it to a text
+  foreground role, or use it as a CTA/background color; its contrast is
+  intentionally insufficient for text.
 - Apply dark variants through the token's `-dark` shade; dark mode
   remains class-based (`dark:` prefix).
 
@@ -59,21 +63,26 @@ gradient:
 
 | Level | Utility | Font | Usage |
 | --- | --- | --- | --- |
-| H1 | `text-h1`, `text-h1-sm` | Cinzel | Page headings |
-| H2 | `text-h2`, `text-h2-sm` | Cinzel | Section headings |
-| H3 | `text-h3`, `text-h3-sm` | Cinzel | Card headings |
-| H4 | `text-h4` | Inter / Cinzel | Sub-headings |
-| Body | `text-body`, `text-body-lg` | Inter | Paragraphs |
+| H1 | `text-h1`, `text-h1-sm` | Cinzel | Page display headings |
+| H2 | `text-h2`, `text-h2-sm` | Cinzel | Section display headings |
+| H3 | `text-h3`, `text-h3-sm` | Inter | Card headings |
+| H4 | `text-h4` | Inter | Sub-headings |
+| Article body | `font-body` | EB Garamond | Prose and long-form paragraphs only |
+| UI body | `font-sans` | Inter | UI text, buttons, nav, metadata, captions |
 | Small | `text-small`, `text-caption` | Inter | Metadata and labels |
 
-- **Headings:** `font-heading` → Cinzel (serif, small caps feel,
-  classical inscription weight). Applied via the `font-heading` utility
-  or explicit `font-family: Cinzel, serif`.
-- **Body:** `font-body` / `font-sans` → Inter (clean, modern readability).
-  Inter remains the default sans-serif stack for body text, UI labels,
-  and metadata.
-- Cinzel is loaded via `next/font/google` in the root layout and applied
-  to all heading elements through the typography scale tokens.
+- **Display headings:** `font-heading` → Cinzel, weights 400/600/700.
+  Apply only to h1 and h2 display headings; never to body copy, buttons,
+  navigation, metadata, or card headings.
+- **Long-form body:** `font-body` → EB Garamond, weights 400/500. Apply only
+  to article prose and long-form paragraph content.
+- **UI text:** `font-sans` → Inter, weights 400/500/600. This is the body
+  default for navigation, controls, labels, metadata, and captions.
+- **Code:** system monospace only: `ui-monospace, SFMono-Regular, Menlo,
+  monospace`; no fourth web font.
+- All three web fonts are loaded through `next/font/google` with
+  `display: "swap"`, Latin subsets, preload, and CSS variables in the root
+  layout. `Cinzel Decorative` is forbidden.
 
 ## 4. Spacing & Layout
 

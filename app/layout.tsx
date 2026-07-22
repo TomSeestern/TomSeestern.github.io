@@ -1,19 +1,34 @@
 import "styles/tailwind.css"
 import { MotionConfig } from "motion/react"
 import type { Metadata, Viewport } from "next"
-import { Cinzel, Inter } from "next/font/google"
+import { Cinzel, EB_Garamond, Inter } from "next/font/google"
 import React from "react"
 import { Footer } from "../components/Footer/Footer"
 import { Header } from "../components/Header/Header"
 import PageTransition from "../components/PageTransition/PageTransition"
 
-const inter = Inter({ subsets: ["latin"], display: "swap" })
-
 const cinzel = Cinzel({
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  preload: true,
+  weight: ["400", "600", "700"],
   variable: "--font-heading",
+})
+
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  weight: ["400", "500"],
+  variable: "--font-body",
+})
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
 })
 
 export const metadata: Metadata = {
@@ -44,13 +59,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.className} ${cinzel.variable} dark`} suppressHydrationWarning>
-      <body className="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">
-        <style
-          dangerouslySetInnerHTML={{
-            __html: "h1, h2, h3, h4 { font-family: var(--font-heading), serif; }",
-          }}
-        />
+    <html
+      lang="en"
+      className={`${cinzel.variable} ${ebGaramond.variable} ${inter.variable} dark`}
+      suppressHydrationWarning
+    >
+      <body className="flex min-h-screen flex-col bg-surface font-sans text-foreground dark:bg-surface-dark dark:text-foreground-dark">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
