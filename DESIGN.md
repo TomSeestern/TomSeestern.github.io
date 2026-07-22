@@ -16,37 +16,37 @@ deliberate?
 
 ### Palette
 
-| Role | Tailwind token | Light | Dark | Usage |
-| --- | --- | --- | --- | --- |
-| Primary surface | `surface` / `marble` | `#F5F0E6` | `#1C1917` | Page backgrounds (warm marble) |
-| Muted surface | `surface-muted` | `#EEE7DA` | `#292524` | Section and hover surfaces |
-| Elevated surface | `surface-elevated` | `#FFFCF6` | `#292524` | Cards and overlays |
-| Foreground | `foreground` / `charcoal` | `#2A2017` | `#F5F0E6` | Headings and primary text (warm charcoal) |
-| Muted foreground | `foreground-muted` | `#625B54` | `#C8C1B5` | Supporting text and metadata |
-| Accent | `accent` / `pompeian` | `#A82A38` | `#A82A38` | Links, CTAs, focus rings (Pompeian red) |
-| Accent hover | `accent-hover` | `#8B202D` | `#D57E8B` | Link/button hover |
-| Accent soft | `accent-soft` | `#F1CDD2` | `#4B0F18` | Badges, soft backgrounds |
-| Accent soft foreground | `accent-soft-foreground` | `#6F1723` | `#E4A8B1` | Text on soft backgrounds |
-| Muted | `muted` | `#625B54` | `#C8C1B5` | General muted text |
-| Border | `border` | `#D7CFC1` | `#4B4540` | Inputs and dividers |
-| Border subtle | `border-subtle` | `#E6DED1` | `#292524` | Light separators |
-| Decorative gold | `gold` | `#C9A34F` | `#C9A34F` | Rules, dividers, icon strokes only — never text or backgrounds |
+| Role                   | Tailwind token            | Light     | Dark      | Usage                                                          |
+| ---------------------- | ------------------------- | --------- | --------- | -------------------------------------------------------------- |
+| Primary surface        | `surface` / `marble`      | `#F5F0E6` | `#1C1917` | Page backgrounds (warm marble)                                 |
+| Muted surface          | `surface-muted`           | `#EEE7DA` | `#292524` | Section and hover surfaces                                     |
+| Elevated surface       | `surface-elevated`        | `#FFFCF6` | `#292524` | Cards and overlays                                             |
+| Foreground             | `foreground` / `charcoal` | `#2A2017` | `#F5F0E6` | Headings and primary text (warm charcoal)                      |
+| Muted foreground       | `foreground-muted`        | `#625B54` | `#C8C1B5` | Supporting text and metadata                                   |
+| Accent                 | `accent` / `pompeian`     | `#A82A38` | `#A82A38` | Links, CTAs, focus rings (Pompeian red)                        |
+| Accent hover           | `accent-hover`            | `#8B202D` | `#D57E8B` | Link/button hover                                              |
+| Accent soft            | `accent-soft`             | `#F1CDD2` | `#4B0F18` | Badges, soft backgrounds                                       |
+| Accent soft foreground | `accent-soft-foreground`  | `#6F1723` | `#E4A8B1` | Text on soft backgrounds                                       |
+| Muted                  | `muted`                   | `#625B54` | `#C8C1B5` | General muted text                                             |
+| Border                 | `border`                  | `#D7CFC1` | `#4B4540` | Inputs and dividers                                            |
+| Border subtle          | `border-subtle`           | `#E6DED1` | `#292524` | Light separators                                               |
+| Decorative gold        | `gold`                    | `#C9A34F` | `#C9A34F` | Rules, dividers, icon strokes only — never text or backgrounds |
 
 The `primary-50` through `primary-900` scale maps to the Pompeian-red
 gradient:
 
-| Key | Hex |
-| --- | --- |
-| `primary-50` | `#F9E8EA` |
-| `primary-100` | `#F1CDD2` |
-| `primary-200` | `#E4A8B1` |
-| `primary-300` | `#D57E8B` |
-| `primary-400` | `#C55B6A` |
-| `primary-500` | `#B73C4D` |
+| Key           | Hex                           |
+| ------------- | ----------------------------- |
+| `primary-50`  | `#F9E8EA`                     |
+| `primary-100` | `#F1CDD2`                     |
+| `primary-200` | `#E4A8B1`                     |
+| `primary-300` | `#D57E8B`                     |
+| `primary-400` | `#C55B6A`                     |
+| `primary-500` | `#B73C4D`                     |
 | `primary-600` | `#A82A38` ← accent / Pompeian |
-| `primary-700` | `#8B202D` ← accent-hover |
-| `primary-800` | `#6F1723` |
-| `primary-900` | `#4B0F18` |
+| `primary-700` | `#8B202D` ← accent-hover      |
+| `primary-800` | `#6F1723`                     |
+| `primary-900` | `#4B0F18`                     |
 
 ### Rules
 
@@ -61,15 +61,15 @@ gradient:
 
 ## 3. Typography
 
-| Level | Utility | Font | Usage |
-| --- | --- | --- | --- |
-| H1 | `text-h1`, `text-h1-sm` | Cinzel | Page display headings |
-| H2 | `text-h2`, `text-h2-sm` | Cinzel | Section display headings |
-| H3 | `text-h3`, `text-h3-sm` | Inter | Card headings |
-| H4 | `text-h4` | Inter | Sub-headings |
-| Article body | `font-body` | EB Garamond | Prose and long-form paragraphs only |
-| UI body | `font-sans` | Inter | UI text, buttons, nav, metadata, captions |
-| Small | `text-small`, `text-caption` | Inter | Metadata and labels |
+| Level        | Utility                      | Font        | Usage                                     |
+| ------------ | ---------------------------- | ----------- | ----------------------------------------- |
+| H1           | `text-h1`, `text-h1-sm`      | Cinzel      | Page display headings                     |
+| H2           | `text-h2`, `text-h2-sm`      | Cinzel      | Section display headings                  |
+| H3           | `text-h3`, `text-h3-sm`      | Inter       | Card headings                             |
+| H4           | `text-h4`                    | Inter       | Sub-headings                              |
+| Article body | `font-body`                  | EB Garamond | Prose and long-form paragraphs only       |
+| UI body      | `font-sans`                  | Inter       | UI text, buttons, nav, metadata, captions |
+| Small        | `text-small`, `text-caption` | Inter       | Metadata and labels                       |
 
 - **Display headings:** `font-heading` → Cinzel, weights 400/600/700.
   Apply only to h1 and h2 display headings; never to body copy, buttons,
@@ -79,7 +79,7 @@ gradient:
 - **UI text:** `font-sans` → Inter, weights 400/500/600. This is the body
   default for navigation, controls, labels, metadata, and captions.
 - **Code:** system monospace only: `ui-monospace, SFMono-Regular, Menlo,
-  monospace`; no fourth web font.
+monospace`; no fourth web font.
 - All three web fonts are loaded through `next/font/google` with
   `display: "swap"`, Latin subsets, preload, and CSS variables in the root
   layout. `Cinzel Decorative` is forbidden.
@@ -120,22 +120,31 @@ never use viewport-width translation utilities.
 - **Accessibility:** foreground/muted contrast preserved at WCAG AA
   minimum (4.5:1 for body text, 3:1 for large text).
 
+### Project collection
+
+- **Structure:** project cards render as an ordered semantic list. Mobile uses
+  a native horizontal scroll container with `snap-x snap-mandatory`; each
+  card occupies the collection content width and snaps as a whole. Desktop
+  changes the same list to a responsive grid.
+- **States:** native scroll obeys reduced-motion preferences without custom
+  animation. Card and anchor hover/focus states remain token-driven.
+- **Accessibility:** list items retain real project links in normal tab order;
+  no duplicate cards, masks, edge guards, or autoplaying tracks obscure copy.
+
 ## 6. Motion & Interaction
 
 Motion uses [Motion](https://motion.dev/) (formerly Framer Motion) via
 the `motion/react` package. Key animations:
 
-| Pattern | Implementation | Purpose |
-| --- | --- | --- |
-| Hero stagger | `motion.div` with `staggerChildren` on the hero section | Introduces heading + subtitle with sequenced fade-up |
-| Page reveal | `motion.div` wrapper with `initial={{ opacity: 0, y: 20 }}` and `animate={{ opacity: 1, y: 0 }}` | Smooth page entry transitions |
-| Card hover spring | `whileHover={{ scale: 1.02 }}` with `spring` transition on teaser cards | Subtle lift on hover |
+| Pattern           | Implementation                                                                                   | Purpose                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| Hero stagger      | `motion.div` with `staggerChildren` on the hero section                                          | Introduces heading + subtitle with sequenced fade-up |
+| Page reveal       | `motion.div` wrapper with `initial={{ opacity: 0, y: 20 }}` and `animate={{ opacity: 1, y: 0 }}` | Smooth page entry transitions                        |
+| Card hover spring | `whileHover={{ scale: 1.02 }}` with `spring` transition on teaser cards                          | Subtle lift on hover                                 |
 
-**Marquees** use `motion-safe:animate-marquee` or
-`motion-safe:animate-marquee2` (CSS keyframe animations defined in
-`tailwind.config.js`). The `motion-safe:` prefix ensures
-`prefers-reduced-motion: reduce` prevents continuous movement while all
-links remain usable.
+Project collections use native scroll-snap at narrow widths and responsive
+CSS grids at wider widths. They do not use an autoplaying track or custom
+motion, so all readable card content remains whole at collection boundaries.
 
 All animations respect `prefers-reduced-motion` — wrap motion in
 `motion-safe:` variants or configure Motion's
