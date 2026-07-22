@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { motion, useReducedMotion } from "motion/react"
+import { motion } from "motion/react"
 
 const container = {
   hidden: { opacity: 0 },
@@ -16,15 +16,8 @@ interface HeroStaggerProps {
 }
 
 export function HeroContainer({ children, className }: HeroStaggerProps) {
-  const prefersReduced = useReducedMotion()
-
   return (
-    <motion.div
-      variants={container}
-      initial={prefersReduced ? undefined : "hidden"}
-      animate={prefersReduced ? undefined : "show"}
-      className={className}
-    >
+    <motion.div variants={container} initial="hidden" animate="show" className={className}>
       {children}
     </motion.div>
   )

@@ -4,6 +4,7 @@ import { Footer } from "../components/Footer/Footer"
 import { Header } from "../components/Header/Header"
 import type { Metadata, Viewport } from "next"
 import { Cinzel, Inter } from "next/font/google"
+import { MotionConfig } from "motion/react"
 import PageTransition from "../components/PageTransition/PageTransition"
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
@@ -91,7 +92,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <Header />
 
-        <PageTransition>{children}</PageTransition>
+        <MotionConfig reducedMotion="user">
+          <PageTransition>{children}</PageTransition>
+        </MotionConfig>
 
         <Footer />
       </body>
