@@ -56,13 +56,18 @@ export default function Page({ params }: Params): JSX.Element {
           </div>
         )}
         <article className="prose prose-lg max-w-none dark:prose-invert">
-          <h1 className="mb-2 text-h1-sm sm:text-h1 text-foreground dark:text-foreground-dark">
+          <h1 className="mb-2 text-h1-sm text-foreground dark:text-foreground-dark sm:text-h1">
             {fileContent.data.title || "Project"}
           </h1>
 
           <p className="mb-8 text-sm text-muted dark:text-muted-dark">
             {readingTime}
-            {fileContent.data.articleDate && ` · ${new Date(fileContent.data.articleDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`}
+            {fileContent.data.articleDate &&
+              ` · ${new Date(fileContent.data.articleDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}`}
           </p>
 
           <MarkdownAsync
@@ -70,7 +75,10 @@ export default function Page({ params }: Params): JSX.Element {
             rehypePlugins={[
               rehypeSlug,
               rehypeAutolinkHeadings,
-              [rehypePrettyCode, { theme: { dark: "github-dark-dimmed", light: "github-light" }, keepBackground: false }],
+              [
+                rehypePrettyCode,
+                { theme: { dark: "github-dark-dimmed", light: "github-light" }, keepBackground: false },
+              ],
             ]}
             components={{ h1: () => null }}
           >
