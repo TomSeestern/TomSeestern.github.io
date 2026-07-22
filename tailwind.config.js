@@ -132,32 +132,12 @@ module.exports = {
         6: "6px",
         8: "8px",
       },
-      spacing: {
-        112: "28rem",
-      },
-      zIndex: {
-        marquee: "60",
-      },
       minHeight: {
         ...defaultTheme.height,
         teaser: "4.5rem",
       },
       minWidth: {
         ...defaultTheme.width,
-      },
-      animation: {
-        marquee: "marquee 90s linear infinite",
-        marquee2: "marquee2 90s linear infinite",
-      },
-      keyframes: {
-        marquee: {
-          "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-100%)" },
-        },
-        marquee2: {
-          "0%": { transform: "translateX(100%)" },
-          "100%": { transform: "translateX(0%)" },
-        },
       },
     },
   },
