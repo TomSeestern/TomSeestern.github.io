@@ -5,6 +5,19 @@ const baseUrl = process.env.TASK_7_AUDIT_URL ?? "http://127.0.0.1:3051"
 const browser = await chromium.launch({ headless: true })
 const results = {}
 
+async function waitForMotionOpacity(page) {
+  await page.locator("main").waitFor({ state: "visible" })
+  await page.waitForFunction(() => {
+    const main = document.querySelector("main")
+
+    if (!main || getComputedStyle(main).opacity !== "1") {
+      return false
+    }
+
+    return [...main.querySelectorAll("[style]")].every((element) => getComputedStyle(element).opacity === "1")
+  })
+}
+
 for (const width of [375, 1280]) {
   for (const theme of ["light", "dark"]) {
     const context = await browser.newContext({ viewport: { width, height: 900 } })
@@ -14,23 +27,7 @@ for (const width of [375, 1280]) {
     }, theme)
     await page.goto(baseUrl, { waitUntil: "networkidle" })
 
-    const main = page.locator("main")
-    await main.waitFor({ state: "visible" })
-    await main.evaluate(async (element) => {
-      await new Promise((resolve) => {
-        if (getComputedStyle(element).opacity === "1") {
-          resolve()
-          return
-        }
-        const observer = new MutationObserver(() => {
-          if (getComputedStyle(element).opacity === "1") {
-            observer.disconnect()
-            resolve()
-          }
-        })
-        observer.observe(element, { attributes: true, attributeFilter: ["style"] })
-      })
-    })
+    await waitForMotionOpacity(page)
 
     const axe = await new AxeBuilder({ page }).withTags(["wcag2aa", "wcag21aa", "wcag22aa"]).analyze()
     const colorContrast = axe.violations.filter((violation) => violation.id === "color-contrast")
