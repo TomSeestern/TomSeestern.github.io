@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
 
-const darkSurface = "rgb(17, 24, 39)"
-const darkAccentSoft = "rgb(30, 58, 138)"
+const darkSurface = "rgb(28, 25, 23)"
+const darkAccentSoft = "rgb(67, 20, 7)"
 const transparentPng = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL6zAAAAABJRU5ErkJggg==",
   "base64"
@@ -71,7 +71,7 @@ test("DarkThemeToggle toggles dark mode and persists on reload", async ({ page }
 
   // Then — dark class removed, light surface shown
   await expect(page.locator("html")).not.toHaveClass(/dark/)
-  const lightSurface = "rgb(255, 255, 255)"
+  const lightSurface = "rgb(250, 249, 246)"
   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
 
   // And — localStorage persists the choice

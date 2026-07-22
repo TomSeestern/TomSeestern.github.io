@@ -9,6 +9,7 @@ const transparentPng = Buffer.from(
 )
 
 async function checkA11y(page: Page, routeName: string): Promise<void> {
+  await expect(page.locator("main")).toHaveCSS("opacity", "1")
   const results = await new AxeBuilder({ page }).analyze()
   expect(results.violations, `Accessibility violations on ${routeName}`).toEqual([])
 }
