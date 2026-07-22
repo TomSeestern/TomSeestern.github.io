@@ -1,7 +1,11 @@
 import AxeBuilder from "@axe-core/playwright"
 import { chromium } from "@playwright/test"
 
-const baseUrl = process.env.TASK_7_AUDIT_URL ?? "http://127.0.0.1:3051"
+const baseUrl = process.env.TASK_7_AUDIT_URL
+
+if (!baseUrl) {
+  throw new Error("TASK_7_AUDIT_URL must point to the selected production audit server.")
+}
 const browser = await chromium.launch({ headless: true })
 const results = {}
 
@@ -44,6 +48,23 @@ for (const width of [375, 1280]) {
       const firstMuted = document.querySelector(".text-muted")
       const firstAccent = document.querySelector(".text-accent")
       const firstBadge = document.querySelector(".bg-accent-soft")
+      const collection = document.querySelector('[data-testid="project-collection"]')
+      const cards = [...document.querySelectorAll('[data-testid="project-card"]')]
+
+      if (!(collection instanceof HTMLElement)) {
+        throw new Error("Project collection missing")
+      }
+
+      const collectionBounds = collection.getBoundingClientRect()
+      const visibleCards = cards
+        .map((card) => card.getBoundingClientRect())
+        .filter((card) => card.right > collectionBounds.left && card.left < collectionBounds.right)
+        .map((card) => ({
+          left: card.left,
+          right: card.right,
+          fullyInside: card.left >= collectionBounds.left && card.right <= collectionBounds.right,
+        }))
+
       return {
         bodyBackground: getComputedStyle(document.body).backgroundColor,
         muted: firstMuted ? getComputedStyle(firstMuted).color : null,
@@ -51,8 +72,19 @@ for (const width of [375, 1280]) {
         badgeBackground: firstBadge ? getComputedStyle(firstBadge).backgroundColor : null,
         badgeForeground: firstBadge ? getComputedStyle(firstBadge).color : null,
         isDark: document.documentElement.classList.contains("dark"),
+        projectCollection: {
+          display: getComputedStyle(collection).display,
+          scrollSnapType: getComputedStyle(collection).scrollSnapType,
+          left: collectionBounds.left,
+          right: collectionBounds.right,
+          visibleCards,
+        },
       }
     })
+
+    if (computed.projectCollection.visibleCards.some((card) => !card.fullyInside)) {
+      throw new Error(`Visible project card crosses collection edge at ${width}px ${theme}.`)
+    }
 
     results[`${width}-${theme}`] = {
       colorContrastViolations: colorContrast.length,
