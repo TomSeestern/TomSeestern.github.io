@@ -1,7 +1,7 @@
 "use client"
 
-import React from "react"
 import { motion } from "motion/react"
+import React from "react"
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   return (
