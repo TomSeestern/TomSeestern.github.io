@@ -10,8 +10,13 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return getMarkdownSlugs(CONTENT_DIR)
 }
 
-export default function Image({ params }: { params: { slug: string } }): ImageResponse {
-  const entry = getMarkdownEntry(params.slug, CONTENT_DIR)
+export default async function Image({
+  params,
+}: {
+  readonly params: Promise<{ slug: string }>
+}): Promise<ImageResponse> {
+  const { slug } = await params
+  const entry = getMarkdownEntry(slug, CONTENT_DIR)
 
   const title = entry?.data.title || "Blog Post"
   const dateRaw = entry?.data.articleDate

@@ -11,7 +11,7 @@ jest.mock("resend", () => ({
 const mockHeadersGet = jest.fn()
 
 jest.mock("next/headers", () => ({
-  headers: jest.fn(() => ({
+  headers: jest.fn(async () => ({
     get: mockHeadersGet,
   })),
 }))
@@ -162,5 +162,6 @@ describe("sendEmail", () => {
     const result = await sendEmail(validFormData)
 
     expect(result).toEqual({ success: true })
+    expect(mockHeadersGet).toHaveBeenCalledWith("x-forwarded-for")
   })
 })

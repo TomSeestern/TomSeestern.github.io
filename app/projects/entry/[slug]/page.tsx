@@ -14,20 +14,19 @@ const CONTENT_DIR = "content/projects"
 const SITE_URL = "https://tom.segbers.de"
 
 interface Params {
-  params: {
-    slug: string
-  }
+  readonly params: Promise<{ slug: string }>
 }
 
-export default function Page({ params }: Params): JSX.Element {
-  const fileContent = getMarkdownEntry(params.slug, CONTENT_DIR)
+export default async function Page({ params }: Params): Promise<JSX.Element> {
+  const { slug } = await params
+  const fileContent = getMarkdownEntry(slug, CONTENT_DIR)
 
   if (!fileContent) {
     notFound()
   }
 
   const readingTime = getReadingTime(fileContent.content)
-  const canonicalUrl = `${SITE_URL}/projects/entry/${params.slug}`
+  const canonicalUrl = `${SITE_URL}/projects/entry/${slug}`
 
   return (
     <>
@@ -110,7 +109,8 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 }
 
 export async function generateMetadata({ params }: Params, parent: ResolvingMetadata): Promise<Metadata> {
-  const fileContent = getMarkdownEntry(params.slug, CONTENT_DIR)
+  const { slug } = await params
+  const fileContent = getMarkdownEntry(slug, CONTENT_DIR)
 
   if (!fileContent) {
     return {
@@ -126,7 +126,7 @@ export async function generateMetadata({ params }: Params, parent: ResolvingMeta
     title,
     description,
     alternates: {
-      canonical: `https://tom.segbers.de/projects/entry/${params.slug}`,
+      canonical: `https://tom.segbers.de/projects/entry/${slug}`,
     },
     openGraph: {
       title,

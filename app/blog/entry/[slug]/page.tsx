@@ -15,7 +15,7 @@ const CONTENT_DIR = "content/blog"
 const SITE_URL = "https://tom.segbers.de"
 
 interface Params {
-  params: { slug: string }
+  readonly params: Promise<{ slug: string }>
 }
 
 function extractHeadings(content: string): { id: string; text: string; level: 2 | 3 }[] {
@@ -30,14 +30,15 @@ function extractHeadings(content: string): { id: string; text: string; level: 2 
   return headings
 }
 
-export default function Page({ params }: Params): JSX.Element {
-  const fileContent = getMarkdownEntry(params.slug, CONTENT_DIR)
+export default async function Page({ params }: Params): Promise<JSX.Element> {
+  const { slug } = await params
+  const fileContent = getMarkdownEntry(slug, CONTENT_DIR)
   if (!fileContent) notFound()
 
   const title = fileContent.data.title || "Blog Post"
   const readingTime = getReadingTime(fileContent.content)
   const headings = extractHeadings(fileContent.content)
-  const canonicalUrl = `${SITE_URL}/blog/entry/${params.slug}`
+  const canonicalUrl = `${SITE_URL}/blog/entry/${slug}`
 
   return (
     <>
@@ -123,7 +124,8 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 }
 
 export async function generateMetadata({ params }: Params, parent: ResolvingMetadata): Promise<Metadata> {
-  const fileContent = getMarkdownEntry(params.slug, CONTENT_DIR)
+  const { slug } = await params
+  const fileContent = getMarkdownEntry(slug, CONTENT_DIR)
   if (!fileContent) return { title: "Not Found", description: "Blog post not found" }
 
   const title = fileContent.data.title || "Blog Post"
@@ -132,7 +134,7 @@ export async function generateMetadata({ params }: Params, parent: ResolvingMeta
   return {
     title,
     description,
-    alternates: { canonical: `https://tom.segbers.de/blog/entry/${params.slug}` },
+    alternates: { canonical: `https://tom.segbers.de/blog/entry/${slug}` },
     openGraph: {
       title,
       description,
