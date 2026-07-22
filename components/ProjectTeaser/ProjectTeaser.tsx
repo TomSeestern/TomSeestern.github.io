@@ -1,11 +1,11 @@
-import { Card } from "flowbite-react"
-import React from "react"
-import { Tooltip } from "../Tooltip/Tooltip"
 import { formatDistanceToNow } from "date-fns"
+import { Card } from "flowbite-react"
 import Image from "next/image"
 import Link from "next/link"
+import React from "react"
 import { getIconPath } from "../../lib/icon-map"
 import { CardMotionWrapper } from "../CardMotionWrapper/CardMotionWrapper"
+import { Tooltip } from "../Tooltip/Tooltip"
 
 /**
  * Interface for the ProjectTeaser props
@@ -26,8 +26,8 @@ export interface ProjectProps {
 
 const ProjectTeaser: React.FC<ProjectProps> = ({ title, description, technologies, ctaLink, projectDate }) => {
   return (
-    <CardMotionWrapper className="h-full w-full">
-      <Card className="h-full w-full transition-colors duration-200 hover:z-50 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
+    <CardMotionWrapper className="size-full">
+      <Card className="size-full transition-colors duration-200 hover:z-50 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
         <div className="flex h-full flex-col justify-between gap-4">
           <div className="">
             <Link
@@ -53,7 +53,7 @@ const ProjectTeaser: React.FC<ProjectProps> = ({ title, description, technologie
                 <div key={tech} className="rounded-lg p-1 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
                   <Tooltip explainer={tech}>
                     {iconPath ? (
-                      <img className="h-8 w-auto object-contain" src={iconPath} alt="" />
+                      <Image className="h-8 w-auto object-contain" src={iconPath} alt="" width={32} height={32} />
                     ) : (
                       <span className="text-sm text-muted dark:text-muted-dark">{tech}</span>
                     )}
@@ -72,7 +72,7 @@ const ProjectTeaser: React.FC<ProjectProps> = ({ title, description, technologie
             >
               Learn more
               <Image
-                className={"ml-2 h-4 w-4 dark:invert"}
+                className={"ml-2 size-4 dark:invert"}
                 src={"/icon/arrow-right.svg"}
                 alt=""
                 width={32}

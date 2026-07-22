@@ -1,13 +1,13 @@
+import { render, screen } from "@testing-library/react"
 import { formatDistanceToNow } from "date-fns"
 import React from "react"
-import { render, screen } from "@testing-library/react"
+import ProjectTeaser from "./ProjectTeaser"
+
 import { getIconPath } from "../../lib/icon-map"
 
 jest.mock("../../lib/icon-map", () => ({
   getIconPath: jest.fn(),
 }))
-
-import ProjectTeaser from "./ProjectTeaser"
 
 const mockGetIconPath = getIconPath as jest.MockedFunction<typeof getIconPath>
 const projectDate = new Date("2024-01-01T00:00:00.000Z")
@@ -143,7 +143,7 @@ describe("ProjectTeaser", () => {
     const { container } = render(<ProjectTeaser {...baseProps} />)
 
     // Then — motion wrapper scales on hover; inner Card keeps hover:z-50
-    const motionWrapper = container.querySelector(".h-full.w-full")
+    const motionWrapper = container.querySelector(".size-full")
     expect(motionWrapper).toBeInTheDocument()
     // The Card (child of motion div) still has hover:z-50 for z-index elevation
     const card = motionWrapper!.querySelector(".transition-colors")
