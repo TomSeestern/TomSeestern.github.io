@@ -42,7 +42,7 @@ export default function Web() {
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24 xl:grid xl:grid-cols-12 xl:gap-8">
           <div className="col-span-8">
             <HeroContainer>
-              <HeroH1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-foreground dark:text-foreground-dark md:text-5xl lg:text-6xl">
+              <HeroH1 className="mb-4 text-4xl font-bold leading-none tracking-tight text-foreground dark:text-foreground-dark md:text-5xl lg:text-6xl">
                 Tom Segbers — Senior Developer
               </HeroH1>
               <HeroP className="mb-6 font-light text-muted dark:text-muted-dark md:text-lg lg:mb-8 lg:text-xl">
@@ -93,7 +93,7 @@ export default function Web() {
       <section className="bg-surface-muted py-8 dark:bg-surface-dark sm:py-16 lg:py-24">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6">
           <div>
-            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-foreground dark:text-foreground-dark">
+            <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-foreground-dark">
               My Recent Projects
             </h2>
             <p className="font-light text-muted dark:text-muted-dark sm:text-xl">
@@ -102,7 +102,10 @@ export default function Web() {
             </p>
           </div>
         </div>
-        <div className="relative flex overflow-hidden py-2">
+        <div
+          data-testid="project-marquee"
+          className="relative flex overflow-hidden py-2 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+        >
           <div className="flex animate-marquee space-x-4 motion-reduce:animate-none">
             {getAllProjects().map((article) => (
               <div key={article.id} className="size-96">
@@ -148,7 +151,7 @@ export default function Web() {
       <section className="bg-surface dark:bg-surface-dark">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
           <div>
-            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-foreground dark:text-foreground-dark">
+            <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-foreground-dark">
               My Recent Blog Posts
             </h2>
             <p className="font-light text-muted dark:text-muted-dark sm:text-xl">
