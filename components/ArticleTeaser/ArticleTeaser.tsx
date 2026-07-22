@@ -57,12 +57,12 @@ const ArticleComponent: React.FC<ArticleProps> = ({
   return (
     <CardMotionWrapper className="min-w-0">
       <Card className="min-w-0 p-2 transition-colors duration-200 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
-        <div className="mb-5 flex items-center justify-between text-muted">
+        <div className="mb-5 flex items-center justify-between text-muted dark:text-muted-dark">
           <span className="inline-flex items-center rounded bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-soft-foreground dark:bg-accent-soft-dark dark:text-accent-soft-foreground-dark">
             <Image className={"size-3"} src={"/icon/article.svg"} alt="" width={32} height={32} />
             Tutorial
           </span>
-          <span className="text-sm">{formatDistanceToNow(articleDate, { addSuffix: true })}</span>
+          <span className="text-sm dark:text-muted-dark">{formatDistanceToNow(articleDate, { addSuffix: true })}</span>
         </div>
         <h3 className="mb-2 truncate text-h3 text-foreground dark:text-foreground-dark">
           <Link

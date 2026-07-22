@@ -138,6 +138,7 @@ describe("ArticleTeaser", () => {
 
     // Then
     expect(screen.getByRole("heading", { name: "Test article" })).toHaveClass("dark:text-foreground-dark")
+    expect(screen.getByText("2 days ago")).toHaveClass("dark:text-muted-dark")
     expect(screen.getByText("Article summary")).toHaveClass("dark:text-muted-dark")
     expect(screen.getByText("Tom Segbers")).toHaveClass("dark:text-foreground-dark")
   })
