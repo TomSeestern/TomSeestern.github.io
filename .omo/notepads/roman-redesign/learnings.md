@@ -1,3 +1,11 @@
+## 2026-07-22 — Task 7 V1 marquee edge closure
+
+- Marquee animated tracks establish `z-0`; opaque guards use semantic section backgrounds at `z-marquee` (60).
+- Motion-wrapped `ProjectTeaser` cards can otherwise paint over ordinary `z-10` guard layers; explicit track/guard stacking fixes it.
+- Guards are `w-48 sm:w-112`: full mobile coverage and desktop edge-only coverage, preserving central cards and reduced-motion behavior.
+- Fresh production checks passed: `pnpm lint`, `pnpm build`, two raw Playwright V1 runs, and Axe at 375/1280 in light/dark with zero violations.
+- Independent screenshot review passed: no readable title, body, date, or CTA fragments at marquee edges.
+
 ## 2026-07-21 — Tailwind Roman palette applied
 
 - `tailwind.config.js`: full Roman palette + Cinzel heading font, 191 lines
@@ -218,6 +226,13 @@ When each of 4 plans lands, run through every numbered question. Plan fails an a
 - Task scope permits only `package.json`, `pnpm-lock.yaml`, and `.omo/`; creating `pnpm-workspace.yaml` would violate it. Exploratory package/lockfile changes reverted. Full reproducible evidence: `.omo/evidence/task-3-pnpm-overrides-blocked.md`.
 
 Framework is hostile by design. Better plans survive it; weak ones caught before a line of code written.
+
+## 2026-07-22 — Task 7 visual closure
+
+- Replaced transparent marquee masking with `pointer-events-none` semantic-surface guards. Opaque guards hide edge fragments without changing project-link navigation or reduced-motion behavior.
+- Standalone Axe audit uses the same Motion settlement condition as production route checks: `main` plus styled descendants must reach opacity `1`.
+- Production Playwright config requires `PLAYWRIGHT_BASE_URL`; choose fresh audit port rather than fixed config port.
+- Verification: lint, Prettier, Jest (91 tests), Next production build, Axe 375/1280 × light/dark, and two production Chromium runs (43/43 each). External production E2E needs `E2E_CONTACT_FORM_SUCCESS=true`.
 
 ## 2026-07-22 — Phase 5 Synthesis: Decision-complete Roman redesign plan
 
