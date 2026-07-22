@@ -1,6 +1,6 @@
+import { Metadata } from "next"
 import ArticleComponent from "../../components/ArticleTeaser/ArticleTeaser"
 import { getAllBlogPosts } from "../../lib/blog"
-import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -40,7 +40,7 @@ function Articles() {
         </div>
         <h2 className="sr-only">Blog entries</h2>
         <div className="grid gap-8 lg:grid-cols-2">
-          {articles.map((article, index) => (
+          {articles.map((article) => (
             <ArticleComponent
               key={article.id}
               title={article.title}
