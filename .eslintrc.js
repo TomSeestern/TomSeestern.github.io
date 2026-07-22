@@ -2,7 +2,7 @@
 const fs = require("fs")
 
 module.exports = {
-  extends: ["next", "prettier", "plugin:storybook/recommended", "plugin:tailwindcss/recommended"],
+  extends: ["next", "prettier", "plugin:tailwindcss/recommended"],
   plugins: ["@typescript-eslint"],
   parserOptions: {
     babelOptions: {
