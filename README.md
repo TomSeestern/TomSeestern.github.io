@@ -36,7 +36,6 @@ on deploy.
   [React Testing Library](https://testing-library.com/react) for unit and
   component tests
 - **[Playwright](https://playwright.dev/)** for end-to-end tests
-- **[Storybook](https://storybook.js.org/)** for component visual smoke tests
 - **[Resend](https://resend.com/)** for the contact form server action
 - **[gray-matter](https://github.com/jonschlinkert/gray-matter)** for Markdown
   frontmatter parsing
@@ -87,9 +86,6 @@ From `package.json`:
 | `pnpm test` | Run Jest unit and component tests |
 | `pnpm e2e:headless` | Run Playwright e2e tests in headless mode |
 | `pnpm e2e:ui` | Run Playwright e2e tests with the interactive UI |
-| `pnpm storybook` | Start Storybook on port 6006 |
-| `pnpm build-storybook` | Build a static Storybook bundle |
-| `pnpm test-storybook` | Run Storybook smoke tests against the built bundle |
 | `pnpm analyze` | Build with `@next/bundle-analyzer` enabled |
 | `pnpm coupling-graph` | Render module dependency graph to `graph.svg` via Madge |
 | `pnpm format` | Apply Prettier to `*.ts`, `*.tsx`, `*.md` |
@@ -164,9 +160,6 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── public/
 │   ├── img/                   # Photos and the OG logo
 │   └── icon/                  # SVG icons used in components
-├── .storybook/
-│   ├── main.ts
-│   └── preview.ts
 ├── styles/
 │   └── tailwind.css           # Tailwind entry, imports Flowbite
 └── scripts/
@@ -214,7 +207,7 @@ the `@tailwindcss/typography` plugin styles the rendered HTML through the
 
 ## Testing
 
-Three layers, each with a dedicated runner:
+Two layers, each with a dedicated runner. CI runs lint, Prettier, Jest, and Playwright end-to-end tests.
 
 **Jest** for unit and component logic (`pnpm test`). Component tests use
 React Testing Library and assert behavior through accessible queries. The
@@ -226,10 +219,6 @@ focused suites in `lib/`.
 spec sets `E2E_CONTACT_FORM_SUCCESS=true` so `sendEmail` succeeds without
 calling Resend. Playwright's `webServer` boots `next dev` on port 3030
 automatically.
-
-**Storybook** for visual smoke (`pnpm build-storybook && pnpm test-storybook`).
-The test runner verifies each story renders without errors. Stories are
-written in TSX; MDX stories are not supported by the smoke runner.
 
 ## Deployment
 
