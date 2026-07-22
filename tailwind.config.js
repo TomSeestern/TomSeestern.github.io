@@ -59,7 +59,7 @@ module.exports = {
           "soft-foreground-dark": primary[300],
         },
         muted: {
-          DEFAULT: "#78716C",
+          DEFAULT: "#706963",
           surface: "#F5F0E8",
           dark: "#A8A29E",
           "surface-dark": "#292524",
