@@ -17,11 +17,10 @@ test("homepage renders core sections", async ({ page }) => {
   await expect(heroHeading).toBeVisible()
   await expect(heroHeading).toHaveText("Tom Segbers — Senior Developer")
 
-  // Project marquee section — h2 "My Recent Projects"
   const projectsHeading = page.getByRole("heading", { name: /My Recent Projects/, level: 2 })
   await expect(projectsHeading).toBeVisible()
-  // Marquee animation containers exist somewhere under the page
-  await expect(page.locator(".animate-marquee").first()).toBeVisible()
+  await expect(page.getByTestId("project-collection")).toBeVisible()
+  await expect(page.getByTestId("project-list")).toBeVisible()
 
   // Blog section — h2 "My Recent Blog Posts"
   const blogHeading = page.getByRole("heading", { name: /My Recent Blog Posts/, level: 2 })
@@ -55,7 +54,7 @@ test("homepage exposes semantic Roman font roles", async ({ page }) => {
   await expect(page.getByText("Building reliable systems and solving hard problems.")).toHaveCSS("font-family", /Inter/)
 })
 
-test("homepage keeps hero visible and protects marquee edges", async ({ page }) => {
+test("homepage shows whole project cards and opens project links with keyboard", async ({ page }) => {
   for (const width of [375, 1280]) {
     await page.setViewportSize({ width, height: 812 })
     await page.goto("/")
@@ -64,17 +63,59 @@ test("homepage keeps hero visible and protects marquee edges", async ({ page }) 
     await expect(heroHeading).toBeVisible()
     await expect(heroHeading).toHaveCSS("opacity", "1")
 
-    const marquee = page.getByTestId("project-marquee")
-    await expect(marquee).toBeVisible()
-    await expect(marquee).toHaveCSS("mask-image", "none")
+    const collection = page.getByTestId("project-collection")
+    const projectCards = page.getByTestId("project-card")
+    await expect(collection).toBeVisible()
+    await expect(projectCards.first()).toBeVisible()
 
-    for (const guardId of ["project-marquee-start-guard", "project-marquee-end-guard"]) {
-      const guard = page.getByTestId(guardId)
-      await expect(guard).toBeVisible()
-      await expect(guard).toHaveCSS("background-color", /rgb/)
-      await expect(guard).toHaveCSS("z-index", "60")
+    if (width === 375) {
+      await expect(collection).toHaveCSS("scroll-snap-type", "x mandatory")
+    } else {
+      await expect(page.getByTestId("project-list")).toHaveCSS("display", "grid")
+    }
+
+    const cardGeometry = await projectCards.evaluateAll((cards, collectionTestId) => {
+      const collectionElement = document.querySelector(`[data-testid="${collectionTestId}"]`)
+      if (!(collectionElement instanceof HTMLElement)) {
+        throw new Error("Project collection missing")
+      }
+
+      const collectionBounds = collectionElement.getBoundingClientRect()
+      return cards
+        .map((card) => card.getBoundingClientRect())
+        .filter((card) => card.right > collectionBounds.left && card.left < collectionBounds.right)
+        .map((card) => ({
+          left: card.left,
+          right: card.right,
+          collectionLeft: collectionBounds.left,
+          collectionRight: collectionBounds.right,
+        }))
+    }, "project-collection")
+
+    expect(cardGeometry).not.toHaveLength(0)
+    for (const card of cardGeometry) {
+      expect(card.left).toBeGreaterThanOrEqual(card.collectionLeft)
+      expect(card.right).toBeLessThanOrEqual(card.collectionRight)
     }
   }
+
+  await page.setViewportSize({ width: 375, height: 812 })
+  await page.goto("/")
+  const projectLinkPattern = /\/projects\/entry\//
+  let focusedProjectLink = ""
+
+  for (let tabCount = 0; tabCount < 32; tabCount += 1) {
+    await page.keyboard.press("Tab")
+    focusedProjectLink = await page.evaluate(() => {
+      const activeElement = document.activeElement
+      return activeElement instanceof HTMLAnchorElement ? activeElement.getAttribute("href") ?? "" : ""
+    })
+    if (projectLinkPattern.test(focusedProjectLink)) break
+  }
+
+  expect(focusedProjectLink).toMatch(projectLinkPattern)
+  await page.keyboard.press("Enter")
+  await expect(page).toHaveURL(projectLinkPattern)
 })
 
 test("article prose uses EB Garamond while UI uses Inter", async ({ page }) => {

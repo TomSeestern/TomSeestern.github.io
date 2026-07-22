@@ -55,18 +55,19 @@ test.describe("interactive accessibility", () => {
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
-  test("reduced motion stops marquee animation while retaining project navigation", async ({ page }) => {
+  test("reduced motion keeps native project navigation available", async ({ page }) => {
     // Given
     const consoleErrors = collectBrowserConsoleErrors(page)
     await page.emulateMedia({ reducedMotion: "reduce" })
 
     // When
     await page.goto("/")
-    const marquee = page.locator(".animate-marquee").first()
+    const collection = page.getByTestId("project-collection")
 
-    // Then
-    await expect(marquee).toBeVisible()
-    await expect(marquee).toHaveCSS("animation-name", "none")
+    // Then: at mobile width, native scroll-snap is active
+    await page.setViewportSize({ width: 375, height: 812 })
+    await expect(collection).toBeVisible()
+    await expect(collection).toHaveCSS("scroll-snap-type", "x mandatory")
     await page.getByRole("link", { name: "View all Projects" }).click()
     await expect(page).toHaveURL(/\/projects$/)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
