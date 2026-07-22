@@ -2,7 +2,7 @@ import * as RadixTooltip from "@radix-ui/react-tooltip"
 import React from "react"
 import { twMerge } from "tailwind-merge"
 
-const tooltipContentClassName = "rounded-0.5md bg-surface-dark px-4 py-2.5 font-body text-2xs text-white"
+const tooltipContentClassName = "rounded-0.5md bg-surface-dark px-4 py-2.5 font-sans text-2xs text-white"
 const tooltipArrowClassName = "h-2 w-4 fill-surface-dark"
 
 export interface TooltipProps extends RadixTooltip.TooltipProps {
