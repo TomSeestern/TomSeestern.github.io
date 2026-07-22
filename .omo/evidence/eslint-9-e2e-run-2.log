@@ -1,0 +1,56 @@
+TIMESTAMP_UTC=2026-07-22T17:26:20Z
+COMMAND=pnpm e2e:headless
+
+
+> tomsegbers-de@0.0.0 e2e:headless /home/tom/Nextcloud/notes/03 Projects/20XX TomSegbers.de - Personal Website/TomSegbers.de
+> playwright test
+
+
+Running 40 tests using 1 worker
+
+[1/40] [chromium] › e2e/contact.spec.ts:4:7 › contact form › submits valid form and shows success message
+
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[2/40] [chromium] › e2e/contact.spec.ts:19:7 › contact form › shows inline error for invalid email
+[3/40] [chromium] › e2e/contact.spec.ts:32:7 › contact form › shows all field errors when all fields are empty
+[4/40] [chromium] › e2e/contact.spec.ts:46:7 › contact form › shows inline error for missing name
+[5/40] [chromium] › e2e/contact.spec.ts:58:7 › contact form › button is disabled while submitting
+[6/40] [chromium] › e2e/contact.spec.ts:72:7 › contact form › clear errors on resubmission after failed attempt
+[7/40] [chromium] › e2e/dark-mode.spec.ts:25:5 › public routes retain readable semantic surfaces in dark mode
+[8/40] [chromium] › e2e/dark-mode.spec.ts:59:5 › DarkThemeToggle toggles dark mode and persists on reload
+[9/40] [chromium] › e2e/dynamic-content.spec.ts:45:5 › blog listing discovers a detail route and breadcrumb returns to blog
+[10/40] [chromium] › e2e/dynamic-content.spec.ts:82:5 › project listing discovers a detail route and breadcrumb returns to projects
+[11/40] [chromium] › e2e/home.spec.ts:3:5 › homepage renders core sections
+[12/40] [chromium] › e2e/interactions.spec.ts:21:7 › interactive accessibility › skip link becomes visible on Tab and moves focus to main content on Enter
+[13/40] [chromium] › e2e/interactions.spec.ts:42:7 › interactive accessibility › keyboard focus gives the custom contact CTA a visible indicator
+[14/40] [chromium] › e2e/interactions.spec.ts:58:7 › interactive accessibility › reduced motion stops marquee animation while retaining project navigation
+[15/40] [chromium] › e2e/responsive.spec.ts:104:9 › home remains usable at mobile
+[16/40] [chromium] › e2e/responsive.spec.ts:104:9 › home remains usable at tablet
+[17/40] [chromium] › e2e/responsive.spec.ts:104:9 › home remains usable at desktop
+[18/40] [chromium] › e2e/responsive.spec.ts:104:9 › about remains usable at mobile
+[19/40] [chromium] › e2e/responsive.spec.ts:104:9 › about remains usable at tablet
+[20/40] [chromium] › e2e/responsive.spec.ts:104:9 › about remains usable at desktop
+[21/40] [chromium] › e2e/responsive.spec.ts:104:9 › blog remains usable at mobile
+[22/40] [chromium] › e2e/responsive.spec.ts:104:9 › blog remains usable at tablet
+[23/40] [chromium] › e2e/responsive.spec.ts:104:9 › blog remains usable at desktop
+[24/40] [chromium] › e2e/responsive.spec.ts:104:9 › blog detail remains usable at mobile
+[25/40] [chromium] › e2e/responsive.spec.ts:104:9 › blog detail remains usable at tablet
+[26/40] [chromium] › e2e/responsive.spec.ts:104:9 › blog detail remains usable at desktop
+[27/40] [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at mobile
+[28/40] [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at tablet
+[29/40] [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at desktop
+[30/40] [chromium] › e2e/responsive.spec.ts:104:9 › project detail remains usable at mobile
+[31/40] [chromium] › e2e/responsive.spec.ts:104:9 › project detail remains usable at tablet
+[32/40] [chromium] › e2e/responsive.spec.ts:104:9 › project detail remains usable at desktop
+[33/40] [chromium] › e2e/responsive.spec.ts:104:9 › contact remains usable at mobile
+[34/40] [chromium] › e2e/responsive.spec.ts:104:9 › contact remains usable at tablet
+[35/40] [chromium] › e2e/responsive.spec.ts:104:9 › contact remains usable at desktop
+[36/40] [chromium] › e2e/responsive.spec.ts:141:5 › mobile header renders navigation and hamburger toggle
+[37/40] [chromium] › e2e/static-routes.spec.ts:43:7 › static routes › homepage renders hydrated primary content accessibly
+[38/40] [chromium] › e2e/static-routes.spec.ts:59:7 › static routes › about page renders its section hierarchy and decorative image semantics
+[39/40] [chromium] › e2e/static-routes.spec.ts:75:7 › static routes › contact form returns test-safe success without a Resend request after hydration
+[40/40] [chromium] › e2e/static-routes.spec.ts:100:7 › static routes › missing route presents Next.js 404 page
+  40 passed (1.4m)
+
+EXIT_CODE=0
