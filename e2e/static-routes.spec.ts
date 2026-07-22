@@ -1,6 +1,6 @@
+import AxeBuilder from "@axe-core/playwright"
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
-import AxeBuilder from "@axe-core/playwright"
 
 const missingRoute = "/__e2e_missing_static_route__"
 const transparentPng = Buffer.from(
