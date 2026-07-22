@@ -102,10 +102,7 @@ export default function Web() {
             </p>
           </div>
         </div>
-        <div
-          data-testid="project-marquee"
-          className="relative flex overflow-hidden py-2 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
-        >
+        <div data-testid="project-marquee" className="relative flex overflow-hidden py-2">
           <div className="flex animate-marquee space-x-4 motion-reduce:animate-none">
             {getAllProjects().map((article) => (
               <div key={article.id} className="size-96">
@@ -135,6 +132,16 @@ export default function Web() {
               </div>
             ))}
           </div>
+          <div
+            aria-hidden="true"
+            data-testid="project-marquee-start-guard"
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-surface-muted dark:bg-surface-dark"
+          />
+          <div
+            aria-hidden="true"
+            data-testid="project-marquee-end-guard"
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-surface-muted dark:bg-surface-dark"
+          />
         </div>
         <div className="mx-auto flex max-w-screen-xl justify-end px-4 pt-8 sm:px-6 sm:pt-16 lg:pt-24">
           <a

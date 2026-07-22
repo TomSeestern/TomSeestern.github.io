@@ -55,7 +55,7 @@ test("homepage exposes semantic Roman font roles", async ({ page }) => {
   await expect(page.getByText("Building reliable systems and solving hard problems.")).toHaveCSS("font-family", /Inter/)
 })
 
-test("homepage keeps hero visible and fades marquee edges on mobile", async ({ page }) => {
+test("homepage keeps hero visible and obscures marquee edge fragments on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 })
   await page.goto("/")
 
@@ -65,7 +65,9 @@ test("homepage keeps hero visible and fades marquee edges on mobile", async ({ p
 
   const marquee = page.getByTestId("project-marquee")
   await expect(marquee).toBeVisible()
-  await expect(marquee).toHaveCSS("mask-image", /linear-gradient/)
+  await expect(marquee).toHaveCSS("mask-image", "none")
+  await expect(page.getByTestId("project-marquee-start-guard")).toBeVisible()
+  await expect(page.getByTestId("project-marquee-end-guard")).toBeVisible()
 })
 
 test("article prose uses EB Garamond while UI uses Inter", async ({ page }) => {
