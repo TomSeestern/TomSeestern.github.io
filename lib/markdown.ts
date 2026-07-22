@@ -1,7 +1,7 @@
-import fs from "fs"
-import path from "path"
 import matter from "gray-matter"
 import { z } from "zod"
+import fs from "fs"
+import path from "path"
 
 const markdownFrontmatterSchema = z.object({
   title: z.string().default("Untitled").catch("Untitled"),
