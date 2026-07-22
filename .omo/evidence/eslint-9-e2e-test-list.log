@@ -1,0 +1,47 @@
+TIMESTAMP_UTC=2026-07-22T17:22:34Z
+COMMAND=pnpm exec playwright test --list
+
+Listing tests:
+  [chromium] › contact.spec.ts:4:7 › contact form › submits valid form and shows success message
+  [chromium] › contact.spec.ts:19:7 › contact form › shows inline error for invalid email
+  [chromium] › contact.spec.ts:32:7 › contact form › shows all field errors when all fields are empty
+  [chromium] › contact.spec.ts:46:7 › contact form › shows inline error for missing name
+  [chromium] › contact.spec.ts:58:7 › contact form › button is disabled while submitting
+  [chromium] › contact.spec.ts:72:7 › contact form › clear errors on resubmission after failed attempt
+  [chromium] › dark-mode.spec.ts:25:5 › public routes retain readable semantic surfaces in dark mode
+  [chromium] › dark-mode.spec.ts:59:5 › DarkThemeToggle toggles dark mode and persists on reload
+  [chromium] › dynamic-content.spec.ts:45:5 › blog listing discovers a detail route and breadcrumb returns to blog
+  [chromium] › dynamic-content.spec.ts:82:5 › project listing discovers a detail route and breadcrumb returns to projects
+  [chromium] › home.spec.ts:3:5 › homepage renders core sections
+  [chromium] › interactions.spec.ts:21:7 › interactive accessibility › skip link becomes visible on Tab and moves focus to main content on Enter
+  [chromium] › interactions.spec.ts:42:7 › interactive accessibility › keyboard focus gives the custom contact CTA a visible indicator
+  [chromium] › interactions.spec.ts:58:7 › interactive accessibility › reduced motion stops marquee animation while retaining project navigation
+  [chromium] › responsive.spec.ts:104:9 › home remains usable at mobile
+  [chromium] › responsive.spec.ts:104:9 › home remains usable at tablet
+  [chromium] › responsive.spec.ts:104:9 › home remains usable at desktop
+  [chromium] › responsive.spec.ts:104:9 › about remains usable at mobile
+  [chromium] › responsive.spec.ts:104:9 › about remains usable at tablet
+  [chromium] › responsive.spec.ts:104:9 › about remains usable at desktop
+  [chromium] › responsive.spec.ts:104:9 › blog remains usable at mobile
+  [chromium] › responsive.spec.ts:104:9 › blog remains usable at tablet
+  [chromium] › responsive.spec.ts:104:9 › blog remains usable at desktop
+  [chromium] › responsive.spec.ts:104:9 › blog detail remains usable at mobile
+  [chromium] › responsive.spec.ts:104:9 › blog detail remains usable at tablet
+  [chromium] › responsive.spec.ts:104:9 › blog detail remains usable at desktop
+  [chromium] › responsive.spec.ts:104:9 › projects remains usable at mobile
+  [chromium] › responsive.spec.ts:104:9 › projects remains usable at tablet
+  [chromium] › responsive.spec.ts:104:9 › projects remains usable at desktop
+  [chromium] › responsive.spec.ts:104:9 › project detail remains usable at mobile
+  [chromium] › responsive.spec.ts:104:9 › project detail remains usable at tablet
+  [chromium] › responsive.spec.ts:104:9 › project detail remains usable at desktop
+  [chromium] › responsive.spec.ts:104:9 › contact remains usable at mobile
+  [chromium] › responsive.spec.ts:104:9 › contact remains usable at tablet
+  [chromium] › responsive.spec.ts:104:9 › contact remains usable at desktop
+  [chromium] › responsive.spec.ts:141:5 › mobile header renders navigation and hamburger toggle
+  [chromium] › static-routes.spec.ts:43:7 › static routes › homepage renders hydrated primary content accessibly
+  [chromium] › static-routes.spec.ts:59:7 › static routes › about page renders its section hierarchy and decorative image semantics
+  [chromium] › static-routes.spec.ts:75:7 › static routes › contact form returns test-safe success without a Resend request after hydration
+  [chromium] › static-routes.spec.ts:100:7 › static routes › missing route presents Next.js 404 page
+Total: 40 tests in 7 files
+
+EXIT_CODE=0
