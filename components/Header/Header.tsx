@@ -2,6 +2,7 @@
 
 import { DarkThemeToggle, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react"
 import Image from "next/image"
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
 
@@ -18,24 +19,18 @@ export function Header() {
   return (
     <Navbar fluid={true} rounded={true}>
       <NavbarBrand href="/">
-        <Image
-          src="/img/logo.png"
-          className="mr-3 h-6 w-6 sm:h-9 sm:w-9"
-          alt="Tom Segbers Logo"
-          width={512}
-          height={512}
-        />
+        <Image src="/img/logo.png" className="mr-3 size-6 sm:size-9" alt="Tom Segbers Logo" width={512} height={512} />
         <span className="self-center whitespace-nowrap text-xl font-semibold text-foreground dark:text-foreground-dark">
           Tom Segbers
         </span>
       </NavbarBrand>
       <div className="flex md:order-2">
-        <a
+        <Link
           href="/contact"
           className="mr-2 rounded-lg bg-accent-hover px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground lg:px-5 lg:py-2.5"
         >
           Contact
-        </a>
+        </Link>
         <DarkThemeToggle className="mr-2" />
         <NavbarToggle />
       </div>
