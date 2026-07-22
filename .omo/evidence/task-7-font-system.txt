@@ -12,6 +12,8 @@
 - 375px document width has no horizontal overflow; hero settles at opacity `1`; marquee has a linear-gradient edge mask.
 - Focused CTA has a solid 2px outline and `rgb(228, 168, 177)` focus shadow.
 - Corrected muted text computes to `rgb(98, 91, 84)` (`#625B54`); Axe scan has zero violations.
+- Fresh production audit at `2026-07-22T21:53:49+02:00`: widths `375` and `1280`, light and dark. All four scans reported `totalViolations: 0`, `colorContrastViolations: 0`. Light computed values: muted `rgb(98, 91, 84)`, accent `rgb(168, 42, 56)`, badge `rgb(241, 205, 210)` / `rgb(111, 23, 35)`. Dark computed values: muted `rgb(200, 193, 181)`, accent `rgb(213, 126, 139)`, badge `rgb(75, 15, 24)` / `rgb(228, 168, 177)`.
+- Existing static-route Axe test waited only for `main` opacity. It could scan partially opaque Hero Motion descendants and measure alpha-composited colors. `waitForMotionOpacity` now waits for all styled descendants to reach opacity `1` before scanning. Focused production Chromium check passed, then two full production Chromium runs passed `43/43`.
 
 ## Commands
 
@@ -28,11 +30,17 @@ pnpm test
 pnpm build
 # PASS
 
-E2E_CONTACT_FORM_SUCCESS=true PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm e2e:headless
-# PASS: 43 tests
+E2E_CONTACT_FORM_SUCCESS=true pnpm exec next start --hostname 127.0.0.1 --port 3052
+# Isolated fresh production server; stopped after verification.
 
-E2E_CONTACT_FORM_SUCCESS=true PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm e2e:headless
-# PASS: 43 tests
+TASK_7_AUDIT_URL=http://127.0.0.1:3052 node .omo/evidence/task-7-production-contrast.mjs
+# PASS: 375/1280 × light/dark; 0 total Axe violations, 0 color-contrast violations.
+
+PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm exec playwright test --config=.omo/evidence/task-7-playwright-production.config.mjs --project=chromium
+# PASS: 43 tests, raw output `/tmp/task-7-chromium-e2e-first.log`, `EXIT_CODE=0`.
+
+PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm exec playwright test --config=.omo/evidence/task-7-playwright-production.config.mjs --project=chromium
+# PASS: 43 tests, raw output `/tmp/task-7-chromium-e2e-second.log`, `EXIT_CODE=0`.
 ```
 
 ## Diagnostics

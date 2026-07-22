@@ -202,6 +202,13 @@ When each of 4 plans lands, run through every numbered question. Plan fails an a
 - Verify with axe after `main` transition reaches `opacity: 1`; earlier scans can measure transitional alpha composites instead of final colors.
 - Literal Playwright evidence needs raw redirection plus explicit exit status. `pnpm exec playwright test --list` fixed scope at 40 tests; two separate full `pnpm e2e:headless` runs each ended `40 passed` and `EXIT_CODE=0` in `.omo/evidence/eslint-9-e2e-run-{1,2}.log`.
 
+## 2026-07-22 — Task 7 production contrast proof
+
+- Audit real production CSS, not a reused dev server: use a fresh `next build`, an isolated port, computed styles, and Axe across light/dark plus 375px/1280px.
+- Current semantic light roles compute to muted `#625B54`, accent `#A82A38`, and accent-soft foreground `#6F1723`; all Axe scans returned zero violations.
+- Motion can create temporary alpha-composited contrast failures. A11y scans wait for `main` and its styled motion descendants to reach opacity `1`, rather than masking any Axe rule.
+- Local `:3030` Playwright reuse can hang behind a wedged inherited dev server. Preserve that process; run production E2E on dedicated `127.0.0.1:3052` config instead. Two isolated Chromium runs passed 43/43 with `EXIT_CODE=0`.
+
 ## 2026-07-22 — Task 3 pnpm override configuration blocked by scope
 
 - Baseline `pnpm audit --json`: 5 low, 9 moderate, 12 high, 0 critical (26 total local advisories).
