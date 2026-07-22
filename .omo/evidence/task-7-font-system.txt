@@ -1,0 +1,41 @@
+# Task 7 — Roman font system and token verification
+
+- Timestamp: 2026-07-22T20:40:35+02:00
+- Scope: Cinzel display headings; EB Garamond article prose; Inter UI; Pompeian/marble/charcoal/gold semantic tokens.
+- Browser evidence: `.omo/evidence/task-7-font-qa.json`; screenshots at 375px and 1280px in light and dark themes, including `*-repaired.png` variants.
+
+## Runtime checks
+
+- `h1` and `h2` computed `font-family` include Cinzel.
+- Article `prose` computed `font-family` includes EB Garamond.
+- Navigation and hero UI copy computed `font-family` include Inter.
+- 375px document width has no horizontal overflow; hero settles at opacity `1`; marquee has a linear-gradient edge mask.
+- Focused CTA has a solid 2px outline and `rgb(228, 168, 177)` focus shadow.
+- Corrected muted text computes to `rgb(98, 91, 84)` (`#625B54`); Axe scan has zero violations.
+
+## Commands
+
+```sh
+pnpm lint
+# PASS
+
+pnpm prettier
+# PASS
+
+pnpm test
+# PASS
+
+pnpm build
+# PASS
+
+E2E_CONTACT_FORM_SUCCESS=true PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm e2e:headless
+# PASS: 43 tests
+
+E2E_CONTACT_FORM_SUCCESS=true PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm e2e:headless
+# PASS: 43 tests
+```
+
+## Diagnostics
+
+- TypeScript LSP unavailable; installation previously declined.
+- Production build completed TypeScript validation successfully.
