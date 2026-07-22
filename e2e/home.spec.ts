@@ -55,19 +55,26 @@ test("homepage exposes semantic Roman font roles", async ({ page }) => {
   await expect(page.getByText("Building reliable systems and solving hard problems.")).toHaveCSS("font-family", /Inter/)
 })
 
-test("homepage keeps hero visible and obscures marquee edge fragments on mobile", async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 812 })
-  await page.goto("/")
+test("homepage keeps hero visible and protects marquee edges", async ({ page }) => {
+  for (const width of [375, 1280]) {
+    await page.setViewportSize({ width, height: 812 })
+    await page.goto("/")
 
-  const heroHeading = page.getByRole("heading", { level: 1 })
-  await expect(heroHeading).toBeVisible()
-  await expect(heroHeading).toHaveCSS("opacity", "1")
+    const heroHeading = page.getByRole("heading", { level: 1 })
+    await expect(heroHeading).toBeVisible()
+    await expect(heroHeading).toHaveCSS("opacity", "1")
 
-  const marquee = page.getByTestId("project-marquee")
-  await expect(marquee).toBeVisible()
-  await expect(marquee).toHaveCSS("mask-image", "none")
-  await expect(page.getByTestId("project-marquee-start-guard")).toBeVisible()
-  await expect(page.getByTestId("project-marquee-end-guard")).toBeVisible()
+    const marquee = page.getByTestId("project-marquee")
+    await expect(marquee).toBeVisible()
+    await expect(marquee).toHaveCSS("mask-image", "none")
+
+    for (const guardId of ["project-marquee-start-guard", "project-marquee-end-guard"]) {
+      const guard = page.getByTestId(guardId)
+      await expect(guard).toBeVisible()
+      await expect(guard).toHaveCSS("background-color", /rgb/)
+      await expect(guard).toHaveCSS("z-index", "60")
+    }
+  }
 })
 
 test("article prose uses EB Garamond while UI uses Inter", async ({ page }) => {

@@ -102,8 +102,8 @@ export default function Web() {
             </p>
           </div>
         </div>
-        <div data-testid="project-marquee" className="relative flex overflow-hidden py-2">
-          <div className="flex animate-marquee space-x-4 motion-reduce:animate-none">
+        <div data-testid="project-marquee" className="relative isolate flex overflow-hidden py-2">
+          <div className="relative z-0 flex animate-marquee space-x-4 motion-reduce:animate-none">
             {getAllProjects().map((article) => (
               <div key={article.id} className="size-96">
                 <ProjectTeaser
@@ -118,7 +118,7 @@ export default function Web() {
             ))}
           </div>
 
-          <div className="absolute flex animate-marquee2 space-x-4 px-2 motion-reduce:animate-none">
+          <div className="absolute z-0 flex animate-marquee2 space-x-4 px-2 motion-reduce:animate-none">
             {getAllProjects().map((article) => (
               <div key={article.id} className="size-96">
                 <ProjectTeaser
@@ -135,12 +135,12 @@ export default function Web() {
           <div
             aria-hidden="true"
             data-testid="project-marquee-start-guard"
-            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-surface-muted dark:bg-surface-dark"
+            className="absolute inset-y-0 left-0 z-marquee w-48 bg-surface-muted dark:bg-surface-dark sm:w-112"
           />
           <div
             aria-hidden="true"
             data-testid="project-marquee-end-guard"
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-surface-muted dark:bg-surface-dark"
+            className="absolute inset-y-0 right-0 z-marquee w-48 bg-surface-muted dark:bg-surface-dark sm:w-112"
           />
         </div>
         <div className="mx-auto flex max-w-screen-xl justify-end px-4 pt-8 sm:px-6 sm:pt-16 lg:pt-24">

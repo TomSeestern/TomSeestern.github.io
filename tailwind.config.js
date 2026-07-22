@@ -132,6 +132,12 @@ module.exports = {
         6: "6px",
         8: "8px",
       },
+      spacing: {
+        112: "28rem",
+      },
+      zIndex: {
+        marquee: "60",
+      },
       minHeight: {
         ...defaultTheme.height,
         teaser: "4.5rem",
