@@ -1,0 +1,122 @@
+# Task 7 — Project Collection Replacement Evidence
+
+**Date:** 2026-07-23
+**Task:** T-1a65c823-7632-4d56-acf1-b88b2c25ffa7
+**Boulder:** .omo/boulders/task-7-visual-closure.md
+**Plan:** .omo/plans/task-7-project-collection-replacement.md
+
+## TL;DR
+
+Replaced failed animated marquee with CSS-only responsive project collection.
+Mobile uses native horizontal scroll-snap; desktop uses responsive grid. All
+project cards render whole within collection bounds at 375px and 1280px in
+light and dark themes. 43/43 E2E tests passed twice on isolated production
+server.
+
+## Root cause (previous marquee)
+
+Continuously translated fixed-width duplicate tracks cross viewport boundaries
+between cards. Opaque edge guards conceal fragments but cannot ensure underlying
+title/body geometry is whole.
+
+## Fix
+
+- Mobile: `snap-x snap-mandatory` scroll container; each card is `w-screen`
+  with `snap-start` and `shrink-0`. Native scroll obeys `prefers-reduced-motion`
+  without custom animation.
+- Desktop (`md:`): same list becomes `md:grid md:grid-cols-2 xl:grid-cols-3`
+  with `md:w-full` and `md:min-w-0`.
+- Removed: duplicate `.animate-marquee`/`.animate-marquee2` tracks, edge guards,
+  `scroll-smooth`, dead Tailwind theme entries (`spacing.112`, `zIndex.marquee`,
+  `animation.marquee`, `animation.marquee2`, keyframes).
+- Preserved: Roman font system, Flowbite tokens, ProjectTeaser card semantics,
+  real project links in normal tab order, CardMotionWrapper hover spring.
+
+## Verification
+
+### Lint / Prettier / Jest / Build
+
+```
+pnpm prettier --check app/page.tsx e2e/home.spec.ts e2e/interactions.spec.ts tailwind.config.js
+  -> All matched files use Prettier code style!
+
+pnpm lint
+  -> Clean (no errors)
+
+pnpm test
+  -> Test Suites: 15 passed, 15 total
+  -> Tests: 91 passed, 91 total
+
+pnpm build
+  -> Compiled successfully in 15.3s
+  -> Generating static pages (47/47)
+  -> No errors
+```
+
+### Axe contrast audit (production, isolated server port 3199)
+
+Command:
+```
+E2E_CONTACT_FORM_SUCCESS=true pnpm start --port 3199
+TASK_7_AUDIT_URL="http://127.0.0.1:3199" node .omo/evidence/task-7-production-contrast.mjs
+```
+
+Results:
+- 375-light: 0 color contrast violations, 1 total violation (non-blocking).
+  scrollSnapType: "x mandatory". 1 visible card, fullyInside: true.
+- 375-dark: 0 color contrast violations, 1 total violation.
+  scrollSnapType: "x mandatory". 1 visible card, fullyInside: true.
+- 1280-light: 0 color contrast violations, 1 total violation.
+  scrollSnapType: "none" (md:snap-none). 21 visible cards, all fullyInside: true.
+- 1280-dark: 0 color contrast violations, 1 total violation.
+  scrollSnapType: "none". 21 visible cards, all fullyInside: true.
+
+Screenshots:
+- .omo/evidence/task-7-production-375-light.png
+- .omo/evidence/task-7-production-375-dark.png
+- .omo/evidence/task-7-production-1280-light.png
+- .omo/evidence/task-7-production-1280-dark.png
+
+### Two raw production E2E runs (configurable PLAYWRIGHT_BASE_URL)
+
+Config: .omo/evidence/task-7-playwright-production.config.mjs (requires PLAYWRIGHT_BASE_URL)
+
+Run 1:
+```
+PLAYWRIGHT_BASE_URL="http://127.0.0.1:3199" pnpm exec playwright test --config=.omo/evidence/task-7-playwright-production.config.mjs
+  -> 43 passed (32.1s)
+```
+
+Run 2:
+```
+PLAYWRIGHT_BASE_URL="http://127.0.0.1:3199" pnpm exec playwright test --config=.omo/evidence/task-7-playwright-production.config.mjs
+  -> 43 passed (27.0s)
+```
+
+### Keyboard navigation (within home.spec.ts geometry test)
+
+- Mobile (375px): Tab through page, focus lands on project link matching
+  `/\/projects\/entry\//`, Enter navigates to project detail page.
+- Both widths: all visible project cards have `left >= collectionLeft` and
+  `right <= collectionRight`.
+
+### Server cleanup receipt
+
+Production server started on port 3199 with `E2E_CONTACT_FORM_SUCCESS=true`.
+Process killed via shell `trap` on EXIT. No process remains on port 3199
+(verified via `lsof -iTCP:3199`).
+
+## Files changed
+
+- `app/page.tsx` — replaced marquee with responsive project collection
+- `e2e/home.spec.ts` — updated tests for collection geometry, snap/grid, keyboard
+- `e2e/interactions.spec.ts` — updated reduced-motion test for native collection
+- `tailwind.config.js` — removed dead marquee theme entries
+- `DESIGN.md` — added project collection primitive documentation
+- `.omo/evidence/task-7-production-contrast.mjs` — added card geometry assertions
+- `.omo/evidence/task-7-playwright-production.config.mjs` — requires PLAYWRIGHT_BASE_URL (no change this session)
+- `.omo/boulders/task-7-visual-closure.md` — task tracking
+
+## Token usage
+
+Approximate: ~120K input, ~15K output across this session.
