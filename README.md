@@ -20,7 +20,7 @@ on deploy.
 
 ## Tech Stack
 
-- **[Next.js 14](https://nextjs.org/)** with the App Router, static export
+- **[Next.js 15](https://nextjs.org/)** with React 19, App Router, static export
 - **[TypeScript](https://www.typescriptlang.org/)** in `strict` mode,
   `noUncheckedIndexedAccess` on, `unknown` over `any`, Zod at boundaries
 - **[Tailwind CSS](https://tailwindcss.com/)** with

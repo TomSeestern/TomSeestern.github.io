@@ -1,0 +1,54 @@
+# Next 15 + React 19 migration evidence
+
+- Task ID: `T-1c97c1a2-cce0-40de-b752-073a9256a80e`
+- Collected: `2026-07-22T17:02:31+02:00`
+- Model: `9router/default` — selected by session configuration.
+
+## Changes verified
+
+- Upgraded Next.js to `15.5.21` and React / React DOM to `19.2.8`.
+- Migrated Next 15 asynchronous `headers()` and dynamic route `params` access.
+- Removed archived `next-compose-plugins`; kept direct bundle-analyzer configuration.
+- Eliminated React 19 reduced-motion hydration divergence using root `MotionConfig reducedMotion="user"` and static Motion props.
+
+## Commands and results
+
+```sh
+pnpm build
+```
+
+Pass. Next.js `15.5.21`; compilation and type validation passed; 47 static pages generated.
+
+```sh
+pnpm test -- components/PageTransition/PageTransition.test.tsx components/HeroStagger/HeroStagger.test.tsx components/CardMotionWrapper/CardMotionWrapper.test.tsx lib/sendEmail.test.tsx
+```
+
+Pass. 4 suites, 19 tests.
+
+```sh
+pnpm prettier
+```
+
+Pass. All matched files formatted.
+
+```sh
+pnpm lint
+```
+
+Pass with pre-existing warnings only. Next 16 deprecation warning for `next lint` reported.
+
+```sh
+pnpm exec playwright test e2e/interactions.spec.ts --project=chromium --workers=1
+```
+
+Migration hydration behavior passed: reduced-motion navigation and no unexpected browser console errors. Command remains nonzero because Roman-redesign baseline expects `rgb(147, 197, 253)` focus color but rendered `rgb(248, 164, 140)`.
+
+## Known environmental / unrelated limits
+
+- Full E2E cannot run Firefox: executable missing at `/home/tom/.cache/ms-playwright/firefox-1532/firefox/firefox`.
+- Chromium full-suite visual and a11y failures predate migration scope and track stale Roman-redesign expectations.
+- TypeScript LSP unavailable; installation was previously declined. `pnpm build` performed TypeScript validation.
+
+## Freshness and reproduction
+
+Run commands from repository root after `pnpm install --frozen-lockfile`. No secret inputs needed. Token usage unavailable from runtime telemetry.
