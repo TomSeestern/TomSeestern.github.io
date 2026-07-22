@@ -21,11 +21,11 @@ const button = cva(
   {
     variants: {
       intent: {
-        primary: ["bg-accent-light", "text-foreground", "hover:enabled:bg-accent-hover"],
+        primary: ["bg-accent", "text-surface", "hover:enabled:bg-accent-hover", "dark:text-foreground-dark"],
         secondary: [
           "bg-transparent",
           "text-accent",
-          "dark:text-accent-light",
+          "dark:text-accent-dark",
           "hover:enabled:bg-accent-light",
           "hover:enabled:text-foreground",
         ],

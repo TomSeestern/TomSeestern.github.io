@@ -21,7 +21,11 @@ describe("Button", () => {
     render(<Button href={href}>Primary action</Button>)
 
     // Then
-    expect(screen.getByRole("link", { name: "Primary action" })).toHaveClass("bg-accent-light", "text-foreground")
+    expect(screen.getByRole("link", { name: "Primary action" })).toHaveClass(
+      "bg-accent",
+      "text-surface",
+      "dark:text-foreground-dark"
+    )
   })
 
   it("uses secondary styling when requested", () => {
@@ -39,7 +43,7 @@ describe("Button", () => {
     expect(screen.getByRole("link", { name: "Secondary action" })).toHaveClass(
       "bg-transparent",
       "text-accent",
-      "dark:text-accent-light"
+      "dark:text-accent-dark"
     )
   })
 
