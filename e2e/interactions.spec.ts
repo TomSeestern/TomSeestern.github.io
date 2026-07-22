@@ -51,7 +51,7 @@ test.describe("interactive accessibility", () => {
     // Then
     await expect(contactCallToAction).toBeFocused()
     await expect(contactCallToAction).toHaveCSS("outline-style", "solid")
-    await expect(contactCallToAction).toHaveCSS("box-shadow", /rgb\(248, 164, 140\)/)
+    await expect(contactCallToAction).toHaveCSS("box-shadow", /rgb\(228, 168, 177\)/)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
