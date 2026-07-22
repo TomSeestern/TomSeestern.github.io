@@ -79,7 +79,7 @@ From `package.json`:
 | `pnpm dev` | Start the dev server with colorized output |
 | `pnpm build` | Production build, generates static pages |
 | `pnpm start` | Run the production build locally |
-| `pnpm lint` | Run `next lint` (ESLint) |
+| `pnpm lint` | Run ESLint through its flat-config CLI |
 | `pnpm lint:fix` | Auto-fix lint errors |
 | `pnpm prettier` | Check formatting |
 | `pnpm prettier:fix` | Apply Prettier fixes |
@@ -119,7 +119,7 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── tailwind.config.js
 ├── postcss.config.js
 ├── prettier.config.js
-├── .eslintrc.js
+├── eslint.config.js
 ├── git-conventional-commits.yaml
 ├── .pre-commit-config.yaml
 ├── app/
