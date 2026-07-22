@@ -8,8 +8,31 @@ const transparentPng = Buffer.from(
   "base64"
 )
 
+async function waitForMotionOpacity(page: Page): Promise<void> {
+  await page.locator("main").evaluate(async (main) => {
+    await new Promise<void>((resolve) => {
+      const isSettled = () =>
+        [...main.querySelectorAll<HTMLElement>("[style]")].every((element) => getComputedStyle(element).opacity === "1")
+
+      if (isSettled()) {
+        resolve()
+        return
+      }
+
+      const observer = new MutationObserver(() => {
+        if (isSettled()) {
+          observer.disconnect()
+          resolve()
+        }
+      })
+      observer.observe(main, { attributes: true, attributeFilter: ["style"], subtree: true })
+    })
+  })
+}
+
 async function checkA11y(page: Page, routeName: string): Promise<void> {
   await expect(page.locator("main")).toHaveCSS("opacity", "1")
+  await waitForMotionOpacity(page)
   const results = await new AxeBuilder({ page }).analyze()
   expect(results.violations, `Accessibility violations on ${routeName}`).toEqual([])
 }
