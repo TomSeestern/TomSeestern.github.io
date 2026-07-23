@@ -51,7 +51,7 @@ export default function Web() {
               <HeroItem className="flex flex-col items-center gap-8 sm:flex-row">
                 {/* Project Section */}
                 <div className="mb-8 flex-1 text-muted dark:text-muted-dark sm:mb-0">
-                  <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
+                  <h2 className="gold-hairline mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
                     Latest Project: LAYZR.gg
                   </h2>
                   <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
@@ -64,7 +64,7 @@ export default function Web() {
                 </div>
                 {/* Blog Section */}
                 <div className="mb-0 flex-1 text-muted dark:text-muted-dark">
-                  <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
+                  <h2 className="gold-hairline mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
                     Recent Blog Posts
                   </h2>
                   <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
@@ -93,7 +93,7 @@ export default function Web() {
       <section className="bg-surface-muted py-8 dark:bg-surface-dark sm:py-16 lg:py-24">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6">
           <div>
-            <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-foreground-dark">
+            <h2 className="gold-hairline mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-foreground-dark">
               My Recent Projects
             </h2>
             <p className="font-light text-muted dark:text-muted-dark sm:text-xl">
@@ -144,7 +144,7 @@ export default function Web() {
       <section className="bg-surface dark:bg-surface-dark">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
           <div>
-            <h2 className="mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-foreground-dark">
+            <h2 className="gold-hairline mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-foreground-dark">
               My Recent Blog Posts
             </h2>
             <p className="font-light text-muted dark:text-muted-dark sm:text-xl">

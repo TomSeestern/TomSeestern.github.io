@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <footer className="rounded-lg bg-surface p-4 antialiased shadow dark:bg-surface-muted-dark sm:flex sm:items-center sm:justify-between sm:p-6 xl:p-8">
+    <footer className="rounded-none bg-surface p-4 antialiased shadow dark:bg-surface-muted-dark sm:flex sm:items-center sm:justify-between sm:p-6 xl:p-8">
       <p className="mb-4 text-center text-sm text-muted dark:text-muted-dark sm:mb-0">
         © 2019-2026{" "}
         <a

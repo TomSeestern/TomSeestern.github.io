@@ -50,7 +50,7 @@ const ProjectTeaser: React.FC<ProjectProps> = ({ title, description, technologie
             {technologies.map((tech) => {
               const iconPath = getIconPath(tech)
               return (
-                <div key={tech} className="rounded-lg p-1 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
+                <div key={tech} className="rounded-sm p-1 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
                   <Tooltip explainer={tech}>
                     {iconPath ? (
                       <Image className="h-8 w-auto object-contain" src={iconPath} alt="" width={32} height={32} />

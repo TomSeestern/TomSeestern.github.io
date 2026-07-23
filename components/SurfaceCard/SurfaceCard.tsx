@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge"
 const surfaceCardRoot = cva([
   "flex",
   "flex-col",
-  "rounded-lg",
+  "rounded-sm",
   "border",
   "border-border",
   "dark:border-border-dark",

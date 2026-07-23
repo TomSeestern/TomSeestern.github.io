@@ -17,7 +17,7 @@ export default function PersonTeaser({
   return (
     <a
       href={companyLink}
-      className="flex items-center gap-3 rounded-lg transition-colors duration-200 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:bg-muted-surface-dark dark:focus-visible:ring-accent-soft-dark"
+      className="flex items-center gap-3 rounded-sm transition-colors duration-200 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:bg-muted-surface-dark dark:focus-visible:ring-accent-soft-dark"
     >
       <Image
         className="size-12 shrink-0 rounded-full object-cover"

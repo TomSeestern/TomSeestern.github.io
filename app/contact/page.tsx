@@ -84,7 +84,7 @@ export default function Contact() {
               type="text"
               id="name"
               name="name"
-              className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
+              className="block w-full rounded-sm border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
               placeholder="Your full name"
               required={true}
             />
@@ -105,7 +105,7 @@ export default function Contact() {
               type="email"
               id="email"
               name="email"
-              className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
+              className="block w-full rounded-sm border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
               placeholder="your.email@example.com"
               required={true}
             />
@@ -126,7 +126,7 @@ export default function Contact() {
               id="message"
               name="message"
               rows={6}
-              className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
+              className="block w-full rounded-sm border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
               placeholder="What would you like to talk about?"
               defaultValue={""}
             />

@@ -9,7 +9,7 @@ const inlineAlert = cva(
     "flex",
     "items-start",
     "gap-3",
-    "rounded-lg",
+    "rounded-sm",
     "border",
     "p-4",
     "text-sm",

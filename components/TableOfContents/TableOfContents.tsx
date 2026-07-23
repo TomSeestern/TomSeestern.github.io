@@ -86,10 +86,10 @@ export function TableOfContents({ headings }: TocProps) {
   return (
     <>
       <details className="order-first mb-6 lg:hidden">
-        <summary className="cursor-pointer rounded bg-surface-muted px-3 py-2 text-sm font-medium text-foreground dark:bg-surface-muted-dark dark:text-foreground-dark">
+        <summary className="cursor-pointer rounded-sm bg-surface-muted px-3 py-2 text-sm font-medium text-foreground dark:bg-surface-muted-dark dark:text-foreground-dark">
           Table of Contents
         </summary>
-        <div className="mt-2 rounded bg-surface p-2 dark:bg-surface-dark">{nav}</div>
+        <div className="mt-2 rounded-sm bg-surface p-2 dark:bg-surface-dark">{nav}</div>
       </details>
       <aside className="hidden lg:sticky lg:top-24 lg:block lg:w-64 lg:shrink-0 lg:self-start">{nav}</aside>
     </>

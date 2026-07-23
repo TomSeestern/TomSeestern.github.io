@@ -57,7 +57,7 @@ export default function About() {
         </div>
         <div id="timeline" className="mt-12 grid grid-cols-1 gap-x-16 gap-y-12 lg:mt-16">
           <div className="space-y-8">
-            <h2 className="text-center text-h2-sm text-foreground dark:text-foreground-dark sm:text-h2">
+            <h2 className="gold-hairline text-center text-h2-sm text-foreground dark:text-foreground-dark sm:text-h2">
               Formal Positions:
             </h2>
             <div>
@@ -94,7 +94,7 @@ export default function About() {
                   Science."
                 link="https://rwu.de"
               >
-                <div className="space-y-4 rounded-lg bg-muted-surface p-4 dark:bg-muted-surface-dark">
+                <div className="space-y-4 rounded-sm bg-muted-surface p-4 dark:bg-muted-surface-dark">
                   <div className="flex flex-col items-start text-base font-medium text-muted dark:text-muted-dark">
                     <p> - Specialization in robotics and AI. </p>
                     <p> - Additional subjects in the areas of Deep Learning and Project Management. </p>

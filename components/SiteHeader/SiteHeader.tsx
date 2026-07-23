@@ -42,7 +42,7 @@ export function SiteHeader() {
   )
 
   return (
-    <header className="w-full rounded-lg">
+    <header className="w-full rounded-none">
       <nav aria-label="Main navigation" className="flex flex-wrap items-center justify-between">
         <Link
           href="/"
