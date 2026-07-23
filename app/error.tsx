@@ -13,7 +13,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
       <p className="max-w-md text-muted dark:text-muted-dark">{error.message || "An unexpected error occurred."}</p>
       <button
         onClick={reset}
-        className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+        className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark"
       >
         Try again
       </button>

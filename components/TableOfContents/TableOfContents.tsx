@@ -28,7 +28,7 @@ function TocLink({ heading, activeId }: { heading: Heading; activeId: string }) 
       <a
         href={`#${heading.id}`}
         onClick={(e) => scrollToHeading(heading.id, e)}
-        className={`block border-l-2 py-1.5 text-sm transition-colors duration-200 ${indent} ${
+        className={`block border-l-2 py-1.5 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark ${indent} ${
           isActive
             ? "border-accent font-medium text-accent dark:border-accent-dark dark:text-accent-dark"
             : "border-transparent text-muted hover:border-border hover:text-foreground dark:text-muted-dark dark:hover:border-border-dark dark:hover:text-foreground-dark"
@@ -86,7 +86,7 @@ export function TableOfContents({ headings }: TocProps) {
   return (
     <>
       <details className="order-first mb-6 lg:hidden">
-        <summary className="cursor-pointer rounded-sm bg-surface-muted px-3 py-2 text-sm font-medium text-foreground dark:bg-surface-muted-dark dark:text-foreground-dark">
+        <summary className="cursor-pointer rounded-sm bg-surface-muted px-3 py-2 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:bg-surface-muted-dark dark:text-foreground-dark dark:focus-visible:ring-accent-soft-dark">
           Table of Contents
         </summary>
         <div className="mt-2 rounded-sm bg-surface p-2 dark:bg-surface-dark">{nav}</div>

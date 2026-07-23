@@ -904,3 +904,57 @@ LSP diagnostics attempted after formatting. Biome LSP unavailable because it is 
 - Hero stagger: HeroH1 (0ms delay), HeroP (100ms delay), HeroItem (200ms delay) — mirrors Motion's `staggerChildren: 0.1, delayChildren: 0.2`
 - PageTransition: `fadeIn` includes `translateY(8px)` to match Motion's `initial={{ y: 8 }}` behavior
 - `willChange` not set — `motion-safe:transition-transform` handles GPU compositing via Tailwind's transition utility
+
+## 2026-07-23 — Tasks 16+17: Token enforcement + craft pass
+
+### Task 16: Token enforcement
+
+**Text sizes replaced:**
+- `app/page.tsx` hero h1: `text-4xl font-bold leading-none tracking-tight md:text-5xl lg:text-6xl` → `text-h1-sm leading-none tracking-tight md:text-h1 lg:text-6xl`. `font-bold` dropped (token bundles fontWeight 700). `leading-none` and `tracking-tight` kept as hero-specific overrides (token's 1.1 line-height and 0.05em letter-spacing overridden). `lg:text-6xl` stays — no semantic token for 3.75rem, hero-specific per inherited wisdom.
+- `app/page.tsx` section h2s (×2): `text-4xl font-bold tracking-tight` → `text-h2`. Token provides 2.25rem font-size, 700 weight, -0.02em letter-spacing, 1.15 line-height. `font-bold` and `tracking-tight` dropped (redundant with token).
+- `app/page.tsx` card h2s (×2): `text-xl font-semibold` → `text-h3-sm`. Token provides 1.25rem, 600 weight, 1.3 line-height. Both match `text-xl` + `font-semibold`.
+- `app/not-found.tsx`: `text-3xl font-bold tracking-tight md:text-4xl` → `text-h2-sm md:text-h2`. `text-h2-sm` = 1.875rem = `text-3xl`, `text-h2` = 2.25rem = `text-4xl`.
+
+**Hardcoded hex colors:**
+- Only in OG image files (`app/opengraph-image.tsx`, `app/blog/entry/[slug]/opengraph-image.tsx`). These use inline `style={{}}` objects for `ImageResponse` — Tailwind classes not available in OG image generation. Hex values (`#C2410C` gradient, `#FAF9F6` text) match palette. Left as-is, documented.
+
+**Hardcoded spacing:**
+- No inline pixel values found in component/page `.tsx` files. All spacing uses Tailwind tokens.
+
+**Verification:** grep confirms zero `text-4xl`/`text-3xl`/`text-2xl` in `app/` + `components/` directories.
+
+### Task 17: Craft pass
+
+**Focus ring gaps fixed (4 elements):**
+- `TableOfContents.tsx` TocLink `<a>`: missing `focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark`. Added to base className.
+- `TableOfContents.tsx` `<summary>`: missing focus ring. Added same pattern.
+- `app/global-error.tsx` `<button>`: missing focus ring + hover. Added `transition-colors hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark`.
+- `app/error.tsx` `<button>`: had hover but missing focus ring. Added same focus-visible pattern.
+
+**Focus ring audit — all clear:**
+- All other interactive elements verified: SiteHeader (logo link, contact CTA, nav links, hamburger), ThemeToggle, InlineAlert dismiss, Breadcrumbs links, Button CVA, ArticleTeaser links, ProjectTeaser links, Footer social links, PersonTeaser, TimelineEntry, contact form inputs, not-found back link, projects page links. All have `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:focus-visible:ring-accent-soft-dark`.
+
+**Button microstates:**
+- Button CVA already handles: focus-visible ring, hover states (`hover:enabled:`), transition-colors. No gaps found — Button renders `<a>` (link), not `<button>`, so disabled/active states N/A.
+- Contact form submit `<button>`: added `disabled:cursor-not-allowed disabled:opacity-60` for disabled state (submitting or confirmed).
+
+**Empty states:**
+- `app/blog/page.tsx`: added conditional — `articles.length === 0` renders "No posts yet. Check back soon!" instead of grid.
+- `app/projects/page.tsx`: extracted `getAllProjects()` to `projects` variable, added same conditional empty state.
+- These are defensive programming — SSG site always has content at build time, but guards against empty content directory.
+
+**Skeletons:**
+- NOT added. Site is SSG — content is markdown files parsed at build time. `generateStaticParams` pre-generates all routes. No runtime data fetching, no loading states needed. If content directory is empty, the empty state conditional handles it.
+
+**4-state pattern (R15.5) for contact form:**
+- **Loading**: `submitting` state → button shows "Sending..." + `disabled={showConfirmation || submitting}` ✓
+- **Error**: `formError` → InlineAlert `color="failure"` with dismiss ✓
+- **Success**: `showConfirmation` → InlineAlert `color="success"` + button shows "Done" ✓
+- **Empty**: N/A — form is always present, not a data-fetching component. Form fields start empty by design.
+
+### Verification gates
+- ✅ `pnpm lint`: 0 errors, 0 warnings
+- ✅ `pnpm prettier`: all files match (after prettier:fix on page.tsx + global-error.tsx)
+- ✅ `pnpm build`: 47 static pages, zero errors
+- ✅ `pnpm test`: 91 tests pass (15 suites)
+- ✅ `pnpm e2e:headless`: 43/43 pass (1.2m)

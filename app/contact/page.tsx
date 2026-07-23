@@ -139,7 +139,7 @@ export default function Contact() {
           <button
             type="submit"
             className={
-              "rounded-lg bg-accent-hover px-5 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground sm:w-fit " +
+              "rounded-lg bg-accent-hover px-5 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark disabled:cursor-not-allowed disabled:opacity-60 dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground sm:w-fit " +
               (showConfirmation ? "!bg-green-700" : "")
             }
             disabled={showConfirmation || submitting}

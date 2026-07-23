@@ -39,19 +39,23 @@ function Articles() {
           </p>
         </div>
         <h2 className="sr-only">Blog entries</h2>
-        <div className="grid gap-8 lg:grid-cols-2">
-          {articles.map((article) => (
-            <ArticleComponent
-              key={article.id}
-              title={article.title}
-              articleDate={article.articleDate}
-              articleContent={article.articleContent}
-              authorImgSrc={article.authorImgSrc}
-              authorName={article.authorName}
-              fullArticleLink={article.fullArticleLink}
-            />
-          ))}
-        </div>
+        {articles.length === 0 ? (
+          <p className="py-12 text-center text-muted dark:text-muted-dark">No posts yet. Check back soon!</p>
+        ) : (
+          <div className="grid gap-8 lg:grid-cols-2">
+            {articles.map((article) => (
+              <ArticleComponent
+                key={article.id}
+                title={article.title}
+                articleDate={article.articleDate}
+                articleContent={article.articleContent}
+                authorImgSrc={article.authorImgSrc}
+                authorName={article.authorName}
+                fullArticleLink={article.fullArticleLink}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
