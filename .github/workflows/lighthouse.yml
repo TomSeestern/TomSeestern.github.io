@@ -23,7 +23,7 @@ jobs:
         run: pnpm build
       - name: Start server
         run: |
-          npx http-server out --port 8080 --silent &
+          npx next start -p 8080 &
           npx wait-on tcp:127.0.0.1:8080
       - name: Audit URLs
         uses: treosh/lighthouse-ci-action@v12
