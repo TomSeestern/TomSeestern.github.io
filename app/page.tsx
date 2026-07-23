@@ -42,7 +42,7 @@ export default function Web() {
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24 xl:grid xl:grid-cols-12 xl:gap-8">
           <div className="col-span-8">
             <HeroContainer>
-              <HeroH1 className="mb-4 text-4xl font-bold leading-none tracking-tight text-foreground dark:text-foreground-dark md:text-5xl lg:text-6xl">
+              <HeroH1 className="mb-4 text-h1-sm leading-none tracking-tight text-foreground dark:text-foreground-dark md:text-h1 lg:text-6xl">
                 Tom Segbers — Senior Developer
               </HeroH1>
               <HeroP className="mb-6 font-light text-muted dark:text-muted-dark md:text-lg lg:mb-8 lg:text-xl">
@@ -51,7 +51,7 @@ export default function Web() {
               <HeroItem className="flex flex-col items-center gap-8 sm:flex-row">
                 {/* Project Section */}
                 <div className="mb-8 flex-1 text-muted dark:text-muted-dark sm:mb-0">
-                  <h2 className="gold-hairline mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
+                  <h2 className="gold-hairline mb-3 text-h3-sm text-foreground dark:text-foreground-dark">
                     Latest Project: LAYZR.gg
                   </h2>
                   <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
@@ -64,7 +64,7 @@ export default function Web() {
                 </div>
                 {/* Blog Section */}
                 <div className="mb-0 flex-1 text-muted dark:text-muted-dark">
-                  <h2 className="gold-hairline mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
+                  <h2 className="gold-hairline mb-3 text-h3-sm text-foreground dark:text-foreground-dark">
                     Recent Blog Posts
                   </h2>
                   <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
@@ -93,9 +93,7 @@ export default function Web() {
       <section className="bg-surface-muted py-8 dark:bg-surface-dark sm:py-16 lg:py-24">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6">
           <div>
-            <h2 className="gold-hairline mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-foreground-dark">
-              My Recent Projects
-            </h2>
+            <h2 className="gold-hairline mb-4 text-h2 text-foreground dark:text-foreground-dark">My Recent Projects</h2>
             <p className="font-light text-muted dark:text-muted-dark sm:text-xl">
               Learn more about the Projects that I worked on recently, how we diagnosed problems, implemented solutions
               and created Customer value!
@@ -144,7 +142,7 @@ export default function Web() {
       <section className="bg-surface dark:bg-surface-dark">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
           <div>
-            <h2 className="gold-hairline mb-4 text-4xl font-bold tracking-tight text-foreground dark:text-foreground-dark">
+            <h2 className="gold-hairline mb-4 text-h2 text-foreground dark:text-foreground-dark">
               My Recent Blog Posts
             </h2>
             <p className="font-light text-muted dark:text-muted-dark sm:text-xl">

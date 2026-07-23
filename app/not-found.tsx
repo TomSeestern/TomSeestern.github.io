@@ -8,7 +8,7 @@ export default function NotFound() {
           <h1 className="mb-4 text-7xl font-extrabold tracking-tight text-accent dark:text-accent-dark lg:text-9xl">
             404
           </h1>
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground dark:text-foreground-dark md:text-4xl">
+          <h2 className="mb-4 text-h2-sm text-foreground dark:text-foreground-dark md:text-h2">
             Something&apos;s missing.
           </h2>
           <p className="mb-4 text-lg font-light text-muted dark:text-muted-dark">
