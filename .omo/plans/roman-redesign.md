@@ -488,24 +488,24 @@ This plan targets 0.1% solo quality. The 0.01% bar is an aspiration that require
 - [x] 10. Replace Flowbite Card → custom SurfaceCard in ProjectTeaser + ArticleTeaser (Phase 2)
 - [x] 11. Replace Flowbite DarkThemeToggle → custom ThemeToggle (Phase 2)
 - [x] 12. Replace Flowbite Navbar → custom SiteHeader in Header.tsx (LAST, deepest coupling) (Phase 2)
-- [ ] 13. Remove `flowbite-react`, `flowbite`, `flowbite/plugin` from Tailwind config + remove 12 unused `@radix-ui/*` deps (keep `@radix-ui/react-tooltip`) (Phase 2)
+- [x] 13. Remove `flowbite-react`, `flowbite`, `flowbite/plugin` from Tailwind config + remove 12 unused `@radix-ui/*` deps (keep `@radix-ui/react-tooltip`) (Phase 2)
 
 ### Phase 3: Visual Restyle
 
-- [ ] 14. Roman design system — drop caps, gold hairline rules, sharp edges, Lucide icons, letter-spacing (3.3)
-- [ ] 15. CSS-first motion — animation-timeline, scroll-behavior, marquee edge fade, grain PNG, remove Motion library (3.4)
-- [ ] 16. Token enforcement — replace inline `text-4xl`/`text-2xl`/hardcoded hex with Tailwind tokens (3.0)
-- [ ] 17. Craft pass — microstates, focus rings, skeletons, empty states, 4-state pattern (3.5)
+- [x] 14. Roman design system — drop caps, gold hairline rules, sharp edges, Lucide icons, letter-spacing (3.3)
+- [x] 15. CSS-first motion — animation-timeline, scroll-behavior, marquee edge fade, grain PNG, remove Motion library (3.4)
+- [x] 16. Token enforcement — replace inline `text-4xl`/`text-2xl`/hardcoded hex with Tailwind tokens (3.0)
+- [x] 17. Craft pass — microstates, focus rings, skeletons, empty states, 4-state pattern (3.5)
 
 ### Phase 4: A11y + QA + Deploy
 
-- [ ] 18. A11y + Lighthouse + visual acceptance — axe scans, WCAG AA contrast, keyboard nav, Lighthouse 90+, screenshots at 375/768/1280/1440px, dark mode parity (4.1-4.4)
+- [x] 18. A11y + Lighthouse + visual acceptance — axe scans, WCAG AA contrast, keyboard nav, Lighthouse 90+, screenshots at 375/768/1280/1440px, dark mode parity (4.1-4.4)
 
 ---
 
 ## Final Verification Wave
 
-- [ ] F1. Security verification — `pnpm install --frozen-lockfile && pnpm build && pnpm test && pnpm lint && pnpm prettier` all pass, vuln count <15
-- [ ] F2. Flowbite removal verification — zero `flowbite-react` imports remain, `pnpm build && pnpm test && pnpm e2e:headless` pass
-- [ ] F3. Visual restyle verification — screenshots at 4 breakpoints, dark mode parity, `prefers-reduced-motion` honored, Lighthouse 90+
-- [ ] F4. A11y verification — `@axe-core/playwright` scan on every public route, WCAG 2.2 AA, keyboard nav, heading hierarchy, touch targets ≥44px
+- [x] F1. Security verification — `pnpm install --frozen-lockfile && pnpm build && pnpm test && pnpm lint && pnpm prettier` all pass, vuln count <15
+- [x] F2. Flowbite removal verification — zero `flowbite-react` imports remain, `pnpm build && pnpm test && pnpm e2e:headless` pass
+- [x] F3. Visual restyle verification — screenshots at 4 breakpoints, dark mode parity, `prefers-reduced-motion` honored, Lighthouse 90+
+- [x] F4. A11y verification — `@axe-core/playwright` scan on every public route, WCAG 2.2 AA, keyboard nav, heading hierarchy, touch targets ≥44px

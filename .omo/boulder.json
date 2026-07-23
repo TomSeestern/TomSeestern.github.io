@@ -24,9 +24,9 @@
       "work_id": "roman-redesign-4df0a13a",
       "active_plan": "/home/tom/Nextcloud/notes/03 Projects/20XX TomSegbers.de - Personal Website/TomSegbers.de/.omo/plans/roman-redesign.md",
       "plan_name": "roman-redesign",
-      "status": "active",
+      "status": "completed",
       "started_at": "2026-07-22T13:30:13.497Z",
-      "updated_at": "2026-07-22T13:30:13.497Z",
+      "updated_at": "2026-07-23T14:26:59.773Z",
       "session_ids": [
         "opencode:ses_075faf792ffeug0WEFAbFuiFxu"
       ],
@@ -34,13 +34,15 @@
         "opencode:ses_075faf792ffeug0WEFAbFuiFxu": "direct"
       },
       "agent": "atlas",
-      "task_sessions": {}
+      "task_sessions": {},
+      "ended_at": "2026-07-23T14:26:59.773Z",
+      "elapsed_ms": 89806276
     }
   },
   "active_plan": "/home/tom/Nextcloud/notes/03 Projects/20XX TomSegbers.de - Personal Website/TomSegbers.de/.omo/plans/roman-redesign.md",
   "started_at": "2026-07-22T13:30:13.497Z",
-  "status": "active",
-  "updated_at": "2026-07-22T13:30:13.497Z",
+  "status": "completed",
+  "updated_at": "2026-07-23T14:26:59.773Z",
   "session_ids": [
     "opencode:ses_075faf792ffeug0WEFAbFuiFxu"
   ],
@@ -49,5 +51,7 @@
   },
   "plan_name": "roman-redesign",
   "task_sessions": {},
-  "agent": "atlas"
+  "agent": "atlas",
+  "ended_at": "2026-07-23T14:26:59.773Z",
+  "elapsed_ms": 89806276
 }
