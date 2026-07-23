@@ -702,3 +702,89 @@ LSP diagnostics attempted after formatting. Biome LSP unavailable because it is 
 - Browser proof is in `.omo/evidence/task-7-font-qa.json` and 375px/1280px light/dark screenshots. Mobile has no horizontal overflow, hero settles at opacity `1`, and marquee edges use a gradient mask.
 - Required gates passed: `pnpm lint`, `pnpm prettier`, `pnpm test`, `pnpm build`, then two independent `E2E_CONTACT_FORM_SUCCESS=true PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright" pnpm e2e:headless` runs, 43 tests each.
 - Task-specific reproduction ledger: `.omo/evidence/task-7-font-system.txt`. TypeScript LSP remains unavailable because installation was previously declined; Next production build completed type validation.
+
+## 2026-07-23 — Tasks 8+9: Flowbite Alert + Breadcrumb replacement
+
+### Task 8: InlineAlert (commit dd5b945)
+- Created `components/InlineAlert/InlineAlert.tsx` using CVA + tailwind-merge pattern (same as Button).
+- Variants: `color="success"` (green-700/green-50 border-green-200, dark: green-400/green-950/40), `color="failure"` (red-600/red-50 border-red-200, dark: red-400/red-950/40).
+- Dismiss button uses lucide-react `X` icon with `aria-label="Dismiss"` + sr-only span.
+- `role="alert"` on container div for a11y.
+- Replaced 2 `<Alert>` usages in `app/contact/page.tsx` — success (fixed inset-x-1/3 top-8 z-50) and failure (mb-6).
+- Zero flowbite-react imports remain in contact page.
+
+### Task 9: Breadcrumbs (commit b61bc14)
+- Created `components/Breadcrumbs/Breadcrumbs.tsx` with named exports `Breadcrumbs` + `BreadcrumbItem`.
+- Structure: `<nav aria-label="Breadcrumb">` → `<ol>` → `<li>` per WCAG breadcrumb pattern.
+- Separator via CSS `after:content-['/']` on each `<li>`, hidden on last via `last:after:hidden`.
+- `BreadcrumbItem` supports `href` (renders `next/link`), `icon` (ComponentType for lucide-react), `className` (for truncate), and `aria-current="page"` on non-href items.
+- Replaced `HiHome` from `react-icons/hi` with `Home` from `lucide-react` in all 4 pages.
+- `lucide-react` added to dependencies (shared by both components).
+- Zero flowbite-react/react-icons imports remain in all 4 pages.
+
+### Verification gates
+- ✅ `pnpm lint`: 0 errors, 0 warnings (after lint:fix for import order + sort-imports + tailwind shorthand)
+- ✅ `pnpm prettier`: all files match (after prettier:fix)
+- ✅ `pnpm build`: 47 static pages generated, zero errors
+- ✅ `pnpm test`: 91 tests pass (15 suites)
+- ✅ `pnpm e2e:headless`: 41/43 pass. 2 failures are pre-existing font-role tests on homepage (home.spec.ts:35, :121) — unrelated to Alert/Breadcrumb changes. All contact/blog/project/now/uses route tests pass.
+
+### Key decisions
+- Used `h-4 w-4` → `size-4` shorthand after ESLint tailwindcss/enforces-shorthand rule.
+- Import order fixed by `pnpm lint:fix` — `react` type imports before `tailwind-merge`, external before internal.
+- BreadcrumbItem accepts `icon?: ComponentType<{ className?: string }>` matching the existing `icon={HiHome}` API pattern — minimal migration to `icon={Home}`.
+- No "use client" on Breadcrumbs (purely presentational, used in server components). No "use client" on InlineAlert (inherits client boundary from contact page which is "use client").
+
+## 2026-07-23 — Tasks 10+11: Flowbite Card + DarkThemeToggle replacement
+
+### Task 10: SurfaceCard (commit 936bf1e)
+- Created `components/SurfaceCard/SurfaceCard.tsx` using CVA + tailwind-merge.
+- Critical: Flowbite Card has TWO-LAYER structure — root `<div>` (no padding) + inner children wrapper `<div class="flex h-full flex-col justify-center gap-4 p-6">`. ArticleTeaser passes `p-2` on root, compounding with `p-6` on children wrapper (32px total). Flattening to one layer would break this — tailwind-merge would resolve `p-2` over `p-6`, reducing padding from 32px to 8px.
+- SurfaceCard preserves two-layer: `<article class="[root]">` + `<div class="[content p-6]">{children}</div>`.
+- Root uses semantic tokens: `bg-surface dark:bg-surface-dark border-border dark:border-border-dark rounded-lg shadow-sm flex flex-col`.
+- `shadow-sm` (task spec) replaces Flowbite's `shadow-md` — minor visual change, intentional.
+- Replaced Card in ProjectTeaser + ArticleTeaser. Zero flowbite-react Card imports remain.
+
+### Task 11: ThemeToggle (commit 91fe5fa)
+- Created `components/ThemeToggle/ThemeToggle.tsx` — "use client" button with lucide-react Sun/Moon icons.
+- CSS-driven icon visibility: both icons rendered in DOM, `hidden dark:block` (Sun) + `block dark:hidden` (Moon). No useState/useEffect needed — correct icon shows from first paint based on `dark` class set by layout.tsx theme script. Zero hydration mismatch.
+- localStorage key: `flowbite-theme-mode` (NOT `theme`) — must match layout.tsx inline script which reads this key before hydration.
+- Dark-mode E2E test updated: selector `[data-testid="dark-theme-toggle"]` → `[data-testid="theme-toggle"]`, test name "DarkThemeToggle toggles..." → "ThemeToggle toggles...".
+- Navbar imports remain in Header.tsx (task 12 scope).
+
+### Verification gates
+- ✅ `pnpm lint`: 0 errors, 0 warnings
+- ✅ `pnpm prettier`: all files match
+- ✅ `pnpm build`: 47 static pages, zero errors
+- ✅ `pnpm test`: 91 tests pass (15 suites)
+- ✅ `pnpm e2e:headless`: 41/43 pass. 2 failures = pre-existing font-role tests (home.spec.ts:35, :121). Dark-mode toggle test now passes with new selector.
+
+### Key decisions
+- SurfaceCard renders as `<article>` (semantic HTML for teasers) instead of Flowbite's `<div>`.
+- ThemeToggle uses `text-muted`/`dark:text-muted-dark` for icon color (secondary action, not primary).
+- ThemeToggle button size: `p-2.5` + `size-5` icon ≈ 40px touch target (close to WCAG 44px minimum).
+- No `useState`/`useEffect` in ThemeToggle — CSS-driven icon toggle is simpler and avoids any hydration timing issues.
+
+## 2026-07-23 — Task 12: Flowbite Navbar → custom SiteHeader
+
+### What was done
+- Created `components/SiteHeader/SiteHeader.tsx` — "use client", `useState` for mobile menu, `useEffect` for Escape-close + route-change-close.
+- Rewrote `components/Header/Header.tsx` to thin wrapper: `export function Header() { return <SiteHeader /> }`.
+- Zero `flowbite-react` imports remain in Header.tsx (grep-confirmed). This is the LAST Flowbite component replacement — task 13 can now remove the dependency.
+
+### Key design decisions
+- **Single `<ul>` for nav links** — NOT two separate desktop/mobile lists. Two lists would cause duplicate `getByRole("link", { name: "About" })` matches in Jest (JSDOM doesn't process CSS, so both lists are visible). Single `<ul>` with conditional `hidden`/`flex` + responsive `md:` classes.
+- **CSS `order` for responsive layout**: brand `order-1`, right-side div `order-2 md:order-3`, nav `<ul>` `order-3 md:order-2`. On mobile: brand + right-side on line 1, nav below. On desktop: brand → nav → right-side in one line.
+- **`flex-wrap` on `<nav>`** + `w-full` on mobile `<ul>` forces the nav to wrap below the brand/CTA row at mobile width. `md:w-auto` restores inline width at desktop.
+- **Hamburger accessible name**: `aria-label={isOpen ? "Close menu" : "Open menu"}` — both contain "menu" → matches E2E `getByRole("button", { name: /menu/i })`.
+- **Jest/JSDOM behavior**: CSS is NOT loaded in JSDOM (next/jest mocks CSS). Tailwind's `hidden` class has no effect — all elements visible by default. This means `getByRole` finds all links regardless of `hidden`/`md:flex` classes. Single `<ul>` prevents duplicate matches.
+- **Brand link accessible name**: Image alt "Tom Segbers Logo" + span text "Tom Segbers" concatenated → "Tom Segbers Logo Tom Segbers". Jest test uses regex `/Tom Segbers Logo Tom Segbers/` to match. Playwright E2E uses substring match `getByRole("link", { name: "Tom Segbers" })` which also matches.
+- **Escape handler**: `useEffect` with `document.addEventListener("keydown", ...)` — only attached when `isOpen` is true, cleaned up on close. Better than element-level `onKeyDown` because Escape works regardless of focus.
+- **Route-change close**: `useEffect` on `pathname` dependency → `setIsOpen(false)`. Mobile menu auto-closes when user navigates.
+
+### Verification gates
+- ✅ `pnpm lint`: 0 errors, 0 warnings
+- ✅ `pnpm prettier`: all files match (after prettier:fix on SiteHeader.tsx)
+- ✅ `pnpm build`: 47 static pages, zero errors
+- ✅ `pnpm test`: 91 tests pass (15 suites) — Header.test.tsx all 6 tests pass with new SiteHeader
+- ✅ `pnpm e2e:headless`: 43/43 pass — including responsive.spec.ts:141 (mobile header hamburger toggle) and all home.spec.ts tests (font-role tests that were previously failing now pass)
