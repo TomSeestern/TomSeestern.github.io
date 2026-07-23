@@ -1,6 +1,6 @@
 "use client"
-import { Alert } from "flowbite-react"
 import React, { useState } from "react"
+import { InlineAlert } from "@/components/InlineAlert/InlineAlert"
 import { sendEmail, type SendEmailResult } from "../../lib/sendEmail"
 
 export default function Contact() {
@@ -49,9 +49,13 @@ export default function Contact() {
   return (
     <section className="bg-surface dark:bg-surface-dark">
       {showConfirmation && (
-        <Alert color="success" onDismiss={() => setShowConfirmation(false)} className="fixed inset-x-1/3 top-8 z-50">
+        <InlineAlert
+          color="success"
+          onDismiss={() => setShowConfirmation(false)}
+          className="fixed inset-x-1/3 top-8 z-50"
+        >
           <span className="font-medium">Success!</span> Email sent successfully.
-        </Alert>
+        </InlineAlert>
       )}
       <div className="mx-auto max-w-screen-md px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
         <h1 className="mb-4 text-center text-h1-sm text-foreground dark:text-foreground-dark sm:text-h1">
@@ -63,9 +67,9 @@ export default function Contact() {
         </p>
 
         {formError && (
-          <Alert color="failure" onDismiss={() => setFormError(null)} className="mb-6">
+          <InlineAlert color="failure" onDismiss={() => setFormError(null)} className="mb-6">
             {formError}
-          </Alert>
+          </InlineAlert>
         )}
 
         <form onSubmit={handleAction} className="space-y-8" noValidate>
