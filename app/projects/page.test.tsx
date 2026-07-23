@@ -1,4 +1,6 @@
 import { render, screen } from "@testing-library/react"
+import Articles from "./page"
+
 import { getAllProjects } from "../../lib/projects"
 
 jest.mock("../../components/ProjectTeaser/ProjectTeaser", () => {
@@ -10,8 +12,6 @@ jest.mock("../../components/ProjectTeaser/ProjectTeaser", () => {
 jest.mock("../../lib/projects", () => ({
   getAllProjects: jest.fn(),
 }))
-
-import Articles from "./page"
 
 const mockGetAllProjects = jest.mocked(getAllProjects)
 

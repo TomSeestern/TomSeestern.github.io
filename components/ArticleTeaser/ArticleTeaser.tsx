@@ -1,8 +1,9 @@
 import { formatDistanceToNow } from "date-fns"
-import { Card } from "flowbite-react"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
+import { CardMotionWrapper } from "../CardMotionWrapper/CardMotionWrapper"
+import { SurfaceCard } from "../SurfaceCard/SurfaceCard"
 
 export interface ArticleProps {
   /**
@@ -54,44 +55,46 @@ const ArticleComponent: React.FC<ArticleProps> = ({
   fullArticleLink,
 }) => {
   return (
-    <Card className="min-w-0 p-2 transition-colors duration-200 hover:bg-surface-muted motion-safe:hover:-translate-y-1 dark:hover:bg-muted-surface-dark">
-      <div className="mb-5 flex items-center justify-between text-muted">
-        <span className="inline-flex items-center rounded bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-soft-foreground dark:bg-accent-soft-dark dark:text-accent-soft-foreground-dark">
-          <Image className={"h-3 w-3"} src={"/icon/article.svg"} alt="" width={32} height={32} />
-          Tutorial
-        </span>
-        <span className="text-sm">{formatDistanceToNow(articleDate, { addSuffix: true })}</span>
-      </div>
-      <h3 className="mb-2 truncate text-h3 text-foreground dark:text-foreground-dark">
-        <Link
-          href={fullArticleLink}
-          className="rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
-        >
-          {title}
-        </Link>
-      </h3>
-      {/* Using min-h-teaser to force the component to keep 3 Lines of space even if text is not long enough */}
-      <p className="mb-5 line-clamp-3 min-h-teaser font-light text-muted dark:text-muted-dark ">{articleContent}</p>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Image
-            className="h-7 w-7 rounded-full"
-            src={authorImgSrc ?? "/img/placeholder.png"}
-            alt="Author's Picture"
-            width={512}
-            height={512}
-          />
-          <span className="font-medium dark:text-foreground-dark">{authorName}</span>
+    <CardMotionWrapper className="min-w-0">
+      <SurfaceCard className="min-w-0 p-2 transition-colors duration-200 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
+        <div className="mb-5 flex items-center justify-between text-muted dark:text-muted-dark">
+          <span className="inline-flex items-center rounded bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-soft-foreground dark:bg-accent-soft-dark dark:text-accent-soft-foreground-dark">
+            <Image className={"size-3"} src={"/icon/article.svg"} alt="" width={32} height={32} />
+            Tutorial
+          </span>
+          <span className="text-sm dark:text-muted-dark">{formatDistanceToNow(articleDate, { addSuffix: true })}</span>
         </div>
-        <Link
-          href={fullArticleLink}
-          className="inline-flex items-center rounded font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
-        >
-          Read more
-          <Image className={"ml-2 h-4 w-4 dark:invert"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
-        </Link>
-      </div>
-    </Card>
+        <h3 className="mb-2 truncate text-h3 text-foreground dark:text-foreground-dark">
+          <Link
+            href={fullArticleLink}
+            className="rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
+          >
+            {title}
+          </Link>
+        </h3>
+        {/* Using min-h-teaser to force the component to keep 3 Lines of space even if text is not long enough */}
+        <p className="mb-5 line-clamp-3 min-h-teaser font-light text-muted dark:text-muted-dark ">{articleContent}</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Image
+              className="size-7 rounded-full"
+              src={authorImgSrc ?? "/img/placeholder.png"}
+              alt="Author's Picture"
+              width={512}
+              height={512}
+            />
+            <span className="font-medium dark:text-foreground-dark">{authorName}</span>
+          </div>
+          <Link
+            href={fullArticleLink}
+            className="inline-flex items-center rounded font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
+          >
+            Read more
+            <Image className={"ml-2 size-4 dark:invert"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
+          </Link>
+        </div>
+      </SurfaceCard>
+    </CardMotionWrapper>
   )
 }
 

@@ -1,0 +1,86 @@
+[
+  {
+    "viewport": {
+      "width": 375,
+      "height": 812
+    },
+    "theme": "light",
+    "consoleErrors": [],
+    "fonts": {
+      "heading": "Cinzel, \"Cinzel Fallback\", serif",
+      "body": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "nav": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "h2": "Cinzel, \"Cinzel Fallback\", serif",
+      "theme": "light",
+      "requests": [
+        "http://127.0.0.1:3040/_next/static/media/a273567b21a7c318-s.p.woff2",
+        "http://127.0.0.1:3040/_next/static/media/c679f70df756412c-s.p.woff2",
+        "http://127.0.0.1:3040/_next/static/media/e4af272ccee01ff0-s.p.woff2"
+      ]
+    },
+    "screenshot": ".omo/evidence/task-7-home-375-light-repaired.png"
+  },
+  {
+    "viewport": {
+      "width": 375,
+      "height": 812
+    },
+    "theme": "dark",
+    "consoleErrors": [],
+    "fonts": {
+      "heading": "Cinzel, \"Cinzel Fallback\", serif",
+      "body": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "nav": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "h2": "Cinzel, \"Cinzel Fallback\", serif",
+      "theme": "dark",
+      "requests": [
+        "http://127.0.0.1:3040/_next/static/media/a273567b21a7c318-s.p.woff2",
+        "http://127.0.0.1:3040/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+        "http://127.0.0.1:3040/_next/static/media/c679f70df756412c-s.p.woff2"
+      ]
+    },
+    "screenshot": ".omo/evidence/task-7-home-375-dark-repaired.png"
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 960
+    },
+    "theme": "light",
+    "consoleErrors": [],
+    "fonts": {
+      "heading": "Cinzel, \"Cinzel Fallback\", serif",
+      "body": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "nav": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "h2": "Cinzel, \"Cinzel Fallback\", serif",
+      "theme": "light",
+      "requests": [
+        "http://127.0.0.1:3040/_next/static/media/a273567b21a7c318-s.p.woff2",
+        "http://127.0.0.1:3040/_next/static/media/c679f70df756412c-s.p.woff2",
+        "http://127.0.0.1:3040/_next/static/media/e4af272ccee01ff0-s.p.woff2"
+      ]
+    },
+    "screenshot": ".omo/evidence/task-7-home-1280-light-repaired.png"
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 960
+    },
+    "theme": "dark",
+    "consoleErrors": [],
+    "fonts": {
+      "heading": "Cinzel, \"Cinzel Fallback\", serif",
+      "body": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "nav": "Inter, \"Inter Fallback\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "h2": "Cinzel, \"Cinzel Fallback\", serif",
+      "theme": "dark",
+      "requests": [
+        "http://127.0.0.1:3040/_next/static/media/a273567b21a7c318-s.p.woff2",
+        "http://127.0.0.1:3040/_next/static/media/c679f70df756412c-s.p.woff2",
+        "http://127.0.0.1:3040/_next/static/media/e4af272ccee01ff0-s.p.woff2"
+      ]
+    },
+    "screenshot": ".omo/evidence/task-7-home-1280-dark-repaired.png"
+  }
+]

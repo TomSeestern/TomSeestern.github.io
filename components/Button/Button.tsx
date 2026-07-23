@@ -7,7 +7,7 @@ const button = cva(
     "justify-center",
     "inline-flex",
     "items-center",
-    "rounded-xl",
+    "rounded-lg",
     "text-center",
     "border",
     "border-accent-light",
@@ -21,12 +21,13 @@ const button = cva(
   {
     variants: {
       intent: {
-        primary: ["bg-accent-light", "text-foreground-dark", "hover:enabled:bg-accent-hover"],
+        primary: ["bg-accent", "text-surface", "hover:enabled:bg-accent-hover", "dark:text-foreground-dark"],
         secondary: [
           "bg-transparent",
-          "text-accent-light",
+          "text-accent",
+          "dark:text-accent-dark",
           "hover:enabled:bg-accent-light",
-          "hover:enabled:text-foreground-dark",
+          "hover:enabled:text-foreground",
         ],
       },
       size: {

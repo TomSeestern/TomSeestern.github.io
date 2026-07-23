@@ -1,6 +1,6 @@
 "use client"
-import { Alert } from "flowbite-react"
 import React, { useState } from "react"
+import { InlineAlert } from "@/components/InlineAlert/InlineAlert"
 import { sendEmail, type SendEmailResult } from "../../lib/sendEmail"
 
 export default function Contact() {
@@ -49,9 +49,13 @@ export default function Contact() {
   return (
     <section className="bg-surface dark:bg-surface-dark">
       {showConfirmation && (
-        <Alert color="success" onDismiss={() => setShowConfirmation(false)} className="fixed inset-x-1/3 top-8 z-50">
+        <InlineAlert
+          color="success"
+          onDismiss={() => setShowConfirmation(false)}
+          className="fixed inset-x-1/3 top-8 z-50"
+        >
           <span className="font-medium">Success!</span> Email sent successfully.
-        </Alert>
+        </InlineAlert>
       )}
       <div className="mx-auto max-w-screen-md px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
         <h1 className="mb-4 text-center text-h1-sm text-foreground dark:text-foreground-dark sm:text-h1">
@@ -63,9 +67,9 @@ export default function Contact() {
         </p>
 
         {formError && (
-          <Alert color="failure" onDismiss={() => setFormError(null)} className="mb-6">
+          <InlineAlert color="failure" onDismiss={() => setFormError(null)} className="mb-6">
             {formError}
-          </Alert>
+          </InlineAlert>
         )}
 
         <form onSubmit={handleAction} className="space-y-8" noValidate>
@@ -80,7 +84,7 @@ export default function Contact() {
               type="text"
               id="name"
               name="name"
-              className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:shadow-sm-light dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
+              className="block w-full rounded-sm border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
               placeholder="Your full name"
               required={true}
             />
@@ -101,7 +105,7 @@ export default function Contact() {
               type="email"
               id="email"
               name="email"
-              className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:shadow-sm-light dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
+              className="block w-full rounded-sm border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
               placeholder="your.email@example.com"
               required={true}
             />
@@ -122,7 +126,7 @@ export default function Contact() {
               id="message"
               name="message"
               rows={6}
-              className="block w-full rounded-lg border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
+              className="block w-full rounded-sm border border-border bg-surface-muted p-2.5 text-sm text-foreground shadow-sm transition-colors duration-200 focus-visible:border-accent-dark focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-muted-surface-dark dark:text-foreground-dark dark:placeholder-muted-dark dark:focus-visible:border-accent-dark dark:focus-visible:ring-accent-soft-dark"
               placeholder="What would you like to talk about?"
               defaultValue={""}
             />
@@ -135,7 +139,7 @@ export default function Contact() {
           <button
             type="submit"
             className={
-              "rounded-lg bg-accent-hover px-5 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground sm:w-fit " +
+              "rounded-lg bg-accent-hover px-5 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark disabled:cursor-not-allowed disabled:opacity-60 dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground sm:w-fit " +
               (showConfirmation ? "!bg-green-700" : "")
             }
             disabled={showConfirmation || submitting}

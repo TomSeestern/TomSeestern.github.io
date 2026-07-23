@@ -1,7 +1,7 @@
-import fs from "fs"
-import path from "path"
 import matter from "gray-matter"
 import { MetadataRoute } from "next"
+import fs from "fs"
+import path from "path"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://tom.segbers.de"

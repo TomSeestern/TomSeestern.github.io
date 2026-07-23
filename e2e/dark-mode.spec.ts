@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
 
-const darkSurface = "rgb(17, 24, 39)"
-const darkAccentSoft = "rgb(30, 58, 138)"
+const darkSurface = "rgb(28, 25, 23)"
+const darkAccentSoft = "rgb(75, 15, 24)"
 const transparentPng = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL6zAAAAABJRU5ErkJggg==",
   "base64"
@@ -56,7 +56,7 @@ test("public routes retain readable semantic surfaces in dark mode", async ({ pa
   expect(relevantErrors).toEqual([])
 })
 
-test("DarkThemeToggle toggles dark mode and persists on reload", async ({ page }) => {
+test("ThemeToggle toggles dark mode and persists on reload", async ({ page }) => {
   // Given — emulate dark colorScheme so inline script's matchMedia check passes
   await page.emulateMedia({ colorScheme: "dark" })
   await page.goto("/")
@@ -66,12 +66,12 @@ test("DarkThemeToggle toggles dark mode and persists on reload", async ({ page }
   await expect(page.locator("body")).toHaveCSS("background-color", darkSurface)
 
   // When — click the theme toggle (light mode)
-  const toggle = page.locator('[data-testid="dark-theme-toggle"]')
+  const toggle = page.locator('[data-testid="theme-toggle"]')
   await toggle.click()
 
   // Then — dark class removed, light surface shown
   await expect(page.locator("html")).not.toHaveClass(/dark/)
-  const lightSurface = "rgb(255, 255, 255)"
+  const lightSurface = "rgb(245, 240, 230)"
   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
 
   // And — localStorage persists the choice

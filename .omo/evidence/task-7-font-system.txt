@@ -1,0 +1,54 @@
+# Task 7 — Roman font system and token verification
+
+- Timestamp: 2026-07-22T20:40:35+02:00
+- Scope: Cinzel display headings; EB Garamond article prose; Inter UI; Pompeian/marble/charcoal/gold semantic tokens.
+- Browser evidence: `.omo/evidence/task-7-font-qa.json`; screenshots at 375px and 1280px in light and dark themes, including `*-repaired.png` variants.
+
+## Runtime checks
+
+- `h1` and `h2` computed `font-family` include Cinzel.
+- Article `prose` computed `font-family` includes EB Garamond.
+- Navigation and hero UI copy computed `font-family` include Inter.
+- 375px document width has no horizontal overflow; hero settles at opacity `1`; marquee uses opaque semantic surface edge guards, so readable partial card copy cannot appear at viewport edges.
+- Focused CTA has a solid 2px outline and `rgb(228, 168, 177)` focus shadow.
+- Corrected muted text computes to `rgb(98, 91, 84)` (`#625B54`); Axe scan has zero violations.
+- Fresh production audit at `2026-07-22T21:53:49+02:00`: widths `375` and `1280`, light and dark. All four scans reported `totalViolations: 0`, `colorContrastViolations: 0`. Light computed values: muted `rgb(98, 91, 84)`, accent `rgb(168, 42, 56)`, badge `rgb(241, 205, 210)` / `rgb(111, 23, 35)`. Dark computed values: muted `rgb(200, 193, 181)`, accent `rgb(213, 126, 139)`, badge `rgb(75, 15, 24)` / `rgb(228, 168, 177)`.
+- Standalone production Axe audit now waits for `main` and every styled descendant to settle at opacity `1`, preventing transitional alpha-composited contrast samples. Production Chromium ran twice against `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3054`; both runs passed `43/43`.
+- Production config rejects a missing `PLAYWRIGHT_BASE_URL`, preventing accidental reuse of a fixed or stale port. The external server used `E2E_CONTACT_FORM_SUCCESS=true`, matching contact E2E contract.
+- Cleanup receipt: `ss -ltnp '( sport = :3054 )'` returned no listening process after trap cleanup.
+
+## Commands
+
+```sh
+pnpm lint
+# PASS
+
+pnpm prettier
+# PASS
+
+pnpm test
+# PASS
+
+pnpm build
+# PASS
+
+E2E_CONTACT_FORM_SUCCESS=true pnpm exec next start -p 3054
+# Isolated fresh production server; stopped by shell trap after verification.
+
+TASK_7_AUDIT_URL=http://127.0.0.1:3054 node .omo/evidence/task-7-production-contrast.mjs
+# PASS: 375/1280 × light/dark; 0 total Axe violations, 0 color-contrast violations.
+
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3054 pnpm exec playwright test --config=.omo/evidence/task-7-playwright-production.config.mjs
+# PASS: 43 tests.
+
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3054 pnpm exec playwright test --config=.omo/evidence/task-7-playwright-production.config.mjs
+# PASS: 43 tests.
+
+ss -ltnp '( sport = :3054 )'
+# PASS: no listening process after cleanup.
+```
+
+## Diagnostics
+
+- TypeScript LSP unavailable; installation previously declined.
+- Production build completed TypeScript validation successfully.

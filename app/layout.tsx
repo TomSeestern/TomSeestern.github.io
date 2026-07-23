@@ -1,11 +1,34 @@
 import "styles/tailwind.css"
+import type { Metadata, Viewport } from "next"
+import { Cinzel, EB_Garamond, Inter } from "next/font/google"
 import React from "react"
 import { Footer } from "../components/Footer/Footer"
 import { Header } from "../components/Header/Header"
-import type { Metadata, Viewport } from "next"
-import { Inter } from "next/font/google"
+import PageTransition from "../components/PageTransition/PageTransition"
 
-const inter = Inter({ subsets: ["latin"], display: "swap" })
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  weight: ["400", "600", "700"],
+  variable: "--font-heading",
+})
+
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  weight: ["400", "500"],
+  variable: "--font-body",
+})
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tom.segbers.de"),
@@ -23,6 +46,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  alternates: {
+    types: { "application/rss+xml": [{ url: "/feed.xml", title: "TomSegbers.de RSS Feed" }] },
+  },
 }
 
 export const viewport: Viewport = {
@@ -32,8 +58,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.className} dark`} suppressHydrationWarning>
-      <body className="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">
+    <html
+      lang="en"
+      className={`${cinzel.variable} ${ebGaramond.variable} ${inter.variable} dark`}
+      suppressHydrationWarning
+    >
+      <body className="flex min-h-screen flex-col bg-surface font-sans text-foreground dark:bg-surface-dark dark:text-foreground-dark">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -75,9 +105,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <Header />
 
-        <main id="main-content" tabIndex={-1} className="grow">
-          {children}
-        </main>
+        <PageTransition>{children}</PageTransition>
 
         <Footer />
       </body>

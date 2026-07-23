@@ -1,8 +1,8 @@
+import { Metadata } from "next"
 import Image from "next/image"
 import React from "react"
 import ProjectTeaser from "../../components/ProjectTeaser/ProjectTeaser"
 import { getAllProjects } from "../../lib/projects"
-import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -30,6 +30,8 @@ export const metadata: Metadata = {
 }
 
 function Articles() {
+  const projects = getAllProjects()
+
   return (
     <>
       <section className="bg-surface antialiased dark:bg-surface-dark">
@@ -52,7 +54,7 @@ function Articles() {
             >
               View all projects
               <Image
-                className={"ml-2 h-4 w-4 dark:invert"}
+                className={"ml-2 size-4 dark:invert"}
                 src={"/icon/arrow-right.svg"}
                 alt=""
                 width={32}
@@ -66,7 +68,7 @@ function Articles() {
             >
               View Blog posts
               <Image
-                className={"ml-2 h-4 w-4 dark:invert"}
+                className={"ml-2 size-4 dark:invert"}
                 src={"/icon/arrow-right.svg"}
                 alt=""
                 width={32}
@@ -81,19 +83,22 @@ function Articles() {
         {/* Grid of 3x3 cards, 1 collum on mobile*/}
         <div className="mx-auto max-w-screen-xl px-4 pb-8 sm:px-6 sm:pb-16 lg:pb-24">
           <h2 className="sr-only">Project archive</h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-            {getAllProjects().map((article) => (
-              <ProjectTeaser
-                key={article.id}
-                title={article.title}
-                imageUrl={article.fullArticleLink}
-                description={article.articleContent}
-                technologies={article.technologies}
-                ctaLink={article.fullArticleLink}
-                projectDate={article.articleDate}
-              />
-            ))}
-          </div>
+          {projects.length === 0 ? (
+            <p className="py-12 text-center text-muted dark:text-muted-dark">No projects yet. Check back soon!</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+              {projects.map((article) => (
+                <ProjectTeaser
+                  key={article.id}
+                  title={article.title}
+                  description={article.articleContent}
+                  technologies={article.technologies}
+                  ctaLink={article.fullArticleLink}
+                  projectDate={article.articleDate}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>

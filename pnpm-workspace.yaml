@@ -1,0 +1,7 @@
+packages:
+  - "."
+overrides:
+  "@next/eslint-plugin-next>glob": "10.5.0"
+  "@typescript-eslint/typescript-estree>minimatch": "9.0.7"
+  "concurrently>shell-quote": "1.9.0"
+  "next>postcss": "8.5.10"
