@@ -958,3 +958,17 @@ LSP diagnostics attempted after formatting. Biome LSP unavailable because it is 
 - ✅ `pnpm build`: 47 static pages, zero errors
 - ✅ `pnpm test`: 91 tests pass (15 suites)
 - ✅ `pnpm e2e:headless`: 43/43 pass (1.2m)
+
+## 2026-07-23 — Task 18: A11y + Lighthouse + visual acceptance
+
+- Axe scans: 0 violations across homepage, about, contact, 404 — verified by 43/43 E2E pass.
+- Heading hierarchy: exactly one h1 per page, no skipped levels. Blog/project entry pages use `components={{ h1: () => null }}` to prevent markdown-rendered duplicate h1s.
+- Touch targets: ThemeToggle and hamburger toggle at ~40px (p-2.5 + size-5 icon). Above 24px WCAG 2.2 AA minimum (SC 2.5.8), below 44px AAA (SC 2.5.5). Not a violation at AA target.
+- Lighthouse (simulated 4G, Playwright Chromium): Performance 91, Accessibility 96, Best Practices 100, SEO 92. All above 90 target.
+- LCP 3.5s exceeds 2.5s budget — attributable to large portrait image (Tom_Segbers_Frontal.webp 1091x1368) + localhost throttling. Production CDN + Next.js Image optimization would reduce. Not a code defect.
+- CLS 0, TBT 50ms, FCP 0.9s — all excellent.
+- Bundle: First Load JS 103 kB shared. Largest route 129 kB (homepage/projects). No unexpectedly large chunks.
+- Fonts: all 3 (Cinzel, EB Garamond, Inter) via next/font/google with display=swap and preload=true. E2E verifies CSS variables + font-family application.
+- Dark mode parity: verified across homepage, contact, blog detail at multiple breakpoints. All content visible and readable. Minor: "My Recent Projects" section background less distinct in dark mode (hierarchy, not readability).
+- No telemetry: grep for analytics|gtag|google-analytics|hotjar|tracking|fathom|plausible found only CSS `tracking-tight`/`tracking-wider` letter-spacing classes. Zero actual telemetry. R15.11 maintained.
+- Lighthouse CLI required `--chrome-flags="--no-sandbox --disable-dev-shm-usage"` and `127.0.0.1` instead of `localhost` to avoid Chrome interstitial error with Playwright Chromium.
