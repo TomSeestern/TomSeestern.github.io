@@ -1,9 +1,9 @@
 import { formatDistanceToNow } from "date-fns"
-import { Card } from "flowbite-react"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
 import { CardMotionWrapper } from "../CardMotionWrapper/CardMotionWrapper"
+import { SurfaceCard } from "../SurfaceCard/SurfaceCard"
 
 export interface ArticleProps {
   /**
@@ -56,7 +56,7 @@ const ArticleComponent: React.FC<ArticleProps> = ({
 }) => {
   return (
     <CardMotionWrapper className="min-w-0">
-      <Card className="min-w-0 p-2 transition-colors duration-200 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
+      <SurfaceCard className="min-w-0 p-2 transition-colors duration-200 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
         <div className="mb-5 flex items-center justify-between text-muted dark:text-muted-dark">
           <span className="inline-flex items-center rounded bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent-soft-foreground dark:bg-accent-soft-dark dark:text-accent-soft-foreground-dark">
             <Image className={"size-3"} src={"/icon/article.svg"} alt="" width={32} height={32} />
@@ -93,7 +93,7 @@ const ArticleComponent: React.FC<ArticleProps> = ({
             <Image className={"ml-2 size-4 dark:invert"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
           </Link>
         </div>
-      </Card>
+      </SurfaceCard>
     </CardMotionWrapper>
   )
 }

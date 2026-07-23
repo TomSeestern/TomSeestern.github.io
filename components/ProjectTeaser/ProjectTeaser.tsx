@@ -1,10 +1,10 @@
 import { formatDistanceToNow } from "date-fns"
-import { Card } from "flowbite-react"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
 import { getIconPath } from "../../lib/icon-map"
 import { CardMotionWrapper } from "../CardMotionWrapper/CardMotionWrapper"
+import { SurfaceCard } from "../SurfaceCard/SurfaceCard"
 import { Tooltip } from "../Tooltip/Tooltip"
 
 /**
@@ -27,7 +27,7 @@ export interface ProjectProps {
 const ProjectTeaser: React.FC<ProjectProps> = ({ title, description, technologies, ctaLink, projectDate }) => {
   return (
     <CardMotionWrapper className="size-full">
-      <Card className="size-full transition-colors duration-200 hover:z-50 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
+      <SurfaceCard className="size-full transition-colors duration-200 hover:z-50 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
         <div className="flex h-full flex-col justify-between gap-4">
           <div className="">
             <Link
@@ -81,7 +81,7 @@ const ProjectTeaser: React.FC<ProjectProps> = ({ title, description, technologie
             </Link>
           </div>
         </div>
-      </Card>
+      </SurfaceCard>
     </CardMotionWrapper>
   )
 }
