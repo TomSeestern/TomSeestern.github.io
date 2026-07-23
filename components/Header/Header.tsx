@@ -1,10 +1,11 @@
 "use client"
 
-import { DarkThemeToggle, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react"
+import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
+import { ThemeToggle } from "../ThemeToggle/ThemeToggle"
 
 const navItems = [
   { href: "/about", label: "About" },
@@ -31,7 +32,7 @@ export function Header() {
         >
           Contact
         </Link>
-        <DarkThemeToggle className="mr-2" />
+        <ThemeToggle className="mr-2" />
         <NavbarToggle />
       </div>
       <NavbarCollapse>

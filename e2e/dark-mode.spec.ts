@@ -56,7 +56,7 @@ test("public routes retain readable semantic surfaces in dark mode", async ({ pa
   expect(relevantErrors).toEqual([])
 })
 
-test("DarkThemeToggle toggles dark mode and persists on reload", async ({ page }) => {
+test("ThemeToggle toggles dark mode and persists on reload", async ({ page }) => {
   // Given — emulate dark colorScheme so inline script's matchMedia check passes
   await page.emulateMedia({ colorScheme: "dark" })
   await page.goto("/")
@@ -66,7 +66,7 @@ test("DarkThemeToggle toggles dark mode and persists on reload", async ({ page }
   await expect(page.locator("body")).toHaveCSS("background-color", darkSurface)
 
   // When — click the theme toggle (light mode)
-  const toggle = page.locator('[data-testid="dark-theme-toggle"]')
+  const toggle = page.locator('[data-testid="theme-toggle"]')
   await toggle.click()
 
   // Then — dark class removed, light surface shown
