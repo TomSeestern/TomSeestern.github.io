@@ -1,8 +1,8 @@
-import { Breadcrumb, BreadcrumbItem } from "flowbite-react"
+import { Home } from "lucide-react"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { HiHome } from "react-icons/hi"
 import ReactMarkdown from "react-markdown"
+import { BreadcrumbItem, Breadcrumbs } from "@/components/Breadcrumbs/Breadcrumbs"
 import { getMarkdownEntry } from "@/lib/markdown"
 
 const CONTENT_DIR = "content/pages"
@@ -18,12 +18,12 @@ export default function Page(): JSX.Element {
   return (
     <>
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <Breadcrumb className="py-2">
-          <BreadcrumbItem href="/" icon={HiHome}>
+        <Breadcrumbs className="py-2">
+          <BreadcrumbItem href="/" icon={Home}>
             Home
           </BreadcrumbItem>
           <BreadcrumbItem className="truncate">{fileContent.data.title || "Uses"}</BreadcrumbItem>
-        </Breadcrumb>
+        </Breadcrumbs>
       </div>
 
       <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 py-8 sm:px-6 sm:py-16 lg:py-24">

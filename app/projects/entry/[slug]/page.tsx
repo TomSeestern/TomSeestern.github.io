@@ -1,13 +1,13 @@
-import { Breadcrumb, BreadcrumbItem } from "flowbite-react"
+import { Home } from "lucide-react"
 import { Metadata, ResolvingMetadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { HiHome } from "react-icons/hi"
 import { MarkdownAsync } from "react-markdown"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypePrettyCode from "rehype-pretty-code"
 import rehypeSlug from "rehype-slug"
 import remarkGfm from "remark-gfm"
+import { BreadcrumbItem, Breadcrumbs } from "@/components/Breadcrumbs/Breadcrumbs"
 import { getMarkdownEntry, getMarkdownSlugs, getReadingTime } from "@/lib/markdown"
 
 const CONTENT_DIR = "content/projects"
@@ -31,13 +31,13 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
   return (
     <>
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <Breadcrumb className="py-2">
-          <BreadcrumbItem href="/" icon={HiHome}>
+        <Breadcrumbs className="py-2">
+          <BreadcrumbItem href="/" icon={Home}>
             Home
           </BreadcrumbItem>
           <BreadcrumbItem href="/projects">Projects</BreadcrumbItem>
           <BreadcrumbItem className="truncate">{fileContent.data.title || "Content "}</BreadcrumbItem>
-        </Breadcrumb>
+        </Breadcrumbs>
       </div>
 
       <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
