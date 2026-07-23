@@ -1,14 +1,6 @@
 "use client"
 
-import { motion } from "motion/react"
 import React from "react"
-
-const container = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
-}
-
-const item = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }
 
 interface HeroStaggerProps {
   readonly children: React.ReactNode
@@ -16,33 +8,37 @@ interface HeroStaggerProps {
 }
 
 export function HeroContainer({ children, className }: HeroStaggerProps) {
-  return (
-    <motion.div variants={container} initial="hidden" animate="show" className={className}>
-      {children}
-    </motion.div>
-  )
+  return <div className={className}>{children}</div>
 }
 
 export function HeroItem({ children, className }: HeroStaggerProps) {
   return (
-    <motion.div variants={item} className={className}>
+    <div
+      className={`${
+        className ?? ""
+      } motion-safe:animate-[fadeInUp_500ms_ease-out_forwards] motion-safe:opacity-0 motion-safe:[animation-delay:200ms]`}
+    >
       {children}
-    </motion.div>
+    </div>
   )
 }
 
 export function HeroH1({ children, className }: HeroStaggerProps) {
   return (
-    <motion.h1 variants={item} className={className}>
+    <h1 className={`${className ?? ""} motion-safe:animate-[fadeInUp_500ms_ease-out_forwards] motion-safe:opacity-0`}>
       {children}
-    </motion.h1>
+    </h1>
   )
 }
 
 export function HeroP({ children, className }: HeroStaggerProps) {
   return (
-    <motion.p variants={item} className={className}>
+    <p
+      className={`${
+        className ?? ""
+      } motion-safe:animate-[fadeInUp_500ms_ease-out_forwards] motion-safe:opacity-0 motion-safe:[animation-delay:100ms]`}
+    >
       {children}
-    </motion.p>
+    </p>
   )
 }

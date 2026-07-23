@@ -142,10 +142,10 @@ describe("ProjectTeaser", () => {
     // When
     const { container } = render(<ProjectTeaser {...baseProps} />)
 
-    // Then — motion wrapper scales on hover; inner Card keeps hover:z-50
+    // Then — CSS hover wrapper translates on hover; inner Card keeps hover:z-50
     const motionWrapper = container.querySelector(".size-full")
     expect(motionWrapper).toBeInTheDocument()
-    // The Card (child of motion div) still has hover:z-50 for z-index elevation
+    // The Card (child of hover wrapper) still has hover:z-50 for z-index elevation
     const card = motionWrapper!.querySelector(".transition-colors")
     expect(card).toHaveClass("hover:z-50")
   })

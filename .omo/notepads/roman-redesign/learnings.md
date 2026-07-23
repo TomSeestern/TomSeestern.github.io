@@ -825,3 +825,82 @@ LSP diagnostics attempted after formatting. Biome LSP unavailable because it is 
 - ✅ `pnpm lint`: 0 errors, 0 warnings
 - ✅ `pnpm prettier`: all files match
 - ✅ `pnpm e2e:headless`: 43/43 pass
+
+## 2026-07-23 — Tasks 14+15: Roman design system + CSS-first motion
+
+### Task 14: Roman design system (commit pending)
+
+**Sharp edges:**
+- SurfaceCard: `rounded-lg` → `rounded-sm`
+- InlineAlert: `rounded-lg` → `rounded-sm` (alert container only; dismiss button kept `rounded-lg`)
+- Contact form inputs (3): `rounded-lg` → `rounded-sm`; submit button kept `rounded-lg`
+- Button CVA: `rounded-xl` → `rounded-lg` (buttons not cards, but `rounded-xl` forbidden)
+- SiteHeader `<header>`: `rounded-lg` → `rounded-none` (structural)
+- Footer `<footer>`: `rounded-lg` → `rounded-none` (structural)
+- PersonTeaser: `rounded-lg` → `rounded-sm`
+- ProjectTeaser tech badge: `rounded-lg` → `rounded-sm`
+- About page content box: `rounded-lg` → `rounded-sm`
+- TableOfContents: `rounded` → `rounded-sm` (details summary + panel)
+- Code blocks (`pre[data-theme]` in tailwind.css): `rounded-lg` → `rounded-sm`
+- `rounded-full` on avatars and spinner kept (not cards)
+- `rounded-lg` on buttons (not-found, error, global-error, SiteHeader CTA, hamburger, footer social links) kept
+
+**Drop caps:**
+- Added `.prose > p:first-of-type::first-letter` CSS in `styles/tailwind.css` `@layer components`
+- Uses `var(--font-heading)` (Cinzel), `font-size: 3em`, `color: theme("colors.accent.DEFAULT")` (pompeian red), `float: left`, `line-height: 0.8`, `margin-right: 0.1em`
+- Scoped to `.prose` class only — affects blog/project/now/uses detail pages, NOT teasers or cards
+
+**Gold hairline rules:**
+- Added `.gold-hairline` utility class in `styles/tailwind.css`: `@apply border-b border-gold/60 pb-2`
+- Applied to 4 homepage h2 headings (Latest Project, Recent Blog Posts, My Recent Projects, My Recent Blog Posts)
+- Applied to about page h2 (Formal Positions)
+- Typography config: added `borderBottomWidth: "1px"`, `borderBottomColor: theme("colors.gold")`, `paddingBottom: "0.5rem"` to prose h2 (both DEFAULT and invert) — applies gold hairline to article detail page h2 rendered from markdown
+- Gold token `#C9A34F` is decorative only — never mapped to text foreground
+
+**Letter-spacing:**
+- Added `letter-spacing: 0.05em` to `@layer base` h1/h2 rule in `styles/tailwind.css`
+- Already present in fontSize token config (`text-h1`, `text-h2` have `letterSpacing: "0.05em"`)
+- Base layer ensures letter-spacing on ALL h1/h2, including those using `text-4xl` (homepage hero)
+- `text-h2-sm` token has `letterSpacing: "-0.02em"` — utility class overrides base layer (correct: tighter at small size)
+
+**Lucide icons:**
+- Verified: zero `react-icons` or `flowbite` imports remain (grep confirmed)
+- `public/icon/` SVGs used via `<Image>` are decorative — fine
+- One hand-written inline SVG in `about/page.tsx` (clock icon) — not a library import, fine
+
+### Task 15: CSS-first motion (commit pending)
+
+**Motion library removal:**
+- `pnpm remove motion` — removed `motion@12.42.2` from dependencies, 4 transitive packages pruned
+- `app/layout.tsx`: removed `MotionConfig` import + wrapper, kept `<PageTransition>{children}</PageTransition>`
+- `components/CardMotionWrapper/CardMotionWrapper.tsx`: replaced `motion.div` with plain `<div>` using `motion-safe:transition-transform motion-safe:duration-200 motion-safe:hover:-translate-y-0.5`
+- `components/PageTransition/PageTransition.tsx`: replaced `motion.main` with plain `<main>` using `motion-safe:animate-[fadeIn_300ms_ease-out]`
+- `components/HeroStagger/HeroStagger.tsx`: replaced all 4 motion components with plain HTML + CSS staggered animations using `motion-safe:opacity-0 motion-safe:animate-[fadeInUp_500ms_ease-out_forwards]` with staggered `motion-safe:[animation-delay:*]`
+- `components/TableOfContents/TableOfContents.tsx`: no motion import — already uses matchMedia, unchanged
+
+**CSS keyframes:**
+- Added `@keyframes fadeIn` (opacity 0→1 + translateY 8px→0) and `@keyframes fadeInUp` (opacity 0→1 + translateY 16px→0) to `styles/tailwind.css`
+- All animations wrapped in `motion-safe:` Tailwind variant (respects `prefers-reduced-motion: reduce`)
+
+**Scroll-behavior:**
+- Added `scroll-behavior: smooth` to `html` in `styles/tailwind.css`, wrapped in `@media (prefers-reduced-motion: no-preference)`
+
+**Test updates:**
+- `ProjectTeaser.test.tsx`: updated comment "motion wrapper scales on hover" → "CSS hover wrapper translates on hover"; test assertions unchanged (`.size-full` and `.transition-colors` selectors still valid)
+- `e2e/interactions.spec.ts`: no change needed — test uses `page.emulateMedia({ reducedMotion: "reduce" })` and tests scroll-snap, no motion library APIs referenced
+- `HeroStagger.test.tsx`: no change needed — tests check element roles and children, not motion-specific APIs
+- `PageTransition.test.tsx`: no change needed — tests check `<main>` with id and tabindex, not motion props
+
+### Verification gates
+- ✅ `pnpm lint`: 0 errors, 0 warnings
+- ✅ `pnpm prettier`: all files match
+- ✅ `pnpm test`: 91 tests pass (15 suites)
+- ✅ `pnpm build`: 47 static pages, zero errors
+- ✅ `pnpm e2e:headless`: 43/43 pass (1.2m)
+
+### Key decisions
+- CardMotionWrapper keeps component name + API (className, children) — ProjectTeaser and ArticleTeaser unchanged
+- CSS hover replaces `whileHover={{ scale: 1.02, y: -2 }}` with `hover:-translate-y-0.5` (2px lift, not scale — simpler, GPU-composited)
+- Hero stagger: HeroH1 (0ms delay), HeroP (100ms delay), HeroItem (200ms delay) — mirrors Motion's `staggerChildren: 0.1, delayChildren: 0.2`
+- PageTransition: `fadeIn` includes `translateY(8px)` to match Motion's `initial={{ y: 8 }}` behavior
+- `willChange` not set — `motion-safe:transition-transform` handles GPU compositing via Tailwind's transition utility

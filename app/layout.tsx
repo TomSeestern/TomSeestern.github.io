@@ -1,5 +1,4 @@
 import "styles/tailwind.css"
-import { MotionConfig } from "motion/react"
 import type { Metadata, Viewport } from "next"
 import { Cinzel, EB_Garamond, Inter } from "next/font/google"
 import React from "react"
@@ -106,9 +105,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <Header />
 
-        <MotionConfig reducedMotion="user">
-          <PageTransition>{children}</PageTransition>
-        </MotionConfig>
+        <PageTransition>{children}</PageTransition>
 
         <Footer />
       </body>
