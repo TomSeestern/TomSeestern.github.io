@@ -26,8 +26,10 @@ on deploy.
 - **[Tailwind CSS](https://tailwindcss.com/)** with
   [`@tailwindcss/typography`](https://tailwindcss.com/docs/typography-plugin)
   for Markdown body text
-- **[Flowbite React](https://flowbite-react.com/)** for UI primitives
-  (navbar, footer, buttons, alerts, tooltips)
+- **Custom UI components** built with
+  [class-variance-authority](https://cva.style/),
+  [tailwind-merge](https://github.com/dcastil/tailwind-merge), and
+  [lucide-react](https://lucide.dev/) icons
 - **[Nix flake](https://nixos.org/)** + **[direnv](https://direnv.net/)** for a
   reproducible dev shell (Node 22, pnpm, git, Playwright Chromium libs)
 - **[pnpm](https://pnpm.io/)** as the package manager
@@ -136,7 +138,7 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── ArticleTeaser/         # Blog post card
 │   ├── Button/
 │   ├── Footer/
-│   ├── Header/                # Flowbite Navbar
+│   ├── Header/                # Custom navbar with mobile menu
 │   ├── PersonTeaser/
 │   ├── ProjectTeaser/         # Project card with technology icons
 │   ├── TimelineEntry/
@@ -161,7 +163,7 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── img/                   # Photos and the OG logo
 │   └── icon/                  # SVG icons used in components
 ├── styles/
-│   └── tailwind.css           # Tailwind entry, imports Flowbite
+│   └── tailwind.css           # Tailwind entry point
 └── scripts/
     └── check-project-frontmatter.js  # Validates project Markdown frontmatter
 ```

@@ -78,3 +78,40 @@ pnpm e2e:headless
 ```
 
 LSP diagnostics remain unavailable: TypeScript and Biome servers were previously declined/not installed. `pnpm build` completed TypeScript validation.
+
+## Homepage contrast repair — 2026-07-22
+
+Task: `T-a82ece11-44f8-419a-b994-283dc9975c7f`
+
+- `tailwind.config.js` uses shared `muted.DEFAULT: "#706963"` for homepage `text-muted` against `surface.DEFAULT: "#FAF9F6"`; this preserves semantic light/dark token use and gives 4.76:1 contrast on the muted surface.
+- Focused original scenario: `pnpm exec playwright test e2e/static-routes.spec.ts --grep "homepage renders hydrated primary content accessibly"` — PASS: `1 passed (13.6s)`.
+- Full verification after `unset PNPM_HOME npm_config_prefix` and `PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"`:
+
+```sh
+pnpm lint
+# PASS: 0 errors, 0 warnings
+
+pnpm prettier
+# PASS: all matching files formatted
+
+pnpm test
+# PASS: 15 suites, 91 tests
+
+pnpm build
+# PASS: Next.js 15.5.21, 47 static pages
+
+pnpm e2e:headless
+# PASS: 40 Chromium tests, first_e2e_exit=0
+
+pnpm e2e:headless
+# PASS: 40 Chromium tests, second_e2e_exit=0
+```
+
+## Literal E2E artifact recapture — 2026-07-22
+
+- Test enumeration: `.omo/evidence/eslint-9-e2e-test-list.log` records `pnpm exec playwright test --list`, `Total: 40 tests in 7 files`, and `EXIT_CODE=0`.
+- Independent raw run 1: `.omo/evidence/eslint-9-e2e-run-1.log` records `pnpm e2e:headless`, `Running 40 tests using 1 worker`, `40 passed (1.4m)`, and `EXIT_CODE=0`.
+- Independent raw run 2: `.omo/evidence/eslint-9-e2e-run-2.log` records the same literal command, test count, final summary, and `EXIT_CODE=0`.
+- Each E2E artifact was captured directly to a temporary file and moved unchanged into `.omo/evidence/`; no output pipes, filters, test selection, or skipped tests were used.
+- Fresh verification after raw captures: `pnpm lint`, `pnpm prettier`, `pnpm test`, and `pnpm build` all passed. Build completed type validation and generated 47 static pages.
+- TypeScript and Biome LSP diagnostics remain unavailable because installation was previously declined; no TypeScript source changed during raw evidence recapture.

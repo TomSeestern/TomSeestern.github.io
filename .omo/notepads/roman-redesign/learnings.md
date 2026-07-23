@@ -788,3 +788,40 @@ LSP diagnostics attempted after formatting. Biome LSP unavailable because it is 
 - ✅ `pnpm build`: 47 static pages, zero errors
 - ✅ `pnpm test`: 91 tests pass (15 suites) — Header.test.tsx all 6 tests pass with new SiteHeader
 - ✅ `pnpm e2e:headless`: 43/43 pass — including responsive.spec.ts:141 (mobile header hamburger toggle) and all home.spec.ts tests (font-role tests that were previously failing now pass)
+
+## 2026-07-23 — Task 13: Remove flowbite-react, flowbite, react-icons, 14 unused @radix-ui/* deps
+
+### What was removed
+- `flowbite-react` (^0.7.0) — zero imports remain (tasks 8-12 replaced all components)
+- `flowbite` (^2.2.0) — only used as Tailwind plugin + content path
+- `react-icons` (^5.4.0) — zero imports remain (HiHome replaced with lucide-react Home in task 9)
+- 14 `@radix-ui/*` packages removed, `@radix-ui/react-tooltip` KEPT (used by Tooltip component)
+- 78 transitive packages pruned from node_modules
+- `pnpm remove` handled package.json + lockfile in one step
+
+### Config file changes
+- `tailwind.config.js` line 26: removed `"./node_modules/flowbite-react/**/*.{js,ts,jsx,tsx,mdx}"` from content array
+- `tailwind.config.js` line 144: removed `require("flowbite/plugin")` from plugins — kept `require("@tailwindcss/typography")`
+- `next.config.mjs` line 35: removed `{ protocol: "https", hostname: "flowbite.s3.amazonaws.com" }` from images.remotePatterns
+- `styles/tailwind.css`: already clean — no `@import "flowbite"` or flowbite CSS imports present
+
+### README.md cleanup
+- Removed Flowbite React reference from Tech Stack section — replaced with custom UI components (CVA + tailwind-merge + lucide-react)
+- Updated Project Structure: Header comment "Flowbite Navbar" → "Custom navbar with mobile menu"
+- Updated styles/tailwind.css comment "Tailwind entry, imports Flowbite" → "Tailwind entry point"
+
+### Remaining "flowbite" references (intentional)
+- 6 references to `"flowbite-theme-mode"` localStorage key remain in:
+  - `components/ThemeToggle/ThemeToggle.tsx:7` (`const STORAGE_KEY = "flowbite-theme-mode"`)
+  - `app/layout.tsx:84,91,94` (inline theme script reads/sets this key)
+  - `e2e/dark-mode.spec.ts:28,78` (test assertions checking the key)
+- This is a backward-compat string, NOT a library import. Renaming would orphan existing visitors' dark mode preference.
+- Task explicitly forbids modifying .tsx files ("dependency/config cleanup only").
+- Zero `flowbite`/`flowbite-react`/`react-icons` IMPORTS remain in any file.
+
+### Verification gates
+- ✅ `pnpm build`: 47 static pages, zero errors
+- ✅ `pnpm test`: 91 tests pass (15 suites)
+- ✅ `pnpm lint`: 0 errors, 0 warnings
+- ✅ `pnpm prettier`: all files match
+- ✅ `pnpm e2e:headless`: 43/43 pass

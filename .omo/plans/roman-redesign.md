@@ -483,11 +483,11 @@ This plan targets 0.1% solo quality. The 0.01% bar is an aspiration that require
 ### Phase 2: Flowbite React → Custom Components
 
 - [x] 7. Add font system (Cinzel, EB Garamond, Inter via `next/font/google`) + color tokens (pompeian, marble, charcoal, gold) to tailwind.config.js + app/layout.tsx (3.0-3.2)
-- [ ] 8. Replace Flowbite Alert → custom InlineAlert in ContactForm (Phase 2)
-- [ ] 9. Replace Flowbite Breadcrumb → custom Breadcrumbs in all pages (Phase 2)
-- [ ] 10. Replace Flowbite Card → custom SurfaceCard in ProjectTeaser + ArticleTeaser (Phase 2)
-- [ ] 11. Replace Flowbite DarkThemeToggle → custom ThemeToggle (Phase 2)
-- [ ] 12. Replace Flowbite Navbar → custom SiteHeader in Header.tsx (LAST, deepest coupling) (Phase 2)
+- [x] 8. Replace Flowbite Alert → custom InlineAlert in ContactForm (Phase 2)
+- [x] 9. Replace Flowbite Breadcrumb → custom Breadcrumbs in all pages (Phase 2)
+- [x] 10. Replace Flowbite Card → custom SurfaceCard in ProjectTeaser + ArticleTeaser (Phase 2)
+- [x] 11. Replace Flowbite DarkThemeToggle → custom ThemeToggle (Phase 2)
+- [x] 12. Replace Flowbite Navbar → custom SiteHeader in Header.tsx (LAST, deepest coupling) (Phase 2)
 - [ ] 13. Remove `flowbite-react`, `flowbite`, `flowbite/plugin` from Tailwind config + remove 12 unused `@radix-ui/*` deps (keep `@radix-ui/react-tooltip`) (Phase 2)
 
 ### Phase 3: Visual Restyle
