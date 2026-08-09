@@ -58,8 +58,13 @@
                 git
               ] ++ chromeRuntimeLibs;
 
+              # `env` (not just shellHook) so `nix develop -c ...` in CI gets
+              # the Chromium libraries — shellHook does not run non-interactively.
+              env = {
+                LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath chromeRuntimeLibs;
+              };
+
               shellHook = ''
-                export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath chromeRuntimeLibs}''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
                 echo " TomSegbers.de dev shell"
                 echo "  node:  $(node --version)"
                 echo "  pnpm:  $(pnpm --version)"
