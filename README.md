@@ -1,9 +1,15 @@
 # TomSegbers.de — Personal Portfolio of Tom Segbers, Senior Developer
 
+[![CI](http://192.168.7.69:3002/TomSegbers/tomsegbers-de/actions/badge.svg?style=flat)](http://192.168.7.69:3002/TomSegbers/tomsegbers-de/actions)
+
 Source for [tom.segbers.de](https://tom.segbers.de), a personal portfolio site.
 Static, no auth, no database, no tracking. Content lives as Markdown files under
 `content/`. The site is built with the Next.js App Router and statically exported
 on deploy.
+
+> **Repository host**: this repository was migrated from GitHub to the local
+> Forgejo instance ([TomSegbers/tomsegbers-de](http://192.168.7.69:3002/TomSegbers/tomsegbers-de))
+> on 2026-08-09. CI runs on Forgejo Actions (`.forgejo/workflows/`).
 
 ## Table of Contents
 
@@ -47,7 +53,7 @@ on deploy.
 ## Getting Started
 
 ```bash
-git clone <repo-url> TomSegbers.de
+git clone ssh://git@forgejo:2222/TomSegbers/tomsegbers-de.git TomSegbers.de
 cd TomSegbers.de
 direnv allow          # activates the Nix devShell with Node 22 + pnpm
 pnpm install --frozen-lockfile
@@ -111,6 +117,8 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── LICENSE
 ├── flake.nix                  # Nix devShell: Node 22, pnpm, git, Chromium libs
 ├── flake.lock
+├── .forgejo/
+│   └── workflows/             # Forgejo Actions CI (check, e2e, bundle analysis)
 ├── .envrc                     # direnv entry: `use flake`
 ├── package.json
 ├── pnpm-lock.yaml
@@ -233,9 +241,10 @@ written in TSX; MDX stories are not supported by the smoke runner.
 
 ## Deployment
 
-Deployed on [Vercel](https://vercel.com/) via the GitHub integration. A push
-to `main` triggers a build and a production deploy; rollbacks are performed
-through the Vercel dashboard.
+Deployed on [Vercel](https://vercel.com/). Previously a push to `main` on
+GitHub triggered the production deploy via the GitHub integration; since the
+Forgejo migration the deploy is triggered manually (`vercel --prod`) or via a
+Forgejo Actions job. Rollbacks are performed through the Vercel dashboard.
 
 `pnpm build` runs `next build` and statically generates all pages; the build
 currently emits 36 static routes. The only server-side runtime code is the
