@@ -1,0 +1,48 @@
+name: Next.js Bundle Analysis
+
+# Migrated from the GitHub workflow (2026-08-09). GitHub-only pieces were
+# dropped: base-branch artifact comparison (dawidd6/action-download-artifact)
+# and PR comment posting (actions/github-script, peter-evans/*) — Forgejo has
+# no equivalent PR-comment API. Remaining: build + analyze + artifact upload.
+# Cross-run comparison can be done locally against the uploaded artifacts.
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+defaults:
+  run:
+    # change this if your nextjs app does not live at the root of the repo
+    working-directory: ./
+
+jobs:
+  analyze:
+    env:
+      SKIP_ENV_VALIDATION: true
+    runs-on: linux
+    steps:
+      - name: Configure nix (LAN cache)
+        run: |
+          mkdir -p /etc/nix
+          cat > /etc/nix/nix.conf << 'EOF'
+          substituters = http://127.0.0.1:5000 https://cache.nixos.org
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= harmonia-cache:xuOVJHvJ0pZ9znLhigqDtY/V/fzTLrYNvaGCNzyAMkQ=
+          EOF
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install dependencies
+        run: nix develop -c pnpm install --frozen-lockfile
+      - name: Build next.js app
+        env:
+          SKIP_BUILD_PRODUCT_REDIRECTS: 1
+        # change this if your site requires a custom build command
+        run: nix develop -c pnpm build
+      - name: Analyze bundle
+        run: nix develop -c node report-bundle-size.js
+      - name: Upload bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: bundle
+          path: .next/analyze/__bundle_analysis.json

@@ -1,0 +1,41 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Check
+    runs-on: linux
+    steps:
+      # Forgejo Actions runners run on motherbase (NixOS); the harmonia LAN
+      # cache makes `nix develop` near-instant. Configure it explicitly so
+      # this also works if runners ever move to another host.
+      - name: Configure nix (LAN cache)
+        run: |
+          mkdir -p /etc/nix
+          cat > /etc/nix/nix.conf << 'EOF'
+          substituters = http://127.0.0.1:5000 https://cache.nixos.org
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= harmonia-cache:xuOVJHvJ0pZ9znLhigqDtY/V/fzTLrYNvaGCNzyAMkQ=
+          EOF
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install dependencies
+        run: nix develop -c pnpm install --frozen-lockfile
+      - name: Lint check
+        run: nix develop -c pnpm lint
+      - name: Format check
+        run: nix develop -c pnpm prettier
+      - name: Unit & Integration tests
+        run: nix develop -c pnpm test
+      - name: Smoke & Acceptance tests
+        run: |
+          nix develop -c pnpm build-storybook --quiet
+          nix develop -c pnpm exec playwright install chromium
+          nix develop -c npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
+            "npx http-server storybook-static --port 6006 --silent" \
+            "npx wait-on tcp:127.0.0.1:6006 && pnpm test-storybook"
