@@ -26,8 +26,8 @@ jobs:
     steps:
       - name: Configure nix (LAN cache)
         run: |
-          mkdir -p /etc/nix
-          cat > /etc/nix/nix.conf << 'EOF'
+          if [ -w /etc/nix ]; then NIX_CONF=/etc/nix/nix.conf; else NIX_CONF="$HOME/.config/nix/nix.conf"; mkdir -p "$HOME/.config/nix"; fi
+          cat > "$NIX_CONF" << 'EOF'
           substituters = http://127.0.0.1:5000 https://cache.nixos.org
           trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= harmonia-cache:xuOVJHvJ0pZ9znLhigqDtY/V/fzTLrYNvaGCNzyAMkQ=
           EOF
