@@ -263,6 +263,11 @@ pnpm start         # http://localhost:3000
 
 - **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/)
   and are enforced by the `commit-msg` hook in `.pre-commit-config.yaml`.
+- **CI action pins** (`.forgejo/workflows/`) are full commit SHAs with a
+  `# vX.Y.Z` comment. Bumping an action = change the SHA and the comment in
+  one atomic commit (e.g. `chore: bump actions/checkout to v4.2.2`). Never mix
+  action bumps with feature work. Note: `upload-artifact` stays on v3 — the
+  v4 client refuses Forgejo's artifact API.
 - **Async error handling** uses [await-to-js](https://github.com/scopsy/await-to-js).
   Async functions that can fail return `[error, result]` tuples rather than
   throwing. Example from the codebase:
