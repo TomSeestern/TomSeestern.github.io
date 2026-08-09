@@ -84,12 +84,12 @@ When a rule body references another rule (e.g., "see R4.14"), the referenced rul
 
 #### R2.7) Fast checks (≤5s wall time) run pre-commit; slow checks stay pre-push `[manual]`
 <!-- manual: 5s is a heuristic — the "right" budget is host-dependent and an agent making the call must measure on the local host -->
-The pre-commit hook (`.pre-commit-config.yaml`) runs only conventional-commit message validation. ESLint, Prettier, and tests run in CI (`.github/workflows/check.yml`). No automated timing enforcement exists.
+The pre-commit hook (`.pre-commit-config.yaml`) runs only conventional-commit message validation. ESLint, Prettier, and tests run in CI (`.forgejo/workflows/check.yml`). No automated timing enforcement exists.
 
 ### Code health
 
 #### R3.1) ESLint + Prettier must pass on every commit `[auto: yarn lint && yarn prettier — CI check.yml]`
-Code must pass `yarn lint` (ESLint with next/react-app/prettier/storybook/tailwindcss configs) and `yarn prettier` (format check) on every push and PR via `.github/workflows/check.yml`.
+Code must pass `yarn lint` (ESLint with next/react-app/prettier/storybook/tailwindcss configs) and `yarn prettier` (format check) on every push and PR via `.forgejo/workflows/check.yml`.
 
 #### R3.2) pre-commit is the hook runner `[manual]`
 <!-- manual: hook-runner choice (pre-commit vs husky vs lefthook) has no AST-distinguishable form — only the rendered `.git/hooks/` config reveals which is wired -->
@@ -234,7 +234,7 @@ If architecture diagrams exist in `docs/`, they must reflect the current code st
 
 ### Verification gates
 
-#### R6.1) No code change without executable verification `[auto: .github/workflows/check.yml — CI required status checks]`
+#### R6.1) No code change without executable verification `[auto: .forgejo/workflows/check.yml — CI required status checks]`
 Every non-trivial code change must be verified through automated tests. The CI workflow (`check.yml`) runs `yarn lint`, `yarn prettier`, `yarn test`, and Storybook smoke tests on every push and PR. Trivial documentation-only changes are exempt.
 
 #### R6.2) Changed behavior must be covered at the correct layer `[manual]`
@@ -310,7 +310,7 @@ For significant changes (new components, data flow modifications, architectural 
 
 ### CI / release discipline
 
-#### R9.1) Required verification commands must be standardized `[auto: .github/workflows/check.yml — CI required status checks]`
+#### R9.1) Required verification commands must be standardized `[auto: .forgejo/workflows/check.yml — CI required status checks]`
 The CI workflow (`check.yml`) enforces `yarn lint`, `yarn prettier`, `yarn test`, and Storybook smoke tests as required verification commands. No additional validation scripts exist — the workflow defines the standard.
 
 #### R9.2) Nightly deep verification must exist `[manual]`
@@ -352,8 +352,8 @@ Build times are visible in CI (`check.yml` logs) and Vercel deployment dashboard
 Dependencies are pinned via `yarn.lock` with exact versions. `yarn install --frozen-lockfile` ensures reproducible installs in CI. Renovate bot configuration may be used for automated dependency updates.
 
 #### R10.2) Vulnerability scanning runs on every CI build `[manual]`
-<!-- manual: no `yarn audit` step exists in CI; vulnerability scanning is manual or provided by GitHub's dependency graph -->
-GitHub's Dependabot alerts and dependency graph provide vulnerability scanning for this repository. No `yarn audit` step is configured in CI. Critical vulnerabilities should be addressed promptly.
+<!-- manual: no `yarn audit` step exists in CI; vulnerability scanning is manual or provided by Forgejo's dependency tracking -->
+Dependency vulnerabilities are tracked via `pnpm audit` (manual runs) and Forgejo's vulnerability reporting for the repository. No automated `pnpm audit` step is configured in CI. Critical vulnerabilities should be addressed promptly.
 
 #### R10.3) License compliance for every dependency `[manual]`
 <!-- manual: no automated license-check script exists; license review is manual -->
@@ -391,11 +391,11 @@ Environment variables (Resend API key, etc.) are stored in `.env.local` (exclude
 
 #### R11.3) Backup & recovery procedure is documented `[manual]`
 <!-- manual: N/A — content is in git; no database or user data to back up -->
-**N/A.** All content lives in git (`content/` markdown files) and is backed up by the git remote (GitHub). No database, user uploads, or server-side state exists to require additional backup procedures.
+**N/A.** All content lives in git (`content/` markdown files) and is backed up by the git remote (Forgejo). No database, user uploads, or server-side state exists to require additional backup procedures.
 
 #### R11.4) Disaster recovery runbook is current `[manual]`
-<!-- manual: N/A — disaster recovery for a static site on Vercel is: push code to GitHub, Vercel redeploys -->
-**N/A.** Recovery procedure: clone the repository, run `yarn install && yarn build`, deploy. Vercel automates deployment from the GitHub integration. No runbook is necessary.
+<!-- manual: N/A — disaster recovery for a static site on Vercel is: push code to Forgejo, deploy -->
+**N/A.** Recovery procedure: clone the repository from Forgejo, run `yarn install && yarn build`, deploy. Deployment is triggered via Vercel (manually or via a Forgejo Actions job). No runbook is necessary.
 
 #### R11.5) Capacity planning documented for scaling decisions `[manual]`
 <!-- manual: N/A — static site served via Vercel's CDN scales automatically; no capacity planning needed -->
@@ -417,7 +417,7 @@ Core Web Vitals are monitored via Vercel Analytics (if configured). Target budge
 
 #### R12.4) Orchestrator memory limits are bounded `[manual]`
 <!-- manual: N/A — no orchestrator or server process exists; site is statically generated -->
-**N/A.** No server process runs at runtime. The site is fully statically generated. Build memory is bounded by the CI runner (ubuntu-latest on GitHub Actions).
+**N/A.** No server process runs at runtime. The site is fully statically generated. Build memory is bounded by the CI runner (Forgejo Actions runner on motherbase).
 
 #### R12.5) Media file size limits enforced on download `[manual]`
 <!-- manual: no automated media-size check exists; images are manually optimized -->
@@ -525,7 +525,7 @@ Before committing visual changes, apply the "would I show this to a potential em
 
 #### R16.1) Protected branches require pull requests only `[manual]`
 <!-- manual: N/A — personal repository with single contributor has no branch protection rules configured -->
-**N/A.** This is a personal repository with a single contributor. No GitHub branch protection rules are configured. Direct pushes to `main` are acceptable. If collaborators are added, branch protection should be enabled.
+**N/A.** This is a personal repository with a single contributor. No Forgejo branch protection rules are configured. Direct pushes to `main` are acceptable. If collaborators are added, branch protection should be enabled.
 
 #### R16.2) Protected branches require specialist approval `[manual]`
 <!-- manual: N/A — no CODEOWNERS file exists; single-contributor repo -->
@@ -540,8 +540,8 @@ Before committing visual changes, apply the "would I show this to a potential em
 **N/A.** No merge-style restrictions exist. The contributor may use any merge strategy. Conventional commits are enforced by the pre-commit hook regardless of merge method.
 
 #### R16.5) Required CI checks are the merge contract `[manual]`
-<!-- manual: CI runs on push/PR via `.github/workflows/check.yml` but is not configured as a required status check -->
-CI checks (lint, prettier, test, Storybook smoke) run on push and PR via `.github/workflows/check.yml` but are not required status checks on the repository. They serve as informational gates. If branch protection is enabled later, these should be made required.
+<!-- manual: CI runs on push/PR via `.forgejo/workflows/check.yml` but is not configured as a required status check -->
+CI checks (lint, prettier, test, Storybook smoke) run on push and PR via `.forgejo/workflows/check.yml` but are not required status checks on the repository. They serve as informational gates. If branch protection is enabled later, these should be made required.
 
 #### R16.6) Every bug fix must prove the failure existed first `[manual]`
 <!-- manual: no automated regression-detection script exists; test additions are verified during review -->
@@ -560,8 +560,8 @@ Tests must produce the same result given the same inputs and state. Jest and Pla
 Tests that pass inconsistently (flaky tests) must be investigated and fixed before merging. No automated flaky-test detection exists — the contributor monitors CI runs. Repeated failures signal the need for test quarantine or fix.
 
 #### R16.10) Canonical CI script is mandatory `[manual]`
-<!-- manual: CI is defined in `.github/workflows/check.yml`; no `scripts/check-test-ci-script.mjs` exists -->
-The canonical CI workflow is `.github/workflows/check.yml`, which runs `pnpm lint`, `pnpm prettier`, `pnpm test`, and Storybook smoke tests. No separate CI-validation script exists. The workflow itself is the canonical definition.
+<!-- manual: CI is defined in `.forgejo/workflows/check.yml`; no `scripts/check-test-ci-script.mjs` exists -->
+The canonical CI workflow is `.forgejo/workflows/check.yml`, which runs `pnpm lint`, `pnpm prettier`, `pnpm test`, and Storybook smoke tests. No separate CI-validation script exists. The workflow itself is the canonical definition.
 
 ### Contract safety and observability
 
@@ -595,7 +595,7 @@ Errors must not be silently caught and discarded. The `await-to-js` pattern (R25
 
 #### R17.8) Releases require observability hooks before exposure `[manual]`
 <!-- manual: N/A — Vercel deploys are atomic; no observability hook infrastructure exists -->
-**N/A.** Deployments are triggered via Vercel's GitHub integration. No pre-deploy observability hook exists. Vercel provides deployment health indicators (build logs, deployment status).
+**N/A.** Deployments are triggered via Vercel (manually or via Forgejo Actions). No pre-deploy observability hook exists. Vercel provides deployment health indicators (build logs, deployment status).
 
 #### R17.9) Incidents must produce a durable artifact `[manual]`
 <!-- manual: N/A — no incident management process exists for a static portfolio site -->
@@ -604,12 +604,12 @@ Errors must not be silently caught and discarded. The `await-to-js` pattern (R25
 ### Security and performance
 
 #### R18.1) Secret scanning is mandatory on every push and PR `[manual]`
-<!-- manual: no `scripts/check-secret-scanning.mjs` exists; GitHub's push protection and secret scanning are the primary defense -->
-Secrets (Resend API key, etc.) are stored in `.env.local` (gitignored) and Vercel environment variables. GitHub's built-in secret scanning with push protection provides automated detection. No custom pre-commit secret scanner exists — the GitHub-native tooling is sufficient for a personal repo.
+<!-- manual: no `scripts/check-secret-scanning.mjs` exists; review of git history and repo diffs is the primary defense -->
+Secrets (Resend API key, etc.) are stored in `.env.local` (gitignored) and Vercel environment variables. Secrets must never be committed; review diffs before pushing. No custom pre-commit secret scanner exists — manual review is the practice for a personal repo.
 
 #### R18.2) Dependency vulnerability scanning is mandatory `[manual]`
-<!-- manual: no `scripts/check-version-pinning.mjs` exists; GitHub Dependabot provides automated scanning -->
-Dependencies are pinned via `pnpm-lock.yaml`. GitHub's Dependabot alerts and dependency graph provide automated vulnerability scanning. No `pnpm audit` step is configured in CI. Critical vulnerabilities should be addressed promptly.
+<!-- manual: no `scripts/check-version-pinning.mjs` exists; manual `pnpm audit` runs provide scanning -->
+Dependencies are pinned via `pnpm-lock.yaml`. Vulnerability scanning is done with manual `pnpm audit` runs (see R10.2). No `pnpm audit` step is configured in CI. Critical vulnerabilities should be addressed promptly.
 
 #### R18.3) Security-sensitive changes require threat-model review `[manual]`
 <!-- manual: N/A — static portfolio site has minimal attack surface; no file glob triggers threat-model review -->
