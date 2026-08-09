@@ -30,13 +30,13 @@ changelog:
     merge: Merges
     breakingChange: BREAKING CHANGES
 
-  ## GitHub
-  # commitUrl: https://github.com/ACCOUNT/REPOSITORY/commit/%commit%
-  # commitRangeUrl: https://github.com/ACCOUNT/REPOSITORY/compare/%from%...%to%?diff=split
+  ## Forgejo
+  # commitUrl: http://192.168.7.69:3002/TomSegbers/tomsegbers-de/commit/%commit%
+  # commitRangeUrl: http://192.168.7.69:3002/TomSegbers/tomsegbers-de/compare/%from%...%to%
 
-  ## GitHub Issues
+  ## Forgejo Issues
   # issueRegexPattern: "#[0-9]+"
-  # issueUrl: https://github.com/ACCOUNT/REPOSITORY/issues/%issue%
+  # issueUrl: http://192.168.7.69:3002/TomSegbers/tomsegbers-de/issues/%issue%
 
   ## Jira Issues
   # issueRegexPattern: "[A-Z][A-Z0-9]+-[0-9]+"
