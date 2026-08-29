@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env FORCE_COLOR=1 next dev",
+    "typecheck": "node_modules/typescript/bin/tsc --noEmit",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
