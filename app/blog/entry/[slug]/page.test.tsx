@@ -20,7 +20,7 @@ describe("[slug] page", () => {
   it("generates canonical link tag metadata", async () => {
     const metadata = await generateMetadata({ params }, {} as any)
     expect(metadata.alternates?.canonical).toBe(
-      `https://tomsegbers.de/blog/entry/${slug}`
+      `https://tom.segbers.de/blog/entry/${slug}`
     )
   })
 })

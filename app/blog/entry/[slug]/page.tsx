@@ -1,5 +1,6 @@
 import { Breadcrumb, BreadcrumbItem } from "flowbite-react"
 import { Metadata, ResolvingMetadata } from "next"
+import { metadata as layoutMetadata } from "@/app/layout"
 import { notFound } from "next/navigation"
 import { HiHome } from "react-icons/hi"
 import ReactMarkdown from "react-markdown"
@@ -68,7 +69,7 @@ export async function generateMetadata({ params }: Params, parent: ResolvingMeta
     title,
     description,
     alternates: {
-      canonical: `https://tomsegbers.de/blog/entry/${params.slug}`,
+      canonical: new URL(`/blog/entry/${params.slug}`, layoutMetadata.metadataBase || "https://tom.segbers.de").toString(),
     },
     openGraph: {
       title,
