@@ -46,7 +46,7 @@ describe("sendEmail", () => {
   })
 
   it("returns success for valid input when Resend accepts", async () => {
-    mockSend.mockResolvedValue({ id: "email-id" })
+    mockSend.mockResolvedValue({ id: "email-id" } as never)
 
     const result = await sendEmail(validFormData)
 
@@ -101,8 +101,8 @@ describe("sendEmail", () => {
   })
 
   it("returns form error when Resend API rejects", async () => {
-    mockSend.mockRejectedValue(new Error("Resend unavailable"))
-    const consoleError = jest.spyOn(console, "error").mockImplementation()
+    mockSend.mockRejectedValue(new Error("Resend unavailable") as never)
+    const consoleError = jest.spyOn(console, "error").mockImplementation(() => {})
 
     const result = await sendEmail(validFormData)
 
@@ -136,7 +136,7 @@ describe("sendEmail", () => {
   })
 
   it("returns form error when rate limit exceeded", async () => {
-    mockSend.mockResolvedValue({ id: "email-id" })
+    mockSend.mockResolvedValue({ id: "email-id" } as never)
 
     // 5 requests within the window should succeed
     for (let i = 0; i < 5; i++) {
@@ -153,11 +153,11 @@ describe("sendEmail", () => {
   })
 
   it("extracts IP from x-forwarded-for header", async () => {
-    mockHeadersGet.mockImplementation((key: string) => {
+    mockHeadersGet.mockImplementation(((key: string) => {
       if (key === "x-forwarded-for") return "192.168.1.42, 10.0.0.1"
       return null
-    })
-    mockSend.mockResolvedValue({ id: "email-id" })
+    }) as any)
+    mockSend.mockResolvedValue({ id: "email-id" } as never)
 
     const result = await sendEmail(validFormData)
 

@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import { getAllBlogPosts } from "../../lib/blog"
+import { MarkdownEntry } from "../../lib/markdown"
 
 jest.mock("../../components/ArticleTeaser/ArticleTeaser", () => {
   return function ArticleTeaser({
@@ -21,7 +22,7 @@ import Articles from "./page"
 
 const mockGetAllBlogPosts = jest.mocked(getAllBlogPosts)
 
-const blogPosts = [
+const blogPosts: MarkdownEntry[] = [
   {
     id: "newest-post",
     title: "Newest post",
@@ -29,6 +30,7 @@ const blogPosts = [
     articleContent: "Newest content",
     authorImgSrc: "/img/newest.png",
     authorName: "Tom",
+    technologies: [],
     fullArticleLink: "/blog/entry/newest-post",
   },
   {
@@ -38,6 +40,7 @@ const blogPosts = [
     articleContent: "Middle content",
     authorImgSrc: "/img/middle.png",
     authorName: "Tom",
+    technologies: [],
     fullArticleLink: "/blog/entry/middle-post",
   },
   {
@@ -47,9 +50,10 @@ const blogPosts = [
     articleContent: "Oldest content",
     authorImgSrc: "/img/oldest.png",
     authorName: "Tom",
+    technologies: [],
     fullArticleLink: "/blog/entry/oldest-post",
   },
-] as const
+]
 
 describe("Articles", () => {
   beforeEach(() => {

@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import { getAllProjects } from "../../lib/projects"
+import { MarkdownEntry } from "../../lib/markdown"
 
 jest.mock("../../components/ProjectTeaser/ProjectTeaser", () => {
   return function ProjectTeaser({ title, ctaLink }: { readonly title: string; readonly ctaLink: string }) {
@@ -15,7 +16,7 @@ import Articles from "./page"
 
 const mockGetAllProjects = jest.mocked(getAllProjects)
 
-const projects = [
+const projects: MarkdownEntry[] = [
   {
     id: "project-alpha",
     title: "Project Alpha",
@@ -46,7 +47,7 @@ const projects = [
     fullArticleLink: "/projects/entry/project-gamma",
     technologies: [],
   },
-] as const
+]
 
 describe("Articles (projects)", () => {
   beforeEach(() => {

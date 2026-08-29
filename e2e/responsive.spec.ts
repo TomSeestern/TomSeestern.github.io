@@ -40,7 +40,7 @@ async function discoverDetailPath(page: Page, listingPath: string, selector: str
   return href ?? ""
 }
 
-const responsiveRoutes = [
+const responsiveRoutes: readonly ResponsiveRoute[] = [
   { name: "home", resolvePath: async () => "/", gridSelector: "main .grid" },
   { name: "about", resolvePath: async () => "/about", interceptPlaceholderImage: true },
   { name: "blog", resolvePath: async () => "/blog", gridSelector: "main .grid" },
@@ -54,7 +54,7 @@ const responsiveRoutes = [
     resolvePath: async (page) => discoverDetailPath(page, "/projects", 'a[href^="/projects/entry/"]'),
   },
   { name: "contact", resolvePath: async () => "/contact" },
-] as const satisfies readonly ResponsiveRoute[]
+]
 
 function collectBrowserErrors(page: Page): readonly string[] {
   const browserErrors: string[] = []
