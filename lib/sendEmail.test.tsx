@@ -152,6 +152,22 @@ describe("sendEmail", () => {
     })
   })
 
+  it("returns validation error without consuming rate limit for invalid input", async () => {
+    mockSend.mockResolvedValue({ id: "email-id" } as never)
+
+    const invalidData = { ...validFormData, name: "" }
+    for (let i = 0; i < 6; i++) {
+      const result = await sendEmail(invalidData)
+      expect(result).toEqual({
+        success: false,
+        errors: { name: "Please enter your name" },
+      })
+    }
+
+    const validResult = await sendEmail(validFormData)
+    expect(validResult).toEqual({ success: true })
+  })
+
   it("extracts IP from x-forwarded-for header", async () => {
     mockHeadersGet.mockImplementation(((key: string) => {
       if (key === "x-forwarded-for") return "192.168.1.42, 10.0.0.1"

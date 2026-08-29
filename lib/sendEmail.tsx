@@ -81,14 +81,6 @@ export const sendEmail = async (formData: {
   email: string
   message: string
 }): Promise<SendEmailResult> => {
-  const ip = getClientIP()
-  if (env.E2E_CONTACT_FORM_SUCCESS !== "true" && !checkRateLimit(ip)) {
-    return {
-      success: false,
-      errors: { _form: "Too many messages. Please try again later." },
-    }
-  }
-
   const parsed = contactFormSchema.safeParse(formData)
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {}
@@ -99,6 +91,14 @@ export const sendEmail = async (formData: {
       }
     }
     return { success: false, errors: fieldErrors }
+  }
+
+  const ip = getClientIP()
+  if (env.E2E_CONTACT_FORM_SUCCESS !== "true" && !checkRateLimit(ip)) {
+    return {
+      success: false,
+      errors: { _form: "Too many messages. Please try again later." },
+    }
   }
 
   const { name, email, message } = parsed.data
