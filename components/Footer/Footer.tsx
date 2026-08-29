@@ -36,7 +36,7 @@ export function Footer({ ...props }: FooterProps) {
           <span className="sr-only">Twitter</span>
         </a>
         <a
-          href="https://www.github.com/TomSeestern/"
+          href="https://www.github.com/TomSegbers/"
           className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
         >
           <Image className={"h-4 w-4 dark:invert"} src={"/icon/github.svg"} alt="" width={32} height={32}></Image>

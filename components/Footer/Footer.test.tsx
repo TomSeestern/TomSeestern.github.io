@@ -43,7 +43,7 @@ describe("Footer", () => {
     render(<Footer />)
 
     // Then
-    expect(screen.getByRole("link", { name: /GitHub/ })).toHaveAttribute("href", "https://www.github.com/TomSeestern/")
+    expect(screen.getByRole("link", { name: /GitHub/ })).toHaveAttribute("href", "https://www.github.com/TomSegbers/")
   })
 
   it("exposes Email contact link with its real destination", () => {
