@@ -34,6 +34,8 @@ export const metadata: Metadata = {
 }
 
 export default function Web() {
+  const projects = getAllProjects()
+
   return (
     <>
       <section className="relative overflow-hidden bg-surface dark:bg-surface-dark">
@@ -107,7 +109,7 @@ export default function Web() {
         </div>
         <div className="relative flex overflow-hidden py-2">
           <div className="flex animate-marquee space-x-4 motion-reduce:animate-none">
-            {getAllProjects().map((article) => (
+            {projects.map((article) => (
               <div key={article.id} className="h-96 w-96">
                 <ProjectTeaser
                   key={article.id}
@@ -123,7 +125,7 @@ export default function Web() {
           </div>
 
           <div className="absolute flex animate-marquee2 space-x-4 px-2 motion-reduce:animate-none">
-            {getAllProjects().map((article) => (
+            {projects.map((article) => (
               <div key={article.id} className="h-96 w-96">
                 <ProjectTeaser
                   key={article.id}
