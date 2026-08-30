@@ -43,3 +43,7 @@ storybook-static/
 
 # Contentlayer
 .contentlayer
+
+# OhMyOpenCode state
+.omo/
+
