@@ -13,6 +13,7 @@ on deploy.
 
 ## Table of Contents
 
+- [Showcase](#showcase)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Available Scripts](#available-scripts)
@@ -23,6 +24,16 @@ on deploy.
 - [Conventions](#conventions)
 - [Environment Variables](#environment-variables)
 - [License](#license)
+
+## Showcase
+
+|                                     Home                                      |                                         Projects                                          |
+| :---------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
+| [![Home](public/img/screenshots/home.webp)](public/img/screenshots/home.webp) | [![Projects](public/img/screenshots/projects.webp)](public/img/screenshots/projects.webp) |
+|     Landing page with hero introduction, featured work, and latest posts.     |         Full portfolio gallery with technology tags and detailed project entries.         |
+|                                   **Blog**                                    |                                        **Contact**                                        |
+| [![Blog](public/img/screenshots/blog.webp)](public/img/screenshots/blog.webp) |  [![Contact](public/img/screenshots/contact.webp)](public/img/screenshots/contact.webp)   |
+| Article index sorted by date with markdown rendering and typography styling.  |          Interactive contact form powered by a Next.js server action and Resend.          |
 
 ## Tech Stack
 
@@ -81,24 +92,24 @@ A pre-commit hook enforces
 
 From `package.json`:
 
-| Script | Purpose |
-| --- | --- |
-| `pnpm dev` | Start the dev server with colorized output |
-| `pnpm build` | Production build, generates static pages |
-| `pnpm start` | Run the production build locally |
-| `pnpm lint` | Run `next lint` (ESLint) |
-| `pnpm lint:fix` | Auto-fix lint errors |
-| `pnpm prettier` | Check formatting |
-| `pnpm prettier:fix` | Apply Prettier fixes |
-| `pnpm test` | Run Jest unit and component tests |
-| `pnpm e2e:headless` | Run Playwright e2e tests in headless mode |
-| `pnpm e2e:ui` | Run Playwright e2e tests with the interactive UI |
-| `pnpm storybook` | Start Storybook on port 6006 |
-| `pnpm build-storybook` | Build a static Storybook bundle |
-| `pnpm test-storybook` | Run Storybook smoke tests against the built bundle |
-| `pnpm analyze` | Build with `@next/bundle-analyzer` enabled |
-| `pnpm coupling-graph` | Render module dependency graph to `graph.svg` via Madge |
-| `pnpm format` | Apply Prettier to `*.ts`, `*.tsx`, `*.md` |
+| Script                 | Purpose                                                 |
+| ---------------------- | ------------------------------------------------------- |
+| `pnpm dev`             | Start the dev server with colorized output              |
+| `pnpm build`           | Production build, generates static pages                |
+| `pnpm start`           | Run the production build locally                        |
+| `pnpm lint`            | Run `next lint` (ESLint)                                |
+| `pnpm lint:fix`        | Auto-fix lint errors                                    |
+| `pnpm prettier`        | Check formatting                                        |
+| `pnpm prettier:fix`    | Apply Prettier fixes                                    |
+| `pnpm test`            | Run Jest unit and component tests                       |
+| `pnpm e2e:headless`    | Run Playwright e2e tests in headless mode               |
+| `pnpm e2e:ui`          | Run Playwright e2e tests with the interactive UI        |
+| `pnpm storybook`       | Start Storybook on port 6006                            |
+| `pnpm build-storybook` | Build a static Storybook bundle                         |
+| `pnpm test-storybook`  | Run Storybook smoke tests against the built bundle      |
+| `pnpm analyze`         | Build with `@next/bundle-analyzer` enabled              |
+| `pnpm coupling-graph`  | Render module dependency graph to `graph.svg` via Madge |
+| `pnpm format`          | Apply Prettier to `*.ts`, `*.tsx`, `*.md`               |
 
 For e2e tests, Playwright needs a Chromium browser. Inside the Nix devShell,
 set `PLAYWRIGHT_BROWSERS_PATH` to the local cache so Playwright finds a
@@ -300,7 +311,10 @@ export const env = createEnv({
   server: {
     RESEND_API_KEY: z.string().optional(),
     E2E_CONTACT_FORM_SUCCESS: z.enum(["true"]).optional(),
-    ANALYZE: z.enum(["true", "false"]).optional().transform((v) => v === "true"),
+    ANALYZE: z
+      .enum(["true", "false"])
+      .optional()
+      .transform((v) => v === "true"),
   },
   client: {},
   runtimeEnv: {

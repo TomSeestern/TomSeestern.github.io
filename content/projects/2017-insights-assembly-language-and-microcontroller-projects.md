@@ -13,7 +13,6 @@ tags:
 technologies:
   - Atmel
   - Assembly
-
 ---
 
 Between 2016 and 2019, I worked on school projects with AT89C5131A microcontrollers and Assembly. We built two separate programs: one controlled a Gleichstrommotor with pulse-width modulation, another sent dynamic text to an LCD through serial communication.

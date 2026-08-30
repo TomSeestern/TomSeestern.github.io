@@ -14,7 +14,6 @@ tags:
 technologies:
   - C++
   - QT Creator
-
 ---
 
 In 2012, I moved from web technologies into C++ because I wanted to understand desktop applications. I was learning alone, working through small programs in C++ and later using Qt Creator. There was no product plan. Goal was to make things work and understand why they worked.

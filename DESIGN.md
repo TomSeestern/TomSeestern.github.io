@@ -8,16 +8,16 @@ Clear, technical portfolio surface with calm white-to-slate contrast and a famil
 
 ### Palette
 
-| Role | Tailwind token | Light | Dark | Usage |
-| --- | --- | --- | --- | --- |
-| Primary surface | `surface` | `#ffffff` | `#111827` | Page backgrounds |
-| Muted surface | `surface-muted` | `#f9fafb` | `#1f2937` | Section and hover surfaces |
-| Foreground | `foreground` | `#111827` | `#ffffff` | Headings and primary text |
-| Muted foreground | `muted` | `#6b7280` | `#9ca3af` | Supporting text and metadata |
-| Border | `border` | `#d1d5db` | `#4b5563` | Inputs and dividers |
-| Accent | `accent` | `#2563eb` | `#3b82f6` | Custom links and focus affordances |
-| Accent hover | `accent-hover` | `#1d4ed8` | `#60a5fa` | Custom link hover affordances |
-| Accent soft | `accent-soft` | `#dbeafe` | `#1e3a8a` | Custom badges |
+| Role             | Tailwind token  | Light     | Dark      | Usage                              |
+| ---------------- | --------------- | --------- | --------- | ---------------------------------- |
+| Primary surface  | `surface`       | `#ffffff` | `#111827` | Page backgrounds                   |
+| Muted surface    | `surface-muted` | `#f9fafb` | `#1f2937` | Section and hover surfaces         |
+| Foreground       | `foreground`    | `#111827` | `#ffffff` | Headings and primary text          |
+| Muted foreground | `muted`         | `#6b7280` | `#9ca3af` | Supporting text and metadata       |
+| Border           | `border`        | `#d1d5db` | `#4b5563` | Inputs and dividers                |
+| Accent           | `accent`        | `#2563eb` | `#3b82f6` | Custom links and focus affordances |
+| Accent hover     | `accent-hover`  | `#1d4ed8` | `#60a5fa` | Custom link hover affordances      |
+| Accent soft      | `accent-soft`   | `#dbeafe` | `#1e3a8a` | Custom badges                      |
 
 `primary-50` through `primary-900` remain Flowbite-compatible aliases. They map exactly to the established blue scale. `primary-600` equals `accent`; `primary-700` equals `accent-hover`; `primary-100` equals `accent-soft`; `primary-500` equals `accent-dark`.
 
@@ -29,12 +29,12 @@ Clear, technical portfolio surface with calm white-to-slate contrast and a famil
 
 ## 3. Typography
 
-| Level | Utility | Usage |
-| --- | --- | --- |
-| H1 | `text-h1`, `text-h1-sm` | Page headings |
-| H2 | `text-h2`, `text-h2-sm` | Section headings |
-| H3 | `text-h3`, `text-h3-sm` | Card headings |
-| Body | `text-body`, `text-body-lg` | Paragraphs |
+| Level | Utility                      | Usage               |
+| ----- | ---------------------------- | ------------------- |
+| H1    | `text-h1`, `text-h1-sm`      | Page headings       |
+| H2    | `text-h2`, `text-h2-sm`      | Section headings    |
+| H3    | `text-h3`, `text-h3-sm`      | Card headings       |
+| Body  | `text-body`, `text-body-lg`  | Paragraphs          |
 | Small | `text-small`, `text-caption` | Metadata and labels |
 
 Primary font: Inter, ui-sans-serif, system-ui, sans-serif.

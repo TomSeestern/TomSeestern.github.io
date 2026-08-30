@@ -1,0 +1,53 @@
+name: Update Screenshots
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "app/**"
+      - "components/**"
+      - "content/**"
+      - "styles/**"
+      - "public/**"
+      - "scripts/update-readme-screenshots.ts"
+  workflow_dispatch:
+
+jobs:
+  screenshots:
+    name: Update Screenshots
+    runs-on: linux
+    steps:
+      - name: Configure nix (LAN cache)
+        run: |
+          # access() fails on read-only mounts even for root, unlike -w on dirs.
+          if [ -w /etc/nix/nix.conf ]; then
+            NIX_CONF=/etc/nix/nix.conf
+          else
+            NIX_CONF="${HOME:-/root}/.config/nix/nix.conf"
+            mkdir -p "$(dirname "$NIX_CONF")"
+          fi
+          cat > "$NIX_CONF" << 'EOF'
+          substituters = http://127.0.0.1:5000 https://cache.nixos.org
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= harmonia-cache:xuOVJHvJ0pZ9znLhigqDtY/V/fzTLrYNvaGCNzyAMkQ=
+          EOF
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install dependencies
+        run: nix develop -c pnpm install --frozen-lockfile
+      - name: Build Next.js app
+        run: nix develop -c pnpm build
+      - name: Install Playwright Chromium
+        run: nix develop -c pnpm exec playwright install chromium
+      - name: Generate screenshots
+        run: nix develop -c pnpm screenshots:update
+      - name: Commit and push updated screenshots
+        run: |
+          if [ -n "$(git status --porcelain public/img/screenshots/)" ]; then
+            git config user.name "Forgejo Actions Bot"
+            git config user.email "bot@noreply.local"
+            git add public/img/screenshots/
+            git commit -m "chore(docs): update feature screenshots [skip ci]"
+            git push origin main
+          else
+            echo "No screenshot changes detected."
+          fi

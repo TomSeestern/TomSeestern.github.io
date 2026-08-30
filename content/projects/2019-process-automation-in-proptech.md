@@ -17,7 +17,6 @@ technologies:
   - SharePoint
   - Office365
   - PowerBI
-
 ---
 
 # Project Overview

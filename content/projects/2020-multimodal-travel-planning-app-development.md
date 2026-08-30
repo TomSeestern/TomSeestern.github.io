@@ -17,7 +17,6 @@ technologies:
   - Git
   - Figma
   - AndroidStudio
-
 ---
 
 SouDest was a 2020 full-stack travel-planning project built around a user question that existing tools answered poorly: which route best fits my price, travel-time, and CO2 priorities? I developed the product with design support, covering Android, web, and backend components.
