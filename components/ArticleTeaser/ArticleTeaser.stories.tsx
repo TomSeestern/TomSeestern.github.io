@@ -1,8 +1,7 @@
-import React from "react"
-import { Meta, Story } from "@storybook/react"
-import ArticleComponent, { ArticleProps } from "./ArticleTeaser"
+import type { Meta, StoryObj } from "@storybook/nextjs"
+import ArticleComponent from "./ArticleTeaser"
 
-export default {
+const meta: Meta<typeof ArticleComponent> = {
   title: "Components/Article",
   component: ArticleComponent,
   argTypes: {
@@ -50,36 +49,41 @@ export default {
       </div>
     ),
   ],
-} as Meta
-
-const Template: Story<ArticleProps> = (args) => <ArticleComponent {...args} />
-
-export const Default = Template.bind({})
-Default.args = {
-  title: "Title of the article",
-  articleDate: new Date(),
-  articleContent: "This is a summary of the article content.",
-  authorImgSrc: "https://placehold.co/400x400.png",
-  authorName: "Author Name",
-  fullArticleLink: "/link/to/article",
 }
 
-export const WithLongTitle = Template.bind({})
-WithLongTitle.args = {
-  ...Default.args,
-  title: "This is an excessively long title that should potentially break the layout",
+export default meta
+type Story = StoryObj<typeof ArticleComponent>
+
+export const Default: Story = {
+  args: {
+    title: "Title of the article",
+    articleDate: new Date(),
+    articleContent: "This is a summary of the article content.",
+    authorImgSrc: "https://placehold.co/400x400.png",
+    authorName: "Author Name",
+    fullArticleLink: "/link/to/article",
+  },
 }
 
-export const WithLongContent = Template.bind({})
-WithLongContent.args = {
-  ...Default.args,
-  title: "Long Content Title",
-  articleContent: "This is a very long article content. ".repeat(100),
+export const WithLongTitle: Story = {
+  args: {
+    ...Default.args,
+    title: "This is an excessively long title that should potentially break the layout",
+  },
 }
 
-export const WithShortContent = Template.bind({})
-WithShortContent.args = {
-  ...Default.args,
-  title: "Short Content Title",
-  articleContent: "Short content",
+export const WithLongContent: Story = {
+  args: {
+    ...Default.args,
+    title: "Long Content Title",
+    articleContent: "This is a very long article content. ".repeat(100),
+  },
+}
+
+export const WithShortContent: Story = {
+  args: {
+    ...Default.args,
+    title: "Short Content Title",
+    articleContent: "Short content",
+  },
 }
