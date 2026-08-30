@@ -9,18 +9,16 @@ jest.mock("react-markdown", () => {
 
 describe("[slug] page", () => {
   const slug = "2019-ebeltoft-cheesecake-recipe"
-  const params = { slug }
+  const params = Promise.resolve({ slug })
 
-  it("renders <h1> title of blog entry", () => {
-    render(<Page params={params} />)
+  it("renders <h1> title of blog entry", async () => {
+    render(await Page({ params }))
     const heading = screen.getByRole("heading", { level: 1 })
     expect(heading).toHaveTextContent("Memorable Ebeltoft Cheesecake – A Sweet Souvenir")
   })
 
   it("generates canonical link tag metadata", async () => {
     const metadata = await generateMetadata({ params }, {} as any)
-    expect(metadata.alternates?.canonical).toBe(
-      `https://tom.segbers.de/blog/entry/${slug}`
-    )
+    expect(metadata.alternates?.canonical).toBe(`https://tom.segbers.de/blog/entry/${slug}`)
   })
 })
