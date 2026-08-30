@@ -9,13 +9,14 @@ import { getMarkdownEntry, getMarkdownSlugs } from "@/lib/markdown"
 const CONTENT_DIR = "content/projects"
 
 interface Params {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
-export default function Page({ params }: Params): JSX.Element {
-  const fileContent = getMarkdownEntry(params.slug, CONTENT_DIR)
+export default async function Page({ params }: Params): Promise<JSX.Element> {
+  const { slug } = await params
+  const fileContent = getMarkdownEntry(slug, CONTENT_DIR)
 
   if (!fileContent) {
     notFound()
@@ -25,7 +26,8 @@ export default function Page({ params }: Params): JSX.Element {
     <>
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <Breadcrumb className="py-2">
-          <BreadcrumbItem href="/" icon={HiHome}>
+          <BreadcrumbItem href="/">
+            <HiHome className="mr-2 inline h-4 w-4" />
             Home
           </BreadcrumbItem>
           <BreadcrumbItem href="/projects">Projects</BreadcrumbItem>
@@ -48,7 +50,8 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 }
 
 export async function generateMetadata({ params }: Params, parent: ResolvingMetadata): Promise<Metadata> {
-  const fileContent = getMarkdownEntry(params.slug, CONTENT_DIR)
+  const { slug } = await params
+  const fileContent = getMarkdownEntry(slug, CONTENT_DIR)
 
   if (!fileContent) {
     return {
@@ -64,7 +67,7 @@ export async function generateMetadata({ params }: Params, parent: ResolvingMeta
     title,
     description,
     alternates: {
-      canonical: new URL(`/projects/entry/${params.slug}`, layoutMetadata.metadataBase || "https://tom.segbers.de").toString(),
+      canonical: new URL(`/projects/entry/${slug}`, layoutMetadata.metadataBase || "https://tom.segbers.de").toString(),
     },
     openGraph: {
       title,

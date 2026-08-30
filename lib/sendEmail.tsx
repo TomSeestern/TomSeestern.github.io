@@ -31,9 +31,9 @@ const rateLimitMap = new Map<string, number[]>()
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000 // 15 minutes
 const RATE_LIMIT_MAX = 5
 
-function getClientIP(): string {
+async function getClientIP(): Promise<string> {
   try {
-    const headersList = headers()
+    const headersList = await headers()
     const forwarded = headersList.get("x-forwarded-for")
     if (forwarded) {
       return forwarded.split(",")[0]!.trim()
@@ -93,7 +93,7 @@ export const sendEmail = async (formData: {
     return { success: false, errors: fieldErrors }
   }
 
-  const ip = getClientIP()
+  const ip = await getClientIP()
   if (env.E2E_CONTACT_FORM_SUCCESS !== "true" && !checkRateLimit(ip)) {
     return {
       success: false,
