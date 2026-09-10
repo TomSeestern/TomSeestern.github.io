@@ -1,0 +1,49 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    name: Lighthouse mobile budgets
+    runs-on: linux
+    timeout-minutes: 30
+    steps:
+      - name: Configure nix (LAN cache)
+        run: |
+          # access() fails on read-only mounts even for root, unlike -w on dirs.
+          if [ -w /etc/nix/nix.conf ]; then
+            NIX_CONF=/etc/nix/nix.conf
+          else
+            NIX_CONF="${HOME:-/root}/.config/nix/nix.conf"
+            mkdir -p "$(dirname "$NIX_CONF")"
+          fi
+          cat > "$NIX_CONF" << 'EOF'
+          substituters = http://127.0.0.1:5000 https://cache.nixos.org
+          trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= harmonia-cache:xuOVJHvJ0pZ9znLhigqDtY/V/fzTLrYNvaGCNzyAMkQ=
+          EOF
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install dependencies
+        run: nix develop -c pnpm install --frozen-lockfile
+      - name: Install Playwright Chromium
+        # The devShell ships only the Chromium runtime libs, not the browser.
+        # Playwright's Chromium doubles as the Lighthouse Chrome binary and is
+        # resolved by `.lighthouserc.js` via $HOME/.cache/ms-playwright.
+        run: nix develop -c pnpm exec playwright install chromium
+      - name: Build
+        run: nix develop -c pnpm build
+      - name: Run Lighthouse budgets
+        run: nix develop -c pnpm exec lhci autorun
+      - name: Upload Lighthouse results
+        # v3, not v4: the v4 artifact client refuses Forgejo (GHES-style) servers.
+        if: always()
+        uses: actions/upload-artifact@c6a366c94c3e0affe28c06c8df20a878f24da3cf # v3.2.2
+        with:
+          name: lighthouse-results
+          path: .lighthouseci/
+          retention-days: 14

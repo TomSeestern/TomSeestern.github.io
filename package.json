@@ -13,6 +13,8 @@
     "prettier:fix": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "analyze": "cross-env ANALYZE=true pnpm build",
     "budget:bundle": "node scripts/check-bundle-budget.mjs",
+    "lighthouse": "lhci autorun",
+    "budget:lighthouse": "lhci autorun",
     "storybook": "cross-env FORCE_COLOR=1 storybook dev -p 6006",
     "test-storybook": "cross-env FORCE_COLOR=1 test-storybook",
     "build-storybook": "cross-env FORCE_COLOR=1 storybook build",
