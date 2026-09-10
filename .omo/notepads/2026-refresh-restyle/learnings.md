@@ -224,3 +224,34 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   errors/55 pre-existing warnings; prettier clean; contact+a11y e2e 17 passed at
   `--project=chromium --workers=1`. `a11y-known-violations.ts` untouched — /contact
   has zero allowlisted rows, so the exact-match scan proves 0 serious/critical.
+
+## T11 — single root Tooltip provider (2026-09-10)
+
+- Radix `Tooltip.Provider` renders NO DOM node, so "one provider" is not a DOM
+  observation. Structural proof = module-level spy: `jest.mock("@radix-ui/react-tooltip",
+  () => ({ ...actual, Provider: jest.fn(actual.Provider) }))` and assert
+  `toHaveBeenCalledTimes(1)`. Red-before/green-after showed 2 -> 1 calls. Get the
+  spy via `jest.requireMock(...).Provider` rather than a namespace member: the bare
+  string `RadixTooltip.Provider` then stays unique to `TooltipProvider.tsx`, which is
+  the grep acceptance criterion.
+- `Tooltip.Root` THROWS without an ancestor `TooltipProvider` ("must be used within
+  TooltipProvider"). Hoisting the provider to the root is therefore a breaking change
+  for every bare consumer. Grep consumers before the change: here only
+  `ProjectTeaser.test.tsx` (9 renders) and `ProjectTeaser.stories.tsx` (decorator)
+  needed wrapping.
+- Radix opens tooltips on `pointermove`, not `pointerenter`. Playwright `hover()`
+  lands the pointer directly on the element and fires `pointerenter` only — the
+  tooltip does NOT open. Real-user recipe that works: `scrollIntoViewIfNeeded()` then
+  `page.mouse.move(outside)` then `page.mouse.move(center, { steps: 6 })`. Without the
+  scroll, `boundingBox().y` can be below the viewport and `mouse.move` is a silent
+  no-op.
+- `data-state="delayed-open"` is a precise browser oracle that the hoisted provider's
+  `delayDuration=200` is active — Radix's default is 700ms and an instant/skipped open
+  would render `instant-open`.
+- `text-2xs` DOES exist in `node_modules/flowbite/dist/flowbite.css`, but that file is
+  never imported (the app uses Flowbite as a Tailwind *plugin*). Verify "undefined
+  class" claims against the built `.next/static/**/*.css`, not node_modules. All three
+  removed classes were absent from the production CSS => no-op removal.
+- Every production tooltip trigger is a decorative `<img>`/`<span>` (not focusable),
+  so browser-level keyboard-focus coverage does not exist. Keyboard focus stays a
+  component-layer concern (`fireEvent.focus`).

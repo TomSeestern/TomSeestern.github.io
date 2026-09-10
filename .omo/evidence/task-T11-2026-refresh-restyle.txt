@@ -1,0 +1,160 @@
+T11 — Hoist Tooltip to a single root provider
+Plan: .omo/plans/2026-refresh-restyle.md (§T11)
+Commit: fix(tooltip): hoist to a single root provider
+Collected (UTC): 2026-09-10T20:52:10Z
+Repo: /home/tom/Projects/tomsegbers-de
+Base commit: 272bb2b feat(contact): server metadata and aria-wired accessible form
+
+================================================================
+1. SCOPE / CHANGED FILES
+================================================================
+- components/Providers/TooltipProvider.tsx  NEW  ("use client", single RadixTooltip.Provider delayDuration=200)
+- components/Tooltip/Tooltip.tsx            MOD  (remove per-instance Provider + 3 undefined token classes)
+- components/Tooltip/Tooltip.test.tsx       MOD  (structural single-provider assertion + wrap under root provider)
+- app/layout.tsx                            MOD  (wrap Header/main/Footer/skip-link once in TooltipProvider)
+- components/ProjectTeaser/ProjectTeaser.test.tsx   MOD  (wrap 9 renders in TooltipProvider — Radix Root throws without a provider)
+- components/ProjectTeaser/ProjectTeaser.stories.tsx MOD (wrap story decorator in TooltipProvider — Storybook smoke)
+- e2e/tooltip.spec.ts                       NEW  (hover opens + delayed-open + Escape dismisses on /projects)
+
+DEVIATION FROM THE BRIEF'S "Commit ONLY" LIST
+The brief listed 4 code files + evidence/notepad. Three additional files were
+REQUIRED for correctness:
+- ProjectTeaser.test.tsx / ProjectTeaser.stories.tsx: ProjectTeaser embeds
+  Tooltip. Radix Tooltip.Root throws "`Tooltip` must be used within
+  `TooltipProvider`" without an ancestor provider, so removing the per-instance
+  provider breaks every bare consumer. Grep of consumers (MUST DO) found exactly
+  these two (plus the Tooltip's own test).
+- e2e/tooltip.spec.ts: the acceptance explicitly requires Playwright
+  hover/focus/Escape verification. Focus is covered at the component layer
+  (Jest fireEvent.focus) because no production tooltip trigger is a focusable
+  element (all triggers are decorative <img>/<span>); a browser-level keyboard
+  focus path does not exist.
+R19.4 applied: the plan's commit list did not account for the consumer blast
+radius the hoist necessarily creates.
+
+NOT touched: app/page.tsx (T16), tailwind.config.js (T08/T13), app/contact/*
+(T12), lib/markdown.ts.
+
+================================================================
+2. RED -> GREEN EVIDENCE (TDD)
+================================================================
+2.1 RED — new structural test, Tooltip.tsx still self-providing:
+  cmd: pnpm test -- components/Tooltip/Tooltip.test.tsx
+  result: 1 failed / 5 passed
+    ✕ does not mount its own provider — the single root provider owns the context
+      expect(jest.fn()).toHaveBeenCalledTimes(expected)
+      Expected number of calls: 1
+      Received number of calls: 2
+  Interpretation: root TooltipProvider (1) + Tooltip's per-instance Provider (1)
+  = 2. The spy wraps Radix's Provider (which renders no DOM), the only observable
+  structural seam.
+
+2.2 GREEN — after removing the per-instance Provider:
+  cmd: pnpm test -- components/Tooltip/Tooltip.test.tsx
+  result: 6 passed, exit 0  (structural count = 1, plus hidden/open/focus/aria tests)
+
+================================================================
+3. GREP PROOF — ONE PROVIDER MOUNT
+================================================================
+cmd: grep -rn "RadixTooltip.Provider" components/
+out: components/Providers/TooltipProvider.tsx:18:  return <RadixTooltip.Provider delayDuration={200}>{children}</RadixTooltip.Provider>
+=> exactly ONE matching location, in TooltipProvider.tsx. (grep -o counts 2
+   because the open and close tag of that single element share line 18.)
+
+Tooltip.tsx no longer imports/renders Provider:
+  grep -n "Provider" components/Tooltip/Tooltip.tsx  -> no matches.
+
+================================================================
+4. UNDEFINED TOKEN CLASSES REMOVED — ZERO VISUAL CHANGE
+================================================================
+Before: "rounded-0.5md bg-zinc-700 px-4 py-2.5 font-open-sans text-2xs text-white"
+After:  "bg-zinc-700 px-4 py-2.5 text-white"
+
+Proof the removed classes were no-ops:
+- Not present in tailwind.config.js (grep = 0 matches for all three).
+- `text-2xs` exists only in node_modules/flowbite/dist/flowbite.css, which the
+  app never imports (styles/tailwind.css imports only @tailwind base/components/
+  utilities; Flowbite is wired as a Tailwind *plugin*, not as prebuilt CSS).
+- Neither `font-open-sans` nor `rounded-0.5md` exist in Flowbite at all.
+- Post-change production CSS contains none of them:
+    grep -rl "text-2xs\|font-open-sans\|rounded-0\.5md" .next/static  -> no matches
+=> computed rendering of the tooltip content is byte-identical.
+
+================================================================
+5. PRODUCTION BUILD
+================================================================
+cmd: pnpm build
+result: exit 0
+  ✓ Compiled successfully in 12.5s
+  ✓ Generating static pages (38/38)
+Post-build CSS scan: none of the three removed classes present (.next/static).
+
+================================================================
+6. JEST (FULL)
+================================================================
+cmd: pnpm test
+result: Test Suites 15 passed, 15 total; Tests 102 passed, 102 total; exit 0
+New/changed: Tooltip.test.tsx 6 tests (structural + behavioral).
+Tooltip consumer ProjectTeaser.test.tsx 9 tests now render inside TooltipProvider.
+
+================================================================
+7. PLAYWRIGHT (chromium, --workers=1)
+================================================================
+7.1 Tooltip behavior on /projects (real page with technology icons):
+  cmd: PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright \
+       pnpm exec playwright test e2e/tooltip.spec.ts --project=chromium --workers=1
+  result: 1 passed
+  Asserts: trigger data-state=closed -> real pointer move into the icon -> tooltip
+  role=visible with text -> data-state="delayed-open" (proves the hoisted
+  provider's 200ms delayDuration is in effect, not Radix's 700ms default) ->
+  Escape -> tooltip hidden and data-state=closed.
+
+7.2 Full chromium e2e regression:
+  cmd: PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright \
+       pnpm exec playwright test --project=chromium --workers=1
+  result: 62 passed (2.2m), exit 0  — incl. a11y.spec.ts, interactions.spec.ts,
+  static-routes.spec.ts, home.spec.ts, responsive.spec.ts, contact.spec.ts.
+
+================================================================
+8. ACCESSIBILITY (axe) — UNCHANGED
+================================================================
+e2e/a11y.spec.ts scans SCHEMES=["light"] x 7 routes and asserts the serious/
+critical violation set EXACTLY equals the self-cleaning allowlist. The full run
+(7.2) is green with the allowlist untouched, so the serious/critical set is
+unchanged. No allowlist entry was removed or added.
+
+================================================================
+9. lint / prettier
+================================================================
+9.1 pnpm lint     -> exit 0  (0 errors, 55 pre-existing warnings; no new warnings)
+9.2 pnpm prettier -> exit 0  ("All matched files use Prettier code style!")
+
+================================================================
+10. RISKS / NOTES
+================================================================
+- A single shared Provider also shares skipDelayDuration (Radix default 300ms):
+  moving between two different technology icons within 300ms now opens the
+  second instantly, whereas previously each icon owned a fresh provider (200ms
+  every time, same-icon re-hover was already instant). This is the intended
+  benefit of a single root provider and does not change copy, position, side,
+  or the 200ms delayed-open path (asserted in e2e).
+- All production tooltip triggers are decorative <img>/<span>; they are not
+  keyboard-focusable, so browser-level focus coverage is impossible without
+  changing interaction semantics (out of scope). Keyboard focus behavior is
+  covered by the Jest test "reveals explanation when trigger receives keyboard
+  focus". Pre-existing condition, not introduced by T11.
+
+================================================================
+11. TOKEN / MODEL
+================================================================
+Model: 9router/default (agent default). Token usage not instrumented this session.
+
+================================================================
+12. REPRODUCE (exact)
+================================================================
+grep -rn "RadixTooltip.Provider" components/
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test'
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm lint'
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm prettier'
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; CI=true pnpm exec playwright test --project=chromium --workers=1'

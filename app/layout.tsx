@@ -2,6 +2,7 @@ import "styles/tailwind.css"
 import React from "react"
 import { Footer } from "../components/Footer/Footer"
 import { Header } from "../components/Header/Header"
+import { TooltipProvider } from "../components/Providers/TooltipProvider"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 
@@ -45,19 +46,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             }),
           }}
         />
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black"
-        >
-          Skip to main content
-        </a>
-        <Header />
+        <TooltipProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black"
+          >
+            Skip to main content
+          </a>
+          <Header />
 
-        <main id="main-content" tabIndex={-1} className="grow">
-          {children}
-        </main>
+          <main id="main-content" tabIndex={-1} className="grow">
+            {children}
+          </main>
 
-        <Footer />
+          <Footer />
+        </TooltipProvider>
       </body>
     </html>
   )

@@ -151,3 +151,23 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   for the full tool timeout even though curl had already returned HTTP 200 and
   written the HTML. Use explicit PID kill without `wait`, or read the prerendered
   `.next/server/app/contact.html` directly. No product impact.
+
+## T11 — tooltip provider hoist (2026-09-10)
+
+- The brief's "Commit ONLY" list (TooltipProvider.tsx, Tooltip.tsx, Tooltip.test.tsx,
+  app/layout.tsx) omitted consumers that the hoist NECESSARILY breaks, because
+  `Tooltip.Root` throws with no ancestor provider. Included, with justification:
+  `components/ProjectTeaser/ProjectTeaser.test.tsx` (wrap renders) and
+  `components/ProjectTeaser/ProjectTeaser.stories.tsx` (wrap decorator) — without
+  them Jest and Storybook smoke go red. R19.4: the plan's scope was wrong.
+- Browser-level keyboard-focus coverage for tooltips is impossible: every production
+  trigger is a decorative `<img>`/`<span>` with no tabindex, and adding one would
+  change interaction semantics (forbidden). Playwright covers hover + delayed-open +
+  Escape; Jest covers focus. No code change made.
+- `grep -rn "RadixTooltip.Provider" components/` returns exactly one location
+  (TooltipProvider.tsx:18). `grep -o | wc -l` reports 2 because the open and close tag
+  of that one element share the same line — not two providers.
+- A single shared provider also shares Radix's `skipDelayDuration` (default 300ms), so
+  moving between two icons within 300ms now opens the second instantly; previously
+  each icon had its own provider. Accepted as the intended benefit of the hoist; the
+  200ms delayed-open path is asserted in e2e.

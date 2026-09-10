@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs"
 import ProjectTeaser from "./ProjectTeaser"
+import { TooltipProvider } from "../Providers/TooltipProvider"
 
 const meta: Meta<typeof ProjectTeaser> = {
   title: "Components/ProjectTeaser",
@@ -13,9 +14,11 @@ const meta: Meta<typeof ProjectTeaser> = {
   },
   decorators: [
     (Story) => (
-      <div className={"bg-slate-100"} style={{ width: "500px", padding: "1rem" }}>
-        <Story />
-      </div>
+      <TooltipProvider>
+        <div className={"bg-slate-100"} style={{ width: "500px", padding: "1rem" }}>
+          <Story />
+        </div>
+      </TooltipProvider>
     ),
   ],
 }

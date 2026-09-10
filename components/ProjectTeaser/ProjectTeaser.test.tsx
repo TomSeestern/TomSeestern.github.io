@@ -8,6 +8,7 @@ jest.mock("../../lib/icon-map", () => ({
 }))
 
 import ProjectTeaser from "./ProjectTeaser"
+import { TooltipProvider } from "../Providers/TooltipProvider"
 
 const mockGetIconPath = getIconPath as jest.MockedFunction<typeof getIconPath>
 const projectDate = new Date("2024-01-01T00:00:00.000Z")
@@ -18,6 +19,15 @@ const baseProps = {
   technologies: ["React", "TypeScript"],
   ctaLink: "/projects/test",
   projectDate,
+}
+
+// ProjectTeaser embeds Tooltip, which reads the single root tooltip provider.
+function renderTeaser(props: React.ComponentProps<typeof ProjectTeaser>) {
+  return render(
+    <TooltipProvider>
+      <ProjectTeaser {...props} />
+    </TooltipProvider>
+  )
 }
 
 describe("ProjectTeaser", () => {
@@ -36,7 +46,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockReturnValue(null)
 
     // When
-    render(<ProjectTeaser {...baseProps} />)
+    renderTeaser(baseProps)
 
     // Then
     expect(screen.getByRole("heading", { level: 3, name: baseProps.title })).toBeInTheDocument()
@@ -47,7 +57,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockReturnValue(null)
 
     // When
-    render(<ProjectTeaser {...baseProps} />)
+    renderTeaser(baseProps)
 
     // Then
     expect(screen.getByRole("link", { name: baseProps.description })).toHaveAttribute("href", baseProps.ctaLink)
@@ -58,7 +68,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockReturnValue(null)
 
     // When
-    render(<ProjectTeaser {...baseProps} />)
+    renderTeaser(baseProps)
 
     // Then
     expect(screen.getByRole("link", { name: /learn more/i })).toHaveAttribute("href", baseProps.ctaLink)
@@ -70,7 +80,7 @@ describe("ProjectTeaser", () => {
     const expectedDate = formatDistanceToNow(projectDate, { addSuffix: true })
 
     // When
-    render(<ProjectTeaser {...baseProps} />)
+    renderTeaser(baseProps)
 
     // Then
     expect(screen.getByText(expectedDate)).toBeInTheDocument()
@@ -81,7 +91,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockImplementation((technology) => (technology === "React" ? "/icon/react.svg" : null))
 
     // When
-    const { container } = render(<ProjectTeaser {...baseProps} />)
+    const { container } = renderTeaser(baseProps)
 
     // Then
     expect(container.querySelector('img[src="/icon/react.svg"]')).toBeInTheDocument()
@@ -92,7 +102,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockImplementation((technology) => (technology === "React" ? "/icon/react.svg" : null))
 
     // When
-    render(<ProjectTeaser {...baseProps} />)
+    renderTeaser(baseProps)
 
     // Then
     expect(screen.getAllByText("TypeScript")).not.toHaveLength(0)
@@ -104,7 +114,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockReturnValue(null)
 
     // When
-    render(<ProjectTeaser {...baseProps} />)
+    renderTeaser(baseProps)
 
     // Then
     expect(mockGetIconPath).toHaveBeenNthCalledWith(1, "React")
@@ -116,7 +126,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockReturnValue("/icon/react.svg")
 
     // When
-    render(<ProjectTeaser {...baseProps} technologies={[]} />)
+    renderTeaser({ ...baseProps, technologies: [] })
 
     // Then
     expect(mockGetIconPath).not.toHaveBeenCalled()
@@ -130,7 +140,7 @@ describe("ProjectTeaser", () => {
     const longTitle = "A project title long enough to require visual truncation in compact card layouts"
 
     // When
-    render(<ProjectTeaser {...baseProps} title={longTitle} />)
+    renderTeaser({ ...baseProps, title: longTitle })
 
     // Then
     expect(screen.getByRole("heading", { level: 3, name: longTitle })).toHaveClass("truncate")
@@ -141,7 +151,7 @@ describe("ProjectTeaser", () => {
     mockGetIconPath.mockReturnValue(null)
 
     // When
-    const { container } = render(<ProjectTeaser {...baseProps} />)
+    const { container } = renderTeaser(baseProps)
 
     // Then
     expect(container.querySelector(".h-full.w-full")).toHaveClass("hover:z-50", "motion-safe:hover:-translate-y-1")
