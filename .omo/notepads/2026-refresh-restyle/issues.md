@@ -132,3 +132,9 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   focused test after formatting before committing.
 - No new risk to existing content: `git diff --stat content/` empty, build 38/38,
   validator COUNT 21.
+
+## T09 — dead deps + README drift (2026-09-10)
+
+- `task_update` for T-69efb5b1 returned `task_lock_unavailable` once (todo sync
+  race); retried and completed. Harness issue, not a code issue.
+- No blockers. Pure removal + doc truthing; build/install/lint/prettier all green.

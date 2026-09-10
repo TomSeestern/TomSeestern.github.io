@@ -4,8 +4,8 @@
 
 Source for [tom.segbers.de](https://tom.segbers.de), a personal portfolio site.
 Static, no auth, no database, no tracking. Content lives as Markdown files under
-`content/`. The site is built with the Next.js App Router and statically exported
-on deploy.
+`content/`. The site is built with the Next.js App Router and pre-rendered with
+static site generation (SSG) on the Node/Vercel runtime.
 
 > **Repository host**: this repository was migrated from GitHub to the local
 > Forgejo instance ([TomSegbers/tomsegbers-de](http://192.168.7.69:3002/TomSegbers/tomsegbers-de))
@@ -37,7 +37,9 @@ on deploy.
 
 ## Tech Stack
 
-- **[Next.js 14](https://nextjs.org/)** with the App Router, static export
+- **[Next.js 15.5.24](https://nextjs.org/)** with the App Router, pre-rendered
+  via static site generation (SSG) on the Node/Vercel runtime. `output: 'export'`
+  is deliberately not used — the contact form server action needs a Node runtime.
 - **[TypeScript](https://www.typescriptlang.org/)** in `strict` mode,
   `noUncheckedIndexedAccess` on, `unknown` over `any`, Zod at boundaries
 - **[Tailwind CSS](https://tailwindcss.com/)** with
@@ -97,7 +99,7 @@ From `package.json`:
 | `pnpm dev`             | Start the dev server with colorized output              |
 | `pnpm build`           | Production build, generates static pages                |
 | `pnpm start`           | Run the production build locally                        |
-| `pnpm lint`            | Run `next lint` (ESLint)                                |
+| `pnpm lint`            | Run ESLint over `*.ts` and `*.tsx`                      |
 | `pnpm lint:fix`        | Auto-fix lint errors                                    |
 | `pnpm prettier`        | Check formatting                                        |
 | `pnpm prettier:fix`    | Apply Prettier fixes                                    |
@@ -108,6 +110,8 @@ From `package.json`:
 | `pnpm build-storybook` | Build a static Storybook bundle                         |
 | `pnpm test-storybook`  | Run Storybook smoke tests against the built bundle      |
 | `pnpm analyze`         | Build with `@next/bundle-analyzer` enabled              |
+| `pnpm lighthouse`      | Run Lighthouse CI budgets (LCP/CLS/TBT)                 |
+| `pnpm budget:bundle`   | Check bundle bytes against the committed baseline       |
 | `pnpm coupling-graph`  | Render module dependency graph to `graph.svg` via Madge |
 | `pnpm format`          | Apply Prettier to `*.ts`, `*.tsx`, `*.md`               |
 
@@ -250,6 +254,11 @@ automatically.
 The test runner verifies each story renders without errors. Stories are
 written in TSX; MDX stories are not supported by the smoke runner.
 
+Two further test tools are dev-only dependencies, never bundled into the
+runtime: `@axe-core/playwright` drives the accessibility assertions in the
+Playwright specs, and `@lhci/cli` runs the Lighthouse CI budgets
+(`pnpm lighthouse`).
+
 ## Deployment
 
 Deployed on [Vercel](https://vercel.com/). Previously a push to `main` on
@@ -257,8 +266,9 @@ GitHub triggered the production deploy via the GitHub integration; since the
 Forgejo migration the deploy is triggered manually (`vercel --prod`) or via a
 Forgejo Actions job. Rollbacks are performed through the Vercel dashboard.
 
-`pnpm build` runs `next build` and statically generates all pages; the build
-currently emits 36 static routes. The only server-side runtime code is the
+`pnpm build` runs `next build` and pre-renders all pages with SSG; the build
+currently emits 38 static routes. The site is served on the Node/Vercel runtime;
+`output: 'export'` is deliberately not set. The only server-side runtime code is the
 contact form server action, which calls the Resend API. The site has no
 middleware, no instrumentation hook, no OpenTelemetry, and no custom API
 routes beyond the Next.js health-check rewrites in `next.config.mjs`.

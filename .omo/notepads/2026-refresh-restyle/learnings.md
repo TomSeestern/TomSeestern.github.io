@@ -181,3 +181,20 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   prior sessions; new evidence must be `git add -f`-ed. `boulder.json` is
   orchestrator-owned — leave it out of task commits.
 - Build emits **38** static pages (consistent with T02), not the plan/README's 36.
+
+## T09 — dead deps + README drift (2026-09-10)
+
+- No `instrumentation.ts` exists, so `@vercel/otel` + all 5 `@opentelemetry/*`
+  were pure dead weight. Also removed `npm-only-allow` and
+  `postinstall-postinstall` — their only occurrences were their own
+  package.json entries (the old `preinstall` hook was already gone). Root
+  `postinstall` is `npx patch-package -y`, which pnpm runs natively.
+- `pnpm install` (unfrozen) removed 82 packages and regenerated
+  `pnpm-lock.yaml`; `pnpm install --frozen-lockfile` then exits 0.
+- `pnpm-lock.yaml` still lists a transitive `@opentelemetry/api` because
+  `next@15.5.24` declares it as an optional peer for its instrumentation hook.
+  Expected, not a direct dependency — acceptance is `package.json` == 0.
+- Build emits 38 static pages (T02/T10 already noted this; README said 36).
+- README stale-claim grep: avoid the literal phrase "static export" — a negated
+  "(not a static export)" still matches the acceptance grep. Phrase as
+  "`output: 'export'` is deliberately not set".
