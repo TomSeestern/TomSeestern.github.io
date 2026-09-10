@@ -1,0 +1,149 @@
+T16 — Home rebuild: type-led hero, curated featured set, founder-arc scaffold
+Plan: 2026-refresh-restyle
+Timestamp (UTC): 2026-09-10T22:11:24Z
+Host: nix devShell (node v22.23.1, pnpm 10.15.1); commands run as
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; <cmd>'
+
+================================================================================
+1. WHAT CHANGED
+================================================================================
+- Marquee removed: both `animate-marquee` / `animate-marquee2` rows (42 cards =
+  21 projects x2) and the `projects.map` duplication are gone from `app/page.tsx`.
+  `.animate-marquee*` no longer appears in the home DOM. Tailwind
+  `animation.marquee` tokens left in `tailwind.config.js` (T15 owns config motion).
+- Type-led hero, no portrait: portrait `<Image src="/img/Tom_Segbers_Frontal.webp">`
+  removed (removes the previous LCP surface). H1 copy unchanged
+  ("Tom Segbers — Senior Developer"); positioning line unchanged
+  ("Building reliable systems and solving hard problems."). Hero wraps to two
+  lines at 375 (no orphan word) via `text-h2-sm sm:text-h1`.
+- Curated featured set of 4 "monuments" in `components/FeaturedSet/FeaturedSet.tsx`,
+  each linking to `/projects/entry/<slug>`. No images, no marquee, no duplication
+  of the project list.
+- Founder-arc scaffold in `components/FounderArc/FounderArc.tsx`: 4 structural
+  beats (01 Origin / 02 Turning Point / 03 Practice / 04 Direction). Neutral,
+  non-factual labels only — NO biography, metrics, clients, or outcomes (R19.1).
+  Code comment marks the copy as T25-owned. Desktop 4-col with the 1px
+  `.column-rule`/left-border motif; stacked with top rules below `lg`.
+- Latest-posts teaser section retained (ArticleTeaser x3 + "View all Blog Posts").
+- Legacy `tracking-tight` dropped from the two page-owned h2 headings in
+  `app/page.tsx` (T14 `!important` bridge no longer needed by any heading T16 owns;
+  `styles/tailwind.css` bridge remains for `app/not-found.tsx`, owned elsewhere).
+
+Featured-selection rule (implemented in `lib/projects.tsx::selectFeaturedProjects`,
+documented in code): projects with frontmatter `featured: true` win, preserving the
+newest-first order from `getAllProjects()`. If fewer than `FEATURED_PROJECT_COUNT`
+(4) are flagged — the current state, no content file sets the flag yet — the
+selection falls back deterministically to the 4 most recent projects. Pure
+function; unit-tested in `lib/projects.test.ts`.
+
+================================================================================
+2. TDD — RED FIRST
+================================================================================
+Command: nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test -- lib/projects.test.ts'
+Result (raw: /tmp/opencode/t16-jest-red.log): EXIT=1 — 5 failed,
+  "TypeError: (0, _projects.selectFeaturedProjects) is not a function".
+
+Command: nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright CI=true; pnpm exec playwright test e2e/home.spec.ts --project=chromium --workers=1 --retries=0'
+Result (raw: /tmp/opencode/t16-home-red.log): EXIT=1 — 2 failed
+  - featured heading element(s) not found (old page has no "Selected Work").
+  - DOM node budget: received 1592, expected <= 1500.
+  => pre-change home node count = 1592 (with the 42-card marquee).
+
+================================================================================
+3. DOM NODE COUNT — / (production build, real Chromium)
+================================================================================
+Method: `rm -rf .next && pnpm build` then `pnpm exec next start -p 3099`, measured
+with `document.querySelectorAll("*").length` in Playwright Chromium; script
+`.omo/evidence/t16-capture.mjs` (raw output /tmp/opencode/t16-capture5.json).
+
+  viewport        node count   .animate-marquee*   featured links   founder beats
+  375x812         206          0                   4                4
+  768x1024        207          0                   4                4
+  1280x960        206          0                   4                4
+
+  Baseline (red, before change): 1592 nodes at Desktop Chrome (1280x720).
+  Reduction: 1592 -> ~206 (~87% fewer nodes). Budget MAX_HOME_DOM_NODES=1500;
+  e2e home.spec.ts "home page stays within the DOM node budget" is GREEN.
+
+Document fit (no horizontal overflow): scrollWidth == clientWidth at 375, 768,
+1280 (375==375, 768==768, 1280==1280).
+
+================================================================================
+4. SCREENSHOTS (production build)
+================================================================================
+.omo/evidence/t16-home-375.png   (375x812, full page)
+.omo/evidence/t16-home-768.png   (768x1024, full page)
+.omo/evidence/t16-home-1280.png  (1280x960, full page)
+Captured by `.omo/evidence/t16-capture.mjs` (reproducible).
+
+Visual QA (look_at, all three viewports): hero wraps cleanly (2 lines, no orphan);
+"Selected Work" 2x2 grid at 1280/768, 1 col at 375; "Background" 4 columns at
+1280 with vertical rules, 1-col stack with horizontal rules at 768/375; blog
+teasers and footer intact; no overflow, no clipped body text, no mis-sized images.
+(Header nav at 375 is owned by other tasks; not touched here.)
+
+================================================================================
+5. E2E + GATES (final code, exit codes)
+================================================================================
+- pnpm test                     EXIT 0  (16 suites, 107 tests; +5 new)
+- pnpm typecheck                EXIT 0
+- pnpm lint                     EXIT 0  (0 errors; 50 -> 40 warnings, no new)
+- pnpm prettier                 EXIT 0  ("All matched files use Prettier code style!")
+- pnpm contrast                 EXIT 0  (24/24 pairs pass)
+- pnpm ornaments                EXIT 0  (no banned ornament/token)
+- pnpm build                    EXIT 0  (✓ Generating static pages (38/38))
+- Full Playwright chromium, workers=1, CI=true:
+    pnpm exec playwright test --project=chromium --workers=1
+    EXIT 0 — 63 passed (2.1m). Raw: /tmp/opencode/t16-e2e3.log
+  Includes e2e/a11y.spec.ts (axe, light) with KNOWN_VIOLATIONS = [] (UNCHANGED,
+  no allowlist entries added) and responsive.spec.ts target-size floor.
+
+================================================================================
+6. FILES CHANGED (commit scope)
+================================================================================
+Modified:
+  app/page.tsx
+  lib/projects.tsx                 (selectFeaturedProjects + FEATURED_PROJECT_COUNT)
+  e2e/home.spec.ts                 (no marquee, 4 featured links, founder arc,
+                                    positioning line, node budget)
+  e2e/interactions.spec.ts         (marquee reduced-motion tests removed;
+                                    motion-primitive freeze + positive control added;
+                                    home CTA retargeted to a featured link)
+  e2e/fixtures/expectations.ts     (COPY.home.positioning/featuredH2/founderArcH2,
+                                    FEATURED_PROJECT_COUNT, MAX_HOME_DOM_NODES)
+  e2e/static-routes.spec.ts        (recentProjectsH2 -> featuredH2; renamed copy)
+Added:
+  components/FeaturedSet/FeaturedSet.tsx
+  components/FounderArc/FounderArc.tsx
+  lib/projects.test.ts
+Evidence (force-added; .omo/ gitignored):
+  .omo/evidence/task-T16-2026-refresh-restyle.txt (this file)
+  .omo/evidence/t16-capture.mjs
+  .omo/evidence/t16-overflow.mjs
+  .omo/evidence/t16-home-375.png / -768.png / -1280.png
+
+NOT touched (other-task ownership): app/projects/page.tsx, app/blog/page.tsx,
+app/about/page.tsx, components/Header/*, components/Footer/*, next.config.mjs,
+tailwind.config.js, styles/tailwind.css.
+
+================================================================================
+7. ISSUES / RISKS
+================================================================================
+- Stale `next start` servers from earlier tasks (port 3055 pid 337465, port 3099
+  pid 1146266) were left alive. On capture 4 they caused a mixed `.next` where the
+  served HTML referenced a CSS chunk (`066ba86eea0123d4.css`) absent from disk
+  (net::ERR_ABORTED) — utility sizing classes silently failed, producing a false
+  horizontal-overflow read. Fixed by killing the stale servers and doing
+  `rm -rf .next && pnpm build`; HTML CSS refs now match disk. `pnpm exec next
+  start` orphans its `next-server` child on `kill $!` — kill by the PID listening
+  on the port (`ss -ltnp`), not the wrapper PID.
+- Header nav at 375 is out of T16 scope (T21 owns Header). The look_at pass noted
+  nav links; the responsive e2e hamburger test is green, so no functional defect.
+- T25 owns the final founder-arc copy and positioning line; T16 ships structure
+  only. T17 is dispatched after T16 and also edits
+  e2e/fixtures/expectations.ts — serialization noted in the task.
+- R22.1 token usage: not separately metered by the harness; this task used one
+  serial executor session. No figure available to report.
+
+Commands were run via `nix develop` per the inherited convention; host has no
+pnpm/node on PATH. `.omo/` is gitignored, so evidence files are `git add -f`-ed.

@@ -2,9 +2,10 @@ import { Metadata } from "next"
 import Image from "next/image"
 import React from "react"
 import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
-import ProjectTeaser from "../components/ProjectTeaser/ProjectTeaser"
-import { getAllProjects } from "../lib/projects"
+import FeaturedSet from "../components/FeaturedSet/FeaturedSet"
+import FounderArc from "../components/FounderArc/FounderArc"
 import { getAllBlogPosts } from "../lib/blog"
+import { getAllProjects, selectFeaturedProjects } from "../lib/projects"
 
 export const metadata: Metadata = {
   title: {
@@ -34,131 +35,30 @@ export const metadata: Metadata = {
 }
 
 export default function Web() {
-  const projects = getAllProjects()
+  const featuredProjects = selectFeaturedProjects(getAllProjects())
 
   return (
     <>
-      <section className="relative overflow-hidden bg-surface dark:bg-surface-dark">
-        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24 xl:grid xl:grid-cols-12 xl:gap-8">
-          <div className="col-span-8">
-            <h1 className="mb-4 text-h1-sm leading-none text-foreground dark:text-foreground-dark md:text-h1 lg:text-6xl">
-              Tom Segbers — Senior Developer
-            </h1>
-            <p className="mb-6 font-light text-muted dark:text-muted-dark md:text-lg lg:mb-8 lg:text-xl">
-              Building reliable systems and solving hard problems.
-            </p>
-            <div className="flex flex-col items-center gap-8 sm:flex-row">
-              {/* Project Section */}
-              <div className="mb-8 flex-1 text-muted dark:text-muted-dark sm:mb-0">
-                {/* TODO: Replace with your project image and details */}
-                <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
-                  Latest Project: LAYZR.gg
-                </h2>
-                <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
-                  Dive into the details of my recent project, LAYZR.gg, where I explore digital collectibles and the
-                  unique digital identity they provide.
-                </p>
-                <a
-                  href="/projects"
-                  className="inline-flex items-center rounded-lg bg-accent-hover px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground"
-                >
-                  Learn More
-                </a>
-              </div>
-              {/* Blog Section */}
-              <div className="mb-0 flex-1 text-muted dark:text-muted-dark">
-                <h2 className="mb-3 text-xl font-semibold text-foreground dark:text-foreground-dark">
-                  Recent Blog Posts
-                </h2>
-                <p className="mb-4 line-clamp-3 min-h-teaser font-light ">
-                  Explore my latest thoughts and insights on Tech, AI and sometimes a bit about software development.
-                  Mostly lessons learned from my projects.
-                </p>
-                <a
-                  href="/blog"
-                  className="inline-flex items-center rounded-lg border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors duration-200 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:border-border-dark dark:bg-surface-elevated-dark dark:text-foreground-dark dark:hover:border-border-dark dark:hover:bg-muted-surface-dark dark:focus-visible:ring-accent-soft-dark"
-                >
-                  Read the Blog
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="absolute right-0 top-0 hidden h-full w-1/3 xl:block">
-            <Image
-              className="h-full w-full object-cover"
-              src="/img/Tom_Segbers_Frontal.webp"
-              alt="Frontal image of Tom Segbers"
-              height={1368}
-              width={1091}
-            />
-          </div>
+      <section className="bg-surface">
+        <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 sm:py-20 lg:py-28">
+          <h1 className="max-w-measure-display text-h2-sm leading-none text-foreground sm:text-h1">
+            Tom Segbers — Senior Developer
+          </h1>
+          <p className="mt-6 max-w-measure-lead text-body-lg font-light text-muted sm:text-xl">
+            Building reliable systems and solving hard problems.
+          </p>
         </div>
       </section>
 
-      <section className="bg-surface-muted py-8 dark:bg-surface-dark sm:py-16 lg:py-24">
-        <div className="mx-auto max-w-screen-xl px-4 sm:px-6">
-          <div>
-            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-foreground dark:text-foreground-dark">
-              My Recent Projects
-            </h2>
-            <p className="font-light text-muted dark:text-muted-dark sm:text-xl">
-              Learn more about the Projects that I worked on recently, how we diagnosed problems, implemented solutions
-              and created Customer value!
-            </p>
-          </div>
-        </div>
-        <div className="relative flex overflow-hidden py-2">
-          <div className="flex animate-marquee space-x-4 motion-reduce:animate-none">
-            {projects.map((article) => (
-              <div key={article.id} className="h-96 w-96">
-                <ProjectTeaser
-                  key={article.id}
-                  title={article.title}
-                  imageUrl={article.fullArticleLink}
-                  description={article.articleContent}
-                  technologies={article.technologies}
-                  ctaLink={article.fullArticleLink}
-                  projectDate={article.articleDate}
-                />
-              </div>
-            ))}
-          </div>
+      <FeaturedSet projects={featuredProjects} />
 
-          <div className="absolute flex animate-marquee2 space-x-4 px-2 motion-reduce:animate-none">
-            {projects.map((article) => (
-              <div key={article.id} className="h-96 w-96">
-                <ProjectTeaser
-                  key={article.id}
-                  title={article.title}
-                  imageUrl={article.fullArticleLink}
-                  description={article.articleContent}
-                  technologies={article.technologies}
-                  ctaLink={article.fullArticleLink}
-                  projectDate={article.articleDate}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="mx-auto flex max-w-screen-xl justify-end px-4 pt-8 sm:px-6 sm:pt-16 lg:pt-24">
-          <a
-            href="/projects"
-            title="View all Projects"
-            className="flex items-center rounded text-base font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-light dark:focus-visible:ring-accent-soft-dark"
-          >
-            View all Projects
-            <Image className={"ml-2 h-4 w-4 dark:invert"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
-          </a>
-        </div>
-      </section>
+      <FounderArc />
 
-      <section className="bg-surface dark:bg-surface-dark">
+      <section className="bg-surface">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
           <div>
-            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-foreground dark:text-foreground-dark">
-              My Recent Blog Posts
-            </h2>
-            <p className="font-light text-muted dark:text-muted-dark sm:text-xl">
+            <h2 className="mb-4 text-h2-sm text-foreground sm:text-h2">My Recent Blog Posts</h2>
+            <p className="text-body-lg font-light text-muted">
               These are some of my recent Blog Posts. I write about a variety of topics, including AI, Tech, and more.
             </p>
           </div>
@@ -181,16 +81,10 @@ export default function Web() {
             <a
               href="/blog"
               title="View all Blog Posts"
-              className="flex items-center rounded text-base font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-accent-dark dark:hover:text-accent-light dark:focus-visible:ring-accent-soft-dark"
+              className="flex items-center rounded text-base font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft"
             >
               View all Blog Posts
-              <Image
-                className={"ml-2 h-4 w-4 dark:invert"}
-                src={"/icon/arrow-right.svg"}
-                alt=""
-                width={32}
-                height={32}
-              />
+              <Image className={"ml-2 h-4 w-4"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
             </a>
           </div>
         </div>

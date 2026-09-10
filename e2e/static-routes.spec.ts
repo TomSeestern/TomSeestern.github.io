@@ -44,7 +44,7 @@ test.describe("static routes", () => {
 
     // Then
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(COPY.home.h1)
-    await expect(page.getByRole("heading", { level: 2, name: COPY.home.recentProjectsH2 })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 2, name: COPY.home.featuredH2 })).toBeVisible()
     await expect(page.getByRole("heading", { level: 2, name: COPY.home.recentBlogH2 })).toBeVisible()
     await expect(page.getByAltText(COPY.home.logoAlt)).toBeVisible()
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)

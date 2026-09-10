@@ -13,7 +13,9 @@
 export const COPY = {
   home: {
     h1: "Tom Segbers — Senior Developer",
-    recentProjectsH2: "My Recent Projects",
+    positioning: "Building reliable systems and solving hard problems.",
+    featuredH2: "Selected Work",
+    founderArcH2: "Background",
     recentBlogH2: "My Recent Blog Posts",
     logoAlt: "Tom Segbers Logo",
   },
@@ -36,3 +38,17 @@ export const BLOG_POST_COUNT = 3
 
 /** Project entries expected under `content/projects/` (asserted as a floor). */
 export const MIN_PROJECT_COUNT = 21
+
+/**
+ * Curated "monument" projects the home featured set renders (T16). Mirrors
+ * `FEATURED_PROJECT_COUNT` in `lib/projects.tsx`; the e2e spec asserts the
+ * rendered link count matches this.
+ */
+export const FEATURED_PROJECT_COUNT = 4
+
+/**
+ * Upper bound for `document.querySelectorAll("*").length` on `/`. The retired
+ * marquee rendered 42 cards (~2× the whole site's node budget); this floor keeps
+ * the home page from regressing back to a node-bloated layout.
+ */
+export const MAX_HOME_DOM_NODES = 1500

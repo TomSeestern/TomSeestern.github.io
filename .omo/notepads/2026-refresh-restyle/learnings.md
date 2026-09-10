@@ -342,3 +342,36 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   no component edit.
 - `next build` CSS minifies `280ms`→`.28s`, `200ms`→`.2s`, `0.16`→`.16`, so grep the
   built CSS for the shape (`.motion-rise{…calm-rise…}`), not the literal source string.
+
+## T16 — home rebuild: featured selection, motion test pattern, responsive borders (2026-09-10)
+
+- Keep selection rules as a pure lib function (`lib/projects.tsx::selectFeaturedProjects`)
+  separate from the presentational component. The page computes the 4 entries and
+  passes them in; the component stays dumb and the rule is unit-testable in ms.
+  Rule shipped: `featured:true` wins (newest-first), else fall back deterministically
+  to the `count` most recent. No content file sets `featured` yet, so the fallback is
+  the live path.
+- A raw CSS class (`.column-rule`) has NO Tailwind responsive variant — you cannot
+  write `lg:column-rule`. For a motif that must change shape across breakpoints, use
+  responsive Tailwind border utilities (`border-t lg:border-t-0 lg:border-l lg:pl-8`)
+  instead of forcing the custom class into a layout it breaks. Keep the custom class
+  for the desktop-only case when possible.
+- Node budget baseline that matters: the old 42-card marquee home was **1592** DOM
+  nodes at Desktop Chrome; the rebuild is ~206 at 375/768/1280 (measured production,
+  `document.querySelectorAll("*").length`). ~87% reduction. The 1500 budget has wide
+  headroom now.
+- Reduced-motion e2e for the new primitives needs a **positive control** or it passes
+  vacuously: assert `.motion-rise` has `animation-name: none` under `reduce`, AND
+  `calm-rise` under `no-preference`. `.motion-rise` is a raw class (always emitted),
+  so it works without a Tailwind `animate-*` utility in content.
+- Home hero at 375: `text-h1-sm` (36px) split "SENIOR / DEVELOPER" awkwardly.
+  `text-h2-sm` (30px) on mobile + `sm:text-h1` gives a clean 2-line wrap. Token-only,
+  no raw sizes.
+- Renaming a key in `e2e/fixtures/expectations.ts` is a repo-wide change:
+  `static-routes.spec.ts` also consumed `COPY.home.recentProjectsH2`. Always
+  `grep -rn` the old key before/after — `pnpm typecheck` catches it (ts-jest does not).
+- Verify home/interactions/static-routes specs at `--retries=0` for the red capture;
+  `CI=true` adds retries=2 and hides a deterministic failure behind retries in logs.
+- Final capture numbers (production): node 206/207/206, featured links 4, founder
+  beats 4, `.animate-marquee*` 0, scrollWidth==clientWidth at 375/768/1280.
+  Screenshots + `t16-capture.mjs` in `.omo/evidence/`.

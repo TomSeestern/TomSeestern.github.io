@@ -6,6 +6,7 @@ import type { Page } from "@playwright/test"
 // links/cards use `focus-visible:ring-accent-soft` (accent.soft, #BE6A50).
 // Measured from the production build's computed `box-shadow` after the T13 remap.
 const CTA_FOCUS_RING = /rgb\(222, 164, 140\)/
+const LINK_FOCUS_RING = /rgb\(190, 106, 80\)/
 
 function collectBrowserConsoleErrors(page: Page): readonly string[] {
   const consoleErrors: string[] = []
@@ -61,36 +62,18 @@ test.describe("interactive accessibility", () => {
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
-  test("reduced motion stops marquee animation while retaining project navigation", async ({ page }) => {
-    // Given
-    const consoleErrors = collectBrowserConsoleErrors(page)
-    await page.emulateMedia({ reducedMotion: "reduce" })
-
-    // When
-    await page.goto("/")
-    const marquee = page.locator(".animate-marquee").first()
-
-    // Then
-    await expect(marquee).toBeVisible()
-    await expect(marquee).toHaveCSS("animation-name", "none")
-    await page.getByRole("link", { name: "View all Projects" }).click()
-    await expect(page).toHaveURL(/\/projects$/)
-    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
-  })
-
-  test("home primary CTA exposes a visible keyboard focus indicator", async ({ page }) => {
+  test("home featured link exposes a visible keyboard focus indicator", async ({ page }) => {
     // Given
     const consoleErrors = collectBrowserConsoleErrors(page)
     await page.goto("/")
-    const primaryCta = page.locator('a:has-text("Learn More")').first()
+    const featuredLink = page.locator('[data-testid="featured-project"]').first()
 
     // When
-    await primaryCta.focus()
+    await featuredLink.focus()
 
     // Then
-    await expect(primaryCta).toBeFocused()
-    await expect(primaryCta).toHaveCSS("outline-style", "solid")
-    await expect(primaryCta).toHaveCSS("box-shadow", CTA_FOCUS_RING)
+    await expect(featuredLink).toBeFocused()
+    await expect(featuredLink).toHaveCSS("box-shadow", LINK_FOCUS_RING)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
@@ -109,21 +92,36 @@ test.describe("interactive accessibility", () => {
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
-  test("reduced motion freezes both marquee tracks while cards stay visible", async ({ page }) => {
+  test("reduced motion freezes every home entrance primitive while content stays visible", async ({ page }) => {
     // Given
     const consoleErrors = collectBrowserConsoleErrors(page)
     await page.emulateMedia({ reducedMotion: "reduce" })
 
     // When
     await page.goto("/")
-    const tracks = page.locator(".animate-marquee, .animate-marquee2")
+    const primitives = page.locator(".motion-rise, .motion-fade")
+
+    // Then — the primitives are inert and their content is rendered.
+    const count = await primitives.count()
+    expect(count).toBeGreaterThan(0)
+    for (const index of Array.from({ length: count }, (_, i) => i)) {
+      await expect(primitives.nth(index)).toHaveCSS("animation-name", "none")
+    }
+    await expect(page.locator('[data-testid="featured-project"]').first()).toBeVisible()
+    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+  })
+
+  test("home entrance primitives animate when motion is allowed", async ({ page }) => {
+    // Given — positive control: without the reduced-motion preference the
+    // primitive must actually run, so the freeze assertion above cannot pass
+    // vacuously.
+    await page.emulateMedia({ reducedMotion: "no-preference" })
+
+    // When
+    await page.goto("/")
+    const primitive = page.locator(".motion-rise").first()
 
     // Then
-    await expect(tracks).toHaveCount(2)
-    for (const index of [0, 1]) {
-      await expect(tracks.nth(index)).toHaveCSS("animation-name", "none")
-    }
-    await expect(page.locator('.animate-marquee a[href^="/projects/entry/"]').first()).toBeVisible()
-    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+    await expect(primitive).toHaveCSS("animation-name", "calm-rise")
   })
 })

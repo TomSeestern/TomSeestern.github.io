@@ -259,3 +259,30 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   (`accent.soft-foreground-dark` #DEA48C). Note the CTA ring is the
   `-soft-foreground-dark` token, NOT `accent.soft`; general links/cards use
   `ring-accent-soft` = `rgb(190,106,80)` (#BE6A50). Full chromium suite 62/62.
+
+## T16 — orphaned `next-server` produced a mixed `.next` and a false overflow (2026-09-10)
+
+- `pnpm exec next start -p 3099 & kill $!` kills the pnpm/node wrapper but the
+  `next-server` child survives and keeps serving. Two such servers were left over
+  (3055 pid 337465 from an earlier task, 3099 pid 1146266 from my own capture).
+  A later `pnpm build` then wrote `.next` while the old server was live, leaving a
+  mixed tree: the served `index.html` referenced CSS chunk `066ba86eea0123d4.css`
+  that was absent from `.next/static/css` → `net::ERR_ABORTED`, so the main
+  stylesheet never loaded and every `h-*`/`w-*` utility silently failed. Images
+  rendered at intrinsic 512px and `document.scrollWidth` read 520 at a 375 viewport
+  — a **false** horizontal-overflow signal, not a real layout bug.
+- Fix: kill by the PID actually listening on the port
+  (`ss -ltnp | grep :3099 | grep -o 'pid=[0-9]*'`), then `rm -rf .next && pnpm build`
+  and confirm `grep -o '/_next/static/css/[a-z0-9]*\.css' .next/server/app/index.html`
+  matches `ls .next/static/css/`. Capture returned to scrollWidth==clientWidth.
+- Cheap integrity check before any production screenshot/node-count capture:
+  every CSS `href` in the prerendered HTML must exist on disk. An `ERR_ABORTED`
+  stylesheet chunk is otherwise invisible in the screenshot until images blow up.
+- Reduced-motion e2e for the compact "View all Projects" link: the responsive
+  `target-size floor` (24px) caught `text-small` (line-height 21px). Switching to
+  `text-base` (24px, `text-base`'s default line-height 1.5rem) clears it — the same
+  choice the retained "View all Blog Posts" link already used.
+- Scope note: `.omo/boulder.json` is orchestrator-owned and was already modified
+  before T16; it is intentionally excluded from the T16 commit.
+- No blockers. Final: build 38/38, typecheck/lint/prettier/contrast/ornaments green,
+  jest 107 passed, full chromium e2e 63 passed.
