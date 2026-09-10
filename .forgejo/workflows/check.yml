@@ -37,6 +37,8 @@ jobs:
         run: nix develop -c pnpm lint
       - name: Format check
         run: nix develop -c pnpm prettier
+      - name: Contrast gate
+        run: nix develop -c pnpm contrast
       - name: Unit & Integration tests
         run: nix develop -c pnpm test
       - name: Smoke & Acceptance tests

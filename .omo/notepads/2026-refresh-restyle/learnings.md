@@ -286,3 +286,7 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Raw: `t13-contrast-{red,green}.txt`, `t13-axe.log`, `t13-axe-green.log`,
   `t13-axe-nodes.txt`, `t13-build.log`, `t13-lint.log`, `t13-prettier.log`,
   `t13-jest.log`.
+
+## T13 follow-up — contrast gate wired into CI (2026-09-10)
+
+- Added `pnpm contrast` (`node scripts/check-contrast.mjs`) and a "Contrast gate" step to `.forgejo/workflows/check.yml` right after "Format check"; the workflow keeps the `nix develop -c pnpm …` style. YAML validated with the pnpm-store js-yaml 3.15.0 (`node -e "require(...js-yaml).load(...)"`); existing action pins untouched.
