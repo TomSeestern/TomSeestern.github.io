@@ -1,0 +1,117 @@
+T15 — Palette application + motion primitives + column-rule motif
+Work: 2026-refresh-restyle
+Collected: 2026-09-10T21:43Z
+Revision before commit: 2bdf1e9
+
+BINDING DECISIONS APPLIED
+- D13: single light mode, warm parchment, NO blue. T13 remapped the tokens; T15
+  finishes applying them and adds the motion/motif layer.
+- D4: terracotta + deep oxblood/wine accents only.
+- Stale plan text (travertine/basalt + #2563eb) explicitly rejected per the
+  orchestrator override in .omo/notepads/2026-refresh-restyle/decisions.md.
+
+CHANGED FILES
+- tailwind.config.js
+    transitionTimingFunction.calm = cubic-bezier(0.16, 1, 0.3, 1)
+    transitionDuration: calm-fast 200ms / calm 280ms / calm-slow 320ms
+    animation.calm-rise (280ms) / calm-fade (200ms), opacity + translateY only
+- styles/tailwind.css
+    global prefers-reduced-motion: reduce guard (duration ~0, scroll auto)
+    @keyframes calm-rise / calm-fade
+    .motion-rise / .motion-fade wrapped in prefers-reduced-motion: no-preference
+    .column-rule 1px vertical motif (border-inline-start: 1px solid border)
+    T14 !important heading-tracking bridge retained + comment marks T16/T17 removal
+- app/layout.tsx
+    skip link focus:bg-white/focus:text-black -> focus:bg-accent/focus:text-white
+    body: dropped dormant dark: utilities (D13 single light mode)
+- app/blog/entry/[slug]/page.tsx, app/projects/entry/[slug]/page.tsx
+    BreadcrumbItem theme href.off -> text-muted (#5C5548, 6.43:1). Breadcrumb only.
+- e2e/fixtures/a11y-known-violations.ts
+    allowlist emptied; the 2 breadcrumb rows removed.
+- scripts/check-ornaments.mjs (new) — pure-Node banned-ornament gate
+- .forgejo/workflows/check.yml — "Ornament gate" step after the contrast gate
+- package.json — "ornaments" script
+- DESIGN.md — §5 motif/banned ornament, §6 motion+reduced-motion+column-rule,
+    §8 ornament gate
+- tests/budgets/contrast.json — UNCHANGED. The breadcrumb reuses the existing
+  "muted on surface" pair; no foreground/background pair changed.
+
+VERIFICATION (all commands via nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …')
+
+1. Contrast gate — 24/24 PASS, exit 0
+   $ pnpm contrast
+   CONTRAST GATE PASSED — all 24 pair(s) meet their minimums.
+   raw: .omo/evidence/t15-motion/gates-quick.log
+
+2. Ornament gate — 84 files scanned, 0 hits, exit 0
+   $ pnpm ornaments
+   ORNAMENT GATE PASSED — no banned ornament or token found.
+   RED PROOF: temporary scripts/__ornament-probe.mjs containing "laurel" and
+   "text-gold" -> ORNAMENT GATE FAILED with both hits located, EXIT=1; probe removed.
+   raw: .omo/evidence/t15-motion/gates-quick.log
+
+3. Typecheck — exit 0
+4. Lint — exit 0 (0 errors, 55 pre-existing warnings)
+5. Prettier — "All matched files use Prettier code style!", exit 0
+6. Jest — 15 suites / 102 tests passed, exit 0
+   raw: .omo/evidence/t15-motion/gates-code.log
+
+7. Build — 38/38 static pages, exit 0
+   ✓ Generating static pages (38/38)
+   raw: .omo/evidence/t15-motion/build.log
+
+8. Reduced-motion — REAL Playwright Chromium emulation, production build
+   $ PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright node \
+       .omo/evidence/t15-motion/verify-reduced-motion.mjs
+   7 routes (/ /about /blog /projects /contact /blog/entry/2019-… /projects/entry/2020-…)
+     running transform/opacity transitions: 0 (every route)
+     running animations:                 0 (every route)
+   marquee under reduce:      transform "none", stable over 500ms
+   marquee under motion-on:   matrix(1,0,0,1,-12.4,0) -> matrix(1,0,0,1,-59.0,0)  (detector is meaningful)
+   hover on motion-safe:-translate-y-1 card under reduce: transform "none"
+   RESULT: REDUCED-MOTION PROOF PASSED — 7 route(s), zero running motion.
+   raw: .omo/evidence/t15-motion/reduced-motion.log
+
+9. Shipped production CSS (.next/static/css, minified):
+   prefers-reduced-motion:reduce x2, prefers-reduced-motion:no-preference x2
+   @keyframes calm-rise present
+   .motion-rise{animation:calm-rise .28s cubic-bezier(.16,1,.3,1) both}
+   .motion-fade{animation:calm-fade .2s cubic-bezier(.16,1,.3,1) both}
+   .column-rule{border-inline-start:1px solid #D8CDB6}
+
+10. a11y e2e — 8 passed, exit 0
+    $ PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright CI=true \
+        pnpm exec playwright test e2e/a11y.spec.ts --project=chromium --workers=1
+    raw: .omo/evidence/t15-motion/a11y-chromium.log
+
+ALLOWLIST ROWS REMOVED
+- /blog/entry/2019-ebeltoft-cheesecake-recipe  light  color-contrast  nodeCount 1
+- /projects/entry/2020-soudest-backend-nodejs  light  color-contrast  nodeCount 1
+KNOWN_VIOLATIONS is now [].
+
+PRE-EXISTING FAILURES (NOT INTRODUCED BY T15)
+Full chromium suite post-T15: 58 passed / 4 failed.
+Same two specs on stashed HEAD (pre-T15): 6 failed / 5 passed.
+=> T15 fixed 2 failures (the breadcrumb color-contrast nodes) and introduced 0.
+Remaining 4 are stale expectations created by T13's palette remap, outside the
+T15 commit scope:
+- e2e/dark-mode.spec.ts:38,66 expect body rgb(255,255,255); surface is #F5EFE1.
+  Last touched T07 (d792fff); T13 never updated it. Needs a T13 follow-up.
+- e2e/interactions.spec.ts:54,87 expect blue ring rgb(147,197,253); T13 remapped
+  the ring to the warm accent-soft family. Owned by T16 per the plan.
+raw: .omo/evidence/t15-motion/e2e-chromium.log, .omo/evidence/t15-motion/e2e-pre-t15.log
+
+HEADING-TRACKING BRIDGE
+Kept. 4 page headings (app/page.tsx x2, app/not-found.tsx x2) still carry
+`tracking-tight`; those files are outside T15 scope, so the T14 `!important`
+bridge in styles/tailwind.css stays. Removed cleanly is impossible without editing
+T16/T17-owned files; the comment now names the removal owner.
+
+CONSTRAINTS HONORED
+- No clip-path animation, no backdrop-filter, no 900ms durations.
+- No blue / gold / marble / Roman prop introduced.
+- No runtime deps added; no Tailwind v4 migration; no component/page edits beyond
+  the permitted breadcrumb theme prop.
+- Contrast manifest unchanged (no pair changed).
+
+COMMIT: feat(theme): parchment palette, motion primitives, column-rule motif

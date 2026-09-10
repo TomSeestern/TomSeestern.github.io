@@ -31,7 +31,12 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
             Home
           </BreadcrumbItem>
           <BreadcrumbItem href="/projects">Projects</BreadcrumbItem>
-          <BreadcrumbItem className="truncate">{fileContent.data.title || "Content "}</BreadcrumbItem>
+          <BreadcrumbItem
+            className="truncate"
+            theme={{ href: { off: "flex items-center text-sm font-medium text-muted" } }}
+          >
+            {fileContent.data.title || "Content "}
+          </BreadcrumbItem>
         </Breadcrumb>
       </div>
 

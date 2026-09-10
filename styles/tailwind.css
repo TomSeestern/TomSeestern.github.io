@@ -6,8 +6,10 @@
   /*
    * Carved display treatment (T14/D3): H1/H2 use the Newsreader serif display
    * face, uppercase, with wide tracking. Tracking is `!important` so legacy
-   * `tracking-tight` utilities on page-owned headings (T15/T16 scope) cannot
+   * `tracking-tight` utilities on page-owned headings (T16/T17 scope) cannot
    * override the display rhythm — the base layer is the single source here.
+   * T16/T17 replace those utilities with an explicit display utility and this
+   * bridge can then be removed.
    */
   h1,
   h2 {
@@ -15,4 +17,69 @@
     text-transform: uppercase;
     letter-spacing: theme("letterSpacing.display") !important;
   }
+}
+
+/*
+ * Reduced motion is absolute (R15.7). When the visitor asks for less motion,
+ * nothing on the site transitions or animates. This global guard also covers
+ * Flowbite-owned and page-owned `transition-colors` utilities that T15 does not
+ * edit, so the whole tree obeys one policy.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Motion primitives (T15). Opacity + translateY only, 200–320 ms, one easing
+ * curve. The @keyframes live here so they are always emitted; the matching
+ * `animate-calm-rise` / `animate-calm-fade` utilities are token-defined in
+ * tailwind.config.js. Each utility is wrapped in `no-preference`, so the guard
+ * is intrinsic — a primitive can never move under reduced motion.
+ */
+@keyframes calm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes calm-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-rise {
+    animation: calm-rise 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .motion-fade {
+    animation: calm-fade 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+/*
+ * The single structural motif (T15): a 1px vertical column rule drawn with a
+ * plain CSS border — never a pseudo-element, gradient, or shadow. Apply to a
+ * column that needs to be separated from the one before it.
+ */
+.column-rule {
+  border-inline-start: 1px solid theme("colors.border.DEFAULT");
 }

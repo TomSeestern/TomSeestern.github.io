@@ -99,9 +99,13 @@ wrappers and never use viewport-width translation utilities.
 
 - **Structure:** headings, metadata, descriptions, and links built with semantic
   color tokens.
-- **States:** custom anchors, buttons, cards, and social controls use
-  `transition-colors duration-200`; links gain an underline or accent-color hover
-  state. Motion is owned by T15 — do not add motion primitives here.
+- **States:** custom anchors, buttons, cards, and social controls use a
+  color-only transition (`transition-colors`, `duration-200`); links gain an
+  underline or accent-color hover state. For entrances use the `.motion-*`
+  primitives in §6 — never an ad-hoc animation.
+- **Motif:** the only structural ornament is the 1px vertical column rule in §6.
+  No classical (Roman) ornament and no precious-material tokens are permitted;
+  `scripts/check-ornaments.mjs` rejects them by name.
 - **Focus:** custom focusable controls use
   `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft`;
   the `accent-soft` ring is contrast-gated against parchment so it clears the
@@ -112,11 +116,45 @@ wrappers and never use viewport-width translation utilities.
 
 ## 6. Motion & Interaction
 
-Motion honors current Tailwind behavior and uses composited properties where
-animation exists. Marquees use `motion-safe:animate-marquee` or
-`motion-safe:animate-marquee2`, so `prefers-reduced-motion: reduce` prevents
-continuous movement while all links remain usable. (Motion primitives and the
-column-rule motif are owned by T15.)
+### Motion rules
+
+"Engineered calm": motion is composited, short, and only ever an entrance or a
+state change. An animation is **never** the only signal for an interaction.
+Every animation and transition uses **opacity and `translateY` only** — no
+`clip-path`, no `backdrop-filter`, and no layout-property animation. There is a
+single easing curve and a 200–320 ms duration band.
+
+| Token / primitive    | Value                                  | Usage                                    |
+| -------------------- | -------------------------------------- | ---------------------------------------- |
+| `ease-calm`          | `cubic-bezier(0.16, 1, 0.3, 1)`        | every custom transition                  |
+| `duration-calm-fast` | `200ms`                                | fades                                    |
+| `duration-calm`      | `280ms`                                | default                                  |
+| `duration-calm-slow` | `320ms`                                | large surface entrances                  |
+| `.motion-rise`       | `280ms` opacity + `translateY(0.5rem)` | entrance of a section or card grid       |
+| `.motion-fade`       | `200ms` opacity                        | entrance where translation would shift layout |
+
+The `calm-rise` / `calm-fade` keyframes live in `styles/tailwind.css`; the
+matching `animate-calm-rise` / `animate-calm-fade` utilities are token-defined
+in `tailwind.config.js` and take the same curve and range. Reach for a
+primitive, or `motion-safe:animate-calm-*`; never invent a bespoke animation.
+
+### Reduced motion
+
+`prefers-reduced-motion: reduce` is absolute. A global guard in
+`styles/tailwind.css` forces every animation and transition to `0.01ms` with a
+single iteration (`scroll-behavior: auto`), covering even the Flowbite-owned and
+page-owned utilities this token layer does not edit. The `.motion-*` primitives
+are additionally wrapped in `prefers-reduced-motion: no-preference`, so they are
+inert by construction. The one legacy marquee uses
+`motion-reduce:animate-none` and is removed by T16.
+
+### The column-rule motif
+
+The single structural ornament: a **1px vertical column rule** drawn as a plain
+CSS border via `.column-rule` (`border-inline-start: 1px solid border`). No
+pseudo-element, gradient, or shadow is used. Apply it to a column that must be
+separated from the one before it. No other ornament is permitted — the
+banned-ornament gate in §8 enforces this.
 
 ## 7. Depth & Surface
 
@@ -147,3 +185,19 @@ foreground/background combination, must update `tests/budgets/contrast.json` and
 pass `node scripts/check-contrast.mjs` before commit. A token that is not in the
 manifest is unverified; a pair that fails is not shippable. The gate is the
 single source of truth for colour accessibility (R5.2, R15.8).
+
+### Banned-ornament gate
+
+The identity forbids classical ornament and precious-material tokens. This is
+also executable, not a convention:
+
+```bash
+node scripts/check-ornaments.mjs   # pnpm ornaments
+```
+
+`scripts/check-ornaments.mjs` walks the source tree (excluding `node_modules/`,
+`.next/`, and `.omo/`) and exits non-zero when any banned term appears as a whole
+word in a code, style, config, or markup file. The banned set is the Roman props
+(`laurel`, `bust`, `spqr`, `colosseum`, `toga`, `papyrus`) and the `gold` and
+`marble` design tokens. Content prose is out of scope — the gate guards shipped
+code and tokens. It runs in `check.yml` next to the contrast gate.

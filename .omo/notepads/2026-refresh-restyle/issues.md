@@ -227,3 +227,25 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   `app/not-found.tsx` ×2). Clean up when T15/T16 normalise those files.
 - e2e `next dev` rebuilt `.next` as a dev build and made `check-font-budget.mjs` report
   0 families until a production rebuild — gate/capture ordering matters.
+
+## T15 — pre-existing e2e failures exposed, not caused (2026-09-10)
+
+- The full chromium e2e suite is RED at 4 tests both before and after T15, and the set
+  shrank: stashed HEAD (pre-T15) = 6 failed / 5 passed; post-T15 = 4 failed / 58 passed.
+  T15's breadcrumb recolor fixed the 2 detail-route `color-contrast` failures and
+  introduced none.
+- Remaining 4 are stale expectations created by T13's palette remap, both outside T15's
+  commit scope:
+  - `e2e/dark-mode.spec.ts:17` pins `lightSurface = "rgb(255, 255, 255)"`; the real
+    surface is now parchment `#F5EFE1` (rgb(245,239,225)). Last touched in T07
+    (`d792fff`), never updated by T13.
+  - `e2e/interactions.spec.ts:54,87` pin the old blue focus ring `rgb(147,197,253)`;
+    T13 remapped the ring to the warm `accent-soft` family (`#DEA48C` renders). Last
+    touched in T06 (`6cb97a6`).
+  `interactions.spec.ts` is explicitly owned by T16; `dark-mode.spec.ts` needs a
+  T13-follow-up to tokenize its surface assertion.
+- Proof method that settled pre-existing-vs-regression: `git stash push -- <T15 paths>`,
+  run the two specs, then `git stash pop`. Establish it with a stashed-HEAD run, not
+  git-log reasoning alone.
+- `task_update` returned `task_lock_unavailable` once (same harness race as T09);
+  retried and completed.

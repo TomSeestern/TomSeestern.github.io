@@ -193,9 +193,26 @@ module.exports = {
         "measure-display": "20ch",
         "width-page": "78rem",
       },
+      // ── Motion (T15) ────────────────────────────────────────────────────────
+      // "Engineered calm": opacity + translateY only, 200–320 ms, one easing
+      // curve. `calm` easing/duration keep every custom transition on the same
+      // curve; `calm-rise` / `calm-fade` are the reveal primitives. Their
+      // @keyframes and the reduced-motion-guarded `.motion-*` utilities live in
+      // styles/tailwind.css — the guard is intrinsic there, so an animation can
+      // never run when the visitor requests reduced motion (R15.7).
+      transitionTimingFunction: {
+        calm: "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
+      transitionDuration: {
+        "calm-fast": "200ms",
+        calm: "280ms",
+        "calm-slow": "320ms",
+      },
       animation: {
         marquee: "marquee 90s linear infinite",
         marquee2: "marquee2 90s linear infinite",
+        "calm-rise": "calm-rise 280ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "calm-fade": "calm-fade 200ms cubic-bezier(0.16, 1, 0.3, 1) both",
       },
       keyframes: {
         marquee: {

@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${inter.className} ${newsreader.variable}`}>
-      <body className="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">
+      <body className="flex min-h-screen flex-col bg-surface text-foreground">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -55,7 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <TooltipProvider>
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-black"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-white"
           >
             Skip to main content
           </a>

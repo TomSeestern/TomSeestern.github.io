@@ -1,0 +1,566 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 11 tests using 1 worker
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+××F××F·××F××F·××F·××F··
+
+  1) [chromium] › e2e/dark-mode.spec.ts:38:5 › public routes render a single light semantic surface 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('body')
+    Expected: "rgb(255, 255, 255)"
+    Received: "rgb(245, 239, 225)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('body')
+        13 × locator resolved to <body class="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">…</body>
+           - unexpected value "rgb(245, 239, 225)"
+
+
+      32 |   // Exactly one mode: never the dark class, always the light surface.
+      33 |   await expect(page.locator("html")).not.toHaveClass(/dark/)
+    > 34 |   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+         |                                      ^
+      35 |   await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+      36 | }
+      37 |
+        at expectLightSurface (/home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:34:38)
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:48:3
+
+    Error Context: test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('body')
+    Expected: "rgb(255, 255, 255)"
+    Received: "rgb(245, 239, 225)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('body')
+        13 × locator resolved to <body class="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">…</body>
+           - unexpected value "rgb(245, 239, 225)"
+
+
+      32 |   // Exactly one mode: never the dark class, always the light surface.
+      33 |   await expect(page.locator("html")).not.toHaveClass(/dark/)
+    > 34 |   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+         |                                      ^
+      35 |   await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+      36 | }
+      37 |
+        at expectLightSurface (/home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:34:38)
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:48:3
+
+    Error Context: test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('body')
+    Expected: "rgb(255, 255, 255)"
+    Received: "rgb(245, 239, 225)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('body')
+        13 × locator resolved to <body class="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">…</body>
+           - unexpected value "rgb(245, 239, 225)"
+
+
+      32 |   // Exactly one mode: never the dark class, always the light surface.
+      33 |   await expect(page.locator("html")).not.toHaveClass(/dark/)
+    > 34 |   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+         |                                      ^
+      35 |   await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+      36 | }
+      37 |
+        at expectLightSurface (/home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:34:38)
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:48:3
+
+    Error Context: test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium-retry2/error-context.md
+
+  2) [chromium] › e2e/dark-mode.spec.ts:66:5 › ships no theme toggle and resolves a single mode regardless of system preference 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('body')
+    Expected: "rgb(255, 255, 255)"
+    Received: "rgb(245, 239, 225)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('body')
+        13 × locator resolved to <body class="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">…</body>
+           - unexpected value "rgb(245, 239, 225)"
+
+
+      74 |   // Then — the one resolved mode is light, regardless of the OS preference.
+      75 |   await expect(page.locator("html")).not.toHaveClass(/dark/)
+    > 76 |   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+         |                                      ^
+      77 |
+      78 |   // Then — no resolver script is served and no theme preference is persisted.
+      79 |   const servedHtml = await page.content()
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:76:38
+
+    Error Context: test-results/dark-mode-ships-no-theme-t-e2029-rdless-of-system-preference-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('body')
+    Expected: "rgb(255, 255, 255)"
+    Received: "rgb(245, 239, 225)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('body')
+        13 × locator resolved to <body class="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">…</body>
+           - unexpected value "rgb(245, 239, 225)"
+
+
+      74 |   // Then — the one resolved mode is light, regardless of the OS preference.
+      75 |   await expect(page.locator("html")).not.toHaveClass(/dark/)
+    > 76 |   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+         |                                      ^
+      77 |
+      78 |   // Then — no resolver script is served and no theme preference is persisted.
+      79 |   const servedHtml = await page.content()
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:76:38
+
+    Error Context: test-results/dark-mode-ships-no-theme-t-e2029-rdless-of-system-preference-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dark-mode-ships-no-theme-t-e2029-rdless-of-system-preference-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/dark-mode-ships-no-theme-t-e2029-rdless-of-system-preference-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('body')
+    Expected: "rgb(255, 255, 255)"
+    Received: "rgb(245, 239, 225)"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('body')
+        13 × locator resolved to <body class="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">…</body>
+           - unexpected value "rgb(245, 239, 225)"
+
+
+      74 |   // Then — the one resolved mode is light, regardless of the OS preference.
+      75 |   await expect(page.locator("html")).not.toHaveClass(/dark/)
+    > 76 |   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+         |                                      ^
+      77 |
+      78 |   // Then — no resolver script is served and no theme preference is persisted.
+      79 |   const servedHtml = await page.content()
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:76:38
+
+    Error Context: test-results/dark-mode-ships-no-theme-t-e2029-rdless-of-system-preference-chromium-retry2/error-context.md
+
+  3) [chromium] › e2e/dark-mode.spec.ts:106:11 › contrast per scheme (axe color-contrast) › light /blog/entry/2019-ebeltoft-cheesecake-recipe has no serious or critical contrast violations 
+
+    Error: contrast violations in light scheme on /blog/entry/2019-ebeltoft-cheesecake-recipe
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "nodeCount": 1,
+    +     "rule": "color-contrast",
+    +   },
+    + ]
+
+      116 |
+      117 |         // Then — exact match: a contrast-only scan on a clean route must be empty.
+    > 118 |         expect(violations, `contrast violations in ${scheme} scheme on ${route}`).toEqual([])
+          |                                                                                   ^
+      119 |       })
+      120 |     }
+      121 |   }
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:118:83
+
+    Error Context: test-results/dark-mode-contrast-per-sch-8dc47-ritical-contrast-violations-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: contrast violations in light scheme on /blog/entry/2019-ebeltoft-cheesecake-recipe
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "nodeCount": 1,
+    +     "rule": "color-contrast",
+    +   },
+    + ]
+
+      116 |
+      117 |         // Then — exact match: a contrast-only scan on a clean route must be empty.
+    > 118 |         expect(violations, `contrast violations in ${scheme} scheme on ${route}`).toEqual([])
+          |                                                                                   ^
+      119 |       })
+      120 |     }
+      121 |   }
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:118:83
+
+    Error Context: test-results/dark-mode-contrast-per-sch-8dc47-ritical-contrast-violations-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dark-mode-contrast-per-sch-8dc47-ritical-contrast-violations-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/dark-mode-contrast-per-sch-8dc47-ritical-contrast-violations-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: contrast violations in light scheme on /blog/entry/2019-ebeltoft-cheesecake-recipe
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "nodeCount": 1,
+    +     "rule": "color-contrast",
+    +   },
+    + ]
+
+      116 |
+      117 |         // Then — exact match: a contrast-only scan on a clean route must be empty.
+    > 118 |         expect(violations, `contrast violations in ${scheme} scheme on ${route}`).toEqual([])
+          |                                                                                   ^
+      119 |       })
+      120 |     }
+      121 |   }
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:118:83
+
+    Error Context: test-results/dark-mode-contrast-per-sch-8dc47-ritical-contrast-violations-chromium-retry2/error-context.md
+
+  4) [chromium] › e2e/dark-mode.spec.ts:106:11 › contrast per scheme (axe color-contrast) › light /projects/entry/2020-soudest-backend-nodejs has no serious or critical contrast violations 
+
+    Error: contrast violations in light scheme on /projects/entry/2020-soudest-backend-nodejs
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "nodeCount": 1,
+    +     "rule": "color-contrast",
+    +   },
+    + ]
+
+      116 |
+      117 |         // Then — exact match: a contrast-only scan on a clean route must be empty.
+    > 118 |         expect(violations, `contrast violations in ${scheme} scheme on ${route}`).toEqual([])
+          |                                                                                   ^
+      119 |       })
+      120 |     }
+      121 |   }
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:118:83
+
+    Error Context: test-results/dark-mode-contrast-per-sch-f7d89-ritical-contrast-violations-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: contrast violations in light scheme on /projects/entry/2020-soudest-backend-nodejs
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "nodeCount": 1,
+    +     "rule": "color-contrast",
+    +   },
+    + ]
+
+      116 |
+      117 |         // Then — exact match: a contrast-only scan on a clean route must be empty.
+    > 118 |         expect(violations, `contrast violations in ${scheme} scheme on ${route}`).toEqual([])
+          |                                                                                   ^
+      119 |       })
+      120 |     }
+      121 |   }
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:118:83
+
+    Error Context: test-results/dark-mode-contrast-per-sch-f7d89-ritical-contrast-violations-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dark-mode-contrast-per-sch-f7d89-ritical-contrast-violations-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/dark-mode-contrast-per-sch-f7d89-ritical-contrast-violations-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: contrast violations in light scheme on /projects/entry/2020-soudest-backend-nodejs
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 6
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "nodeCount": 1,
+    +     "rule": "color-contrast",
+    +   },
+    + ]
+
+      116 |
+      117 |         // Then — exact match: a contrast-only scan on a clean route must be empty.
+    > 118 |         expect(violations, `contrast violations in ${scheme} scheme on ${route}`).toEqual([])
+          |                                                                                   ^
+      119 |       })
+      120 |     }
+      121 |   }
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:118:83
+
+    Error Context: test-results/dark-mode-contrast-per-sch-f7d89-ritical-contrast-violations-chromium-retry2/error-context.md
+
+  5) [chromium] › e2e/interactions.spec.ts:42:7 › interactive accessibility › keyboard focus gives the custom contact CTA a visible indicator 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: locator('nav').getByRole('link', { name: 'Contact', exact: true }).first()
+    Expected pattern: /rgb\(147, 197, 253\)/
+    Received string:  "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('nav').getByRole('link', { name: 'Contact', exact: true }).first()
+        14 × locator resolved to <a href="/contact" class="mr-2 rounded-lg bg-accent-hover px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground lg:px-5 lg:py-2.5">Contact</a>
+           - unexpected value "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+
+
+      52 |     await expect(contactCallToAction).toBeFocused()
+      53 |     await expect(contactCallToAction).toHaveCSS("outline-style", "solid")
+    > 54 |     await expect(contactCallToAction).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+         |                                       ^
+      55 |     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+      56 |   })
+      57 |
+        at /home/tom/Projects/tomsegbers-de/e2e/interactions.spec.ts:54:39
+
+    Error Context: test-results/interactions-interactive-a-fc1b9-act-CTA-a-visible-indicator-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: locator('nav').getByRole('link', { name: 'Contact', exact: true }).first()
+    Expected pattern: /rgb\(147, 197, 253\)/
+    Received string:  "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('nav').getByRole('link', { name: 'Contact', exact: true }).first()
+        14 × locator resolved to <a href="/contact" class="mr-2 rounded-lg bg-accent-hover px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground lg:px-5 lg:py-2.5">Contact</a>
+           - unexpected value "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+
+
+      52 |     await expect(contactCallToAction).toBeFocused()
+      53 |     await expect(contactCallToAction).toHaveCSS("outline-style", "solid")
+    > 54 |     await expect(contactCallToAction).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+         |                                       ^
+      55 |     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+      56 |   })
+      57 |
+        at /home/tom/Projects/tomsegbers-de/e2e/interactions.spec.ts:54:39
+
+    Error Context: test-results/interactions-interactive-a-fc1b9-act-CTA-a-visible-indicator-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/interactions-interactive-a-fc1b9-act-CTA-a-visible-indicator-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/interactions-interactive-a-fc1b9-act-CTA-a-visible-indicator-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: locator('nav').getByRole('link', { name: 'Contact', exact: true }).first()
+    Expected pattern: /rgb\(147, 197, 253\)/
+    Received string:  "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('nav').getByRole('link', { name: 'Contact', exact: true }).first()
+        14 × locator resolved to <a href="/contact" class="mr-2 rounded-lg bg-accent-hover px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground lg:px-5 lg:py-2.5">Contact</a>
+           - unexpected value "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+
+
+      52 |     await expect(contactCallToAction).toBeFocused()
+      53 |     await expect(contactCallToAction).toHaveCSS("outline-style", "solid")
+    > 54 |     await expect(contactCallToAction).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+         |                                       ^
+      55 |     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+      56 |   })
+      57 |
+        at /home/tom/Projects/tomsegbers-de/e2e/interactions.spec.ts:54:39
+
+    Error Context: test-results/interactions-interactive-a-fc1b9-act-CTA-a-visible-indicator-chromium-retry2/error-context.md
+
+  6) [chromium] › e2e/interactions.spec.ts:75:7 › interactive accessibility › home primary CTA exposes a visible keyboard focus indicator 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: locator('a:has-text("Learn More")').first()
+    Expected pattern: /rgb\(147, 197, 253\)/
+    Received string:  "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('a:has-text("Learn More")').first()
+        14 × locator resolved to <a href="/projects" class="inline-flex items-center rounded-lg bg-accent-hover px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground">Learn More</a>
+           - unexpected value "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+
+
+      85 |     await expect(primaryCta).toBeFocused()
+      86 |     await expect(primaryCta).toHaveCSS("outline-style", "solid")
+    > 87 |     await expect(primaryCta).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+         |                              ^
+      88 |     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+      89 |   })
+      90 |
+        at /home/tom/Projects/tomsegbers-de/e2e/interactions.spec.ts:87:30
+
+    Error Context: test-results/interactions-interactive-a-abefa-le-keyboard-focus-indicator-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: locator('a:has-text("Learn More")').first()
+    Expected pattern: /rgb\(147, 197, 253\)/
+    Received string:  "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('a:has-text("Learn More")').first()
+        14 × locator resolved to <a href="/projects" class="inline-flex items-center rounded-lg bg-accent-hover px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground">Learn More</a>
+           - unexpected value "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+
+
+      85 |     await expect(primaryCta).toBeFocused()
+      86 |     await expect(primaryCta).toHaveCSS("outline-style", "solid")
+    > 87 |     await expect(primaryCta).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+         |                              ^
+      88 |     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+      89 |   })
+      90 |
+        at /home/tom/Projects/tomsegbers-de/e2e/interactions.spec.ts:87:30
+
+    Error Context: test-results/interactions-interactive-a-abefa-le-keyboard-focus-indicator-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/interactions-interactive-a-abefa-le-keyboard-focus-indicator-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/interactions-interactive-a-abefa-le-keyboard-focus-indicator-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator: locator('a:has-text("Learn More")').first()
+    Expected pattern: /rgb\(147, 197, 253\)/
+    Received string:  "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('a:has-text("Learn More")').first()
+        14 × locator resolved to <a href="/projects" class="inline-flex items-center rounded-lg bg-accent-hover px-5 py-2.5 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-accent-soft-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark dark:bg-accent dark:hover:bg-accent-hover dark:focus-visible:ring-accent-soft-foreground">Learn More</a>
+           - unexpected value "rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px"
+
+
+      85 |     await expect(primaryCta).toBeFocused()
+      86 |     await expect(primaryCta).toHaveCSS("outline-style", "solid")
+    > 87 |     await expect(primaryCta).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+         |                              ^
+      88 |     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+      89 |   })
+      90 |
+        at /home/tom/Projects/tomsegbers-de/e2e/interactions.spec.ts:87:30
+
+    Error Context: test-results/interactions-interactive-a-abefa-le-keyboard-focus-indicator-chromium-retry2/error-context.md
+
+  6 failed
+    [chromium] › e2e/dark-mode.spec.ts:38:5 › public routes render a single light semantic surface ─
+    [chromium] › e2e/dark-mode.spec.ts:66:5 › ships no theme toggle and resolves a single mode regardless of system preference 
+    [chromium] › e2e/dark-mode.spec.ts:106:11 › contrast per scheme (axe color-contrast) › light /blog/entry/2019-ebeltoft-cheesecake-recipe has no serious or critical contrast violations 
+    [chromium] › e2e/dark-mode.spec.ts:106:11 › contrast per scheme (axe color-contrast) › light /projects/entry/2020-soudest-backend-nodejs has no serious or critical contrast violations 
+    [chromium] › e2e/interactions.spec.ts:42:7 › interactive accessibility › keyboard focus gives the custom contact CTA a visible indicator 
+    [chromium] › e2e/interactions.spec.ts:75:7 › interactive accessibility › home primary CTA exposes a visible keyboard focus indicator 
+  5 passed (2.2m)
+PRE_T15_E2E=1

@@ -317,3 +317,28 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Objective overflow proof is `document.documentElement.scrollWidth === innerWidth` at
   375/768/1280; `look_at` gives the visual read. Marquee overflow entries are clipped by
   the section's `overflow-hidden` and are pre-existing.
+
+## T15 — motion primitives, reduced-motion guard, column-rule motif (2026-09-10)
+
+- Motion tokens (easing/duration/animation) go in `tailwind.config.js`; the
+  `@keyframes` must live where they are always emitted. Tailwind only emits config
+  `keyframes` when a matching `animate-*` utility appears in scanned content, so a
+  `.motion-rise` class referenced from CSS alone would point at a missing
+  `@keyframes`. Working split: config tokens for T16+ `motion-safe:animate-calm-rise`,
+  and the `@keyframes` + guarded `.motion-*` classes as top-level raw CSS. Never put
+  them in `@layer utilities` — unused custom utilities are purged.
+- Reduced-motion is verified against the production build with real Playwright
+  emulation. The check that matters: for every element, `transition-duration > 50ms`
+  with `transition-property` containing transform/opacity, or `animation-name !== none`
+  with `animation-duration > 50ms`. The global `prefers-reduced-motion: reduce` guard
+  drives both to ~0. Always include the positive control (motion-on marquee matrix
+  changes) so the check cannot be vacuously green.
+- The marquee transform read is a cheap freeze oracle: under reduce it is literally
+  `none` (`motion-reduce:animate-none`); under no-preference it advances.
+- Flowbite React `BreadcrumbItem` puts `props.className` on the `<li>`; the link/span
+  color comes ONLY from `theme.href.on` / `theme.href.off` (never merged with
+  `className`). Override via the `theme` prop: `theme={{ href: { off: "…text-muted" } }}`
+  deep-merges with twMerge and drops the built-in `text-gray-500`. One prop per page,
+  no component edit.
+- `next build` CSS minifies `280ms`→`.28s`, `200ms`→`.2s`, `0.16`→`.16`, so grep the
+  built CSS for the shape (`.motion-rise{…calm-rise…}`), not the literal source string.
