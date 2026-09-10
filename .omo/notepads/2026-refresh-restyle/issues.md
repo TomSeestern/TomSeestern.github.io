@@ -26,3 +26,11 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Playwright's bundled browser is absent (`chromium_headless_shell-1228` missing). Scans used `executablePath=/etc/profiles/per-user/tom/bin/chromium`.
 - HEAD moved to `e3e8de5` (eslint config; package.json + pnpm-lock only) at 18:40:28Z while measurement ran. The measured build is from `74689e8`. No runtime impact; re-measure at exact HEAD if budget gates need parity.
 - axe fires only `color-contrast` (dark: home 9 / blog 6 / projects 21; light: about 2). These are the contrast targets for the restyle.
+
+## T04 — axe harness + Lighthouse devDeps (2026-09-10)
+
+- The T04 acceptance command `pnpm e2e:headless` (unqualified) is **not** green in this devShell and never was: firefox/webkit cannot launch (`flake.nix` provides chromium libs only). Verified pre-existing on `e2e/home.spec.ts --project=firefox`. Use `--project=chromium` (the CI project); the CI-equivalent run is `CI=true pnpm e2e:headless --project=chromium` → 55 passed, exit 0.
+- Unqualified chromium at default 11 workers has a pre-existing dev-server flake: `dark-mode.spec.ts:25` `page.goto` timeout. Reproduced with the a11y spec excluded (4 failed / 33 passed), so it is not introduced by T04. Candidate root cause for T06/F5: dev-mode on-demand compilation under parallel load; consider a warmed/prebuilt server for e2e.
+- `.forgejo/workflows/playwright.yml` already installed chromium since `5b9c22d`; T04 only updated the explanatory comment. No functional CI change was needed. Flagging because the task listed "wire browser install" as a deliverable when it already existed.
+- `@axe-core/playwright@4.13.0` bundles axe-core ~4.13.0 vs the T02 baseline's 4.10.3; with reduced motion the seeded counts still match exactly (9/6/21/2), so no version drift in detected nodes.
+- The committed allowlist is intentionally non-empty and MUST reach empty by Wave 6 (F5). Four entries: `/` dark 9, `/blog` dark 6, `/projects` dark 21, `/about` light 2.

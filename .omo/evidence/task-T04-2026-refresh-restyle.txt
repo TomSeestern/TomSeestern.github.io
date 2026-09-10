@@ -1,0 +1,181 @@
+# Evidence — T04 (2026-refresh-restyle)
+
+**Task:** Add the accessibility + Lighthouse test harness (axe spec, devDeps).
+**Revision:** working tree on top of `747a2fc` (`test(budgets): capture 2026 refresh baseline`)
+**Collected:** 2026-09-10T19:13:35Z
+**Owner:** Sisyphus-Junior
+
+---
+
+## 1. devDependencies added (DEV-ONLY — never runtime)
+
+Command (exact):
+
+```
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm add -D @axe-core/playwright @lhci/cli'
+```
+
+Result:
+
+```
+devDependencies:
++ @axe-core/playwright 4.13.0
++ @lhci/cli 0.15.1
+Done in 35.1s using pnpm v10.15.1
+```
+
+Verification that both are **dev-only**:
+
+```
+$ grep -n "axe-core\|lhci" package.json
+64:    "@axe-core/playwright": "^4.13.0",     <- inside "devDependencies" (starts line 63)
+70:    "@lhci/cli": "^0.15.1",                <- inside "devDependencies"
+```
+
+`git diff package.json` shows exactly `+2 -0`, both lines under `devDependencies`.
+Nothing added to `dependencies`. `@axe-core/playwright` bundles `axe-core ~4.13.0`
+(baseline T02 injected axe-core 4.10.3; counts coincide — see §3).
+
+Lockfile consistency:
+
+```
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm install --frozen-lockfile'
+FROZEN_EXIT=0   # Done in 1.5s using pnpm v10.15.1
+```
+
+## 2. Browser availability
+
+The bundled Playwright browser revision for `@playwright/test@1.61.1` is
+chromium **1228**; the machine cache only had 1200 (a different project's
+`playwright-core@1.57.0`). Resolved inside the devShell:
+
+```
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; \
+  export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; \
+  pnpm exec playwright install chromium firefox webkit'
+```
+
+Result in `~/.cache/ms-playwright/`:
+
+```
+chromium-1228   chromium_headless_shell-1228   firefox-1532   webkit-2311
+```
+
+`pnpm e2e:headless --project=chromium` now launches a browser with no
+`executablePath` override. `PLAYWRIGHT_BROWSERS_PATH` must be exported in the
+shell (README already documents this for the devShell).
+
+## 3. axe spec results
+
+File: `e2e/a11y.spec.ts`; allowlist: `e2e/fixtures/a11y-known-violations.ts`.
+
+```
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; \
+  export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; \
+  pnpm exec playwright test e2e/a11y.spec.ts --project=chromium --reporter=list'
+A11Y_EXIT=0
+  15 passed (23.5s)
+```
+
+Coverage: 7 routes x 2 schemes (light/dark) = 14 route scans + 1 allowlist
+integrity test. Only `serious`/`critical` axe impacts fail the run.
+
+Seeded allowlist (matches T02 baseline once the marquee animation is frozen):
+
+| route | scheme | rule | nodes |
+|---|---|---|---|
+| `/` | dark | color-contrast | 9 |
+| `/blog` | dark | color-contrast | 6 |
+| `/projects` | dark | color-contrast | 21 |
+| `/about` | light | color-contrast | 2 |
+
+Determinism fix: the home projects marquee is an infinite CSS animation; which
+cards are visible at scan time varies, so `color-contrast` node counts flapped
+(9 vs 10) under parallel load. The spec emulates `prefers-reduced-motion:
+reduce`, which the marquee already honours (`motion-reduce:animate-none`,
+`app/page.tsx:111`), freezing the layout. After that, 6/6 repeated parallel
+scans of `/` dark returned exactly 9.
+
+## 4. Allowlist actually detects violations (not decorative)
+
+Temporarily removed the `/projects` dark entry, re-ran the same command:
+
+```
+1 failed, 14 passed  (EXIT=1)
+Error: axe dark /projects: unallowlisted serious/critical violations found, ...
+  - Expected  - 1
+  + Received  + 6
+      "nodeCount": 21
+```
+
+Entry restored; re-run returns 15/15. The spec therefore fails both on a new
+violation (unallowlisted) and on a stale entry (a listed violation that no longer
+occurs), and self-cleans.
+
+## 5. Full e2e suite (new spec alongside existing specs)
+
+Canonical CI command (mirrors `.forgejo/workflows/playwright.yml`, CI worker=1):
+
+```
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; \
+  export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; export CI=true; \
+  pnpm e2e:headless --project=chromium'
+CI_E2E_EXIT=0
+  55 passed (1.6m)
+```
+
+Unqualified `pnpm e2e:headless` (all three browser projects) is **not** usable in
+this devShell and was already so before T04: `flake.nix` installs only
+`chromeRuntimeLibs` (`flake.nix:24`), so firefox/webkit fail at launch with
+`Host system is missing dependencies`. Proven pre-existing on an untouched spec:
+
+```
+$ ... pnpm exec playwright test e2e/home.spec.ts --project=firefox
+Error: browserType.launch: Host system is missing dependencies to run browsers.
+Missing libraries: libstdc++.so.6 libXcursor.so.1 libXi.so.6 libgdk_pixbuf-2.0.so.0 libXrender.so.1
+1 failed
+```
+
+Also, the unqualified chromium run with the default 11 workers has a
+pre-existing dev-server flake (`page.goto` timeout in `dark-mode.spec.ts`)
+unrelated to this task — removing the a11y spec entirely still produced
+4 failed / 33 passed:
+
+```
+$ ... playwright test --project=chromium --grep-invert "accessibility"
+4 failed, 33 passed
+```
+
+The CI-equivalent `CI=true` run (workers=1, retries=2) is green (55 passed).
+
+## 6. Quality gates
+
+```
+pnpm typecheck   -> exit 0
+pnpm lint        -> exit 0 (0 errors, 55 warnings — identical to T01 baseline)
+pnpm prettier    -> exit 0 (All matched files use Prettier code style!)
+pnpm install --frozen-lockfile -> exit 0
+```
+
+## 7. CI workflow
+
+`.forgejo/workflows/playwright.yml` already installed
+`pnpm exec playwright install chromium` (present since `5b9c22d`, the Forgejo
+migration). The T04 change is a comment-only update naming the axe spec; no
+action pin, step name, or command was changed.
+
+## 8. Resource note (R22.1)
+
+No external model calls; single-agent execution. ~2 browser installs, ~6 axe
+spec runs, 2 full-suite runs. No token metering available for this harness.
+
+## Files
+
+| Artifact | Status |
+|---|---|
+| `package.json` | devDeps only (+2) |
+| `pnpm-lock.yaml` | regenerated |
+| `e2e/a11y.spec.ts` | new |
+| `e2e/fixtures/a11y-known-violations.ts` | new |
+| `.forgejo/workflows/playwright.yml` | comment only |
+| `.omo/notepads/2026-refresh-restyle/{learnings,issues}.md` | appended |

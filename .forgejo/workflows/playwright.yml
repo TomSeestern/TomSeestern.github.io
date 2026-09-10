@@ -30,8 +30,9 @@ jobs:
       - name: Install dependencies
         run: nix develop -c pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
-        # Chromium only — the e2e suite runs with --project=chromium; the
-        # devShell (flake.nix) provides the system libraries via LD_LIBRARY_PATH.
+        # Chromium only — the e2e suite (including the axe a11y spec) runs with
+        # --project=chromium; the devShell (flake.nix) provides the system
+        # libraries via LD_LIBRARY_PATH.
         run: nix develop -c pnpm exec playwright install chromium
       - name: Run Playwright tests
         run: nix develop -c pnpm exec playwright test --project=chromium
