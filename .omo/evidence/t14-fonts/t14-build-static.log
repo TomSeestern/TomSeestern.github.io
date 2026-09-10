@@ -1,0 +1,145 @@
+
+> tomsegbers-de@0.0.0 build /home/tom/Projects/tomsegbers-de
+> next build
+
+ ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+   ▲ Next.js 15.5.24
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 20.5s
+   Linting and checking validity of types ...
+
+./app/about/page.tsx
+1:8  Warning: 'path' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+3:1  Warning: `../../components/PersonTeaser/PersonTeaser` import should occur before import of `../../components/TimelineEntry/TimelineEntry`  import/order
+4:1  Warning: `next/image` import should occur before import of `path`  import/order
+5:1  Warning: `react` import should occur before import of `path`  import/order
+6:1  Warning: `next` import should occur before import of `path`  import/order
+45:15  Warning: Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+126:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/blog/entry/[slug]/page.tsx
+3:1  Warning: `@/app/layout` import should occur after import of `react-markdown`  import/order
+30:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+52:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/blog/page.test.tsx
+21:1  Warning: `./page` import should occur before import of `../../lib/blog`  import/order
+
+./app/blog/page.tsx
+3:1  Warning: `next` import should occur before import of `../../components/ArticleTeaser/ArticleTeaser`  import/order
+43:35  Warning: 'index' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/layout.tsx
+6:1  Warning: `next` type import should occur before import of `react`  import/order
+7:1  Warning: `next/font/google` import should occur before import of `react`  import/order
+
+./app/page.tsx
+7:1  Warning: `../lib/blog` import should occur before import of `../lib/projects`  import/order
+88:15  Warning: Classnames 'h-full, w-full' could be replaced by the 'size-full' shorthand!  tailwindcss/enforces-shorthand
+113:37  Warning: Classnames 'h-96, w-96' could be replaced by the 'size-96' shorthand!  tailwindcss/enforces-shorthand
+129:37  Warning: Classnames 'h-96, w-96' could be replaced by the 'size-96' shorthand!  tailwindcss/enforces-shorthand
+150:20  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+188:17  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/projects/entry/[slug]/page.tsx
+3:1  Warning: `@/app/layout` import should occur after import of `react-markdown`  import/order
+30:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+52:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/projects/page.test.tsx
+3:1  Warning: `../../lib/markdown` import should occur before import of `../../lib/projects`  import/order
+15:1  Warning: `./page` import should occur before import of `../../lib/projects`  import/order
+
+./app/projects/page.tsx
+5:1  Warning: `next` import should occur before import of `next/image`  import/order
+55:17  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+69:17  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/sitemap.ts
+3:1  Warning: `gray-matter` import should occur before import of `fs`  import/order
+4:1  Warning: `next` import should occur before import of `fs`  import/order
+
+./components/ArticleTeaser/ArticleTeaser.tsx
+60:18  Warning: Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+78:13  Warning: Classnames 'h-7, w-7' could be replaced by the 'size-7' shorthand!  tailwindcss/enforces-shorthand
+91:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Footer/Footer.tsx
+2:1  Warning: `next/image` import should occur before import of `react`  import/order
+9:29  Warning: 'props' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+28:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+35:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+42:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+49:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Header/Header.tsx
+23:11  Warning: Classnames 'h-6, w-6' could be replaced by the 'size-6' shorthand!  tailwindcss/enforces-shorthand
+23:11  Warning: Classnames 'sm:h-9, sm:w-9' could be replaced by the 'sm:size-9' shorthand!  tailwindcss/enforces-shorthand
+
+./components/PersonTeaser/PersonTeaser.tsx
+23:9  Warning: Classnames 'h-12, w-12' could be replaced by the 'size-12' shorthand!  tailwindcss/enforces-shorthand
+
+./components/ProjectTeaser/ProjectTeaser.test.tsx
+3:1  Warning: `@testing-library/react` import should occur before import of `date-fns`  import/order
+10:1  Warning: `./ProjectTeaser` import should occur before import of `../../lib/icon-map`  import/order
+
+./components/ProjectTeaser/ProjectTeaser.tsx
+1:1  Warning: `flowbite-react` import should occur after import of `date-fns`  import/order
+2:1  Warning: `react` import should occur after import of `next/link`  import/order
+3:1  Warning: `../Tooltip/Tooltip` import should occur after import of `../../lib/icon-map`  import/order
+29:3  Warning: 'imageUrl' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+37:11  Warning: Classnames 'h-full, w-full' could be replaced by the 'size-full' shorthand!  tailwindcss/enforces-shorthand
+63:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+81:20  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./lib/markdown.ts
+3:1  Warning: `gray-matter` import should occur before import of `fs`  import/order
+4:1  Warning: `zod` import should occur before import of `fs`  import/order
+
+./lib/sendEmail.tsx
+3:1  Warning: `await-to-js` import should occur before import of `next/headers`  import/order
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/38) ...
+   Generating static pages (9/38) 
+   Generating static pages (18/38) 
+   Generating static pages (28/38) 
+ ✓ Generating static pages (38/38)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                                              Size  First Load JS
+┌ ○ /                                                                                   622 B         206 kB
+├ ○ /_not-found                                                                         133 B         102 kB
+├ ○ /about                                                                              160 B         108 kB
+├ ƒ /api/health                                                                         133 B         102 kB
+├ ○ /apple-icon.png                                                                       0 B            0 B
+├ ○ /blog                                                                               620 B         196 kB
+├ ● /blog/entry/[slug]                                                                  136 B         204 kB
+├   ├ /blog/entry/2019-ebeltoft-cheesecake-recipe
+├   ├ /blog/entry/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition
+├   └ /blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation
+├ ○ /contact                                                                          3.52 kB         121 kB
+├ ○ /icon.png                                                                             0 B            0 B
+├ ○ /projects                                                                           623 B         206 kB
+├ ● /projects/entry/[slug]                                                              135 B         204 kB
+├   ├ /projects/entry/2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms
+├   ├ /projects/entry/2011-first-competition-with-wenzelbots-team
+├   ├ /projects/entry/2012-elevating-robot-competition-performance
+├   └ [+18 more paths]
+├ ○ /robots.txt                                                                         133 B         102 kB
+└ ○ /sitemap.xml                                                                        133 B         102 kB
++ First Load JS shared by all                                                          102 kB
+  ├ chunks/26-f9a8958c8fc95dc8.js                                                     46.2 kB
+  ├ chunks/3f9eb5ed-4ee7e796f67bc406.js                                               54.2 kB
+  └ other shared chunks (total)                                                       1.87 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,118 @@
+# T14 — Carved display treatment + self-hosted font budget
+
+Task: T14 — deliver the carved two-font type treatment for TomSegbers.de
+Binding decision: D3 = two fonts, Inter + Newsreader, self-hosted.
+Date (UTC): 2026-09-10
+Base revision: see `base-sha.txt` (T13 tip `d1200f9`)
+
+## Outcome
+
+- Two font families, both self-hosted by `next/font/google` at build time.
+  No runtime/third-party font request (`fonts.googleapis.com` / `fonts.gstatic.com`
+  absent from the served HTML and the whole `.next` tree — see
+  `no-third-party-fonts.txt`).
+- Host path chosen: **`next/font/google`** (build-time fetch worked; the
+  `next/font/local` `public/fonts/` fallback was NOT needed).
+- Carved treatment: H1/H2 use Newsreader (uppercase, positive tracking) via
+  Tailwind `fontFamily.display` / `fontFamily.serif` + `letterSpacing.display`
+  and a `@layer base` rule in `styles/tailwind.css`. No page/component file was
+  edited (T15/T16 own those).
+
+## Font sizes (production build)
+
+Measured by `node scripts/check-font-budget.mjs` (first-load payload = the
+preloaded latin woff2 that an English page actually downloads):
+
+| Family     | Preloaded file                     | Bytes  | Size    |
+| ---------- | ---------------------------------- | ------ | ------- |
+| Inter      | e4af272ccee01ff0-s.p.woff2 (latin) | 48,432 | 47.3 KiB|
+| Newsreader | cdda087ff4cb1a1a-s.p.woff2 (latin) | 23,916 | 23.4 KiB|
+| **Total**  |                                    | 72,348 | **70.7 KiB** |
+
+- Budget: total ≤ 100 KiB (102,400 B) → **PASS** (70.7 KiB).
+- Newsreader ≤ 60 KiB (61,440 B) → **PASS** (23.4 KiB).
+- Families ≤ 2 → **PASS** (Inter, Newsreader).
+- All emitted unicode-range subsets (cyrillic/greek/latin-ext/…): 257.3 KiB
+  across 10 files. `next/font/google` always emits every subset Google serves;
+  only the preloaded latin subsets are downloaded by this English site, so the
+  gate budgets the first-load payload and prints the all-subset total for
+  visibility (see `t14-font-budget.txt`).
+
+### Why a single Newsreader weight (700)
+
+Google's `css2` API returns the **variable** Newsreader face when more than one
+weight is requested in a single call, even with a static-weight list. That file
+is 58,152 B (latin) and, combined with Inter latin (48,432 B), pushed the
+first-load total to 106,584 B — over the 100 KiB budget. A single-weight request
+returns a static instance: `wght@700` → 23,916 B. 700 covers the `h2` token
+exactly; `h1` (800) resolves to the loaded 700 face with **no synthetic bold**
+(measured: h1 width identical at font-weight 700 and 800 — `probe-bold.mjs`,
+`syntheticBold: false`).
+
+## Verification commands
+
+Run via `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'`.
+
+| Command                                                          | Result |
+| ---------------------------------------------------------------- | ------ |
+| `pnpm build`                                                     | exit 0 — 38/38 static pages (`t14-build-final.log`) |
+| `node scripts/check-font-budget.mjs`                             | exit 0 — 2 families / 70.7 KiB (`t14-font-budget.txt`) |
+| `pnpm lint`                                                      | exit 0 — 0 errors, 55 pre-existing warnings (`t14-lint.log`) |
+| `pnpm prettier`                                                  | exit 0 (`t14-prettier.log`) |
+| `pnpm test`                                                      | exit 0 — 102 passed (`t14-jest.log`) |
+| `node scripts/check-contrast.mjs`                                | exit 0 — 24/24 pairs (`t14-contrast.log`) |
+| `CI=true … playwright a11y.spec.ts --project=chromium --workers=1` | exit 0 — 8 passed (`t14-axe.log`) |
+
+TDD red→green for the gate: temporarily `MAX_FAMILIES=1` + `TOTAL_BUDGET=10 KiB`
+→ exit 1 with both violations (`t14-font-budget-red.txt`), restored → exit 0.
+Restore proven byte-identical to a backup copy (`diff -q`).
+
+## Visual evidence — 3 breakpoints
+
+Captured from the production build (`next start -p 3077`) with Chromium,
+`reducedMotion: reduce`, `document.fonts.ready` awaited. Script: `capture.mjs`;
+raw data: `heading-report.json`.
+
+| Page            | 375px mobile                | 768px tablet                | 1280px desktop                |
+| --------------- | --------------------------- | --------------------------- | ----------------------------- |
+| `/` (home)      | `home-mobile.png`           | `home-tablet.png`           | `home-desktop.png`            |
+| `/blog/entry/…` | `blog-entry-mobile.png`     | `blog-entry-tablet.png`     | `blog-entry-desktop.png`      |
+
+- `document.documentElement.scrollWidth === innerWidth` at all 3 breakpoints on
+  both pages → **no horizontal page overflow**.
+- Computed heading styles confirm the treatment: `fontFamily` starts with
+  `Newsreader`, `textTransform: uppercase`, positive `letterSpacing`
+  (0.5–1.5px depending on size). H1 hero wraps cleanly to 3 lines at 375px.
+- h3/h4 remain Inter (base rule scoped to h1/h2 only).
+- The listed "overflow" elements are the marquee track (inside the section's
+  `overflow-hidden`) and the Flowbite breadcrumb item on the blog detail page —
+  both clipped by an ancestor; page scrollWidth is unchanged. Pre-existing.
+
+## Files changed
+
+- `app/layout.tsx` — import `Newsreader` from `next/font/google`; one static
+  weight 700, `subsets: ["latin"]`, `display: "swap"`,
+  `variable: "--font-newsreader"`; applied on `<html>`.
+- `tailwind.config.js` — `fontFamily.display` / `fontFamily.serif` →
+  `var(--font-newsreader)` chain; `letterSpacing.display` (0.025em) via a single
+  `displayTracking` const.
+- `styles/tailwind.css` — `@layer base` h1/h2: display serif, uppercase,
+  `letter-spacing: theme("letterSpacing.display") !important`.
+- `scripts/check-font-budget.mjs` — new zero-dependency gate.
+
+## Notes / risks
+
+- **`!important` on heading tracking** is deliberate: page-owned headings
+  (`app/page.tsx` ×2, `app/not-found.tsx` ×2) still carry legacy
+  `tracking-tight`, which would otherwise override the carved tracking. T15/T16
+  own those files and can drop the legacy utility later.
+- **Both latin faces are preloaded** (Inter body + Newsreader display). The
+  instruction "only preload the LCP-relevant font" is satisfied for the new
+  font: `next/font` preloads only Newsreader's latin subset, not its
+  latin-ext/vietnamese subsets, and only one weight (700). Inter's preload is
+  pre-existing and retained to avoid an LCP regression (the T05 LCP budget is
+  already tight).
+- `pnpm typecheck` remains RED on two pre-existing test fixtures (T12 issue) —
+  untouched here; the build type-checks the production graph and is green.
+- Token usage: ~1 session, moderate (multiple 15–38 s production builds to
+  measure emitted font bytes). No estimate tooling available.

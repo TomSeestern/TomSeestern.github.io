@@ -1,0 +1,14 @@
+Third-party font request proof (T14)
+Generated: 2026-09-10T21:27:26Z
+
+# Served production HTML (next start) references:
+  curl -s http://127.0.0.1:3077/ | grep -o 'fonts.googleapis|fonts.gstatic|googleapis'
+  -> (no matches)
+
+# Full .next tree grep:
+  grep -rl 'fonts.googleapis\|fonts.gstatic' .next/
+  -> (no files)
+
+# Served preload font links (self-hosted only):
+  /_next/static/media/cdda087ff4cb1a1a-s.p.woff2  (Newsreader latin)
+  /_next/static/media/e4af272ccee01ff0-s.p.woff2  (Inter latin)

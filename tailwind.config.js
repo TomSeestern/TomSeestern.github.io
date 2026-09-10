@@ -20,6 +20,10 @@ const primary = {
   900: "#4a1a10",
 }
 
+// Carved display tracking (T14) — single source for the uppercase H1/H2 serif
+// treatment, consumed by the base heading styles in styles/tailwind.css.
+const displayTracking = "0.025em"
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
@@ -156,6 +160,13 @@ module.exports = {
           "Segoe UI Symbol",
           "Noto Color Emoji",
         ],
+        // Carved display face (T14/D3). `--font-newsreader` is set by
+        // next/font on <html>; the system serif stack is the offline fallback.
+        display: ["var(--font-newsreader)", "Newsreader", "ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
+        serif: ["var(--font-newsreader)", "Newsreader", "ui-serif", "Georgia", "Cambria", "Times New Roman", "serif"],
+      },
+      letterSpacing: {
+        display: displayTracking,
       },
       borderWidth: {
         DEFAULT: "1px",

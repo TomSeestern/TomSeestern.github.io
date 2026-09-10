@@ -290,3 +290,30 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 ## T13 follow-up — contrast gate wired into CI (2026-09-10)
 
 - Added `pnpm contrast` (`node scripts/check-contrast.mjs`) and a "Contrast gate" step to `.forgejo/workflows/check.yml` right after "Format check"; the workflow keeps the `nix develop -c pnpm …` style. YAML validated with the pnpm-store js-yaml 3.15.0 (`node -e "require(...js-yaml).load(...)"`); existing action pins untouched.
+
+## T14 — carved display treatment + font budget gate (2026-09-10)
+
+- `next/font/google`'s `subsets` option only controls **preload**, not which files Next
+  emits; the loader (`find-font-files-in-css.js`) downloads every unicode-range subset
+  Google serves. So `.next/static/media` holds cyrillic/greek/latin-ext files for Inter
+  even with `subsets: ["latin"]`. A byte gate must budget the **preloaded** files
+  (`.p.woff2`, also linked from `<link rel="preload" as="font">`), not the sum of all
+  emitted woff2 (Inter alone = ~214 KiB across 6 files; preloaded latin = 47.3 KiB).
+- Google's `css2` API returns the **variable** font when multiple weights are requested
+  in one call (`family=Newsreader:wght@700;800` → same src URL for both weights, ~58 KiB
+  latin), even though single-weight calls return static instances (`wght@700` → 23.8 KiB).
+  next/font uses one call for all weights → variable. To keep a variable-capable face
+  small, request a **single weight**.
+- Single weight 700 + `font-weight: 800` on h1: Chromium maps 800→700 with **no synthetic
+  bold**. Oracle: measure the same element at `font-weight:700` and `800`; equal width ==
+  real face, wider == synthesized (`probe-bold.mjs`).
+- Base-layer `letter-spacing` loses to utility classes on specificity (element selector
+  0,0,1 < class 0,1,0) regardless of source order. To make a base treatment authoritative
+  over page-owned `tracking-*` utilities without editing those files, `!important` is the
+  only lever. Documented in `styles/tailwind.css`.
+- `next start` production capture works, but a later `next dev` e2e run **clobbers `.next`**
+  with dev output → a gate reading `.next/static/css` then sees 0 families. Run
+  `rm -rf .next && pnpm build` before any build-artifact gate, after e2e.
+- Objective overflow proof is `document.documentElement.scrollWidth === innerWidth` at
+  375/768/1280; `look_at` gives the visual read. Marquee overflow entries are clipped by
+  the section's `overflow-hidden` and are pre-existing.

@@ -1,0 +1,463 @@
+{
+  "base": "http://127.0.0.1:3077",
+  "generatedAt": "2026-09-10T21:22:06.930Z",
+  "pages": {
+    "home": {
+      "mobile": {
+        "viewport": 375,
+        "documentScrollWidth": 375,
+        "horizontalOverflow": false,
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Tom Segbers — Senior Developer",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.9px",
+            "fontSize": "36px",
+            "right": 359
+          },
+          {
+            "tag": "H2",
+            "text": "Latest Project: LAYZR.gg",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "600",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.5px",
+            "fontSize": "20px",
+            "right": 359
+          },
+          {
+            "tag": "H2",
+            "text": "Recent Blog Posts",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "600",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.5px",
+            "fontSize": "20px",
+            "right": 359
+          },
+          {
+            "tag": "H2",
+            "text": "My Recent Projects",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.9px",
+            "fontSize": "36px",
+            "right": 359
+          },
+          {
+            "tag": "H2",
+            "text": "My Recent Blog Posts",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.9px",
+            "fontSize": "36px",
+            "right": 359
+          }
+        ],
+        "overflow": [
+          {
+            "tag": "DIV",
+            "cls": "flex animate-marquee space-x-4 motion-reduce:animate-none",
+            "right": 8384
+          },
+          {
+            "tag": "DIV",
+            "cls": "h-96 w-96",
+            "right": 384
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 d",
+            "right": 384
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex h-full flex-col justify-center gap-4 p-6",
+            "right": 383
+          },
+          {
+            "tag": "DIV",
+            "cls": "h-96 w-96",
+            "right": 784
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 d",
+            "right": 784
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex h-full flex-col justify-center gap-4 p-6",
+            "right": 783
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex h-full flex-col justify-between gap-4",
+            "right": 759
+          },
+          {
+            "tag": "DIV",
+            "cls": "",
+            "right": 759
+          },
+          {
+            "tag": "A",
+            "cls": "rounded transition-colors duration-200 hover:text-accent-hover hover:underline f",
+            "right": 759
+          }
+        ],
+        "screenshot": ".omo/evidence/t14-fonts/home-mobile.png"
+      },
+      "tablet": {
+        "viewport": 768,
+        "documentScrollWidth": 768,
+        "horizontalOverflow": false,
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Tom Segbers — Senior Developer",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "1.2px",
+            "fontSize": "48px",
+            "right": 744
+          },
+          {
+            "tag": "H2",
+            "text": "Latest Project: LAYZR.gg",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "600",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.5px",
+            "fontSize": "20px",
+            "right": 368
+          },
+          {
+            "tag": "H2",
+            "text": "Recent Blog Posts",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "600",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.5px",
+            "fontSize": "20px",
+            "right": 744
+          },
+          {
+            "tag": "H2",
+            "text": "My Recent Projects",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.9px",
+            "fontSize": "36px",
+            "right": 744
+          },
+          {
+            "tag": "H2",
+            "text": "My Recent Blog Posts",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.9px",
+            "fontSize": "36px",
+            "right": 744
+          }
+        ],
+        "overflow": [
+          {
+            "tag": "DIV",
+            "cls": "flex animate-marquee space-x-4 motion-reduce:animate-none",
+            "right": 8384
+          },
+          {
+            "tag": "DIV",
+            "cls": "h-96 w-96",
+            "right": 784
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 d",
+            "right": 784
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex h-full flex-col justify-center gap-4 p-6",
+            "right": 783
+          },
+          {
+            "tag": "DIV",
+            "cls": "h-96 w-96",
+            "right": 1184
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 d",
+            "right": 1184
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex h-full flex-col justify-center gap-4 p-6",
+            "right": 1183
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex h-full flex-col justify-between gap-4",
+            "right": 1159
+          },
+          {
+            "tag": "DIV",
+            "cls": "",
+            "right": 1159
+          },
+          {
+            "tag": "A",
+            "cls": "rounded transition-colors duration-200 hover:text-accent-hover hover:underline f",
+            "right": 1159
+          }
+        ],
+        "screenshot": ".omo/evidence/t14-fonts/home-tablet.png"
+      },
+      "desktop": {
+        "viewport": 1280,
+        "documentScrollWidth": 1280,
+        "horizontalOverflow": false,
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Tom Segbers — Senior Developer",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "1.5px",
+            "fontSize": "60px",
+            "right": 835
+          },
+          {
+            "tag": "H2",
+            "text": "Latest Project: LAYZR.gg",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "600",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.5px",
+            "fontSize": "20px",
+            "right": 413
+          },
+          {
+            "tag": "H2",
+            "text": "Recent Blog Posts",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "600",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.5px",
+            "fontSize": "20px",
+            "right": 835
+          },
+          {
+            "tag": "H2",
+            "text": "My Recent Projects",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.9px",
+            "fontSize": "36px",
+            "right": 1256
+          },
+          {
+            "tag": "H2",
+            "text": "My Recent Blog Posts",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.9px",
+            "fontSize": "36px",
+            "right": 1256
+          }
+        ],
+        "overflow": [
+          {
+            "tag": "DIV",
+            "cls": "flex animate-marquee space-x-4 motion-reduce:animate-none",
+            "right": 8384
+          },
+          {
+            "tag": "DIV",
+            "cls": "h-96 w-96",
+            "right": 1584
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 d",
+            "right": 1584
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex h-full flex-col justify-center gap-4 p-6",
+            "right": 1583
+          },
+          {
+            "tag": "DIV",
+            "cls": "flex h-full flex-col justify-between gap-4",
+            "right": 1559
+          },
+          {
+            "tag": "DIV",
+            "cls": "",
+            "right": 1559
+          },
+          {
+            "tag": "A",
+            "cls": "rounded transition-colors duration-200 hover:text-accent-hover hover:underline f",
+            "right": 1559
+          },
+          {
+            "tag": "H3",
+            "cls": "truncate text-h3-sm text-foreground dark:text-foreground-dark",
+            "right": 1559
+          },
+          {
+            "tag": "P",
+            "cls": "line-clamp-3 min-h-teaser text-lg font-normal text-muted dark:text-muted-dark",
+            "right": 1559
+          },
+          {
+            "tag": "A",
+            "cls": "rounded transition-colors duration-200 hover:text-foreground focus-visible:outli",
+            "right": 1535
+          }
+        ],
+        "screenshot": ".omo/evidence/t14-fonts/home-desktop.png"
+      }
+    },
+    "blog-entry": {
+      "mobile": {
+        "viewport": 375,
+        "documentScrollWidth": 375,
+        "horizontalOverflow": false,
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Memorable Ebeltoft Cheesecake – A Sweet Souvenir",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.9px",
+            "fontSize": "36px",
+            "right": 359
+          },
+          {
+            "tag": "H2",
+            "text": "Ingredients",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "700",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.75px",
+            "fontSize": "30px",
+            "right": 359
+          },
+          {
+            "tag": "H2",
+            "text": "Preparation",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "700",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.75px",
+            "fontSize": "30px",
+            "right": 359
+          }
+        ],
+        "overflow": [
+          {
+            "tag": "SPAN",
+            "cls": "flex items-center text-sm font-medium text-gray-500 dark:text-gray-400",
+            "right": 492
+          }
+        ],
+        "screenshot": ".omo/evidence/t14-fonts/blog-entry-mobile.png"
+      },
+      "tablet": {
+        "viewport": 768,
+        "documentScrollWidth": 768,
+        "horizontalOverflow": false,
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Memorable Ebeltoft Cheesecake – A Sweet Souvenir",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "1.2px",
+            "fontSize": "48px",
+            "right": 744
+          },
+          {
+            "tag": "H2",
+            "text": "Ingredients",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "700",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.75px",
+            "fontSize": "30px",
+            "right": 744
+          },
+          {
+            "tag": "H2",
+            "text": "Preparation",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "700",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.75px",
+            "fontSize": "30px",
+            "right": 744
+          }
+        ],
+        "overflow": [],
+        "screenshot": ".omo/evidence/t14-fonts/blog-entry-tablet.png"
+      },
+      "desktop": {
+        "viewport": 1280,
+        "documentScrollWidth": 1280,
+        "horizontalOverflow": false,
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "Memorable Ebeltoft Cheesecake – A Sweet Souvenir",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "800",
+            "textTransform": "uppercase",
+            "letterSpacing": "1.2px",
+            "fontSize": "48px",
+            "right": 1000
+          },
+          {
+            "tag": "H2",
+            "text": "Ingredients",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "700",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.75px",
+            "fontSize": "30px",
+            "right": 1000
+          },
+          {
+            "tag": "H2",
+            "text": "Preparation",
+            "fontFamily": "Newsreader, \"Newsreader Fallback\", Newsreader, ui-serif, Georgia, Cambria, \"Times New Roman\", serif",
+            "fontWeight": "700",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.75px",
+            "fontSize": "30px",
+            "right": 1000
+          }
+        ],
+        "overflow": [],
+        "screenshot": ".omo/evidence/t14-fonts/blog-entry-desktop.png"
+      }
+    }
+  }
+}

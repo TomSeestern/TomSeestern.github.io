@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /*
+   * Carved display treatment (T14/D3): H1/H2 use the Newsreader serif display
+   * face, uppercase, with wide tracking. Tracking is `!important` so legacy
+   * `tracking-tight` utilities on page-owned headings (T15/T16 scope) cannot
+   * override the display rhythm — the base layer is the single source here.
+   */
+  h1,
+  h2 {
+    font-family: theme("fontFamily.display");
+    text-transform: uppercase;
+    letter-spacing: theme("letterSpacing.display") !important;
+  }
+}

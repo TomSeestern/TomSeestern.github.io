@@ -1,0 +1,13 @@
+Font budget gate — families: Inter, Newsreader (2/1)
+FAMILY      FILE                             SIZE
+-------------------------------------------------
+Inter       e4af272ccee01ff0-s.p.woff2   47.3 KiB
+Newsreader  cdda087ff4cb1a1a-s.p.woff2   23.4 KiB
+-------------------------------------------------
+First-load woff2: 70.7 KiB / 10.0 KiB budget
+  Newsreader:     23.4 KiB / 60.0 KiB budget
+All emitted woff2 (every unicode-range subset, not all downloaded): 257.3 KiB across 10 file(s)
+
+FONT BUDGET GATE FAILED — 2 issue(s):
+  - 2 font families in use (Inter, Newsreader); budget is 1
+  - first-load woff2 70.7 KiB exceeds 10.0 KiB

@@ -194,3 +194,22 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 
 - Build 38/38, lint 0 errors (55 pre-existing warnings), prettier clean, jest 102
   passed, axe 8 passed, contrast gate 24/24. Scope stayed inside the token layer.
+
+## T14 — font budget forced a design tradeoff (2026-09-10)
+
+- The task budget (total ≤100 KiB, Newsreader ≤60 KiB) is only satisfiable by reading
+  "shipped" as the **preloaded latin** payload. Summing every emitted
+  `.next/static/media/*.woff2` is impossible for the google path: Inter alone emits 6
+  unicode-range subsets totalling ~214 KiB. The gate asserts the preloaded set and prints
+  the all-subset total for visibility. If the all-file sum was intended, only
+  `next/font/local` with hand-subset latin files could reach 100 KiB for two families.
+- Newsreader's variable latin face is 58 KiB. Multi-weight `next/font` requests returned
+  the variable face and blew the budget; shipped config uses a single static weight (700).
+  H1 (token weight 800) renders the 700 face with no synthesis (verified), so h1/h2 now
+  share one weight and hierarchy is size-only. T15/T16 may revisit if a 2nd weight
+  (+23 KiB) is worth it.
+- Heading tracking uses `!important` in `styles/tailwind.css` to beat the legacy
+  `tracking-tight` utilities on four page-owned headings (`app/page.tsx` ×2,
+  `app/not-found.tsx` ×2). Clean up when T15/T16 normalise those files.
+- e2e `next dev` rebuilt `.next` as a dev build and made `check-font-budget.mjs` report
+  0 families until a production rebuild — gate/capture ordering matters.

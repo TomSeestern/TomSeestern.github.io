@@ -4,9 +4,15 @@ import { Footer } from "../components/Footer/Footer"
 import { Header } from "../components/Header/Header"
 import { TooltipProvider } from "../components/Providers/TooltipProvider"
 import type { Metadata, Viewport } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Newsreader } from "next/font/google"
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
+
+// Display/serif face for the carved H1/H2 treatment (D3: Inter + Newsreader).
+// One static weight keeps the shipped subset small (Google serves the variable
+// face for multi-weight requests, which blows the 60 KiB budget); 700 covers the
+// h2 token exactly and matches the h1 token without faux-bold synthesis.
+const newsreader = Newsreader({ subsets: ["latin"], weight: "700", display: "swap", variable: "--font-newsreader" })
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tom.segbers.de"),
@@ -33,7 +39,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={`${inter.className} ${newsreader.variable}`}>
       <body className="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">
         <script
           type="application/ld+json"
