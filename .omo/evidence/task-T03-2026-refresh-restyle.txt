@@ -1,0 +1,176 @@
+TASK: T03 — Add a bundle-byte budget gate against the committed baseline
+PLAN: 2026-refresh-restyle
+HOST: /home/tom/Projects/tomsegbers-de
+DATE (UTC): 2026-09-10
+EVIDENCE FRESHNESS (R20.3): collected 2026-09-10T19:0xZ–19:18Z, same session as execution.
+INTERPRETER: nix develop (node v22.23.1, pnpm 10.15.1)
+BASE REVISION: 759efd6 (T04 axe harness landed); T03 work is on top, uncommitted until step 9.
+
+================================================================
+0. ANALYZER ARTIFACT GENERATION
+================================================================
+`.next/analyze/__bundle_analysis.json` was absent at task start (T02's `.next/`
+had no `analyze/` dir). Regenerated:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build && node report-bundle-size.js'
+  pnpm build                                              EXIT: 0
+  node report-bundle-size.js                              EXIT: 0
+  ARTIFACT: .next/analyze/__bundle_analysis.json present (14 top-level keys)
+SHAPE VERIFIED (do not assume schema):
+  { "<route>": { "raw": <int bytes>, "gzip": <int bytes> }, ..., "__global": {...} }
+  Compare-current-to-baseline script: 0 gzip diffs across all 14 keys — the
+  regenerated artifact is byte-for-byte equal in gzip sizes to
+  tests/budgets/bundle-baseline.json.
+  __global gzip = 102,253 B (matches baseline.md §1).
+
+================================================================
+1. HAPPY PATH — script exits 0 against current baseline
+================================================================
+COMMAND:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; node scripts/check-bundle-budget.mjs'
+EXIT: 0
+OUTPUT (excerpt):
+  Bundle budget check
+    analyzer : .next/analyze/__bundle_analysis.json
+    baseline : tests/budgets/bundle-baseline.json
+    limits   : shared first-load 130 KB, route 180 KB, route growth +10.0%
+
+  Route                          Current   Baseline      Δ                   Limit
+  --------------------------------------------------------------------------------
+  __global                     102,253 B  102,253 B  +0.0%                  130 KB
+  /_not-found/page                 133 B      133 B  +0.0%           180 KB / +10%
+  /about/page                    5,496 B    5,496 B  +0.0%           180 KB / +10%
+  /api/health/route                133 B      133 B  +0.0%           180 KB / +10%
+  /blog/entry/[slug]/page       92,496 B   92,496 B  +0.0%           180 KB / +10%
+  /blog/page                    94,550 B   94,550 B  +0.0%           180 KB / +10%
+  /contact/page                 18,056 B   18,056 B  +0.0%           180 KB / +10%
+  /layout                       44,105 B   44,105 B  +0.0%           180 KB / +10%
+  /not-found                       133 B      133 B  +0.0%           180 KB / +10%
+  /page                        103,734 B  103,734 B  +0.0%           180 KB / +10%
+  /projects/entry/[slug]/page   92,495 B   92,495 B  +0.0%           180 KB / +10%
+  /projects/page               103,736 B  103,736 B  +0.0%           180 KB / +10%
+  /robots.txt/route                133 B      133 B  +0.0%           180 KB / +10%
+  /sitemap.xml/route               133 B      133 B  +0.0%           180 KB / +10%
+
+  PASS — 14 entries within budget.
+VERIFIED: exit code 0, all 14 entries +0.0% vs committed baseline, no violation.
+
+================================================================
+2. FAILURE DEMONSTRATION — shared first-load limit lowered 1 byte
+================================================================
+Deliberate change (script constant, temporary backup/restore, never committed):
+  SHARED_FIRST_LOAD_BUDGET_BYTES: 130*1024 (133,120)  ->  102,252  (1 byte below measured 102,253)
+COMMAND:
+  node scripts/check-bundle-budget.mjs                                   EXIT: 1
+OUTPUT (excerpt):
+  __global   102,253 B  102,253 B  +0.0%   100 KB  <-- FAIL
+  FAIL — 1 budget violation(s):
+    __global — exceeds 100 KB limit (102,253 B gzip)
+VERIFIED: absolute shared-budget rule fires; offending route named; non-zero exit.
+REVERT: `cp /tmp/t03-script.bak scripts/check-bundle-budget.mjs` -> byte-identical restore.
+
+================================================================
+3. FAILURE DEMONSTRATION — route absolute limit below current
+================================================================
+Deliberate change (temporary):
+  ROUTE_BUDGET_BYTES: 180*1024 (184,320)  ->  100*1024 (102,400)
+COMMAND:
+  node scripts/check-bundle-budget.mjs                                   EXIT: 1
+OUTPUT (excerpt):
+  /page           103,734 B  ...  100 KB / +10%  <-- FAIL
+  /projects/page  103,736 B  ...  100 KB / +10%  <-- FAIL
+  FAIL — 2 budget violation(s):
+    /page — exceeds 100 KB limit (103,734 B gzip)
+    /projects/page — exceeds 100 KB limit (103,736 B gzip)
+VERIFIED: absolute per-route rule fires for every offending route; non-zero exit.
+REVERT: script byte-identical restore (see step 5).
+
+================================================================
+4. FAILURE DEMONSTRATION — >10% growth vs mutated baseline
+================================================================
+Deliberate change (temporary mutation of the committed baseline value; restored):
+  tests/budgets/bundle-baseline.json  "/page".gzip: 103,734 -> 90,000
+COMMAND:
+  node scripts/check-bundle-budget.mjs                                   EXIT: 1
+OUTPUT (excerpt):
+  /page   103,734 B   90,000 B  +15.3%   180 KB / +10%  <-- FAIL
+  FAIL — 1 budget violation(s):
+    /page — grew +15.3% vs baseline (90,000 B gzip), limit +10.0%
+VERIFIED: growth rule fires at >10%; offending route + delta named; non-zero exit.
+
+================================================================
+5. RESTORE VERIFICATION (no deliberate change survives)
+================================================================
+  cp /tmp/t03-script.bak   scripts/check-bundle-budget.mjs
+  cp /tmp/t03-baseline.bak tests/budgets/bundle-baseline.json
+  diff -q /tmp/t03-script.bak   scripts/check-bundle-budget.mjs   -> identical
+  diff -q /tmp/t03-baseline.bak tests/budgets/bundle-baseline.json -> identical
+  git status tests/budgets/bundle-baseline.json                    -> (no modification)
+  node scripts/check-bundle-budget.mjs                             -> EXIT: 0 (PASS again)
+NOTE: the only tracked-file changes are the intended T03 deliverables; the
+baseline file is untouched (confirms "do not invent/overwrite baseline").
+
+================================================================
+6. STATIC CHECKS
+================================================================
+PRETTIER (acceptance command):
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm prettier'
+  -> "All matched files use Prettier code style!"                       EXIT: 0
+  Note: the repo glob is "**/*.{js,jsx,ts,tsx}" and does NOT include ".mjs";
+  the new script was additionally checked/fixed directly:
+  pnpm exec prettier --write scripts/check-bundle-budget.mjs
+  pnpm exec prettier --check scripts/check-bundle-budget.mjs             EXIT: 0
+ESLINT scope check:
+  nix develop -c bash -c '... pnpm lint'  -> 0 errors, 55 warnings          EXIT: 0
+  `lint` = `eslint . --ext .ts,.tsx`, so `scripts/` (`.mjs`) is NOT linted.
+YAML VALIDATION of the workflow:
+  node -e 'js-yaml@4.3.0 (from pnpm store).load(...)'  -> "YAML OK"
+  steps: Configure nix (LAN cache) | actions/checkout@… | Install dependencies |
+         Build next.js app | Analyze bundle | Check bundle budget | Upload bundle
+  Gate step is immediately AFTER "Analyze bundle" and BEFORE "Upload bundle".
+PACKAGE.JSON parse: JSON.parse(...) -> "package.json OK".
+
+================================================================
+7. DELIVERABLES / WIRING
+================================================================
+scripts/check-bundle-budget.mjs  (new, pure Node ESM, no new deps; bare JSON
+  reads the analyzer artifact whose gzip bytes are already computed — gzip-size
+  is therefore not imported). Paths resolved from the script's own location.
+  Named constants at top: KIB, SHARED_FIRST_LOAD_BUDGET_BYTES=130*KIB,
+  ROUTE_BUDGET_BYTES=180*KIB, ROUTE_GROWTH_BUDGET_RATIO=0.1.
+  Handles: missing analyzer/baseline -> actionable ERROR + exit 1 (no stack
+  trace), malformed entries, route absent from baseline -> absolute limit only
+  + "(new route)" note.
+package.json: "budget:bundle": "node scripts/check-bundle-budget.mjs"
+.forgejo/workflows/nextjs_bundle_analysis.yml: new step "Check bundle budget"
+  run: nix develop -c node scripts/check-bundle-budget.mjs
+  No action pins changed (only added a step; +2 lines).
+
+================================================================
+8. ARTIFACTS + TOKEN USAGE (R22.1)
+================================================================
+scripts/check-bundle-budget.mjs                       (committed)
+package.json                                          (budget:bundle)
+.forgejo/workflows/nextjs_bundle_analysis.yml         (gate step)
+tests/budgets/bundle-baseline.json                    (UNCHANGED — comparison ref)
+.omo/evidence/task-T03-2026-refresh-restyle.txt       (this file)
+.omo/notepads/2026-refresh-restyle/{learnings,issues}.md  (appended)
+TOKEN USAGE: not instrumented (session tooling exposes no per-task counter).
+ESTIMATE: ~35k tokens (build + 3 failure demos + re-verification).
+
+================================================================
+9. COMMIT + SUMMARY
+================================================================
+COMMIT: test(ci): add bundle-byte budget gate against committed baseline
+FILES: scripts/check-bundle-budget.mjs, package.json,
+       .forgejo/workflows/nextjs_bundle_analysis.yml, .omo/evidence/... ,
+       .omo/notepads/...
+RISKS:
+  - Absolute limits (130/180 KB) currently have large headroom vs the measured
+    ~102 KB; the binding rule today is the +10% growth gate. That is intended —
+    the absolute caps are backstops for large future regressions.
+  - KB is binary (1024) here; documented in the script constant. Global is
+    checked against the absolute cap only (not growth); every non-global key
+    (including /layout and the static/icon routes present in the artifact) is
+    checked against both rules.
+  - New routes absent from the baseline are compared only to the absolute cap
+    until a future baseline refresh adds them.
