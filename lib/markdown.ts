@@ -10,6 +10,15 @@ const markdownFrontmatterSchema = z.object({
   authorImgSrc: z.string().default("/img/placeholder.png").catch("/img/placeholder.png"),
   authorName: z.string().default("Anonymous").catch("Anonymous"),
   technologies: z.array(z.string()).default([]).catch([]),
+  tags: z.array(z.string()).default([]).catch([]),
+  featured: z.boolean().default(false).catch(false),
+  role: z.string().default("").catch(""),
+  outcome: z.string().default("").catch(""),
+  heroImage: z.string().default("").catch(""),
+  metrics: z
+    .array(z.object({ label: z.string(), value: z.string() }))
+    .default([])
+    .catch([]),
 })
 
 /** Parsed frontmatter + computed fields for a single markdown content file.
@@ -25,6 +34,12 @@ export type MarkdownEntry = {
   readonly authorName: string
   readonly fullArticleLink: string
   readonly technologies: string[]
+  readonly tags: string[]
+  readonly featured: boolean
+  readonly role: string
+  readonly outcome: string
+  readonly heroImage: string
+  readonly metrics: readonly { readonly label: string; readonly value: string }[]
 }
 
 /**

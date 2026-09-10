@@ -160,3 +160,24 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   content → use `grep`, which is the correct tool anyway.
 - `git stash push -- <paths>` lets you rebuild+recapture the exact "before" state
   for a true before/after computed-style diff without reverting the working tree.
+
+## T10 — additive frontmatter fields for the restyle (2026-09-10)
+
+- `lib/markdown.ts` is a tiny schema+type pair; adding fields is 2 edits: extend
+  `markdownFrontmatterSchema` and mirror each field as `readonly` on
+  `MarkdownEntry`. The reader spreads `...frontmatter`, so no mapping code.
+- TDD red is cheap here: the two existing exact-shape `toEqual` assertions in
+  `lib/markdown.test.ts` fail the instant the schema grows (extra keys), so the
+  red run proves both the new tests AND the shape contract in one command.
+  Update those two assertions with the new defaults — do NOT weaken to
+  `toMatchObject` (task mandate).
+- `metrics.value` is `z.string()` per spec; YAML `value: 1200` parses as a number
+  and is correctly `.catch([])`-ed to an empty array. Content authors must quote
+  numeric metric values. This is a boundary contract, not a bug.
+- Prettier normalizes mixed single/double quotes in joined frontmatter arrays:
+  strings containing `"` stay single-quoted, the rest flip to double. Write the
+  fixture with `'    value: "1200"'` and let `pnpm exec prettier --write` settle it.
+- `.omo/` is gitignored (`.gitignore:49`) yet 201+ `.omo/` files are tracked from
+  prior sessions; new evidence must be `git add -f`-ed. `boulder.json` is
+  orchestrator-owned — leave it out of task commits.
+- Build emits **38** static pages (consistent with T02), not the plan/README's 36.

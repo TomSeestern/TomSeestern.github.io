@@ -50,6 +50,12 @@ describe("getAllMarkdownEntries", () => {
         authorName: "Tom",
         fullArticleLink: "/blog/entry/valid-entry",
         technologies: ["TypeScript"],
+        tags: [],
+        featured: false,
+        role: "",
+        outcome: "",
+        heroImage: "",
+        metrics: [],
       },
     ])
   })
@@ -71,6 +77,12 @@ describe("getAllMarkdownEntries", () => {
       authorName: "Anonymous",
       fullArticleLink: "/projects/entry/missing-fields",
       technologies: [],
+      tags: [],
+      featured: false,
+      role: "",
+      outcome: "",
+      heroImage: "",
+      metrics: [],
     })
   })
 
@@ -201,5 +213,102 @@ describe("getAllMarkdownEntries", () => {
 
     // Then
     expect(entries.map(({ id }) => id)).toEqual(["dated", "undated"])
+  })
+
+  it("parses tags from frontmatter", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "tagged-entry.md", "tags:\n  - typescript\n  - nextjs")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/blog")
+
+    // Then
+    expect(entry?.tags).toEqual(["typescript", "nextjs"])
+  })
+
+  it("defaults tags to an empty array when absent", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "untagged-entry.md", "title: Untagged")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/blog")
+
+    // Then
+    expect(entry?.tags).toEqual([])
+  })
+
+  it("parses featured true from frontmatter", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "featured-entry.md", "featured: true")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/projects")
+
+    // Then
+    expect(entry?.featured).toBe(true)
+  })
+
+  it("defaults featured to false when absent", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "ordinary-entry.md", "title: Ordinary")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/projects")
+
+    // Then
+    expect(entry?.featured).toBe(false)
+  })
+
+  it("parses metrics as an array of label/value pairs", () => {
+    // Given
+    writeMarkdownEntry(
+      fixtureDirectory,
+      "measured-entry.md",
+      ["metrics:", "  - label: Users", '    value: "1200"', "  - label: Uptime", '    value: "99.9%"'].join("\n")
+    )
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/projects")
+
+    // Then
+    expect(entry?.metrics).toEqual([
+      { label: "Users", value: "1200" },
+      { label: "Uptime", value: "99.9%" },
+    ])
+  })
+
+  it("defaults metrics to an empty array when absent", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "unmeasured-entry.md", "title: Unmeasured")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/projects")
+
+    // Then
+    expect(entry?.metrics).toEqual([])
+  })
+
+  it("falls back to an empty metrics array when metrics is malformed", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "malformed-metrics.md", "metrics: not-an-array")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/projects")
+
+    // Then
+    expect(entry?.metrics).toEqual([])
+  })
+
+  it("defaults role, outcome, and heroImage to empty strings", () => {
+    // Given
+    writeMarkdownEntry(fixtureDirectory, "unstyled-entry.md", "title: Unstyled")
+
+    // When
+    const [entry] = getAllMarkdownEntries(fixtureDirectory, "/projects")
+
+    // Then
+    expect(entry?.role).toBe("")
+    expect(entry?.outcome).toBe("")
+    expect(entry?.heroImage).toBe("")
   })
 })

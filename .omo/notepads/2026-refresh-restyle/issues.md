@@ -118,3 +118,17 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   NOT in `tailwind.config.js` at all — they are undefined utility classes local to
   Tooltip.tsx (T11). There was nothing to delete from config; deferred to T11.
 - `pkill -f` self-match killed the build shell (see learnings). Use explicit PIDs.
+
+## T10 — additive frontmatter fields (2026-09-10)
+
+- `metrics.value` is typed `z.string()` by spec, but YAML numbers are common in
+  hand-authored metrics. `value: 1200` (unquoted) parses as number 1200, fails
+  the string schema, and silently `.catch([])`-es the WHOLE metrics array to `[]`
+  — no per-item fallback. Content must quote numeric values (`value: "1200"`).
+  Flag for T19 authoring.
+- `pnpm prettier` failed on the new test file after the first edit (mixed quote
+  styles in the joined frontmatter fixture); `pnpm exec prettier --write
+  lib/markdown.test.ts` fixed it and the test stayed green. Always re-run the
+  focused test after formatting before committing.
+- No new risk to existing content: `git diff --stat content/` empty, build 38/38,
+  validator COUNT 21.

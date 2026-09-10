@@ -1,0 +1,245 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 test /home/tom/Projects/tomsegbers-de
+> cross-env FORCE_COLOR=1 jest lib/markdown.test.ts
+
+[0m[7m[1m[31m FAIL [39m[22m[27m[0m [2mlib/[22m[1mmarkdown.test.ts[22m
+  getAllMarkdownEntries
+    [31m✕[39m [2mparses valid frontmatter and preserves article teaser fields (12 ms)[22m
+    [31m✕[39m [2mapplies consumer-safe defaults when frontmatter fields are missing (1 ms)[22m
+    [32m✓[39m [2mapplies defaults when frontmatter field values are malformed (4 ms)[22m
+    [32m✓[39m [2mreturns no entries when directory is empty (1 ms)[22m
+    [32m✓[39m [2mignores non-Markdown files (1 ms)[22m
+    [32m✓[39m [2msorts entries by article date descending (1 ms)[22m
+    [32m✓[39m [2muses filename slug for identifier and entry URL (1 ms)[22m
+    [32m✓[39m [2mpreserves multiple technology names[22m
+    [32m✓[39m [2mdefaults malformed author fields independently (1 ms)[22m
+    [32m✓[39m [2mdefaults malformed article content without discarding valid title (1 ms)[22m
+    [32m✓[39m [2mignores Markdown-looking directory names[22m
+    [32m✓[39m [2mincludes entries with default date after dated entries (1 ms)[22m
+    [31m✕[39m [2mparses tags from frontmatter (1 ms)[22m
+    [31m✕[39m [2mdefaults tags to an empty array when absent (1 ms)[22m
+    [31m✕[39m [2mparses featured true from frontmatter (1 ms)[22m
+    [31m✕[39m [2mdefaults featured to false when absent (1 ms)[22m
+    [31m✕[39m [2mparses metrics as an array of label/value pairs (1 ms)[22m
+    [31m✕[39m [2mdefaults metrics to an empty array when absent (1 ms)[22m
+    [31m✕[39m [2mfalls back to an empty metrics array when metrics is malformed (1 ms)[22m
+    [31m✕[39m [2mdefaults role, outcome, and heroImage to empty strings (1 ms)[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › parses valid frontmatter and preserves article teaser fields[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 6[39m
+    [31m+ Received  + 0[39m
+
+    [33m@@ -2,18 +2,12 @@[39m
+    [2m    Object {[22m
+    [2m      "articleContent": "Valid teaser",[22m
+    [2m      "articleDate": 2024-03-01T00:00:00.000Z,[22m
+    [2m      "authorImgSrc": "/img/tom.png",[22m
+    [2m      "authorName": "Tom",[22m
+    [32m-     "featured": false,[39m
+    [2m      "fullArticleLink": "/blog/entry/valid-entry",[22m
+    [32m-     "heroImage": "",[39m
+    [2m      "id": "valid-entry",[22m
+    [32m-     "metrics": Array [],[39m
+    [32m-     "outcome": "",[39m
+    [32m-     "role": "",[39m
+    [32m-     "tags": Array [],[39m
+    [2m      "technologies": Array [[22m
+    [2m        "TypeScript",[22m
+    [2m      ],[22m
+    [2m      "title": "Valid entry",[22m
+    [2m    },[22m
+[2m[22m
+[2m    [0m [90m 41 |[39m[22m
+[2m     [90m 42 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 43 |[39m     expect(entries)[33m.[39mtoEqual([[22m
+[2m     [90m    |[39m                     [31m[1m^[22m[2m[39m[22m
+[2m     [90m 44 |[39m       {[22m
+[2m     [90m 45 |[39m         id[33m:[39m [32m"valid-entry"[39m[33m,[39m[22m
+[2m     [90m 46 |[39m         title[33m:[39m [32m"Valid entry"[39m[33m,[39m[0m[22m
+[2m[22m
+[2m      [2mat Object.toEqual ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:43:21)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › applies consumer-safe defaults when frontmatter fields are missing[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 6[39m
+    [31m+ Received  + 0[39m
+
+    [2m  Object {[22m
+    [2m    "articleContent": "Failed to load content",[22m
+    [2m    "articleDate": 1990-01-01T00:00:00.000Z,[22m
+    [2m    "authorImgSrc": "/img/placeholder.png",[22m
+    [2m    "authorName": "Anonymous",[22m
+    [32m-   "featured": false,[39m
+    [2m    "fullArticleLink": "/projects/entry/missing-fields",[22m
+    [32m-   "heroImage": "",[39m
+    [2m    "id": "missing-fields",[22m
+    [32m-   "metrics": Array [],[39m
+    [32m-   "outcome": "",[39m
+    [32m-   "role": "",[39m
+    [32m-   "tags": Array [],[39m
+    [2m    "technologies": Array [],[22m
+    [2m    "title": "Untitled",[22m
+    [2m  }[22m
+[2m[22m
+[2m    [0m [90m 69 |[39m[22m
+[2m     [90m 70 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 71 |[39m     expect(entry)[33m.[39mtoEqual({[22m
+[2m     [90m    |[39m                   [31m[1m^[22m[2m[39m[22m
+[2m     [90m 72 |[39m       id[33m:[39m [32m"missing-fields"[39m[33m,[39m[22m
+[2m     [90m 73 |[39m       title[33m:[39m [32m"Untitled"[39m[33m,[39m[22m
+[2m     [90m 74 |[39m       articleDate[33m:[39m [36mnew[39m [33mDate[39m([32m"1990-01-01"[39m)[33m,[39m[0m[22m
+[2m[22m
+[2m      [2mat Object.toEqual ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:71:19)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › parses tags from frontmatter[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    Expected: [32m["typescript", "nextjs"][39m
+    Received: [31mundefined[39m
+[2m[22m
+[2m    [0m [90m 224 |[39m[22m
+[2m     [90m 225 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 226 |[39m     expect(entry[33m?[39m[33m.[39mtags)[33m.[39mtoEqual([[32m"typescript"[39m[33m,[39m [32m"nextjs"[39m])[22m
+[2m     [90m     |[39m                         [31m[1m^[22m[2m[39m[22m
+[2m     [90m 227 |[39m   })[22m
+[2m     [90m 228 |[39m[22m
+[2m     [90m 229 |[39m   it([32m"defaults tags to an empty array when absent"[39m[33m,[39m () [33m=>[39m {[0m[22m
+[2m[22m
+[2m      [2mat Object.toEqual ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:226:25)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › defaults tags to an empty array when absent[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    Expected: [32m[][39m
+    Received: [31mundefined[39m
+[2m[22m
+[2m    [0m [90m 235 |[39m[22m
+[2m     [90m 236 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 237 |[39m     expect(entry[33m?[39m[33m.[39mtags)[33m.[39mtoEqual([])[22m
+[2m     [90m     |[39m                         [31m[1m^[22m[2m[39m[22m
+[2m     [90m 238 |[39m   })[22m
+[2m     [90m 239 |[39m[22m
+[2m     [90m 240 |[39m   it([32m"parses featured true from frontmatter"[39m[33m,[39m () [33m=>[39m {[0m[22m
+[2m[22m
+[2m      [2mat Object.toEqual ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:237:25)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › parses featured true from frontmatter[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mundefined[39m
+[2m[22m
+[2m    [0m [90m 246 |[39m[22m
+[2m     [90m 247 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 248 |[39m     expect(entry[33m?[39m[33m.[39mfeatured)[33m.[39mtoBe([36mtrue[39m)[22m
+[2m     [90m     |[39m                             [31m[1m^[22m[2m[39m[22m
+[2m     [90m 249 |[39m   })[22m
+[2m     [90m 250 |[39m[22m
+[2m     [90m 251 |[39m   it([32m"defaults featured to false when absent"[39m[33m,[39m () [33m=>[39m {[0m[22m
+[2m[22m
+[2m      [2mat Object.toBe ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:248:29)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › defaults featured to false when absent[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mfalse[39m
+    Received: [31mundefined[39m
+[2m[22m
+[2m    [0m [90m 257 |[39m[22m
+[2m     [90m 258 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 259 |[39m     expect(entry[33m?[39m[33m.[39mfeatured)[33m.[39mtoBe([36mfalse[39m)[22m
+[2m     [90m     |[39m                             [31m[1m^[22m[2m[39m[22m
+[2m     [90m 260 |[39m   })[22m
+[2m     [90m 261 |[39m[22m
+[2m     [90m 262 |[39m   it([32m"parses metrics as an array of label/value pairs"[39m[33m,[39m () [33m=>[39m {[0m[22m
+[2m[22m
+[2m      [2mat Object.toBe ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:259:29)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › parses metrics as an array of label/value pairs[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    Expected: [32m[{"label": "Users", "value": "1200"}, {"label": "Uptime", "value": "99.9%"}][39m
+    Received: [31mundefined[39m
+[2m[22m
+[2m    [0m [90m 272 |[39m[22m
+[2m     [90m 273 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 274 |[39m     expect(entry[33m?[39m[33m.[39mmetrics)[33m.[39mtoEqual([[22m
+[2m     [90m     |[39m                            [31m[1m^[22m[2m[39m[22m
+[2m     [90m 275 |[39m       { label[33m:[39m [32m"Users"[39m[33m,[39m value[33m:[39m [32m"1200"[39m }[33m,[39m[22m
+[2m     [90m 276 |[39m       { label[33m:[39m [32m"Uptime"[39m[33m,[39m value[33m:[39m [32m"99.9%"[39m }[33m,[39m[22m
+[2m     [90m 277 |[39m     ])[0m[22m
+[2m[22m
+[2m      [2mat Object.toEqual ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:274:28)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › defaults metrics to an empty array when absent[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    Expected: [32m[][39m
+    Received: [31mundefined[39m
+[2m[22m
+[2m    [0m [90m 286 |[39m[22m
+[2m     [90m 287 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 288 |[39m     expect(entry[33m?[39m[33m.[39mmetrics)[33m.[39mtoEqual([])[22m
+[2m     [90m     |[39m                            [31m[1m^[22m[2m[39m[22m
+[2m     [90m 289 |[39m   })[22m
+[2m     [90m 290 |[39m[22m
+[2m     [90m 291 |[39m   it([32m"falls back to an empty metrics array when metrics is malformed"[39m[33m,[39m () [33m=>[39m {[0m[22m
+[2m[22m
+[2m      [2mat Object.toEqual ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:288:28)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › falls back to an empty metrics array when metrics is malformed[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    Expected: [32m[][39m
+    Received: [31mundefined[39m
+[2m[22m
+[2m    [0m [90m 297 |[39m[22m
+[2m     [90m 298 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 299 |[39m     expect(entry[33m?[39m[33m.[39mmetrics)[33m.[39mtoEqual([])[22m
+[2m     [90m     |[39m                            [31m[1m^[22m[2m[39m[22m
+[2m     [90m 300 |[39m   })[22m
+[2m     [90m 301 |[39m[22m
+[2m     [90m 302 |[39m   it([32m"defaults role, outcome, and heroImage to empty strings"[39m[33m,[39m () [33m=>[39m {[0m[22m
+[2m[22m
+[2m      [2mat Object.toEqual ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:299:28)[22m[2m[22m
+
+[1m[31m  [1m● [22m[1mgetAllMarkdownEntries › defaults role, outcome, and heroImage to empty strings[39m[22m
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m""[39m
+    Received: [31mundefined[39m
+[2m[22m
+[2m    [0m [90m 308 |[39m[22m
+[2m     [90m 309 |[39m     [90m// Then[39m[22m
+[2m    [31m[1m>[22m[2m[39m[90m 310 |[39m     expect(entry[33m?[39m[33m.[39mrole)[33m.[39mtoBe([32m""[39m)[22m
+[2m     [90m     |[39m                         [31m[1m^[22m[2m[39m[22m
+[2m     [90m 311 |[39m     expect(entry[33m?[39m[33m.[39moutcome)[33m.[39mtoBe([32m""[39m)[22m
+[2m     [90m 312 |[39m     expect(entry[33m?[39m[33m.[39mheroImage)[33m.[39mtoBe([32m""[39m)[22m
+[2m     [90m 313 |[39m   })[0m[22m
+[2m[22m
+[2m      [2mat Object.toBe ([22m[2m[0m[36mlib/markdown.test.ts[39m[0m[2m:310:25)[22m[2m[22m
+
+[1mTest Suites: [22m[1m[31m1 failed[39m[22m, 1 total
+[1mTests:       [22m[1m[31m10 failed[39m[22m, [1m[32m10 passed[39m[22m, 20 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        0.662 s
+[2mRan all test suites[22m[2m matching [22m/lib\/markdown.test.ts/i[2m.[22m
+ ELIFECYCLE  Test failed. See above for more details.

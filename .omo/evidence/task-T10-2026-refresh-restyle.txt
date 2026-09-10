@@ -1,0 +1,87 @@
+TASK: T10 — Add additive frontmatter fields to the markdown reader
+PLAN: .omo/plans/2026-refresh-restyle (task T10)
+DATE: 2026-09-10 22:17:27 +0200 (UTC 2026-09-10T20:17:27Z)
+AGENT: Sisyphus-Junior (quick)
+
+GOAL
+----
+Extend `lib/markdown.ts` `markdownFrontmatterSchema` + `MarkdownEntry` with six
+additive, legacy-safe fields so 24 existing content files still build unchanged:
+
+  tags:      z.array(z.string()).default([]).catch([])
+  featured:  z.boolean().default(false).catch(false)
+  role:      z.string().default("").catch("")
+  outcome:   z.string().default("").catch("")
+  heroImage: z.string().default("").catch("")
+  metrics:   z.array(z.object({ label: z.string(), value: z.string() })).default([]).catch([])
+
+Existing field names/defaults/behaviors (title, articleDate, articleContent,
+authorImgSrc, authorName, technologies) unchanged. Schema stays non-strict
+(no `.strict()`), no new dependencies.
+
+RED -> GREEN (TDD)
+------------------
+1) RED — tests written first, before the schema change:
+     nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test lib/markdown.test.ts'
+     EXIT=1
+     Test Suites: 1 failed, 1 total
+     Tests:       10 failed, 10 passed, 20 total
+     Failing: the two existing exact-shape `toEqual` assertions (now missing the
+     new default keys) + 8 new additive-field tests. Raw: .omo/evidence/t10-red.log
+
+2) GREEN — after adding the six schema fields + six readonly `MarkdownEntry` fields:
+     same command; EXIT=0
+     Test Suites: 1 passed, 1 total
+     Tests:       20 passed, 20 total
+     Raw: .omo/evidence/t10-green.log
+
+   NOTE: the first green attempt caught a real boundary lesson — an unquoted
+   numeric YAML metric value (`value: 1200`) fails `z.string()` and correctly
+   falls back to `[]`. The fixture was corrected to quote the values
+   (`value: "1200"`), it is a consumer content-authoring contract, not a schema
+   relaxation. Schema left exactly as specified.
+
+CHANGED FILES
+-------------
+  lib/markdown.ts       +6 schema fields, +6 readonly MarkdownEntry fields
+  lib/markdown.test.ts  two exact-shape assertions updated with new defaults;
+                        +8 new tests; formatted by prettier
+
+VERIFICATION MATRIX (all via nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …')
+---------------------------------------------------------------------------------------
+  pnpm test lib/markdown.test.ts        EXIT=0   20 passed / 20
+  pnpm test (full suite)                EXIT=0   13 suites, 93 passed / 93
+  pnpm build                            EXIT=0   ✓ Generating static pages (38/38)
+  node scripts/check-project-frontmatter.js
+                                        EXIT=0   COUNT 21 (all 21 project files PASS)
+  pnpm lint                             EXIT=0   (55 pre-existing warnings, 0 errors)
+  pnpm prettier                         EXIT=0   (after --write on the test file)
+
+  Full-suite log:  .omo/evidence/t10-test-full.log
+  Build log:       .omo/evidence/t10-build.log
+  Lint log:        .omo/evidence/t10-lint.log
+  Frontmatter log: .omo/evidence/t10-frontmatter.log
+  Prettier log:    .omo/evidence/t10-prettier.log
+
+NON-REGRESSION — content untouched
+----------------------------------
+  git diff --stat content/   -> (empty)
+  All 24 content files (3 blog + 21 project) build and parse unchanged; the
+  frontmatter validator passes with COUNT 21.
+
+COMMIT SCOPE
+------------
+  lib/markdown.ts
+  lib/markdown.test.ts
+  .omo/evidence/task-T10-2026-refresh-restyle.txt + raw t10-*.log
+  .omo/notepads/2026-refresh-restyle/{learnings,issues}.md
+
+  NOT committed: .omo/boulder.json (orchestrator-owned, out of scope).
+
+RISKS / NOTES
+-------------
+- `metrics.value` is `z.string()` by spec; numeric YAML metrics are rejected to
+  `[]` via `.catch()`. Content authors (T19) must quote numeric metric values.
+- `.omo/` is gitignored (`.gitignore:49`); evidence + notepad staged with `-f`.
+- T17 consumes `featured`, T19 consumes `role/outcome/metrics/heroImage`,
+  T29 consumes `tags`. All fields are additive and default-safe.
