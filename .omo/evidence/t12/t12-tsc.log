@@ -1,0 +1,11 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+app/blog/page.test.tsx(26,3): error TS2740: Type '{ id: string; title: string; articleDate: Date; articleContent: string; authorImgSrc: string; authorName: string; technologies: never[]; fullArticleLink: string; }' is missing the following properties from type 'MarkdownEntry': tags, featured, role, outcome, and 2 more.
+app/blog/page.test.tsx(36,3): error TS2740: Type '{ id: string; title: string; articleDate: Date; articleContent: string; authorImgSrc: string; authorName: string; technologies: never[]; fullArticleLink: string; }' is missing the following properties from type 'MarkdownEntry': tags, featured, role, outcome, and 2 more.
+app/blog/page.test.tsx(46,3): error TS2740: Type '{ id: string; title: string; articleDate: Date; articleContent: string; authorImgSrc: string; authorName: string; technologies: never[]; fullArticleLink: string; }' is missing the following properties from type 'MarkdownEntry': tags, featured, role, outcome, and 2 more.
+app/projects/page.test.tsx(20,3): error TS2740: Type '{ id: string; title: string; articleDate: Date; articleContent: string; authorImgSrc: string; authorName: string; fullArticleLink: string; technologies: string[]; }' is missing the following properties from type 'MarkdownEntry': tags, featured, role, outcome, and 2 more.
+app/projects/page.test.tsx(30,3): error TS2740: Type '{ id: string; title: string; articleDate: Date; articleContent: string; authorImgSrc: string; authorName: string; fullArticleLink: string; technologies: string[]; }' is missing the following properties from type 'MarkdownEntry': tags, featured, role, outcome, and 2 more.
+app/projects/page.test.tsx(40,3): error TS2740: Type '{ id: string; title: string; articleDate: Date; articleContent: string; authorImgSrc: string; authorName: string; fullArticleLink: string; technologies: never[]; }' is missing the following properties from type 'MarkdownEntry': tags, featured, role, outcome, and 2 more.

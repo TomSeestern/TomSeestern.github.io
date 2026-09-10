@@ -1,0 +1,143 @@
+T12 — Contact a11y wiring + server/client metadata split
+Plan: .omo/plans/2026-refresh-restyle.md (§T12)
+Commit: feat(contact): server metadata and aria-wired accessible form
+Collected (UTC): 2026-09-10T20:29:05Z
+Repo: /home/tom/Projects/tomsegbers-de
+
+================================================================
+1. SCOPE / CHANGED FILES
+================================================================
+- app/contact/ContactForm.tsx        NEW  ("use client" form UI, a11y wiring, blur validation)
+- app/contact/page.tsx               MOD  (server component, exports metadata title/description/canonical, renders <ContactForm/>)
+- app/contact/ContactForm.test.tsx   NEW  (Jest: blur-only validation, aria-describedby/invalid, non-hostile first blur, role=status)
+- app/contact/page.test.tsx          NEW  (Jest: exported metadata title/description/canonical)
+- e2e/contact.spec.ts                MOD  (+3 tests: blur validation, untouched-first-blur, role=status live region)
+- .omo/evidence/task-T12-2026-refresh-restyle.txt + .omo/evidence/t12/*.log  (evidence, git add -f)
+
+NOT touched: lib/sendEmail.tsx (server-side Zod re-check preserved unchanged),
+app/layout.tsx, tailwind.config.js, lib/markdown.ts, package.json, contact copy.
+
+================================================================
+2. DELIVERABLE 1 — server page + client form
+================================================================
+- app/contact/ContactForm.tsx is "use client"; it holds the full existing
+  markup/classes/behavior (Flowbite <Alert>, sendEmail call, submit state).
+- app/contact/page.tsx no longer has "use client"; it exports:
+    metadata.title       = "Contact"
+    metadata.description = "Get in touch with Tom Segbers — …just to say hello."
+    metadata.alternates.canonical = "https://tom.segbers.de/contact"
+  and returns <ContactForm />.
+- User-visible copy unchanged: h1 "Get in Touch", submit "Send Message",
+  success "Success! Email sent successfully." (e2e fixture expectations.ts kept).
+
+================================================================
+3. DELIVERABLE 2 — accessibility wiring
+================================================================
+- Each field: aria-describedby -> "name-error" / "email-error" / "message-error"
+  only while that field has an error (no dangling id reference); aria-invalid={true}
+  only on fields with errors; both absent otherwise.
+- Success Alert: role="status" (polite live region) — NOT role="alert".
+  Flowbite Alert hardcodes role="alert" but spreads restProps after it, so the
+  explicit role="status" prop wins. Dismiss button retained (onDismiss).
+- Failure alerts keep Flowbite's default role="alert".
+
+================================================================
+4. DELIVERABLE 3 — blur validation (documented behavior)
+================================================================
+Chosen behavior: blur-only, gated on prior editing (editedFields map set from
+onChange). Typing NEVER validates. The first focus/blur of an untouched empty
+field shows no error (not hostile). Submit still validates everything through the
+server action. Local blur check mirrors the server messages; the server-side Zod
+re-check in lib/sendEmail.tsx remains unchanged and authoritative.
+
+================================================================
+5. RED -> GREEN EVIDENCE
+================================================================
+5.1 RED — Jest (before implementation; ContactForm.tsx absent):
+  cmd: nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm exec jest app/contact'
+  result: 2 failed / 0 passed (Cannot find module './ContactForm')
+  log: .omo/evidence/t12/t12-red-jest.log
+
+5.2 RED — Playwright (before implementation, old client page still in place):
+  cmd: PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright pnpm exec playwright test \
+       e2e/contact.spec.ts --project=chromium --workers=1 --retries=0
+  result: 2 failed / 7 passed
+    FAIL validates the email field on blur, before submit  (#email-error not found)
+    FAIL success message is exposed as a polite live region (getByRole('status') not found)
+  log: .omo/evidence/t12/t12-red-e2e.log
+
+5.3 GREEN — focused Jest:
+  cmd: pnpm exec jest app/contact
+  result: 2 suites / 8 tests passed, exit 0
+  log: .omo/evidence/t12/t12-green-jest.log
+
+5.4 GREEN — full Jest:
+  cmd: pnpm test
+  result: Test Suites 15 passed, Tests 101 passed, exit 0
+  log: .omo/evidence/t12/t12-test-full.log
+
+5.5 GREEN — Playwright contact + axe (chromium, workers=1, CI=true):
+  cmd: PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright CI=true \
+       pnpm exec playwright test e2e/contact.spec.ts e2e/a11y.spec.ts \
+       --project=chromium --workers=1
+  result: 17 passed, exit 0  (contact.spec 9 + a11y.spec 8 = 1 allowlist-integrity + 7 routes)
+  log: .omo/evidence/t12/t12-green-e2e.log
+
+================================================================
+6. axe RESULT (/contact)
+================================================================
+e2e/a11y.spec.ts scans SCHEMES=["light"] × 7 routes and asserts the serious/
+critical violation set EXACTLY equals the allowlist. /contact has NO allowlisted
+entries (e2e/fixtures/a11y-known-violations.ts holds only /about light ×2).
+The run is green => /contact serious+critical violations = 0. a11y.spec.ts and
+the allowlist were NOT modified (no change was needed).
+
+================================================================
+7. PRODUCTION BUILD + curl METADATA PROOF
+================================================================
+7.1 Build:
+  cmd: pnpm build
+  result: exit 0; "✓ Generating static pages (38/38)"; /contact is static (○),
+          First Load JS 121 kB
+  log: .omo/evidence/t12/t12-build.log
+
+7.2 curl against production server (next start -p 3060, HTTP 200):
+  HTML captured: .omo/evidence/t12/t12-contact.html
+  observed tags:
+    <title>Contact | TomSegbers.de</title>
+    <meta name="description" content="Get in touch with Tom Segbers — collaboration ideas, project proposals, or just to say hello."/>
+    <link rel="canonical" href="https://tom.segbers.de/contact"/>
+    <meta property="og:title" content="Contact | TomSegbers.de"/>
+    <meta property="og:url" content="https://tom.segbers.de/contact"/>
+
+================================================================
+8. lint / prettier
+================================================================
+8.1 pnpm lint   -> exit 0 (0 errors, 55 pre-existing warnings)
+    log: .omo/evidence/t12/t12-lint.log
+8.2 pnpm prettier -> exit 0 ("All matched files use Prettier code style!")
+    log: .omo/evidence/t12/t12-prettier2.log
+
+================================================================
+9. KNOWN PRE-EXISTING ISSUE (NOT T12, NOT FIXED)
+================================================================
+tsc --noEmit exits 2 with 6 errors in app/blog/page.test.tsx and
+app/projects/page.test.tsx: their MarkdownEntry fixtures predate T10's additive
+frontmatter fields (tags/featured/role/outcome/…). These files are outside the
+T12 commit scope and are untouched. `pnpm build` (which type-checks) is green.
+Log: .omo/evidence/t12/t12-tsc.log
+
+================================================================
+10. TOKEN / MODEL
+================================================================
+Model: 9router/default (agent default). Token usage not instrumented in this
+session; tracked at orchestrator level.
+
+================================================================
+11. REPRODUCE (exact)
+================================================================
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test'
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm lint'
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm prettier'
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; CI=true pnpm exec playwright test e2e/contact.spec.ts e2e/a11y.spec.ts --project=chromium --workers=1'

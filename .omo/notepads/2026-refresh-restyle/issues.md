@@ -138,3 +138,16 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - `task_update` for T-69efb5b1 returned `task_lock_unavailable` once (todo sync
   race); retried and completed. Harness issue, not a code issue.
 - No blockers. Pure removal + doc truthing; build/install/lint/prettier all green.
+
+## T12 — contact a11y split (2026-09-10)
+
+- `tsc --noEmit` (`pnpm typecheck`) is RED with 6 errors in `app/blog/page.test.tsx`
+  and `app/projects/page.test.tsx`: their `MarkdownEntry` fixtures predate T10's
+  additive frontmatter fields (tags/featured/role/outcome/…). Pre-existing, outside
+  T12 scope, not fixed. `pnpm build` (which type-checks) stays green because the
+  Next build excludes/ignores these test files. Follow-up needed if `typecheck` is
+  ever made a gate.
+- The `next start -p 3060` + curl + `kill $SRV; wait $SRV` one-liner hung the shell
+  for the full tool timeout even though curl had already returned HTTP 200 and
+  written the HTML. Use explicit PID kill without `wait`, or read the prerendered
+  `.next/server/app/contact.html` directly. No product impact.

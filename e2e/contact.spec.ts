@@ -87,4 +87,41 @@ test.describe("contact form", () => {
     // Previous error should be cleared
     await expect(page.locator("#email-error")).not.toBeVisible({ timeout: 5000 })
   })
+
+  test("validates the email field on blur, before submit", async ({ page }) => {
+    await page.goto("/contact")
+
+    const email = page.locator('input[name="email"]')
+    await email.fill("not-an-email")
+    await email.blur()
+
+    await expect(page.locator("#email-error")).toBeVisible({ timeout: 5000 })
+    await expect(page.locator("#email-error")).toContainText("missing an @ symbol")
+    await expect(email).toHaveAttribute("aria-invalid", "true")
+    await expect(email).toHaveAttribute("aria-describedby", "email-error")
+  })
+
+  test("does not flag an untouched empty field on its first blur", async ({ page }) => {
+    await page.goto("/contact")
+
+    const name = page.locator('input[name="name"]')
+    await name.focus()
+    await name.blur()
+
+    await expect(page.locator("#name-error")).not.toBeVisible()
+    await expect(name).not.toHaveAttribute("aria-invalid", "true")
+  })
+
+  test("success message is exposed as a polite live region", async ({ page }) => {
+    await page.goto("/contact")
+
+    await page.fill('input[name="name"]', "Tom")
+    await page.fill('input[name="email"]', "sender@example.com")
+    await page.fill('textarea[name="message"]', "Hello, I have a question.")
+    await page.click('button[type="submit"]')
+
+    const status = page.getByRole("status")
+    await expect(status).toBeVisible({ timeout: 10000 })
+    await expect(status).toContainText("Email sent successfully.")
+  })
 })

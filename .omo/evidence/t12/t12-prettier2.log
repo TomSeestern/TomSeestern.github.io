@@ -1,0 +1,16 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+app/contact/page.tsx 429ms
+app/contact/ContactForm.tsx 85ms
+app/contact/ContactForm.test.tsx 25ms
+app/contact/page.test.tsx 9ms
+e2e/contact.spec.ts 32ms
+
+> tomsegbers-de@0.0.0 prettier /home/tom/Projects/tomsegbers-de
+> prettier --check "**/*.{js,jsx,ts,tsx}"
+
+Checking formatting...
+All matched files use Prettier code style!

@@ -1,0 +1,12 @@
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+PASS app/contact/page.test.tsx
+PASS app/contact/ContactForm.test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        1.971 s
+Ran all test suites matching /app\/contact/i.

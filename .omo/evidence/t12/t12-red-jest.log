@@ -1,0 +1,48 @@
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+FAIL app/contact/page.test.tsx
+  ● Test suite failed to run
+
+    Cannot find module './ContactForm' from 'app/contact/page.test.tsx'
+
+      1 | import { metadata } from "./page"
+      2 |
+    > 3 | jest.mock("./ContactForm", () => ({
+        |      ^
+      4 |   __esModule: true,
+      5 |   default: () => null,
+      6 | }))
+
+      at Resolver._throwModNotFoundError (node_modules/.pnpm/jest-resolve@29.7.0/node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.mock (app/contact/page.test.tsx:3:6)
+
+FAIL app/contact/ContactForm.test.tsx
+  ● Test suite failed to run
+
+    Cannot find module './ContactForm' from 'app/contact/ContactForm.test.tsx'
+
+    However, Jest was able to find:
+    	'./ContactForm.test.tsx'
+
+    You might want to include a file extension in your import, or update your 'moduleFileExtensions', which is currently ['js', 'mjs', 'cjs', 'jsx', 'ts', 'tsx', 'json', 'node'].
+
+    See https://jestjs.io/docs/configuration#modulefileextensions-arraystring
+
+       8 |
+       9 | const INVALID_EMAIL_MESSAGE = "Email address is missing an @ symbol"
+    > 10 | const MISSING_NAME_MESSAGE = "Please enter your name"
+         |                                                      ^
+      11 |
+      12 | describe("ContactForm", () => {
+      13 |   beforeEach(() => {
+
+      at Resolver._throwModNotFoundError (node_modules/.pnpm/jest-resolve@29.7.0/node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.<anonymous> (app/contact/ContactForm.test.tsx:10:61)
+
+Test Suites: 2 failed, 2 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        1.24 s
+Ran all test suites matching /app\/contact/i.

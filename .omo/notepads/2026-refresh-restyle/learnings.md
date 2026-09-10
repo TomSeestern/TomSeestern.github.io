@@ -198,3 +198,29 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - README stale-claim grep: avoid the literal phrase "static export" — a negated
   "(not a static export)" still matches the acceptance grep. Phrase as
   "`output: 'export'` is deliberately not set".
+
+## T12 — contact server/client split + a11y wiring (2026-09-10)
+
+- Flowbite `Alert` hardcodes `role="alert"` BEFORE `...restProps`, so an explicit
+  `role="status"` prop wins. No custom wrapper needed to make the success alert a
+  polite live region; `getByRole("status")` then matches in Playwright/Jest.
+- `@testing-library/user-event` is NOT installed (cannot add deps). `fireEvent.blur`
+  DOES trigger React's `onBlur` here — no need for `fireEvent.focusOut`. Test with
+  `fireEvent.change` (sets value + onChange) then `fireEvent.blur`.
+- Blur validation that is not hostile: gate on an `editedFields` map set from
+  `onChange`. Typing never validates; first focus/blur of an untouched empty field
+  shows nothing; submit still routes through the server action. This satisfied the
+  "non-hostile first blur" requirement while keeping the existing submit e2e green.
+- `app/contact/page.tsx` flipped from `"use client"` to a server component; the form
+  moved verbatim to `app/contact/ContactForm.tsx`. Metadata canonical uses the
+  absolute string `https://tom.segbers.de/contact`; the built HTML emits
+  `<link rel="canonical" href="https://tom.segbers.de/contact"/>`.
+- Doing the `next start` + `curl` proof inside one `nix develop -c bash -c` with
+  `kill $SRV; wait $SRV` HANGS the outer command (the node child holds stdout). The
+  HTML is written before the hang, so kill by explicit PID after curl and skip
+  `wait`, or split into two tool calls. `/contact` is a static route, so the tags
+  are already in the prerendered file at `.next/server/app/contact.html`.
+- Green gates: jest 101 passed; build 38/38 (contact First Load 121 kB); lint 0
+  errors/55 pre-existing warnings; prettier clean; contact+a11y e2e 17 passed at
+  `--project=chromium --workers=1`. `a11y-known-violations.ts` untouched — /contact
+  has zero allowlisted rows, so the exact-match scan proves 0 serious/critical.
