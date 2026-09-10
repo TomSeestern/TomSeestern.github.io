@@ -7,16 +7,12 @@ import { KNOWN_VIOLATIONS } from "./fixtures/a11y-known-violations"
 /**
  * Colour schemes every public route is scanned in.
  *
- * Dark mode still exists in the current theme implementation. T07 (decision D13)
- * removes it — at that point this becomes a single-line change:
- *
- *   export const SCHEMES = ["light"] as const
- *
- * The matching dark entries in `KNOWN_VIOLATIONS` then become orphans and the
- * "allowlist references only scanned route/scheme combinations" test fails,
- * forcing them to be deleted rather than lingering.
+ * D13 (T07) removed the dark-mode machinery — the site ships a single light
+ * mode, so this is the only scheme. The matching allowlist entries live in
+ * `e2e/fixtures/a11y-known-violations.ts`; the integrity test below fails if an
+ * entry references a route/scheme this matrix no longer scans.
  */
-export const SCHEMES = ["light", "dark"] as const
+export const SCHEMES = ["light"] as const
 
 /** Public routes covered by the axe scan. */
 export const A11Y_ROUTES = [
@@ -52,17 +48,6 @@ function allowlistedViolations(route: Route, scheme: Scheme): readonly Violation
     .sort((a, b) => a.rule.localeCompare(b.rule))
 }
 
-async function waitForScheme(page: Page, scheme: Scheme): Promise<void> {
-  // The inline theme script flips `<html class="dark">` before first paint.
-  // Under parallel load `next dev` can compile on demand, so allow a generous
-  // budget rather than racing the default 5s assertion timeout.
-  await page.waitForFunction(
-    (expectDark) => document.documentElement.classList.contains("dark") === expectDark,
-    scheme === "dark",
-    { timeout: 30_000 }
-  )
-}
-
 /**
  * Wait until fonts are loaded and a stable frame has been painted so axe reads
  * settled colours instead of a mid-hydration state.
@@ -80,7 +65,7 @@ async function waitForStableRender(page: Page): Promise<void> {
 test.describe("accessibility (axe)", () => {
   test("allowlist references only scanned route/scheme combinations", () => {
     // Guards against stale allowlist entries whose route/scheme is no longer
-    // scanned (e.g. the dark entries after T07 removes dark mode).
+    // scanned (e.g. the dark entries removed with D13/T07).
     for (const entry of KNOWN_VIOLATIONS) {
       expect(A11Y_ROUTES).toContain(entry.route)
       expect(SCHEMES).toContain(entry.scheme)
@@ -94,11 +79,6 @@ test.describe("accessibility (axe)", () => {
         // deterministic layout — the running animation changes which cards are
         // visible, which would make `color-contrast` node counts flaky.
         await page.emulateMedia({ reducedMotion: "reduce" })
-        // Runs before every navigation so the inline theme script reads the
-        // scheme from localStorage on first paint.
-        await page.addInitScript((value: string) => {
-          window.localStorage.setItem("flowbite-theme-mode", value)
-        }, scheme)
       })
 
       for (const route of A11Y_ROUTES) {
@@ -109,7 +89,6 @@ test.describe("accessibility (axe)", () => {
           await page.goto(route)
 
           // When
-          await waitForScheme(page, scheme)
           await waitForStableRender(page)
           const analysis = await new AxeBuilder({ page }).analyze()
 

@@ -32,7 +32,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.className} dark`} suppressHydrationWarning>
+    <html lang="en" className={inter.className}>
       <body className="flex min-h-screen flex-col bg-surface text-foreground dark:bg-surface-dark dark:text-foreground-dark">
         <script
           type="application/ld+json"
@@ -43,28 +43,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               name: "TomSegbers.de",
               url: "https://tom.segbers.de",
             }),
-          }}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-(function() {
-  try {
-    var mode = localStorage.getItem("flowbite-theme-mode");
-    if (mode === "dark") {
-      document.documentElement.classList.add("dark");
-    } else if (mode === "light") {
-      document.documentElement.classList.remove("dark");
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("flowbite-theme-mode", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("flowbite-theme-mode", "light");
-    }
-  } catch (e) {}
-})();
-`,
           }}
         />
         <a

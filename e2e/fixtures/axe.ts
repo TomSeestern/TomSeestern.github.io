@@ -5,9 +5,10 @@ import type { Page } from "@playwright/test"
  * Shared axe conventions for the e2e suite (established in T04).
  *
  * `e2e/a11y.spec.ts` owns the full route × scheme allowlist scan. This module
- * exposes only the reusable primitives so other specs — currently the dark-mode
- * contrast checks — reuse the reduced-motion freeze, settled-render wait, and
- * violation summarising instead of forking that logic.
+ * exposes only the reusable primitives so other specs — currently the
+ * single-mode contrast checks in `e2e/dark-mode.spec.ts` — reuse the
+ * reduced-motion freeze, settled-render wait, and violation summarising instead
+ * of forking that logic.
  */
 
 /** A serious/critical axe violation flattened to a deterministic comparison row. */

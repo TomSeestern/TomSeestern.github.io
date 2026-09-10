@@ -113,3 +113,26 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - T06 acceptance: 55 → 68 tests, both exit 0 with `CI=true ... --project=chromium
   --workers=1`. Raw: `.omo/evidence/t06-e2e/{before,after}.log`.
 
+## T07 — single light mode, dark machinery removed (2026-09-10)
+
+- D13 overrode the stale plan text: T07 is NOT "keep key / preserve dark fallback".
+  Removed `DarkThemeToggle` + the inline resolver + the hardcoded `dark` class and
+  `suppressHydrationWarning`. `suppressHydrationWarning` existed only because the
+  inline script mutated `<html class>` pre-hydration; with no script it is dead.
+- `tailwind.config.js` is `darkMode: "class"`, so once no code adds `.dark` the
+  dormant `dark:*` utilities can never activate. Leaving them in place kept T07 a
+  pure refactor — palette removal stays with T13/T15.
+- TDD red was a single assertion: `[data-testid="dark-theme-toggle"]` count 1 → 0.
+  The "no dark class under `prefers-color-scheme: dark`" assertion in the same test
+  short-circuits behind it, so assert the toggle first and let the rest follow.
+- Acceptance grep `flowbite-theme-mode|DarkThemeToggle` covers `e2e/` too, so a
+  spec that *names* the key breaks it. Assert behavior instead: served HTML must
+  not contain `localStorage`/`prefers-color-scheme`, and `localStorage.length === 0`
+  after load. Both fail pre-change (script sets the key) and pass post-change.
+- `SCHEMES = ["light"]`, `A11yScheme = "light"`, deleted `e2e/fixtures/theme.ts`
+  (`waitForScheme` no longer applies). Allowlist dropped to one real light row:
+  `/about` light ×2, re-verified by the exact-match axe run.
+- Verify: build 0; lint 0 (55 pre-existing warnings); prettier 0; full chromium
+  `--workers=1` 58 passed. Raw: `.omo/evidence/t07-e2e/`.
+
+

@@ -1,6 +1,6 @@
 "use client"
 
-import { DarkThemeToggle, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react"
+import { Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import React from "react"
@@ -36,7 +36,6 @@ export function Header() {
         >
           Contact
         </a>
-        <DarkThemeToggle className="mr-2" />
         <NavbarToggle />
       </div>
       <NavbarCollapse>

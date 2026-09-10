@@ -1,0 +1,108 @@
+T07 — Remove dark-mode machinery; ship a single light mode
+Plan:    .omo/plans/2026-refresh-restyle.md (T07, text SUPERSEDED by D13)
+Decision: D13 (single light mode) / D12 (theme key VOID), .omo/decisions/2026-09-10-refresh-scope-decisions.md
+Base rev: 6cb97a6 (T06)  |  Branch: main  |  Date: 2026-09-10T19:55:56Z
+
+================================================================================
+1. Implemented (D13 interpretation, NOT the stale plan wording)
+================================================================================
+- components/Header/Header.tsx : removed `DarkThemeToggle` import + usage.
+- app/layout.tsx               : removed hardcoded `dark` class on <html>,
+                                 removed the inline theme-resolution <script>
+                                 (localStorage["flowbite-theme-mode"] +
+                                 prefers-color-scheme), and removed the now-unneeded
+                                 `suppressHydrationWarning`.
+- e2e/dark-mode.spec.ts        : repurposed to single-mode rendering coverage
+                                 (no toggle, no resolver, light surface under
+                                 prefers-color-scheme: dark, no persisted pref,
+                                 contrast scan light-only). Filename retained.
+- e2e/a11y.spec.ts             : SCHEMES = ["light"]; dropped waitForScheme +
+                                 the localStorage addInitScript.
+- e2e/fixtures/a11y-known-violations.ts : A11yScheme = "light"; dark rows removed,
+                                 `/about` light ×2 kept (re-verified).
+- e2e/fixtures/theme.ts        : DELETED (waitForScheme no longer applies).
+- e2e/fixtures/axe.ts          : comment updated to the single-mode spec.
+Dormant `dark:` utility classes are intentionally left in place — palette
+removal belongs to T13/T15 (scope guard; no colours changed here).
+
+================================================================================
+2. Machinery grep (acceptance)
+================================================================================
+$ grep -ri "flowbite-theme-mode\|DarkThemeToggle" app components e2e
+(no output; exit 1)
+=> BEFORE (base 6cb97a6) there were matches in app/layout.tsx, Header.tsx,
+   a11y.spec.ts, dark-mode.spec.ts. AFTER: zero.
+
+Exhaustive pre-work grep also confirmed the only other consumers were
+`data-theme`/`theme-mode` (none) and `waitForScheme` (a11y + dark-mode specs).
+
+================================================================================
+3. Failing-first (TDD red) — BEFORE any app change
+================================================================================
+Command:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; \
+    export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; \
+    CI=true pnpm exec playwright test e2e/dark-mode.spec.ts \
+    --project=chromium --workers=1 --retries=0'
+Result: EXIT=1  (1 failed, 4 passed) — raw: .omo/evidence/t07-e2e/red.log
+Key failure:
+  1) e2e/dark-mode.spec.ts › ships no theme toggle and no persisted theme key
+     Error: expect(locator).toHaveCount(expected) failed
+     Locator:  locator('[data-testid="dark-theme-toggle"]')
+     Expected: 0
+     Received: 1
+     at e2e/dark-mode.spec.ts:72:67
+The assertion proves the toggle (and resolver) still existed. (Test title was
+later renamed to "…resolves a single mode regardless of system preference";
+the assertion at line 72 is unchanged.)
+
+================================================================================
+4. Green verification — AFTER implementation
+================================================================================
+$ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+  EXIT=0 (38 static pages)        raw: .omo/evidence/t07-e2e/build.log
+
+$ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm lint'
+  EXIT=0 (0 errors, 55 pre-existing warnings; baseline unchanged)
+                                  raw: .omo/evidence/t07-e2e/lint.log
+
+$ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm prettier'
+  EXIT=0 "All matched files use Prettier code style!"
+                                  raw: .omo/evidence/t07-e2e/prettier.log
+
+$ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; \
+    export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; \
+    CI=true pnpm exec playwright test e2e/dark-mode.spec.ts e2e/a11y.spec.ts \
+    --project=chromium --workers=1 --retries=0'
+  EXIT=0                          raw: .omo/evidence/t07-e2e/green-targeted.log
+
+$ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; \
+    export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; \
+    CI=true pnpm exec playwright test --project=chromium --workers=1'
+  EXIT=0 — 58 passed (1.6m)       raw: .omo/evidence/t07-e2e/full-e2e.log
+
+Real Playwright Chromium only; firefox/webkit excluded by design (flake.nix
+ships chromium libs only — pre-existing, see T04 issues).
+
+================================================================================
+5. Allowlist re-verification
+================================================================================
+The a11y spec compares the actual axe summary to KNOWN_VIOLATIONS with an exact
+match. After dropping the scheme+dark rows and keeping only
+  { "/about", light, "color-contrast", 2 },
+the full green run above passed all 7 routes × 1 scheme — so `/about` light ×2
+is the real current debt and no dark rows remain. KNOWN_VIOLATIONS total: 1.
+(Still must reach empty by F5 per its own header.)
+
+================================================================================
+6. Risks / notes
+================================================================================
+- Dormant `dark:*` utilities remain across app/components and on <body>. They can
+  never activate because no `.dark` class is ever added (tailwind darkMode:
+  "class") and no toggle/script exists. T13/T15 remove them with the palette.
+- `e2e/dark-mode.spec.ts` keeps its former filename (explicit task preference to
+  avoid churn) although it now asserts the single light mode.
+- No dependency, tailwind.config.js, app/page.tsx, lib/markdown.ts, or
+  app/contact/* changes (scope guards honoured).
+
+Model: opencode/default (no rationale needed beyond task delegation).

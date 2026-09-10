@@ -11,10 +11,12 @@
  * MUST be empty by Wave 6 (final gate F5). Do not ship this file non-empty.
  *
  * Seed source: `.omo/notepads/2026-refresh-restyle/baseline.md` §3 (axe baseline,
- * axe-core 4.10.3, captured 2026-09-10). Every current entry is `color-contrast`:
- *   home dark ×9, blog dark ×6, projects dark ×21, about light ×2.
+ * axe-core 4.10.3, captured 2026-09-10). D13 (T07) removed dark mode, so the
+ * former dark entries (home ×9, blog ×6, projects ×21) no longer exist. Every
+ * remaining entry is `color-contrast`:
+ *   about light ×2.
  */
-export type A11yScheme = "light" | "dark"
+export type A11yScheme = "light"
 
 export type KnownViolation = {
   readonly route: string
@@ -24,8 +26,5 @@ export type KnownViolation = {
 }
 
 export const KNOWN_VIOLATIONS: readonly KnownViolation[] = [
-  { route: "/", scheme: "dark", rule: "color-contrast", nodeCount: 9 },
-  { route: "/blog", scheme: "dark", rule: "color-contrast", nodeCount: 6 },
-  { route: "/projects", scheme: "dark", rule: "color-contrast", nodeCount: 21 },
   { route: "/about", scheme: "light", rule: "color-contrast", nodeCount: 2 },
 ]

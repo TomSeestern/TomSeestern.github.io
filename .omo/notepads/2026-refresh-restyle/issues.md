@@ -85,3 +85,17 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   default-worker chromium run flakes on `next dev`. The reliable command remains
   `CI=true ... --project=chromium --workers=1` (T04 issues §).
 
+## T07 — single light mode (2026-09-10)
+
+- **The acceptance grep and the spec conflict if the spec names the key.** The
+  first draft asserted `localStorage.getItem("flowbite-theme-mode")`/HTML
+  `.not.toContain(...)`, which makes `grep -ri "flowbite-theme-mode" ... e2e`
+  non-empty. Replaced with behavior-only assertions (no literal). Watch this for
+  any future "prove X is gone" test where the grep is itself the gate.
+- Capturing the red run with `CI=true` also enables `retries=2`, so the failing
+  test executes up to 3× (and `next dev` cold compiles each time). Used
+  `--retries=0` for the red capture; the canonical acceptance run keeps `CI=true`.
+- `--project=firefox`/`webkit` still cannot launch (pre-existing, no system libs).
+  Do not chase them in T07; the required command is chromium-only.
+
+
