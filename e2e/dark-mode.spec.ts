@@ -14,7 +14,9 @@ import { freezeAnimations, scanSeriousViolations, waitForStableRender } from "./
  * `prefers-color-scheme`. The filename is retained to avoid churn.
  */
 
-const lightSurface = "rgb(255, 255, 255)"
+// tailwind.config.js `surface.DEFAULT` (#F5EFE1). Measured from the production
+// build's computed `body` background-color after the T13 token remap.
+const lightSurface = "rgb(245, 239, 225)"
 const transparentPng = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL6zAAAAABJRU5ErkJggg==",
   "base64"

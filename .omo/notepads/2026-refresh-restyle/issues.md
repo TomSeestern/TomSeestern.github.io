@@ -249,3 +249,13 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   git-log reasoning alone.
 - `task_update` returned `task_lock_unavailable` once (same harness race as T09);
   retried and completed.
+- **Rule:** a palette/token change MUST update any hardcoded colour assertion in
+  `e2e/` in the SAME commit. T13 remapped `surface` and the focus rings but left
+  `e2e/dark-mode.spec.ts` (white surface) and `e2e/interactions.spec.ts` (blue
+  ring) asserting the old values, so the suite stayed red across two tasks. Fix
+  (`test(e2e): update stale palette assertions after token remap`) measured the
+  computed values from the production build: body = `rgb(245,239,225)`
+  (`surface.DEFAULT` #F5EFE1), CTA ring = `rgb(222,164,140)`
+  (`accent.soft-foreground-dark` #DEA48C). Note the CTA ring is the
+  `-soft-foreground-dark` token, NOT `accent.soft`; general links/cards use
+  `ring-accent-soft` = `rgb(190,106,80)` (#BE6A50). Full chromium suite 62/62.

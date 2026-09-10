@@ -1,6 +1,12 @@
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
 
+// CTAs carry `focus-visible:ring-accent-soft-foreground-dark`, so their focus
+// ring is tailwind.config.js `accent.soft-foreground-dark` (#DEA48C). General
+// links/cards use `focus-visible:ring-accent-soft` (accent.soft, #BE6A50).
+// Measured from the production build's computed `box-shadow` after the T13 remap.
+const CTA_FOCUS_RING = /rgb\(222, 164, 140\)/
+
 function collectBrowserConsoleErrors(page: Page): readonly string[] {
   const consoleErrors: string[] = []
 
@@ -51,7 +57,7 @@ test.describe("interactive accessibility", () => {
     // Then
     await expect(contactCallToAction).toBeFocused()
     await expect(contactCallToAction).toHaveCSS("outline-style", "solid")
-    await expect(contactCallToAction).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+    await expect(contactCallToAction).toHaveCSS("box-shadow", CTA_FOCUS_RING)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
@@ -84,7 +90,7 @@ test.describe("interactive accessibility", () => {
     // Then
     await expect(primaryCta).toBeFocused()
     await expect(primaryCta).toHaveCSS("outline-style", "solid")
-    await expect(primaryCta).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+    await expect(primaryCta).toHaveCSS("box-shadow", CTA_FOCUS_RING)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 

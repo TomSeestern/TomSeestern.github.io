@@ -115,3 +115,34 @@ CONSTRAINTS HONORED
 - Contrast manifest unchanged (no pair changed).
 
 COMMIT: feat(theme): parchment palette, motion primitives, column-rule motif
+
+────────────────────────────────────────────────────────────────────────────────
+T15 FOLLOW-UP — stale palette assertions fixed (verification finding)
+
+The palette remap (T13) left hardcoded colour assertions in two e2e specs, so the
+full chromium suite was RED (58 passed / 4 failed). Fixed in the T15 follow-up
+commit `test(e2e): update stale palette assertions after token remap`.
+
+MEASURED VALUES (production build, Playwright getComputedStyle)
+- body background-color: rgb(245, 239, 225)  == tailwind.config.js surface.DEFAULT #F5EFE1
+- CTA focus ring (contact CTA + "Learn More"): rgb(222, 164, 140)
+    == tailwind.config.js accent.soft-foreground-dark #DEA48C
+    (both CTAs carry focus-visible:ring-accent-soft-foreground-dark)
+- general link/card ring ("View all Projects"): rgb(190, 106, 80)
+    == tailwind.config.js accent.soft #BE6A50 (ring-accent-soft) — mapping only
+
+FILES
+- e2e/dark-mode.spec.ts  lightSurface "rgb(255,255,255)" -> "rgb(245,239,225)"
+- e2e/interactions.spec.ts  blue /rgb(147,197,253)/ -> CTA_FOCUS_RING /rgb(222,164,140)/
+Raw: .omo/evidence/t15-motion/measure-stale-assertions.{mjs,log}
+
+VERIFICATION
+- Full chromium suite: 62 passed / 0 failed, exit 0
+  $ PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright CI=true \
+      pnpm exec playwright test --project=chromium --workers=1
+  raw: .omo/evidence/t15-motion/e2e-full-fixed.log
+- pnpm typecheck: exit 0
+- pnpm prettier: "All matched files use Prettier code style!", exit 0
+  raw: .omo/evidence/t15-motion/gates-fix.log
+
+COMMIT: test(e2e): update stale palette assertions after token remap
