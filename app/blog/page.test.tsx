@@ -22,37 +22,48 @@ import Articles from "./page"
 
 const mockGetAllBlogPosts = jest.mocked(getAllBlogPosts)
 
+function makeBlogPost(id: string, overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
+  return {
+    id,
+    title: "Untitled",
+    articleDate: new Date("1990-01-01"),
+    articleContent: "",
+    authorImgSrc: "/img/placeholder.png",
+    authorName: "Anonymous",
+    fullArticleLink: `/blog/entry/${id}`,
+    technologies: [],
+    tags: [],
+    featured: false,
+    role: "",
+    outcome: "",
+    heroImage: "",
+    metrics: [],
+    ...overrides,
+  }
+}
+
 const blogPosts: MarkdownEntry[] = [
-  {
-    id: "newest-post",
+  makeBlogPost("newest-post", {
     title: "Newest post",
     articleDate: new Date("2024-01-01"),
     articleContent: "Newest content",
     authorImgSrc: "/img/newest.png",
     authorName: "Tom",
-    technologies: [],
-    fullArticleLink: "/blog/entry/newest-post",
-  },
-  {
-    id: "middle-post",
+  }),
+  makeBlogPost("middle-post", {
     title: "Middle post",
     articleDate: new Date("2020-01-01"),
     articleContent: "Middle content",
     authorImgSrc: "/img/middle.png",
     authorName: "Tom",
-    technologies: [],
-    fullArticleLink: "/blog/entry/middle-post",
-  },
-  {
-    id: "oldest-post",
+  }),
+  makeBlogPost("oldest-post", {
     title: "Oldest post",
     articleDate: new Date("2019-01-01"),
     articleContent: "Oldest content",
     authorImgSrc: "/img/oldest.png",
     authorName: "Tom",
-    technologies: [],
-    fullArticleLink: "/blog/entry/oldest-post",
-  },
+  }),
 ]
 
 describe("Articles", () => {

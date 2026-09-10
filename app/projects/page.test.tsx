@@ -16,37 +16,50 @@ import Articles from "./page"
 
 const mockGetAllProjects = jest.mocked(getAllProjects)
 
+function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
+  return {
+    id,
+    title: "Untitled",
+    articleDate: new Date("1990-01-01"),
+    articleContent: "",
+    authorImgSrc: "/img/placeholder.png",
+    authorName: "Anonymous",
+    fullArticleLink: `/projects/entry/${id}`,
+    technologies: [],
+    tags: [],
+    featured: false,
+    role: "",
+    outcome: "",
+    heroImage: "",
+    metrics: [],
+    ...overrides,
+  }
+}
+
 const projects: MarkdownEntry[] = [
-  {
-    id: "project-alpha",
+  makeProject("project-alpha", {
     title: "Project Alpha",
     articleDate: new Date("2025-01-01"),
     articleContent: "Alpha description",
     authorImgSrc: "/img/alpha.png",
     authorName: "Tom",
-    fullArticleLink: "/projects/entry/project-alpha",
     technologies: ["TypeScript", "Next.js"],
-  },
-  {
-    id: "project-beta",
+  }),
+  makeProject("project-beta", {
     title: "Project Beta",
     articleDate: new Date("2024-06-01"),
     articleContent: "Beta description",
     authorImgSrc: "/img/beta.png",
     authorName: "Tom",
-    fullArticleLink: "/projects/entry/project-beta",
     technologies: ["Python"],
-  },
-  {
-    id: "project-gamma",
+  }),
+  makeProject("project-gamma", {
     title: "Project Gamma",
     articleDate: new Date("2023-01-01"),
     articleContent: "Gamma description",
     authorImgSrc: "/img/gamma.png",
     authorName: "Tom",
-    fullArticleLink: "/projects/entry/project-gamma",
-    technologies: [],
-  },
+  }),
 ]
 
 describe("Articles (projects)", () => {

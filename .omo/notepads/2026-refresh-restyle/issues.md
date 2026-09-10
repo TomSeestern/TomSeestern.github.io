@@ -133,6 +133,20 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - No new risk to existing content: `git diff --stat content/` empty, build 38/38,
   validator COUNT 21.
 
+## T10 regression — tsc --noEmit missed by Jest/build (2026-09-10)
+
+- Adding fields to `MarkdownEntry` broke `app/blog/page.test.tsx` (3 mocks) and
+  `app/projects/page.test.tsx` (3 mocks) with TS2740 — `pnpm test` stayed green
+  (ts-jest transpiles without type-checking) and `pnpm build` only type-checks
+  the production graph, so neither caught it. `pnpm typecheck` (tsc --noEmit)
+  did. **Rule: every additive `MarkdownEntry`/schema task MUST run `pnpm
+  typecheck`, alongside test+build.**
+- Fixed with a local `makeBlogPost` / `makeProject` factory (defaults for all 13
+  fields incl. the 6 new ones, `id` + `Partial<MarkdownEntry>` overrides) so a
+  future additive field fails to compile in ONE place per file, not 6 literals.
+  Production code and schema untouched. Verify: typecheck 0, test 0 (15 suites,
+  102 passed), lint 0, prettier 0.
+
 ## T09 — dead deps + README drift (2026-09-10)
 
 - `task_update` for T-69efb5b1 returned `task_lock_unavailable` once (todo sync
