@@ -3,17 +3,21 @@ const { pick, omit } = require("lodash")
 const colors = require("tailwindcss/colors")
 const defaultTheme = require("tailwindcss/defaultTheme")
 
+// Warm terracotta ramp — the single accent family for the parchment palette
+// (D4/D13: two warm accents only). `accent` below is the semantic layer on
+// top of this ramp; `primary-*` stays available for Flowbite-owned utilities.
+// Every text/UI pair is contrast-gated by scripts/check-contrast.mjs.
 const primary = {
-  50: "#eff6ff",
-  100: "#dbeafe",
-  200: "#bfdbfe",
-  300: "#93c5fd",
-  400: "#60a5fa",
-  500: "#3b82f6",
-  600: "#2563eb",
-  700: "#1d4ed8",
-  800: "#1e40af",
-  900: "#1e3a8a",
+  50: "#fbf3ef",
+  100: "#f6e3da",
+  200: "#edc9b9",
+  300: "#dea48c",
+  400: "#c97a5c",
+  500: "#b45036",
+  600: "#a63d28",
+  700: "#7f2e1e",
+  800: "#652417",
+  900: "#4a1a10",
 }
 
 /** @type {import('tailwindcss').Config} */
@@ -32,42 +36,45 @@ module.exports = {
     extend: {
       colors: {
         surface: {
-          DEFAULT: "#ffffff",
-          muted: "#f9fafb",
-          elevated: "#ffffff",
-          dark: "#111827",
-          "muted-dark": "#1f2937",
-          "elevated-dark": "#1f2937",
+          DEFAULT: "#F5EFE1",
+          muted: "#EDE4D1",
+          elevated: "#FBF7EE",
+          dark: "#211E1A",
+          "muted-dark": "#2B2722",
+          "elevated-dark": "#2B2722",
         },
         foreground: {
-          DEFAULT: "#111827",
-          muted: "#6b7280",
-          dark: "#ffffff",
-          "muted-dark": "#9ca3af",
+          DEFAULT: "#1B1B1F",
+          muted: "#5C5548",
+          dark: "#F2ECE0",
+          "muted-dark": "#B7AD9C",
         },
         accent: {
-          DEFAULT: primary[600],
-          light: primary[400],
-          hover: primary[700],
-          soft: primary[100],
-          "soft-contrast": primary[200],
-          "soft-foreground": primary[800],
-          dark: primary[500],
-          "hover-dark": primary[400],
-          "soft-dark": primary[900],
-          "soft-foreground-dark": primary[300],
+          DEFAULT: "#A63D28",
+          light: "#A63D28",
+          hover: "#7F2E1E",
+          soft: "#BE6A50",
+          "soft-contrast": "#B45036",
+          "soft-foreground": "#1F0F0A",
+          dark: "#B45036",
+          "hover-dark": "#C97A5C",
+          "soft-dark": "#4A1A10",
+          "soft-foreground-dark": "#DEA48C",
+          // Second warm accent — deep oxblood/wine (D4). Text-safe on parchment.
+          secondary: "#5E2130",
+          "secondary-hover": "#471824",
         },
         muted: {
-          DEFAULT: "#6b7280",
-          surface: "#f3f4f6",
-          dark: "#9ca3af",
-          "surface-dark": "#1f2937",
+          DEFAULT: "#5C5548",
+          surface: "#E9DFC9",
+          dark: "#B7AD9C",
+          "surface-dark": "#2B2722",
         },
         border: {
-          DEFAULT: "#d1d5db",
-          subtle: "#e5e7eb",
-          dark: "#4b5563",
-          "subtle-dark": "#374151",
+          DEFAULT: "#D8CDB6",
+          subtle: "#E6DDCB",
+          dark: "#57503F",
+          "subtle-dark": "#3A342A",
         },
         primary,
       },
@@ -165,6 +172,15 @@ module.exports = {
       },
       minWidth: {
         ...defaultTheme.width,
+      },
+      // Measure system (T13). Reading-width caps live here, not in CSS vars, so
+      // every page shares one vertical rhythm instead of ad-hoc max-w values.
+      maxWidth: {
+        "measure-article": "66ch",
+        "measure-lead": "46ch",
+        "measure-card": "38ch",
+        "measure-display": "20ch",
+        "width-page": "78rem",
       },
       animation: {
         marquee: "marquee 90s linear infinite",

@@ -1,0 +1,177 @@
+{
+  "description": "Shipping token pairs for the single light parchment palette. Each entry is a real foreground/background combination the UI renders — not the palette in the abstract. Contrast is computed by scripts/check-contrast.mjs; text pairs need >=4.5:1 (WCAG 2.2 AA), ui/non-text pairs need >=3:1 (WCAG 1.4.11). Tokens live in tailwind.config.js and are documented in DESIGN.md §2.",
+  "minimums": {
+    "text": 4.5,
+    "ui": 3
+  },
+  "pairs": [
+    {
+      "name": "body ink on surface",
+      "kind": "text",
+      "foreground": "#1B1B1F",
+      "background": "#F5EFE1",
+      "usage": "foreground on surface — body copy, headings"
+    },
+    {
+      "name": "body ink on surface-muted",
+      "kind": "text",
+      "foreground": "#1B1B1F",
+      "background": "#EDE4D1",
+      "usage": "foreground on surface-muted — text over muted section/hover surfaces"
+    },
+    {
+      "name": "muted on surface",
+      "kind": "text",
+      "foreground": "#5C5548",
+      "background": "#F5EFE1",
+      "usage": "muted on surface — supporting text, metadata"
+    },
+    {
+      "name": "muted on surface-muted",
+      "kind": "text",
+      "foreground": "#5C5548",
+      "background": "#EDE4D1",
+      "usage": "muted on surface-muted — supporting text on muted surfaces"
+    },
+    {
+      "name": "muted on muted-block",
+      "kind": "text",
+      "foreground": "#5C5548",
+      "background": "#E9DFC9",
+      "usage": "muted on muted-surface — supporting text on inset blocks (/about)"
+    },
+    {
+      "name": "accent link on surface",
+      "kind": "text",
+      "foreground": "#A63D28",
+      "background": "#F5EFE1",
+      "usage": "accent on surface — links, accent-as-text"
+    },
+    {
+      "name": "accent link on surface-muted",
+      "kind": "text",
+      "foreground": "#A63D28",
+      "background": "#EDE4D1",
+      "usage": "accent on surface-muted — links over muted surfaces"
+    },
+    {
+      "name": "accent hover link on surface",
+      "kind": "text",
+      "foreground": "#7F2E1E",
+      "background": "#F5EFE1",
+      "usage": "accent-hover on surface — link hover state"
+    },
+    {
+      "name": "wine link on surface",
+      "kind": "text",
+      "foreground": "#5E2130",
+      "background": "#F5EFE1",
+      "usage": "accent-secondary (oxblood) on surface — second accent as text"
+    },
+    {
+      "name": "wine link on surface-muted",
+      "kind": "text",
+      "foreground": "#5E2130",
+      "background": "#EDE4D1",
+      "usage": "accent-secondary on surface-muted — second accent as text over muted surfaces"
+    },
+    {
+      "name": "cta white on accent",
+      "kind": "text",
+      "foreground": "#FFFFFF",
+      "background": "#A63D28",
+      "usage": "button label on accent background — solid CTA"
+    },
+    {
+      "name": "cta white on accent-hover",
+      "kind": "text",
+      "foreground": "#FFFFFF",
+      "background": "#7F2E1E",
+      "usage": "button label on accent-hover background — CTA hover"
+    },
+    {
+      "name": "cta white on soft-foreground hover",
+      "kind": "text",
+      "foreground": "#FFFFFF",
+      "background": "#1F0F0A",
+      "usage": "button label on accent-soft-foreground — CTA hover (Home/Header)"
+    },
+    {
+      "name": "badge label on accent-soft",
+      "kind": "text",
+      "foreground": "#1F0F0A",
+      "background": "#BE6A50",
+      "usage": "accent-soft-foreground on accent-soft — badge chip (/about, teasers)"
+    },
+    {
+      "name": "button primary warm-white on accent",
+      "kind": "text",
+      "foreground": "#F2ECE0",
+      "background": "#A63D28",
+      "usage": "Button primary label (foreground-dark) on accent-light"
+    },
+    {
+      "name": "button secondary accent on surface",
+      "kind": "text",
+      "foreground": "#A63D28",
+      "background": "#F5EFE1",
+      "usage": "Button secondary label (accent-light) on transparent/surface"
+    },
+    {
+      "name": "wine cta white on wine",
+      "kind": "text",
+      "foreground": "#FFFFFF",
+      "background": "#5E2130",
+      "usage": "button label on accent-secondary background"
+    },
+    {
+      "name": "focus ring accent-soft on surface",
+      "kind": "ui",
+      "foreground": "#BE6A50",
+      "background": "#F5EFE1",
+      "usage": "ring-accent-soft focus ring on surface"
+    },
+    {
+      "name": "focus ring accent-soft on surface-muted",
+      "kind": "ui",
+      "foreground": "#BE6A50",
+      "background": "#EDE4D1",
+      "usage": "ring-accent-soft focus ring on muted surfaces"
+    },
+    {
+      "name": "accent border on surface",
+      "kind": "ui",
+      "foreground": "#A63D28",
+      "background": "#F5EFE1",
+      "usage": "accent border/ring on surface"
+    },
+    {
+      "name": "accent border on surface-muted",
+      "kind": "ui",
+      "foreground": "#A63D28",
+      "background": "#EDE4D1",
+      "usage": "accent border/ring on muted surfaces"
+    },
+    {
+      "name": "input focus border accent-dark on surface-muted",
+      "kind": "ui",
+      "foreground": "#B45036",
+      "background": "#EDE4D1",
+      "usage": "focus-visible:border-accent-dark on contact form inputs"
+    },
+    {
+      "name": "wine border on surface",
+      "kind": "ui",
+      "foreground": "#5E2130",
+      "background": "#F5EFE1",
+      "usage": "accent-secondary border/ring on surface"
+    },
+    {
+      "name": "soft-foreground ring on surface",
+      "kind": "ui",
+      "foreground": "#1F0F0A",
+      "background": "#F5EFE1",
+      "usage": "ring-accent-soft-foreground focus ring on surface"
+    }
+  ]
+}

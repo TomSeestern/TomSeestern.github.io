@@ -255,3 +255,34 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Every production tooltip trigger is a decorative `<img>`/`<span>` (not focusable),
   so browser-level keyboard-focus coverage does not exist. Keyboard focus stays a
   component-layer concern (`fireEvent.focus`).
+
+## T13 — warm parchment tokens + contrast gate (2026-09-10)
+
+- The universal focus ring is `ring-accent-soft` (every link/button/card uses it).
+  In the old palette that was a pale tint (~1.1:1 on white) — an un-gated WCAG
+  1.4.11 failure. `accent-soft` ALSO serves as the badge chip background, so the
+  two roles fight: chip bg wants light, focus ring wants >=3:1. The only value
+  satisfying both on #F5EFE1/#EDE4D1 is a MID terracotta (#BE6A50, 3.41/3.10) with
+  a near-black chip label (#1F0F0A, 4.75). If T15 wants pale chips, it must split
+  the ring token from the chip token in the components.
+- A `maxWidth` block under `extend` EXTENDS Tailwind's defaults, so adding the
+  measure tokens keeps every `max-w-screen-*`/`max-w-3xl` working. `width-page`
+  as a maxWidth entry yields the class `max-w-width-page` (per the task spec).
+- Contrast math is cheap to verify before editing: a 30-line node probe computes
+  every shipping pair in ms, so choose token values by measurement, not vibes.
+  Parchment lum = 0.8658; 3:1 needs a token lum <= 0.255, which is why warm
+  mid-tones are darker than they look.
+- Keep the literal word "cool"/"warm" in prose, not the forbidden colour word —
+  the acceptance grep `#2563eb|#2f7bff|blue` over tailwind.config.js + DESIGN.md
+  matches SUBSTRINGS, including comments. A sentence like "no <colour> anywhere"
+  trips it.
+- TDD red for a pure-JS gate: ship the manifest WITH a known-bad pair, capture
+  `EXIT=1` + the per-pair FAIL row, then delete only that pair. No test file needed;
+  the script's own exit code is the assertion.
+
+## T13 — evidence paths
+
+- Ledger: `.omo/evidence/task-T13-2026-refresh-restyle.txt`.
+- Raw: `t13-contrast-{red,green}.txt`, `t13-axe.log`, `t13-axe-green.log`,
+  `t13-axe-nodes.txt`, `t13-build.log`, `t13-lint.log`, `t13-prettier.log`,
+  `t13-jest.log`.

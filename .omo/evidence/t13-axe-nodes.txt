@@ -1,0 +1,30 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 e2e:headless /home/tom/Projects/tomsegbers-de
+> playwright test --project=chromium --workers=1 e2e/_t13-debug.spec.ts
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 1 test using 1 worker
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+
+### /blog/entry/2019-ebeltoft-cheesecake-recipe :: color-contrast nodes=1
+TARGET: [".text-gray-500.font-medium[data-testid=\"flowbite-breadcrumb-item\"]"]
+HTML: <span class="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400" data-testid="flowbite-breadcrumb-item">Memorable Ebeltoft Cheesecake – A Sweet Souvenir</span>
+FAIL: Fix any of the following:
+  Element has insufficient color contrast of 4.21 (foreground color: #6b7280, background color: #f5efe1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1
+
+### /projects/entry/2020-soudest-backend-nodejs :: color-contrast nodes=1
+TARGET: [".text-gray-500.font-medium[data-testid=\"flowbite-breadcrumb-item\"]"]
+HTML: <span class="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400" data-testid="flowbite-breadcrumb-item">SouDest Backend - A Multimodal Travel Planner Backend With NodeJS</span>
+FAIL: Fix any of the following:
+  Element has insufficient color contrast of 4.21 (foreground color: #6b7280, background color: #f5efe1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1
+·
+  1 passed (18.3s)

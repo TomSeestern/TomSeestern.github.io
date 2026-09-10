@@ -1,0 +1,138 @@
+TASK T13 — Design tokens + measure system + contrast CI gate + DESIGN.md
+Plan: 2026-refresh-restyle
+Base SHA: f237eea
+Timestamp: 2026-09-10T21:07:58Z
+Agent: Sisyphus-Junior
+Binding decisions: D13 (single light mode, warm parchment, no cool accent), D4 (two warm accents)
+
+================================================================================
+1. DELIVERABLES SHIPPED
+================================================================================
+- tailwind.config.js — semantic token VALUES remapped to warm parchment; token
+  NAMES preserved; primary-* remapped to terracotta ramp; measure maxWidth tokens
+  added. No dark-mode removal (T07 already did that); -dark values kept resolvable
+  and warmed.
+- scripts/check-contrast.mjs — pure JS, zero deps, WCAG 2.x ratio gate.
+- tests/budgets/contrast.json — 24 shipping pairs (17 text, 7 ui).
+- DESIGN.md — rewritten §2 palette, §4 measure tokens, §8 contrast gate contract.
+- e2e/fixtures/a11y-known-violations.ts — allowlist matched to post-palette axe
+  reality (/about removed, 2 detail-page breadcrumb rows added, owned by T15).
+
+================================================================================
+2. TOKEN VALUES + MEASURED CONTRAST RATIOS
+================================================================================
+surface            #F5EFE1   (parchment base)
+surface-muted      #EDE4D1
+surface-elevated   #FBF7EE
+muted.surface      #E9DFC9
+foreground (ink)   #1B1B1F   on surface 14.97:1 | on surface-muted 13.59:1
+muted/#5C5548      on surface 6.43:1 | on surface-muted 5.84:1 | on block 5.57:1
+border             #D8CDB6   (decorative divider — 1.4.11 exempt)
+border-subtle      #E6DDCB
+accent (terracotta)#A63D28   as text on surface 5.52:1 | on surface-muted 5.01:1
+accent-hover       #7F2E1E   as text on surface 7.92:1
+accent-light       #A63D28   Button primary bg; warm-white #F2ECE0 label 5.38:1
+accent-soft        #BE6A50   focus ring on surface 3.41:1 | on surface-muted 3.10:1
+accent-soft-fg     #1F0F0A   badge label on accent-soft 4.75:1; CTA hover white 18.57:1
+accent.dark        #B45036   input focus border on surface-muted 4.01:1
+accent-secondary (oxblood/wine) #5E2130
+                   as text on surface 10.55:1 | on surface-muted 9.57:1
+accent-secondary-hover #471824
+primary-50..900    terracotta ramp (600=#a63d28, 700=#7f2e1e, 500=#b45036,
+                   100/#f6e3da ... 900/#4a1a10) — Flowbite aliases, no cool hue.
+CTA white on accent #A63D28 6.33:1; on accent-hover #7F2E1E 9.08:1.
+
+Key design fact: accent-soft is the universal `ring-accent-soft` focus ring AND the
+badge chip background. On white the old pale blue tint (1.1:1) was an un-gated
+focus-indicator failure; #BE6A50 now clears 3:1 on both parchment tones while the
+near-black soft-foreground keeps the chip label at 4.75:1. This is why the soft
+token is a mid terracotta, not a pale tint.
+
+================================================================================
+3. TDD — FAILING-FIRST DEMO
+================================================================================
+Wrote scripts/check-contrast.mjs + tests/budgets/contrast.json with a deliberate
+`text` pair `#F5EFE1 on #FFFFFF` (parchment on white).
+
+Command:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; node scripts/check-contrast.mjs'
+
+Red run (raw: .omo/evidence/t13-contrast-red.txt), EXIT=1:
+  FAIL   text   1.15   4.5  DELIBERATELY-BAD parchment on white
+  CONTRAST GATE FAILED — 1 pair(s) below budget:
+    - DELIBERATELY-BAD parchment on white: 1.15:1 below the 4.5:1 text minimum (#F5EFE1 on #FFFFFF)
+
+Removed the bad pair, re-ran → EXIT=0 (raw: .omo/evidence/t13-contrast-green.txt):
+  PASS   text  14.97   4.5  body ink on surface
+  ... (24 pairs) ...
+  CONTRAST GATE PASSED — all 24 pair(s) meet their minimums.
+
+Acceptance command (exact):
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; node scripts/check-contrast.mjs'
+  → EXIT 0
+
+================================================================================
+4. AXE — BEFORE / AFTER + ALLOWLIST CHANGE
+================================================================================
+Pre-T13 allowlist (1 row): /about light color-contrast ×2.
+Post-palette run of e2e/a11y.spec.ts (raw: .omo/evidence/t13-axe.log), EXIT=1:
+  /about                          actual []         (stale entry → removed)
+  /blog/entry/2019-...            actual [cc ×1]    (new)
+  /projects/entry/2020-...        actual [cc ×1]    (new)
+  home, /blog, /projects, /contact → clean
+
+Failing node identified via temporary debug spec (.omo/evidence/t13-axe-nodes.txt):
+  TARGET: .text-gray-500.font-medium[data-testid="flowbite-breadcrumb-item"]
+  HTML:   <span class="... text-gray-500 dark:text-gray-400" data-testid="flowbite-breadcrumb-item">
+  Cause:  Flowbite React BreadcrumbItem's built-in theme hardcodes text-gray-500
+          (#6b7280) for the current-page span. It passed on white; on parchment
+          #F5EFE1 it is 4.22:1 (< 4.5). This is Flowbite COMPONENT theming, which
+          T15 owns — T13 is forbidden to change component files, so it is
+          allowlisted with T15 as owner (see fixture doc comment).
+
+New allowlist (2 rows, /about removed):
+  /blog/entry/2019-ebeltoft-cheesecake-recipe  light color-contrast ×1
+  /projects/entry/2020-soudest-backend-nodejs  light color-contrast ×1
+
+Re-run of e2e/a11y.spec.ts (raw: .omo/evidence/t13-axe-green.log), EXIT=0:
+  8 passed (1 allowlist-integrity test + 7 route scans, light scheme only)
+
+================================================================================
+5. BUILD / LINT / PRETTIER / JEST
+================================================================================
+pnpm build            → EXIT 0; "✓ Generating static pages (38/38)" (raw: .omo/evidence/t13-build.log)
+pnpm lint             → EXIT 0; 55 pre-existing warnings, 0 errors (raw: .omo/evidence/t13-lint.log)
+pnpm prettier         → EXIT 0; "All matched files use Prettier code style!" (raw: .omo/evidence/t13-prettier.log)
+pnpm test (jest)      → EXIT 0; 15 suites / 102 tests (raw: .omo/evidence/t13-jest.log)
+token-file format     → scripts/check-contrast.mjs + tests/budgets/contrast.json + DESIGN.md formatted
+
+Acceptance grep (must show no shipping cool accent):
+  grep -rniE "#2563eb|#2f7bff|blue" tailwind.config.js DESIGN.md  → no matches
+
+================================================================================
+6. FILES CHANGED
+================================================================================
+tailwind.config.js                        (M)
+e2e/fixtures/a11y-known-violations.ts     (M)
+DESIGN.md                                 (M)
+scripts/check-contrast.mjs                (A)
+tests/budgets/contrast.json               (A)
+.omo/evidence/task-T13-2026-refresh-restyle.txt (A, git add -f)
+.omo/notepads/2026-refresh-restyle/{learnings,issues}.md (A append)
+
+================================================================================
+7. RISKS / HANDOFF
+================================================================================
+- 2 new allowlist rows (Flowbite BreadcrumbItem text-gray-500) are real debt. T15
+  (palette application to components) must recolor the breadcrumb to a warm token
+  and delete both rows; the axe spec self-cleans when it does.
+- accent-soft is now a mid terracotta (#BE6A50), changing badge chips from a pale
+  tint to a filled warm chip. Deliberate: it is the only value that makes the
+  shipped focus ring clear WCAG 1.4.11 (3:1) without touching component files.
+  T15 should sanity-check the visual intent of `bg-accent-soft` chips.
+- The `-dark` tokens remain in the config (inert, class strategy, no `.dark`
+  class is ever added). They were warmed so no cool value survives anywhere.
+- `border`/`border-subtle` are intentionally NOT in the contrast manifest: 1px
+  decorative rules are WCAG 1.4.11-exempt. Interactive boundaries ARE gated.
+- The contrast gate is not yet wired into CI; it is the token-change gate. Wiring
+  it into .forgejo/workflows/check.yml is a candidate follow-up.

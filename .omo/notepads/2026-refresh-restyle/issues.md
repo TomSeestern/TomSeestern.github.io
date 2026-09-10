@@ -171,3 +171,26 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   moving between two icons within 300ms now opens the second instantly; previously
   each icon had its own provider. Accepted as the intended benefit of the hoist; the
   200ms delayed-open path is asserted in e2e.
+
+## T13 — palette change shifted Flowbite breadcrumb contrast (2026-09-10)
+
+- The parchment surface (#F5EFE1) is darker than white, so Flowbite React
+  BreadcrumbItem's built-in `text-gray-500` (#6b7280) dropped from >4.5:1 on white
+  to **4.22:1** on parchment. It fires `color-contrast` ×1 on each detail page
+  (`/blog/entry/2019-...`, `/projects/entry/2020-...`). The class is Flowbite
+  COMPONENT theming, not a semantic token; T13 must not touch component files, so
+  both nodes are allowlisted with **T15** as owner. T15 must recolor the breadcrumb
+  to a warm token (`text-muted` #5C5548 = 6.43:1) and delete the rows.
+- The 2 former `/about` light entries are GONE (the /about badge + supporting text
+  now pass), so the stale rows were removed as required — the allowlist went from
+  1 row (/about ×2) to 2 rows (detail pages ×1 each), still self-cleaning.
+- `accent-soft` semantic collision (see learnings): using it for both the focus
+  ring and the chip background forced a mid-terracotta value. T15 should decide
+  whether to keep filled chips (#BE6A50 + #1F0F0A) or split the ring/chip tokens.
+- Not yet wired into CI: `scripts/check-contrast.mjs` is the token-change gate but
+  no workflow step runs it. Candidate follow-up for the CI task.
+
+## T13 — no blockers
+
+- Build 38/38, lint 0 errors (55 pre-existing warnings), prettier clean, jest 102
+  passed, axe 8 passed, contrast gate 24/24. Scope stayed inside the token layer.
