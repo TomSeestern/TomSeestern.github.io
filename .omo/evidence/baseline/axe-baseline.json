@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "base": "http://127.0.0.1:3000",
+    "axe": "4.10.3",
+    "chrome": "/etc/profiles/per-user/tom/bin/chromium"
+  },
+  "routes": {
+    "dark": {
+      "home": {
+        "route": "/",
+        "htmlClass": "__className_f367f3 dark",
+        "isDark": true,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 1,
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": 9,
+              "help": "Elements must meet minimum color contrast ratio thresholds"
+            }
+          ],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "about": {
+        "route": "/about",
+        "htmlClass": "__className_f367f3 dark",
+        "isDark": true,
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+        ],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "blog": {
+        "route": "/blog",
+        "htmlClass": "__className_f367f3 dark",
+        "isDark": true,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 1,
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": 6,
+              "help": "Elements must meet minimum color contrast ratio thresholds"
+            }
+          ],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "blog-cheesecake": {
+        "route": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+        "htmlClass": "__className_f367f3 dark",
+        "isDark": true,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "projects": {
+        "route": "/projects",
+        "htmlClass": "__className_f367f3 dark",
+        "isDark": true,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 1,
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": 21,
+              "help": "Elements must meet minimum color contrast ratio thresholds"
+            }
+          ],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "project-soudest": {
+        "route": "/projects/entry/2020-soudest-backend-nodejs",
+        "htmlClass": "__className_f367f3 dark",
+        "isDark": true,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "contact": {
+        "route": "/contact",
+        "htmlClass": "__className_f367f3 dark",
+        "isDark": true,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 44,
+          "incompleteCount": 1
+        }
+      }
+    },
+    "light": {
+      "home": {
+        "route": "/",
+        "htmlClass": "__className_f367f3",
+        "isDark": false,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "about": {
+        "route": "/about",
+        "htmlClass": "__className_f367f3",
+        "isDark": false,
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+        ],
+        "axe": {
+          "violationCount": 1,
+          "violations": [
+            {
+              "id": "color-contrast",
+              "impact": "serious",
+              "nodes": 2,
+              "help": "Elements must meet minimum color contrast ratio thresholds"
+            }
+          ],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "blog": {
+        "route": "/blog",
+        "htmlClass": "__className_f367f3",
+        "isDark": false,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "blog-cheesecake": {
+        "route": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+        "htmlClass": "__className_f367f3",
+        "isDark": false,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "projects": {
+        "route": "/projects",
+        "htmlClass": "__className_f367f3",
+        "isDark": false,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "project-soudest": {
+        "route": "/projects/entry/2020-soudest-backend-nodejs",
+        "htmlClass": "__className_f367f3",
+        "isDark": false,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 40,
+          "incompleteCount": 0
+        }
+      },
+      "contact": {
+        "route": "/contact",
+        "htmlClass": "__className_f367f3",
+        "isDark": false,
+        "consoleErrors": [],
+        "axe": {
+          "violationCount": 0,
+          "violations": [],
+          "passCount": 44,
+          "incompleteCount": 1
+        }
+      }
+    }
+  }
+}

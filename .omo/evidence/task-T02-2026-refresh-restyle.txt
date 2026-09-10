@@ -1,0 +1,165 @@
+TASK: T02 — Capture 2026 measurement baseline (before restyle)
+PLAN: 2026-refresh-restyle
+HOST: /home/tom/Projects/tomsegbers-de
+DATE (UTC): 2026-09-10
+REVISION MEASURED: 74689e8 (tree clean except .omo/boulder.json at start)
+INTERPRETER: nix develop (node v22.23.1, pnpm 10.15.1)
+EVIDENCE FRESHNESS (R20.3): collected 2026-09-10T18:01Z–18:46Z, same session as task execution.
+
+================================================================
+1. PRODUCTION BUILD
+================================================================
+COMMAND:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+START:  2026-09-10T18:01Z
+EXIT:   0
+END:    2026-09-10T18:02Z
+LOG:    .omo/evidence/baseline/build-74689e8.log
+RESULT: "✓ Compiled successfully in 16.5s"
+        "✓ Generating static pages (38/38)"
+        13 route patterns in the route table:
+        /  /_not-found  /about  /api/health  /apple-icon.png  /blog
+        /blog/entry/[slug] (3 slugs)  /contact  /icon.png  /projects
+        /projects/entry/[slug] (21 slugs)  /robots.txt  /sitemap.xml
+DISCREPANCY: README.md says "build currently emits 36 static routes"; observed 38
+        generated pages. Recorded as-is (38); "36" believed stale. See issues.md.
+VERIFIED: exit code 0 captured; log file present.
+
+================================================================
+2. BUNDLE BASELINE
+================================================================
+COMMAND:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; node report-bundle-size.js'
+EXIT:   0
+GENERATOR OUTPUT: .next/analyze/__bundle_analysis.json (the repo's canonical
+        bundle JSON; `ANALYZE=true pnpm build` only adds the treemap HTML, no
+        stable JSON). No package.json change.
+COPIES:
+  tests/budgets/bundle-baseline.json            (required committed artifact)
+  .omo/evidence/baseline/bundle-74689e8.json
+  .omo/evidence/baseline/bundle-stdout-74689e8.json
+VALIDATION:
+  node -e 'require("./tests/budgets/bundle-baseline.json")' -> parses (14 keys)
+  __global: gzip 102253 B, raw 350080 B
+VERIFIED: JSON parses; matches build's "First Load JS shared by all 102 kB".
+
+================================================================
+3. PRODUCTION SERVER
+================================================================
+COMMAND:
+  setsid nohup nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; exec pnpm start' \
+    > /tmp/next-start-t02.log 2>&1 < /dev/null &
+LOG: /tmp/next-start-t02.log (server ready in 357ms)
+CHECK: curl -sS -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/  -> 200
+PORT: 3000 (production build, NOT dev; dev/playwright uses 3030)
+VERIFIED: HTTP 200 from production `next start`.
+
+================================================================
+4. LIGHTHOUSE BASELINE (mobile, 4x CPU simulate, cold)
+================================================================
+Lighthouse 13.4.1; Chromium 149.0.7827.200 via
+CHROME_PATH=/etc/profiles/per-user/tom/bin/chromium.
+configSettings confirmed: formFactor=mobile, throttlingMethod=simulate,
+throttling.cpuSlowdownMultiplier=4.
+TEMPERATURE: each `npx -y lighthouse` call creates a fresh Chrome profile (cold);
+lighthouse is NOT added to package.json (T04 owns installation).
+
+PER-ROUTE COMMAND (one invocation each; <name>/<path> below):
+  nix develop -c bash -c "unset PNPM_HOME npm_config_prefix; \
+    export CHROME_PATH=/etc/profiles/per-user/tom/bin/chromium; \
+    npx -y lighthouse 'http://127.0.0.1:3000<path>' \
+      --output=json --output-path='.omo/evidence/baseline/lighthouse/<name>.json' \
+      --chrome-flags='--headless=new --no-sandbox --disable-dev-shm-usage' \
+      --only-categories=performance,accessibility,best-practices,seo \
+      --quiet --throttling-method=simulate"
+EXITS: 0 for all 7 runs (home 2026-09-10T18:41Z; others 18:42:12Z–18:44Z).
+
+name               LCP(ms)  CLS       TBT(ms)  perf  a11y  bp    seo
+home               2830     0         126      0.94  1.00  1.00  0.92
+about              2384     0         38       0.98  0.96  0.96  1.00
+blog               2489     0         86       0.97  1.00  1.00  0.92
+blog-cheesecake    3562     0.03748   113      0.89  1.00  0.96  1.00
+projects           2588     0         85       0.97  0.96  1.00  0.92
+project-soudest    2127     0         124      0.98  1.00  1.00  1.00
+contact            2256     0         115      0.98  1.00  1.00  1.00
+
+Routes: / , /about , /blog , /blog/entry/2019-ebeltoft-cheesecake-recipe ,
+/projects , /projects/entry/2020-soudest-backend-nodejs , /contact
+RAW: .omo/evidence/baseline/lighthouse/*.json (7 files)
+VERIFIED: values read directly from each raw JSON via
+  r.audits["largest-contentful-paint"|"cumulative-layout-shift"|"total-blocking-time"].
+LIMITATION: single run per route (not 3–5 run median). Flagged in issues.md.
+
+================================================================
+5. axe BASELINE (dark + light, same routes)
+================================================================
+TOOLING (no package.json change):
+  curl -sSL -o /tmp/axe.min.js \
+    https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js
+  axe-core 4.10.3, size 553446 B.
+  Scan driver: .omo/evidence/baseline/axe-scan.cjs (copy of /tmp/axe-scan.cjs)
+  launched via:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; \
+    export NODE_PATH=/home/tom/Projects/tomsegbers-de/node_modules; \
+    node /tmp/axe-scan.cjs'
+  -> exit 0; wrote .omo/evidence/baseline/axe-baseline.json
+  Chromium via executablePath=/etc/profiles/per-user/tom/bin/chromium
+  (Playwright's own download chromium_headless_shell-1228 is absent).
+  Theme driven by context.addInitScript setting
+  localStorage["flowbite-theme-mode"] = "dark" | "light" before navigation;
+  isDark asserted from document.documentElement.className (dark => true).
+  Page script injected AFTER networkidle + 400ms settle.
+
+route                                     dark violations        light violations
+/ (home)                                  color-contrast x9      none
+/about                                    none                   color-contrast x2
+/blog                                     color-contrast x6      none
+/blog/entry/2019-ebeltoft-cheesecake-recipe none                 none
+/projects                                 color-contrast x21     none
+/projects/entry/2020-soudest-backend-nodejs none                 none
+/contact                                  none                   none
+
+Totals: dark 36 contrast nodes across 3 routes; light 2 contrast nodes across 1 route.
+No rule other than color-contrast fires in either scheme.
+VERIFIED: raw JSON .omo/evidence/baseline/axe-baseline.json contains per-route
+  {htmlClass,isDark,axe.violations[{id,impact,nodes}]} for both themes.
+
+================================================================
+6. CURRENT STATE NOTES
+================================================================
+COMMAND:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; \
+    export NODE_PATH=.../node_modules; node /tmp/count-cards.cjs'
+RESULT: {"marquee1":21,"marquee2":21}
+  -> marquee renders 42 cards (21 projects mapped twice); matches app/page.tsx:110-141.
+COUNTS:
+  projects: 21 (ls content/projects/*.md | wc -l)
+  blog:     3  (ls content/blog/*.md | wc -l)
+THEME DEFAULT:
+  app/layout.tsx:35 hardcodes `dark` on <html>; inline script app/layout.tsx:48-69
+  overrides from localStorage["flowbite-theme-mode"], else prefers-color-scheme.
+  Fresh headless browser (system light, no stored pref) => hardcoded `dark` removed,
+  effective initial render = LIGHT. Observed: htmlClass lacked `dark` on cold load.
+  D13 will make single light mode deterministic. Both schemes captured above.
+
+================================================================
+7. ARTIFACTS + TOKEN USAGE (R22.1)
+================================================================
+tests/budgets/bundle-baseline.json                                  (committed)
+.omo/evidence/baseline/bundle-74689e8.json
+.omo/evidence/baseline/bundle-stdout-74689e8.json
+.omo/evidence/baseline/build-74689e8.log
+.omo/evidence/baseline/lighthouse/{home,about,blog,blog-cheesecake,projects,project-soudest,contact}.json
+.omo/evidence/baseline/axe-baseline.json
+.omo/evidence/baseline/axe-scan.cjs
+.omo/evidence/baseline/count-cards.cjs
+.omo/notepads/2026-refresh-restyle/{baseline.md,learnings.md,issues.md}   (appended)
+TOKEN USAGE: not instrumented (session tooling does not expose a per-task counter).
+ESTIMATE: ~45k tokens for build + 7 lighthouse runs + 14 axe scans + writes.
+
+================================================================
+8. SUMMARY / BLOCKERS
+================================================================
+No blockers. All required measurements produced from actually-run commands.
+Sub-finding inconclusive: exact "36 build routes" claim in README/plan could not be
+reproduced (observed 38) and route-count semantics differ — recorded as 38, flagged.
