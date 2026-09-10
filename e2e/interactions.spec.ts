@@ -71,4 +71,53 @@ test.describe("interactive accessibility", () => {
     await expect(page).toHaveURL(/\/projects$/)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
+
+  test("home primary CTA exposes a visible keyboard focus indicator", async ({ page }) => {
+    // Given
+    const consoleErrors = collectBrowserConsoleErrors(page)
+    await page.goto("/")
+    const primaryCta = page.locator('a:has-text("Learn More")').first()
+
+    // When
+    await primaryCta.focus()
+
+    // Then
+    await expect(primaryCta).toBeFocused()
+    await expect(primaryCta).toHaveCSS("outline-style", "solid")
+    await expect(primaryCta).toHaveCSS("box-shadow", /rgb\(147, 197, 253\)/)
+    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+  })
+
+  test("keyboard activation follows a home CTA without a pointer", async ({ page }) => {
+    // Given
+    const consoleErrors = collectBrowserConsoleErrors(page)
+    await page.goto("/")
+    const projectsCta = page.getByRole("link", { name: "View all Projects" })
+
+    // When
+    await projectsCta.focus()
+    await page.keyboard.press("Enter")
+
+    // Then
+    await expect(page).toHaveURL(/\/projects$/)
+    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+  })
+
+  test("reduced motion freezes both marquee tracks while cards stay visible", async ({ page }) => {
+    // Given
+    const consoleErrors = collectBrowserConsoleErrors(page)
+    await page.emulateMedia({ reducedMotion: "reduce" })
+
+    // When
+    await page.goto("/")
+    const tracks = page.locator(".animate-marquee, .animate-marquee2")
+
+    // Then
+    await expect(tracks).toHaveCount(2)
+    for (const index of [0, 1]) {
+      await expect(tracks.nth(index)).toHaveCSS("animation-name", "none")
+    }
+    await expect(page.locator('.animate-marquee a[href^="/projects/entry/"]').first()).toBeVisible()
+    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+  })
 })

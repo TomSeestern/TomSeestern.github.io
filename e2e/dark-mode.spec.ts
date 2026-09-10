@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
 
+import type { A11yScheme } from "./fixtures/a11y-known-violations"
+import { freezeAnimations, scanSeriousViolations, waitForStableRender } from "./fixtures/axe"
+import { waitForScheme } from "./fixtures/theme"
+
 const darkSurface = "rgb(17, 24, 39)"
 const darkAccentSoft = "rgb(30, 58, 138)"
 const transparentPng = Buffer.from(
@@ -84,4 +88,48 @@ test("DarkThemeToggle toggles dark mode and persists on reload", async ({ page }
   // Then — inline script reads localStorage, removes dark class again
   await expect(page.locator("html")).not.toHaveClass(/dark/)
   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+})
+
+/**
+ * Colour schemes under contrast audit. Kept in sync with `SCHEMES` in
+ * `e2e/a11y.spec.ts`; T07 (single light mode) reduces this to `["light"]`.
+ */
+const CONTRAST_SCHEMES = ["light", "dark"] as const satisfies readonly A11yScheme[]
+
+/**
+ * Routes with no known contrast debt in either scheme. The full allowlist
+ * (with its currently-debt routes: `/` dark, `/blog` dark, `/projects` dark,
+ * `/about` light) is owned by `e2e/a11y.spec.ts` — this spec only adds a
+ * contrast-only gate on the clean routes so a theme regression is caught per
+ * scheme without duplicating the allowlist machinery.
+ */
+const CONTRAST_ROUTES = [
+  "/contact",
+  "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+  "/projects/entry/2020-soudest-backend-nodejs",
+] as const
+
+test.describe("contrast per scheme (axe color-contrast)", () => {
+  for (const scheme of CONTRAST_SCHEMES) {
+    for (const route of CONTRAST_ROUTES) {
+      test(`${scheme} ${route} has no serious or critical contrast violations`, async ({ page }) => {
+        test.setTimeout(90_000)
+
+        // Given — freeze the marquee and set the scheme before first paint.
+        await freezeAnimations(page)
+        await page.addInitScript((value: string) => {
+          window.localStorage.setItem("flowbite-theme-mode", value)
+        }, scheme)
+
+        // When
+        await page.goto(route)
+        await waitForScheme(page, scheme)
+        await waitForStableRender(page)
+        const violations = await scanSeriousViolations(page, ["color-contrast"])
+
+        // Then — exact match: a contrast-only scan on a clean route must be empty.
+        expect(violations, `contrast violations in ${scheme} scheme on ${route}`).toEqual([])
+      })
+    }
+  }
 })

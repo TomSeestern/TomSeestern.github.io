@@ -1,0 +1,163 @@
+TASK T06 — single-source e2e copy/count expectations + extend regression harness
+================================================================================
+repo      : /home/tom/Projects/tomsegbers-de
+date_utc  : 2026-09-10T19:46Z
+HEAD      : 4c24843 (chore: ignore lhci report artifacts)
+tree      : dirty (T06 working changes only; see §6)
+plan      : 2026-refresh-restyle (T06 blocks T07, T16, T17)
+
+--------------------------------------------------------------------------------
+1. DELIVERABLES
+--------------------------------------------------------------------------------
+[1] e2e/fixtures/expectations.ts — created. Single module holding the exact copy
+    (home/about/contact/404) and the blog/project counts. Top-of-file doc comment
+    states content changes MUST update this fixture in the same PR.
+[2] e2e/static-routes.spec.ts, e2e/dynamic-content.spec.ts — refactored to consume
+    the fixture. home.spec.ts also switched to the fixture for the same home copy
+    so no copy literal survives outside expectations.ts.
+[3] e2e/interactions.spec.ts — +3 tests (home CTA focus ring, keyboard Enter
+    navigation, both marquee tracks frozen under reduced motion).
+    e2e/dark-mode.spec.ts — +6 tests: axe color-contrast per scheme (light/dark)
+    on the three clean routes, reusing reduced-motion + stable-render + scan
+    helpers; no allowlist logic duplicated (owned by a11y.spec.ts).
+    e2e/responsive.spec.ts — +4 tests: 44px primary contact controls + a WCAG 2.2
+    target-size floor audit at mobile for `/`, `/blog`, `/contact`.
+[4] No existing assertion value changed — see §4 diff.
+
+New shared fixtures:
+  e2e/fixtures/axe.ts   — freezeAnimations / waitForStableRender / scanSeriousViolations
+  e2e/fixtures/theme.ts — waitForScheme
+  e2e/fixtures/expectations.ts — COPY + BLOG_POST_COUNT + MIN_PROJECT_COUNT
+
+--------------------------------------------------------------------------------
+2. EXACT COMMANDS + EXIT CODES
+--------------------------------------------------------------------------------
+E2E (acceptance form, run BEFORE and AFTER):
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix;
+    export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright;
+    CI=true pnpm exec playwright test --project=chromium --workers=1'
+  BEFORE : EXIT=0  -> "Running 55 tests using 1 worker" / "55 passed (1.6m)"
+           raw: .omo/evidence/t06-e2e/before.log   (21:34:15 +0200)
+  AFTER  : EXIT=0  -> "Running 68 tests using 1 worker" / "68 passed (1.9m)"
+           raw: .omo/evidence/t06-e2e/after.log    (21:46:09 +0200)
+  New tests: 55 + 13 = 68. The original 55 assertions still pass unchanged.
+
+LINT:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm lint'
+  EXIT=0  -> "✖ 55 problems (0 errors, 55 warnings)"  (warning count identical to
+  the T01 baseline; no new warnings introduced by T06)
+  raw: .omo/evidence/t06-e2e/lint.log
+
+PRETTIER:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix;
+    pnpm exec prettier --check "e2e/**/*.ts"'
+  EXIT=0  -> "All matched files use Prettier code style!"
+
+TYPECHECK (extra gate, not required by the task):
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm run typecheck'
+  EXIT=0  (tsc --noEmit clean)
+  raw: .omo/evidence/t06-e2e/typecheck.log
+
+--------------------------------------------------------------------------------
+3. GREP PROOF — literals single-sourced
+--------------------------------------------------------------------------------
+raw: .omo/evidence/t06-e2e/grep-proof.txt   (captured 2026-09-10T19:43:56Z)
+
+A) static copy literals across e2e/  -> ONLY e2e/fixtures/expectations.ts:
+   e2e/fixtures/expectations.ts:15:    h1: "Tom Segbers — Senior Developer",
+   e2e/fixtures/expectations.ts:16:    recentProjectsH2: "My Recent Projects",
+   e2e/fixtures/expectations.ts:17:    recentBlogH2: "My Recent Blog Posts",
+   e2e/fixtures/expectations.ts:18:    logoAlt: "Tom Segbers Logo",
+   e2e/fixtures/expectations.ts:21:    h1: "About me",
+   e2e/fixtures/expectations.ts:22:    formalPositionsH2: "Formal Positions:",
+   e2e/fixtures/expectations.ts:25:    h1: "Get in Touch",
+   e2e/fixtures/expectations.ts:27:    successMessage: "Success! Email sent successfully.",
+
+B) old inline count literals (`toHaveCount(3)`, `toBeGreaterThanOrEqual(21)`)
+   across e2e/  -> (no matches)
+
+C) count constants defined once, consumed in dynamic-content.spec.ts:
+   e2e/fixtures/expectations.ts:35:export const BLOG_POST_COUNT = 3
+   e2e/fixtures/expectations.ts:38:export const MIN_PROJECT_COUNT = 21
+   e2e/dynamic-content.spec.ts:4:  import { BLOG_POST_COUNT, MIN_PROJECT_COUNT } ...
+   e2e/dynamic-content.spec.ts:29: toHaveCount(BLOG_POST_COUNT)
+   e2e/dynamic-content.spec.ts:51: toHaveCount(BLOG_POST_COUNT)
+   e2e/dynamic-content.spec.ts:64: toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
+   e2e/dynamic-content.spec.ts:88: toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
+
+Command form used:
+  grep -rn -E "<copy alternation>" e2e/
+  grep -rn -E "toHaveCount\(3\)|toBeGreaterThanOrEqual\(21\)" e2e/
+  grep -rn -E "BLOG_POST_COUNT|MIN_PROJECT_COUNT" e2e/
+
+--------------------------------------------------------------------------------
+4. REFACTOR-ONLY PROOF
+--------------------------------------------------------------------------------
+- BEFORE = 55 passed; AFTER = 68 passed. Original 55 all green in both runs.
+- Every changed line in static-routes / dynamic-content / home is a literal ->
+  fixture-constant substitution (same string / same number). `git diff` shows no
+  new/removed assertion and no route-list change.
+- 13 added tests account for the 55 -> 68 delta.
+- a11y.spec.ts + a11y-known-violations.ts untouched:
+  `git diff --stat -- e2e/a11y.spec.ts e2e/fixtures/a11y-known-violations.ts`
+  -> empty.
+
+--------------------------------------------------------------------------------
+5. KNOWN / PRE-EXISTING FAILURES (why --project=chromium --workers=1)
+--------------------------------------------------------------------------------
+Documented in T04 (issues notepad):
+- firefox/webkit cannot launch in this devShell: flake.nix supplies chromium libs
+  only ("Host system is missing dependencies"). Pre-existing, not T06.
+- Unqualified chromium at the default worker count flakes on `page.goto` against
+  the on-demand `next dev` server (dark-mode.spec.ts:25 timeouts). Pre-existing.
+- Therefore the reliable acceptance signal is `--project=chromium --workers=1`
+  (CI already runs with workers=1). T06 ran exactly that form, exit 0.
+- The 3-browser/parallel `pnpm e2e:headless` remains red for the reasons above;
+  T06 does not change that and does not mask it.
+
+--------------------------------------------------------------------------------
+6. CHANGED FILES (expected commit scope)
+--------------------------------------------------------------------------------
+Modified:
+  e2e/static-routes.spec.ts
+  e2e/dynamic-content.spec.ts
+  e2e/home.spec.ts
+  e2e/interactions.spec.ts
+  e2e/dark-mode.spec.ts
+  e2e/responsive.spec.ts
+  .omo/notepads/2026-refresh-restyle/learnings.md   (appended)
+  .omo/notepads/2026-refresh-restyle/issues.md      (appended)
+Added:
+  e2e/fixtures/expectations.ts
+  e2e/fixtures/axe.ts
+  e2e/fixtures/theme.ts
+  .omo/evidence/task-T06-2026-refresh-restyle.txt   (this ledger)
+  .omo/evidence/t06-e2e/                            (raw logs)
+Not staged (pre-existing orchestration state, not owned by T06):
+  .omo/boulder.json
+
+Concurrency note: 4c24843 ("chore: ignore lhci report artifacts") landed at
+21:32:05 +0200; it touches `.gitignore` only (`git show --stat 4c24843` = 1
+file, 1 insertion). No e2e/product impact; BEFORE and AFTER both ran at 4c24843.
+
+--------------------------------------------------------------------------------
+7. DESIGN NOTES FOR T07 (single light mode)
+--------------------------------------------------------------------------------
+- dark-mode.spec.ts exposes `CONTRAST_SCHEMES = ["light", "dark"]` (typed against
+  `A11yScheme`); T07 reduces it to `["light"]` — one line, mirroring the SCHEMES
+  comment in a11y.spec.ts.
+- The contrast scan reuses e2e/fixtures/axe.ts + theme.ts rather than forking the
+  a11y allowlist; the full route×scheme allowlist remains owned by a11y.spec.ts.
+- Responsive touch-target test keeps `MIN_PRIMARY_TOUCH_TARGET_PX = 44` and a
+  WCAG 2.2 AA `MIN_WCAG_TARGET_SIZE_PX = 24` floor. Current header controls render
+  at 40–42px; the 44px floor is asserted where it is met today (contact submit +
+  message field) and the gap is recorded as a restyle follow-up — no assertion
+  was weakened to make the suite green.
+
+--------------------------------------------------------------------------------
+8. REPRODUCE
+--------------------------------------------------------------------------------
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix;
+    export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright;
+    CI=true pnpm exec playwright test --project=chromium --workers=1'
+Expected: exit 0, "68 passed".

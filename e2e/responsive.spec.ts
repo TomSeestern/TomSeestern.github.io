@@ -152,3 +152,95 @@ test("mobile header renders navigation and hamburger toggle", async ({ page }) =
   const relevantErrors = browserErrors.filter((err) => !err.includes("placehold.co") && !err.includes("Image corrupt"))
   expect(relevantErrors).toEqual([])
 })
+
+/** WCAG 2.2 SC 2.5.5 (AAA) / project rule R15.3 target for primary controls. */
+const MIN_PRIMARY_TOUCH_TARGET_PX = 44
+
+/** WCAG 2.2 SC 2.5.8 (AA) target-size floor for the remaining controls. */
+const MIN_WCAG_TARGET_SIZE_PX = 24
+
+/** Mobile routes covered by the generic target-size audit. */
+const TOUCH_TARGET_AUDIT_ROUTES = ["/", "/blog", "/contact"] as const
+
+type TouchTargetViolation = {
+  readonly tag: string
+  readonly label: string
+  readonly width: number
+  readonly height: number
+}
+
+async function expectTouchTargetAtLeast(page: Page, selector: string, minimumPx: number, label: string): Promise<void> {
+  const box = await page.locator(selector).first().boundingBox()
+  expect(box, `${label} must be visible`).not.toBeNull()
+  if (!box) {
+    return
+  }
+  expect(box.width, `${label} width`).toBeGreaterThanOrEqual(minimumPx)
+  expect(box.height, `${label} height`).toBeGreaterThanOrEqual(minimumPx)
+}
+
+async function collectUndersizedTargets(page: Page, minimumPx: number): Promise<readonly TouchTargetViolation[]> {
+  return page.evaluate((minPx) => {
+    const interactiveSelector = 'a[href], button, input, textarea, select, [role="button"]'
+    const elements = Array.from(document.querySelectorAll<HTMLElement>(interactiveSelector))
+    const violations: Array<{ tag: string; label: string; width: number; height: number }> = []
+
+    for (const element of elements) {
+      const style = getComputedStyle(element)
+      if (style.display === "none" || style.visibility === "hidden") {
+        continue
+      }
+
+      const rect = element.getBoundingClientRect()
+      if (rect.width === 0 || rect.height === 0) {
+        continue
+      }
+
+      // Skip link is visually hidden until focused — a keyboard-only control.
+      if (element.matches('a[href="#main-content"]')) {
+        continue
+      }
+
+      // Inline links inside prose are exempt from target-size rules (WCAG 2.5.5).
+      if (element.tagName === "A" && element.closest("p")) {
+        continue
+      }
+
+      if (rect.width < minPx || rect.height < minPx) {
+        violations.push({
+          tag: element.tagName.toLowerCase(),
+          label: (element.getAttribute("aria-label") ?? element.textContent ?? "").trim().slice(0, 40),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+        })
+      }
+    }
+
+    return violations
+  }, minimumPx)
+}
+
+test.describe("touch targets", () => {
+  test("contact form primary controls meet the 44px touch target", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await page.goto("/contact")
+
+    await expectTouchTargetAtLeast(page, 'button[type="submit"]', MIN_PRIMARY_TOUCH_TARGET_PX, "contact submit button")
+    await expectTouchTargetAtLeast(
+      page,
+      'textarea[name="message"]',
+      MIN_PRIMARY_TOUCH_TARGET_PX,
+      "contact message field"
+    )
+  })
+
+  for (const route of TOUCH_TARGET_AUDIT_ROUTES) {
+    test(`${route} interactive controls meet the WCAG 2.2 target-size floor`, async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 812 })
+      await page.goto(route)
+
+      const violations = await collectUndersizedTargets(page, MIN_WCAG_TARGET_SIZE_PX)
+      expect(violations, `undersized targets on ${route}: ${JSON.stringify(violations)}`).toEqual([])
+    })
+  }
+})

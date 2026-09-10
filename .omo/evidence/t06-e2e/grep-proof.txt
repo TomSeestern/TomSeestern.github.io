@@ -1,0 +1,24 @@
+### T06 grep proof — 2026-09-10T19:43:56Z
+### repo: /home/tom/Projects/tomsegbers-de  HEAD: 4c24843
+
+## A) static copy literals across e2e/ — expect ONLY e2e/fixtures/expectations.ts
+e2e/fixtures/expectations.ts:15:    h1: "Tom Segbers — Senior Developer",
+e2e/fixtures/expectations.ts:16:    recentProjectsH2: "My Recent Projects",
+e2e/fixtures/expectations.ts:17:    recentBlogH2: "My Recent Blog Posts",
+e2e/fixtures/expectations.ts:18:    logoAlt: "Tom Segbers Logo",
+e2e/fixtures/expectations.ts:21:    h1: "About me",
+e2e/fixtures/expectations.ts:22:    formalPositionsH2: "Formal Positions:",
+e2e/fixtures/expectations.ts:25:    h1: "Get in Touch",
+e2e/fixtures/expectations.ts:27:    successMessage: "Success! Email sent successfully.",
+
+## B) old inline count literals — expect NO matches
+(no matches)
+
+## C) fixture constants definition + usages
+e2e/fixtures/expectations.ts:35:export const BLOG_POST_COUNT = 3
+e2e/fixtures/expectations.ts:38:export const MIN_PROJECT_COUNT = 21
+e2e/dynamic-content.spec.ts:4:import { BLOG_POST_COUNT, MIN_PROJECT_COUNT } from "./fixtures/expectations"
+e2e/dynamic-content.spec.ts:29:    await expect(postLinks).toHaveCount(BLOG_POST_COUNT)
+e2e/dynamic-content.spec.ts:51:    await expect(postLinks).toHaveCount(BLOG_POST_COUNT)
+e2e/dynamic-content.spec.ts:64:    expect(await projectLinks.count()).toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
+e2e/dynamic-content.spec.ts:88:    expect(await projectLinks.count()).toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)

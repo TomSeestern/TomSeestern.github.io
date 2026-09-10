@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
 
+import { COPY } from "./fixtures/expectations"
+
 const missingRoute = "/__e2e_missing_static_route__"
 const transparentPng = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL6zAAAAABJRU5ErkJggg==",
@@ -41,10 +43,10 @@ test.describe("static routes", () => {
     await page.goto("/")
 
     // Then
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tom Segbers — Senior Developer")
-    await expect(page.getByRole("heading", { level: 2, name: "My Recent Projects" })).toBeVisible()
-    await expect(page.getByRole("heading", { level: 2, name: "My Recent Blog Posts" })).toBeVisible()
-    await expect(page.getByAltText("Tom Segbers Logo")).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(COPY.home.h1)
+    await expect(page.getByRole("heading", { level: 2, name: COPY.home.recentProjectsH2 })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 2, name: COPY.home.recentBlogH2 })).toBeVisible()
+    await expect(page.getByAltText(COPY.home.logoAlt)).toBeVisible()
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
@@ -57,8 +59,8 @@ test.describe("static routes", () => {
     await page.goto("/about")
 
     // Then
-    await expect(page.getByRole("heading", { level: 1, name: "About me" })).toBeVisible()
-    await expect(page.getByRole("heading", { level: 2, name: "Formal Positions:" })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1, name: COPY.about.h1 })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 2, name: COPY.about.formalPositionsH2 })).toBeVisible()
     await expect(page.locator('img[alt=""]').first()).toBeVisible()
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
@@ -78,11 +80,11 @@ test.describe("static routes", () => {
     await page.getByLabel("Your Name").fill("E2E Tester")
     await page.getByLabel("Your Email").fill("e2e@example.test")
     await page.getByLabel("Your Message").fill("This message must never reach Resend.")
-    await page.getByRole("button", { name: "Send Message" }).click()
+    await page.getByRole("button", { name: COPY.contact.submitButton }).click()
 
     // Then
-    await expect(page.getByRole("heading", { level: 1, name: "Get in Touch" })).toBeVisible()
-    await expect(page.getByText("Success! Email sent successfully.")).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1, name: COPY.contact.h1 })).toBeVisible()
+    await expect(page.getByText(COPY.contact.successMessage)).toBeVisible()
     expect(resendRequests).toEqual([])
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
@@ -96,7 +98,7 @@ test.describe("static routes", () => {
 
     // Then
     expect(response?.status()).toBe(404)
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("404")
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(COPY.notFound.h1)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors, [
       "Failed to load resource: the server responded with a status of 404 (Not Found)",
     ])

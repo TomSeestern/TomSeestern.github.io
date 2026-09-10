@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
 
+import { BLOG_POST_COUNT, MIN_PROJECT_COUNT } from "./fixtures/expectations"
+
 async function expectNoBrowserErrors(page: Page, runJourney: () => Promise<void>): Promise<void> {
   const browserErrors: string[] = []
   page.on("console", (message) => {
@@ -24,7 +26,7 @@ test("blog listing discovers a detail route and breadcrumb returns to blog", asy
     const postLinks = page.locator('h3 a[href^="/blog/entry/"]')
 
     // Then
-    await expect(postLinks).toHaveCount(3)
+    await expect(postLinks).toHaveCount(BLOG_POST_COUNT)
     const detailUrl = await postLinks.first().getAttribute("href")
     expect(detailUrl).toMatch(/^\/blog\/entry\/[^/]+$/)
 
@@ -46,7 +48,7 @@ test("blog listing discovers a detail route and breadcrumb returns to blog", asy
 
     // Then
     await expect(page).toHaveURL(/\/blog$/)
-    await expect(postLinks).toHaveCount(3)
+    await expect(postLinks).toHaveCount(BLOG_POST_COUNT)
   })
 })
 
@@ -59,7 +61,7 @@ test("project listing discovers a detail route and breadcrumb returns to project
 
     // Then
     await expect(projectLinks.first()).toBeVisible()
-    expect(await projectLinks.count()).toBeGreaterThanOrEqual(21)
+    expect(await projectLinks.count()).toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
     const detailUrl = await projectLinks.first().getAttribute("href")
     expect(detailUrl).toMatch(/^\/projects\/entry\/[^/]+$/)
 
@@ -83,6 +85,6 @@ test("project listing discovers a detail route and breadcrumb returns to project
     // Then
     await expect(page).toHaveURL(/\/projects$/)
     await expect(projectLinks.first()).toBeVisible()
-    expect(await projectLinks.count()).toBeGreaterThanOrEqual(21)
+    expect(await projectLinks.count()).toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
   })
 })

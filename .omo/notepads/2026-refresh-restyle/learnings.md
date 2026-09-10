@@ -47,3 +47,69 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Validate a workflow YAML without python3: `node -e 'require("./node_modules/.pnpm/js-yaml@4.3.0/node_modules/js-yaml").load(...)'`. Find the store path with `ls node_modules/.pnpm | grep yaml`. The devShell has node but not python3.
 - Failure-demo hygiene: do NOT wrap the sequence in `set -e` — a deliberately failing `node script` aborts the script before the restore `cp`, leaving the mutation in place. Use `cmd; echo "EXIT=$?"` and restore on the next line, then `diff -q` against the backup to prove the restore.
 - The binding budget rule today is the **+10% route-growth** gate, not the 130/180 KB absolute caps: measured routes sit at ~92–104 KB, so a 10% drift (~9–10 KB) trips long before the absolute caps. Keep both; the absolute caps are backstops.
+
+## T05 — Lighthouse CI budgets (2026-09-10)
+
+- LHCI's yargs config loader flattens `ci.collect.*` to top-level, so `chromePath`,
+  `startServerCommand`, `numberOfRuns` all live at `ci.collect` but the separate
+  `healthcheck` child process still sees them (`opts.chromePath`).
+- `collect.settings.chromeFlags` is MERGED with LHCI's own `--headless=new` (node-runner
+  appends headless unless `--headful`), so a value like `"--no-sandbox --disable-dev-shm-usage"`
+  is safe and does not drop headless.
+- LHCI's numeric assertion `aggregationMethod` defaults to **`optimistic`**, not median.
+  To assert the median of `numberOfRuns`, set `aggregationMethod: "median"` per assertion.
+  The saved `assertion-results.json` `actual` then equals the median.
+- LHCI hardcodes its saved-reports dir to `./.lighthouseci` (constant in
+  `@lhci/utils/src/saved-reports.js`) — `upload.outputDir` does NOT move it. So
+  `.lighthouseci/` always appears in cwd; keep it untracked (CI uploads it as an artifact).
+- `autorun` order is healthcheck -> collect -> assert -> upload; upload runs even when assert
+  fails (`hasFailure` only gates the final exit). So CI artifacts are written on a red run.
+- Chrome resolution that works both locally and in CI without extra env: prefer
+  `$CHROME_PATH`, else `command -v chromium|chromium-browser|google-chrome`, else scan
+  `$PLAYWRIGHT_BROWSERS_PATH` (default `~/.cache/ms-playwright`) for
+  `chromium-*/chrome-linux64/chrome`. In the nix devShell `command -v chromium` finds the
+  system Chromium; CI uses the Playwright-installed one.
+- `onlyCategories: ["performance"]` keeps 21 audits (7 routes x 3 runs) affordable; the three
+  metric audits still run and assert.
+- This bash tool truncates/summarizes large command output. Redirect heavy runs to a file
+  (`> log 2>&1; echo $? > exit`) and Read the file instead of relying on stdout.
+
+## T05 — evidence path
+
+- `.omo/evidence/task-T05-2026-refresh-restyle.txt`; raw run in `.omo/evidence/t05-lighthouse/`.
+  Parse medians with `.omo/evidence/t05-lighthouse/parse-medians.mjs`.
+
+## T06 — single-source e2e copy/count + harness extensions (2026-09-10)
+
+- Copy/count single-sourcing: `e2e/fixtures/expectations.ts` holds `COPY`,
+  `BLOG_POST_COUNT` (3), `MIN_PROJECT_COUNT` (21). `home.spec.ts` had to be
+  refactored too — otherwise its h1/h2 literals kept the copy in two modules and
+  the "one module" grep proof failed. Watch for literals hiding in **comments**
+  (`// h2 "My Recent Posts"` also matched the grep; strip them).
+- Grep to prove single-sourcing in one shot:
+  `grep -rn -E "My Recent Projects|...|About me" e2e/` must hit only
+  `e2e/fixtures/expectations.ts`; `grep -rn -E "toHaveCount\(3\)|toBeGreaterThanOrEqual\(21\)" e2e/`
+  must be empty.
+- Shared axe primitives live in `e2e/fixtures/axe.ts`
+  (`freezeAnimations` = `emulateMedia({reducedMotion:"reduce"})`,
+  `waitForStableRender` = fonts.ready + 2 frames, `scanSeriousViolations`).
+  `e2e/fixtures/theme.ts` = `waitForScheme`. `a11y.spec.ts` stays untouched
+  (T04 owns it) — the dark-mode contrast spec reuses the primitives without
+  duplicating the route×scheme allowlist.
+- Playwright's `webServer` injects `E2E_CONTACT_FORM_SUCCESS=true`. If you start
+  `next dev --port 3030` by hand and run Playwright without `CI=true`, it is
+  REUSED and lacks that env → `static-routes.spec.ts` contact test fails with
+  "Success! Email sent successfully." not found. Let Playwright own the server
+  (or export the env yourself) for iteration.
+- Flowbite's `NavbarToggle` mobile menu does NOT close on `Escape` (verified).
+  Don't add an Escape-to-close test; it is not implemented.
+- `.focus()` on a link DOES match `:focus-visible` in Chromium here, so
+  programmatic focus is a valid way to assert a visible focus ring (same trick
+  T04/earlier specs use).
+- `e2e/**/*.ts` is covered by `pnpm prettier` (`**/*.{js,jsx,ts,tsx}`) — run
+  `pnpm exec prettier --write "e2e/**/*.ts"` after edits. `pnpm typecheck`
+  (`node_modules/typescript/bin/tsc --noEmit`) covers `e2e/` too and is a cheap
+  extra gate.
+- T06 acceptance: 55 → 68 tests, both exit 0 with `CI=true ... --project=chromium
+  --workers=1`. Raw: `.omo/evidence/t06-e2e/{before,after}.log`.
+

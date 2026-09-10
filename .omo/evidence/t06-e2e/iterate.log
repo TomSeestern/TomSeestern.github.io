@@ -1,0 +1,85 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+Running 47 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/dark-mode.spec.ts:29:5 › public routes retain readable semantic surfaces in dark mode (10.7s)
+  ✓   2 [chromium] › e2e/dark-mode.spec.ts:63:5 › DarkThemeToggle toggles dark mode and persists on reload (3.5s)
+  ✓   3 [chromium] › e2e/dark-mode.spec.ts:115:11 › contrast per scheme (axe color-contrast) › light /contact has no serious or critical contrast violations (1.1s)
+  ✓   4 [chromium] › e2e/dark-mode.spec.ts:115:11 › contrast per scheme (axe color-contrast) › light /blog/entry/2019-ebeltoft-cheesecake-recipe has no serious or critical contrast violations (1.6s)
+  ✓   5 [chromium] › e2e/dark-mode.spec.ts:115:11 › contrast per scheme (axe color-contrast) › light /projects/entry/2020-soudest-backend-nodejs has no serious or critical contrast violations (1.1s)
+  ✓   6 [chromium] › e2e/dark-mode.spec.ts:115:11 › contrast per scheme (axe color-contrast) › dark /contact has no serious or critical contrast violations (1.1s)
+  ✓   7 [chromium] › e2e/dark-mode.spec.ts:115:11 › contrast per scheme (axe color-contrast) › dark /blog/entry/2019-ebeltoft-cheesecake-recipe has no serious or critical contrast violations (1.4s)
+  ✓   8 [chromium] › e2e/dark-mode.spec.ts:115:11 › contrast per scheme (axe color-contrast) › dark /projects/entry/2020-soudest-backend-nodejs has no serious or critical contrast violations (1.2s)
+  ✓   9 [chromium] › e2e/dynamic-content.spec.ts:22:5 › blog listing discovers a detail route and breadcrumb returns to blog (1.6s)
+  ✓  10 [chromium] › e2e/dynamic-content.spec.ts:55:5 › project listing discovers a detail route and breadcrumb returns to projects (2.3s)
+  ✓  11 [chromium] › e2e/home.spec.ts:5:5 › homepage renders core sections (1.7s)
+  ✓  12 [chromium] › e2e/interactions.spec.ts:21:7 › interactive accessibility › skip link becomes visible on Tab and moves focus to main content on Enter (1.8s)
+  ✓  13 [chromium] › e2e/interactions.spec.ts:42:7 › interactive accessibility › keyboard focus gives the custom contact CTA a visible indicator (1.6s)
+  ✓  14 [chromium] › e2e/interactions.spec.ts:58:7 › interactive accessibility › reduced motion stops marquee animation while retaining project navigation (2.3s)
+  ✓  15 [chromium] › e2e/interactions.spec.ts:75:7 › interactive accessibility › home primary CTA exposes a visible keyboard focus indicator (1.6s)
+  ✓  16 [chromium] › e2e/interactions.spec.ts:91:7 › interactive accessibility › keyboard activation follows a home CTA without a pointer (2.2s)
+  ✓  17 [chromium] › e2e/interactions.spec.ts:106:7 › interactive accessibility › reduced motion freezes both marquee tracks while cards stay visible (1.6s)
+  ✓  18 [chromium] › e2e/responsive.spec.ts:104:9 › home remains usable at mobile (1.6s)
+  ✓  19 [chromium] › e2e/responsive.spec.ts:104:9 › home remains usable at tablet (1.7s)
+  ✓  20 [chromium] › e2e/responsive.spec.ts:104:9 › home remains usable at desktop (1.6s)
+  ✓  21 [chromium] › e2e/responsive.spec.ts:104:9 › about remains usable at mobile (676ms)
+  ✓  22 [chromium] › e2e/responsive.spec.ts:104:9 › about remains usable at tablet (637ms)
+  ✓  23 [chromium] › e2e/responsive.spec.ts:104:9 › about remains usable at desktop (640ms)
+  ✓  24 [chromium] › e2e/responsive.spec.ts:104:9 › blog remains usable at mobile (773ms)
+  ✓  25 [chromium] › e2e/responsive.spec.ts:104:9 › blog remains usable at tablet (720ms)
+  ✓  26 [chromium] › e2e/responsive.spec.ts:104:9 › blog remains usable at desktop (737ms)
+  ✓  27 [chromium] › e2e/responsive.spec.ts:104:9 › blog detail remains usable at mobile (1.5s)
+  ✓  28 [chromium] › e2e/responsive.spec.ts:104:9 › blog detail remains usable at tablet (1.4s)
+  ✓  29 [chromium] › e2e/responsive.spec.ts:104:9 › blog detail remains usable at desktop (1.4s)
+  ✓  30 [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at mobile (1.2s)
+  ✓  31 [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at tablet (1.1s)
+  ✓  32 [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at desktop (1.2s)
+  ✓  33 [chromium] › e2e/responsive.spec.ts:104:9 › project detail remains usable at mobile (2.0s)
+  ✓  34 [chromium] › e2e/responsive.spec.ts:104:9 › project detail remains usable at tablet (1.9s)
+  ✓  35 [chromium] › e2e/responsive.spec.ts:104:9 › project detail remains usable at desktop (1.9s)
+  ✓  36 [chromium] › e2e/responsive.spec.ts:104:9 › contact remains usable at mobile (738ms)
+  ✓  37 [chromium] › e2e/responsive.spec.ts:104:9 › contact remains usable at tablet (709ms)
+  ✓  38 [chromium] › e2e/responsive.spec.ts:104:9 › contact remains usable at desktop (682ms)
+  ✓  39 [chromium] › e2e/responsive.spec.ts:141:5 › mobile header renders navigation and hamburger toggle (1.6s)
+  ✓  40 [chromium] › e2e/responsive.spec.ts:229:7 › touch targets › contact form primary controls meet the 44px touch target (721ms)
+  ✓  41 [chromium] › e2e/responsive.spec.ts:243:9 › touch targets › / interactive controls meet the WCAG 2.2 target-size floor (1.5s)
+  ✓  42 [chromium] › e2e/responsive.spec.ts:243:9 › touch targets › /blog interactive controls meet the WCAG 2.2 target-size floor (678ms)
+  ✓  43 [chromium] › e2e/responsive.spec.ts:243:9 › touch targets › /contact interactive controls meet the WCAG 2.2 target-size floor (725ms)
+  ✓  44 [chromium] › e2e/static-routes.spec.ts:38:7 › static routes › homepage renders hydrated primary content accessibly (2.0s)
+  ✓  45 [chromium] › e2e/static-routes.spec.ts:53:7 › static routes › about page renders its section hierarchy and decorative image semantics (689ms)
+  ✘  46 [chromium] › e2e/static-routes.spec.ts:68:7 › static routes › contact form returns test-safe success without a Resend request after hydration (5.8s)
+  ✓  47 [chromium] › e2e/static-routes.spec.ts:92:7 › static routes › missing route presents Next.js 404 page (1.8s)
+
+
+  1) [chromium] › e2e/static-routes.spec.ts:68:7 › static routes › contact form returns test-safe success without a Resend request after hydration 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Success! Email sent successfully.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('Success! Email sent successfully.')
+
+
+      85 |     // Then
+      86 |     await expect(page.getByRole("heading", { level: 1, name: COPY.contact.h1 })).toBeVisible()
+    > 87 |     await expect(page.getByText(COPY.contact.successMessage)).toBeVisible()
+         |                                                               ^
+      88 |     expect(resendRequests).toEqual([])
+      89 |     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
+      90 |   })
+        at /home/tom/Projects/tomsegbers-de/e2e/static-routes.spec.ts:87:63
+
+    Error Context: test-results/static-routes-static-route-0a002-end-request-after-hydration-chromium/error-context.md
+
+  1 failed
+    [chromium] › e2e/static-routes.spec.ts:68:7 › static routes › contact form returns test-safe success without a Resend request after hydration 
+  46 passed (1.3m)
