@@ -41,7 +41,7 @@ export default function Web() {
       <section className="relative overflow-hidden bg-surface dark:bg-surface-dark">
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24 xl:grid xl:grid-cols-12 xl:gap-8">
           <div className="col-span-8">
-            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-foreground dark:text-foreground-dark md:text-5xl lg:text-6xl">
+            <h1 className="mb-4 text-h1-sm leading-none text-foreground dark:text-foreground-dark md:text-h1 lg:text-6xl">
               Tom Segbers — Senior Developer
             </h1>
             <p className="mb-6 font-light text-muted dark:text-muted-dark md:text-lg lg:mb-8 lg:text-xl">

@@ -136,3 +136,27 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   `--workers=1` 58 passed. Raw: `.omo/evidence/t07-e2e/`.
 
 
+
+## T08 — token drift cleanup, zero visual change (2026-09-10)
+
+- Every semantic `fontSize` token (`h1`..`caption`) bakes in a line-height that
+  DIFFERS from Tailwind's raw `text-*` default. So `text-4xl font-extrabold
+  tracking-tight` is NOT swappable for `text-h1-sm` (lh 40px vs 39.6px).
+- The one exact swap: a raw heading that already carries `leading-none` can become
+  the matching token IF the token's size/weight/letter-spacing match and `leading-none`
+  is kept to override the token's line-height. Verified: `text-4xl font-extrabold
+  leading-none tracking-tight` == `text-h1-sm leading-none` (36/36/-0.9/800), and
+  `md:text-5xl` == `md:text-h1` (48/48). `lg:text-6xl` has no token → keep.
+- Zero-visual-change proof method that works here: build → `pnpm exec next start -p 3055`
+  → Playwright Chromium (`reducedMotion: reduce`), `getComputedStyle` over a fixed
+  selector set at 375/768/1280, run on stashed (before) and changed tree, diff all
+  props. This T08 run: 0 diffs / 615 elements / 14,760 comparisons.
+  Script: `.omo/evidence/t08-styles/capture.mjs`.
+- Do NOT `pkill -f "<pattern>"` when the pattern text appears in your own shell
+  command line — pkill matches the shell itself and kills the command (silent 400s
+  timeout, empty log). Kill by explicit PID from `ps -eo pid,args | grep …`.
+- `sg` on this host is the setgroups binary (`/run/wrappers/bin/sg`), not ast-grep;
+  no `ast-grep` binary exists and deps are frozen for T09. Class names are string
+  content → use `grep`, which is the correct tool anyway.
+- `git stash push -- <paths>` lets you rebuild+recapture the exact "before" state
+  for a true before/after computed-style diff without reverting the working tree.

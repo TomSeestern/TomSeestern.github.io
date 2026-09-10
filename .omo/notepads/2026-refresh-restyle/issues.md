@@ -99,3 +99,22 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   Do not chase them in T07; the required command is chromium-only.
 
 
+
+## T08 — plan's grep acceptance conflicts with its zero-visual-change mandate (2026-09-10)
+
+- T08 acceptance says "grep for raw heading utilities in `app/` returns none", but its
+  own MUST-DO rule says "only replace raw utilities with tokens that resolve to the
+  SAME value; if unsure, leave it" and MUST-NOT says "do not change any visual value".
+  These are mutually exclusive: NO raw heading utility in `app/` has an exact token
+  equivalent (all token line-heights differ). Applying the plan's example
+  (`app/page.tsx:44 text-4xl…` → `text-h1-sm`) WITHOUT keeping `leading-none` changes
+  line-height 36px→39.6px; the section h2s would change 40px→39.6px. Measured.
+- Resolution taken: exact swaps only (hero h1, keeping `leading-none` + `md:text-h1`),
+  everything else left with per-case measured diffs recorded in the evidence file.
+  `grep` therefore still reports `lg:text-6xl` (no token exists), the two section h2s,
+  and `app/not-found.tsx` `md:text-4xl`. This is a deliberate refuse-to-drift call;
+  T14/T16 own the visual normalization of `/`.
+- Spurious "accidental key" note: `rounded-0.5md` / `font-open-sans` / `text-2xs` are
+  NOT in `tailwind.config.js` at all — they are undefined utility classes local to
+  Tooltip.tsx (T11). There was nothing to delete from config; deferred to T11.
+- `pkill -f` self-match killed the build shell (see learnings). Use explicit PIDs.

@@ -1,0 +1,19 @@
+### grep A: hero raw combo in app/ (expect none)
+(no matches)
+exit=0
+
+### grep B: raw heading-size utilities in app/
+app/not-found.tsx:9:          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground dark:text-foreground-dark md:text-4xl">
+app/page.tsx:44:            <h1 className="mb-4 text-h1-sm leading-none text-foreground dark:text-foreground-dark md:text-h1 lg:text-6xl">
+app/page.tsx:101:            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-foreground dark:text-foreground-dark">
+app/page.tsx:158:            <h2 className="mb-4 text-4xl font-extrabold tracking-tight text-foreground dark:text-foreground-dark">
+
+### grep C: exact removed token utility text-foreground-foreground-muted-dark (expect none)
+grep: ./.omo/evidence/t08-styles/greps.txt: input file is also the output
+(no matches)
+
+### grep D: accidental keys foregound-muted-dark/rounded-0.5md/font-open-sans/text-2xs
+./components/Tooltip/Tooltip.tsx:5:const tooltipContentClassName = "rounded-0.5md bg-zinc-700 px-4 py-2.5 font-open-sans text-2xs text-white"
+./app/contact/page.tsx:75:              className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark"
+./app/contact/page.tsx:96:              className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark"
+./app/contact/page.tsx:117:              className="mb-2 block text-sm font-medium text-foreground dark:text-foreground-muted-dark"

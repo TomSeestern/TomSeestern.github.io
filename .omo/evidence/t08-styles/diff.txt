@@ -1,0 +1,3 @@
+elements compared: 205
+property comparisons: 4920
+DIFFS: 0

@@ -44,7 +44,6 @@ module.exports = {
           muted: "#6b7280",
           dark: "#ffffff",
           "muted-dark": "#9ca3af",
-          "foreground-muted-dark": "#d1d5db",
         },
         accent: {
           DEFAULT: primary[600],
@@ -107,7 +106,7 @@ module.exports = {
         },
         invert: {
           css: {
-            color: theme("colors.foreground.foreground-muted-dark"),
+            color: theme("colors.foreground.muted-dark"),
             a: { color: theme("colors.accent.dark") },
             h2: { color: theme("colors.foreground.dark") },
             h3: { color: theme("colors.foreground.dark") },

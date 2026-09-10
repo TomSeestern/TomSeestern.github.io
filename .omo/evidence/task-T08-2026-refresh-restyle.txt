@@ -1,0 +1,170 @@
+# T08 — Token drift + accidental token key cleanup
+
+- Collected: 2026-09-10T22:12:44+02:00
+- Owner: Sisyphus-Junior
+- Base revision: d792fff
+- Command wrapper: `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'`
+- Support artifacts: `.omo/evidence/t08-styles/` (capture script, diffs, greps, logs)
+
+## Summary
+
+1. Removed accidental/undefined token key `foreground.foreground-muted-dark` from
+   `tailwind.config.js` and repaired its sole remaining reference (the dormant
+   `typography.invert` variant) to the existing sibling token
+   `colors.foreground.muted-dark`.
+2. Replaced the home hero's raw heading utilities with the semantic token where the
+   computed value is **exactly** identical (verified empirically at 3 viewports).
+3. Left every raw utility that has **no** exactly-equivalent semantic token in place —
+   swapping those would violate the task's primary constraint (zero visual change).
+   Measured proof of each mismatch is below.
+4. Tooltip's bogus classes (`rounded-0.5md`, `font-open-sans`, `text-2xs`) are
+   **not defined anywhere in `tailwind.config.js`**; they are undefined utility
+   classes owned by `components/Tooltip/Tooltip.tsx` (T11). Nothing to remove from
+   config; deferred to T11.
+
+## Changes
+
+```diff
+ app/page.tsx (line 44, home hero <h1>)
+- className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-foreground dark:text-foreground-dark md:text-5xl lg:text-6xl"
++ className="mb-4 text-h1-sm leading-none text-foreground dark:text-foreground-dark md:text-h1 lg:text-6xl"
+
+ tailwind.config.js
+-          "foreground-muted-dark": "#d1d5db",   (removed key)
+-            color: theme("colors.foreground.foreground-muted-dark"),
++            color: theme("colors.foreground.muted-dark"),
+```
+
+Why the hero swap is exactly equivalent (token supplies size/weight/tracking; the
+pre-existing `leading-none` preserves `line-height:1`, which the token would otherwise
+set to 1.1):
+
+| breakpoint | before | after | computed |
+|---|---|---|---|
+| base | `text-4xl font-extrabold tracking-tight leading-none` | `text-h1-sm leading-none` | 36px / 36px / -0.9px / 800 |
+| md | `md:text-5xl` (+ same base) | `md:text-h1` (+ same base) | 48px / 48px / -1.2px / 800 |
+| lg | `lg:text-6xl` (unchanged) | `lg:text-6xl` (unchanged) | 60px / 60px / -1.5px / 800 |
+
+`lg:text-6xl` (3.75rem) is intentionally kept: no semantic token exists for that size,
+so tokenizing it would shrink the lg hero (visual change).
+
+## Commands and results
+
+### Build
+
+```text
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
+```
+
+- before (d792fff + stashed changes): exit 0
+- after: exit 0  → `.omo/evidence/t08-styles/build-final.log`
+
+### Lint + Prettier
+
+```text
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm lint'      → exit 0 (0 errors, 55 pre-existing warnings)
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm prettier'  → exit 0 ("All matched files use Prettier code style!")
+```
+
+Logs: `.omo/evidence/t08-styles/lint.log`, `.omo/evidence/t08-styles/prettier.log`.
+
+### Computed-style before/after diff (zero-visual-change proof)
+
+Method: `next build` → `next start -p 3055` → Playwright Chromium (headless,
+`reducedMotion: reduce`), capture `getComputedStyle` for a fixed selector set
+(hero h1, hero subtitle, every section h2, hero inner h2s, first project-card
+title/description/meta, CTAs, text links) at mobile 375 / tablet 768 / desktop 1280.
+Run once on the stashed (before) tree and once on the changed tree, then diff every
+property. Script: `.omo/evidence/t08-styles/capture.mjs`.
+
+```text
+viewports: mobile,tablet,desktop
+elements compared: 615
+property comparisons: 14760
+TOTAL DIFFS: 0
+```
+
+Raw: `.omo/evidence/t08-styles/diff3.txt`.
+
+### Token-equivalence probe (why the other raw utilities were left)
+
+Standalone raw-vs-token probes measured at all 3 viewports (`before3.json`/`after3.json`,
+now removed for size; rerun `capture.mjs` to regenerate):
+
+| raw | candidate token | result |
+|---|---|---|
+| `text-4xl font-extrabold leading-none tracking-tight` | `text-h1-sm leading-none` | **equal** (applied) |
+| `text-3xl font-bold tracking-tight` | `text-h2-sm tracking-tight` | **equal** (not-in-plan file; left untouched) |
+| `text-4xl font-extrabold tracking-tight` | `text-h1-sm` | DIFFERS: line-height 40px → 39.6px |
+| `text-xl font-semibold` | `text-h3-sm` | DIFFERS: line-height 28px → 26px |
+| `font-light md:text-lg lg:text-xl` | `text-body-lg` | DIFFERS: font-size/line-height/font-weight |
+| `font-light sm:text-xl` | `text-body-lg` | DIFFERS: font-size/line-height/font-weight |
+
+Cause: every semantic font-size token bakes in a **different** line-height (and, for
+some, weight/letter-spacing) than Tailwind's raw `text-*` defaults. There is no exact
+raw→token mapping for those combinations, so applying one would drift the pixels.
+
+### Greps
+
+```text
+### grep A: hero raw combo in app/ (expect none)
+(no matches)
+
+### grep B: raw heading-size utilities in app/
+app/not-found.tsx:9: <h2 className="mb-4 text-3xl font-bold tracking-tight … md:text-4xl">
+app/page.tsx:44:    <h1 className="mb-4 text-h1-sm leading-none … md:text-h1 lg:text-6xl">
+app/page.tsx:101:   <h2 className="mb-4 text-4xl font-extrabold tracking-tight …">
+app/page.tsx:158:   <h2 className="mb-4 text-4xl font-extrabold tracking-tight …">
+
+### grep C: exact removed token utility text-foreground-foreground-muted-dark (expect none)
+(no matches)
+
+### grep D: foreground-muted-dark | rounded-0.5md | font-open-sans | text-2xs
+./components/Tooltip/Tooltip.tsx:5: rounded-0.5md … font-open-sans text-2xs   (T11-owned)
+./app/contact/page.tsx:75,96,117: dark:text-foreground-muted-dark            (uses foreground.muted-dark key — intact)
+```
+
+Full output: `.omo/evidence/t08-styles/greps.txt`.
+
+`grep B` is **not** empty, and cannot be made empty with zero visual change:
+- `app/page.tsx:44` still matches only because of `lg:text-6xl` (no 3.75rem token).
+- `app/page.tsx:101,158` — `text-4xl font-extrabold tracking-tight` has no
+  line-height-exact token (40px vs 39.6px). The task rule "only replace raw utilities
+  with tokens that resolve to the SAME value; if unsure, leave it" applies.
+- `app/not-found.tsx:9` — base `text-3xl …` is exactly eligible for
+  `text-h2-sm tracking-tight`, but `md:text-4xl` is not; file is outside this task's
+  named scope and was left untouched to avoid an unverified change.
+
+### Built-CSS verification of the removed key
+
+```text
+text-foreground-foreground-muted-dark  → 0 occurrences (accidental utility is gone)
+text-foreground-muted-dark             → 1 occurrence  (legit contact-page utility intact)
+prose-invert color                     → #9ca3af (foreground.muted-dark)
+```
+
+The `prose-invert` rule emits only under `.dark` / `:is(.dark *)`; no code adds `.dark`
+since T07, so this key edit is visually inert.
+
+### ast-grep
+
+`ast-grep` binary is not installed; `sg` on this host is the group-switcher
+(`/run/wrappers/bin/sg` → "group 'run' does not exist"), and `package.json`/lockfile
+are out of scope per T09. Class names are string content, not AST shapes, so the
+structural sweep fell back to `grep` (the correct tool for string content).
+
+## Verdict
+
+- Build / lint / prettier: green.
+- Computed-style diff: **0 changes** across 615 elements and 14,760 property
+  comparisons at mobile/tablet/desktop.
+- Accidental config key + its dangling reference removed; no undefined CSS emitted.
+
+## Risks / follow-ups
+
+- The home page's section h2s (`text-4xl font-extrabold tracking-tight`) remain raw
+  until T16 rebuilds `/` (curated featured set); tokenizing them now would change
+  line-height by 0.4px. T14/T16 own the visual normalization.
+- T11 must fix Tooltip's three undefined classes; no config keys back them.
+- `app/not-found.tsx` h2 has an exact token candidate (`text-h2-sm tracking-tight`)
+  deferred to a later token task.

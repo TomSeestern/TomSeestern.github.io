@@ -1,0 +1,4 @@
+viewports: mobile,tablet,desktop
+elements compared: 615
+property comparisons: 14760
+TOTAL DIFFS: 0
