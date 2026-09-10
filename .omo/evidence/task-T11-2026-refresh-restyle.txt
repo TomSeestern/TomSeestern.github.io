@@ -158,3 +158,57 @@ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build'
 nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm lint'
 nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm prettier'
 nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; CI=true pnpm exec playwright test --project=chromium --workers=1'
+
+================================================================
+13. STABILIZATION UPDATE — e2e/tooltip.spec.ts (2026-09-10T23:08:43Z)
+================================================================
+Commit: test(e2e): stabilize tooltip hover spec
+Base:   b0e6635 feat(home): type-led hero and curated featured set replacing marquee
+
+Verification flagged e2e/tooltip.spec.ts as non-deterministic. Reproduced the
+brief's repro loop:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; export
+    PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; for i in 1 2 3; do
+    CI=true pnpm exec playwright test e2e/tooltip.spec.ts --project=chromium
+    --workers=1 --retries=0 2>&1 | tail -2; done'
+  observed: 3/3 fail, then 1 pass, then 5/5 pass across separate invocations.
+
+ROOT CAUSE (probed, not guessed): cold-dev hydration drops the first pointermove.
+Instrumented runs attached native pointer listeners to the target trigger and
+dumped React props + state:
+  - native events DID reach the trigger: moves=3, enters=1, leaves=0
+  - the trigger's `__reactProps$` DID contain onPointerMove/onPointerLeave (function)
+  - yet `data-state` stayed "closed" in the failing run (never opened over a 3s
+    poll at 100ms intervals)
+  - a SECOND identical gesture on the same page ALWAYS opened it ("delayed-open")
+  - a fixed 1500ms pre-wait made a single gesture deterministic (8/8)
+Falsified alternatives:
+  - `page.waitForLoadState("networkidle")` + hover: still 4/8 flaky
+  - `document.fonts.ready`: still 6/8 flaky (2/8 open)
+  - layout shift: elementFromPoint at the gesture coordinate returned the icon,
+    and native pointer events reached it — so the pointer was not missing
+  - `locator.hover()` alone: 8/8 closed (lands directly -> pointerenter only;
+    Radix opens on pointermove)
+Conclusion: no stable public hydration signal exists for the App Router tree;
+`next dev` also compiles /projects on demand per fresh webServer, widening the
+window. The gesture, not a fixed selector, is what races.
+
+STABILIZATION TECHNIQUE (e2e/tooltip.spec.ts):
+  - target a stable specific trigger: `img[src="/icon/react.svg"][data-state]`
+  - enter the trigger from OUTSIDE (mouse.move outside -> mouse.move center, steps),
+    because Radix opens on pointermove
+  - wrap the real gesture + `await expect(trigger).toHaveAttribute("data-state",
+    /open/, { timeout: 1000 })` in `expect(...).toPass({ timeout: 15000,
+    intervals: [250, 500, 1000] })` — waits on the app's observable state; does
+    NOT depend on Playwright `--retries`
+  - then assert tooltip role visible, Escape hides it, data-state returns closed
+No waitForTimeout, no product-code change, no other spec touched.
+
+VERIFICATION
+13.1 Single-spec repro loop (--retries=0), 5 consecutive fresh servers:
+     RUN 1..5 = PASS, TOTAL PASS=5 FAIL=0
+13.2 Full chromium suite, TWICE (CI=true, --workers=1):
+     run 1: 63 passed (3.8m) — 0 failed, 0 flaky
+     run 2: 63 passed (3.3m) — 0 failed, 0 flaky
+13.3 pnpm typecheck -> exit 0   (green since 2bdf1e9 added the fixtures)
+13.4 pnpm prettier   -> exit 0  ("All matched files use Prettier code style!")

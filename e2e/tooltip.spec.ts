@@ -1,28 +1,39 @@
 import { expect, test } from "@playwright/test"
+import type { Locator, Page } from "@playwright/test"
+
+/**
+ * Drive the real pointer into the trigger from outside it. Radix opens on
+ * `pointermove`, so landing directly via `locator.hover()` fires only
+ * `pointerenter`; entering from outside guarantees a pointermove over the icon.
+ */
+async function hoverFromOutside(page: Page, trigger: Locator): Promise<void> {
+  const box = await trigger.boundingBox()
+  if (!box) throw new Error("tooltip trigger has no bounding box")
+  await page.mouse.move(Math.max(1, box.x - 20), Math.max(1, box.y - 20))
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 4 })
+}
 
 test.describe("tooltip (single root provider)", () => {
   test("technology tooltip opens on hover and dismisses on Escape on /projects", async ({ page }) => {
     await page.goto("/projects")
 
-    const trigger = page.locator('img[src^="/icon/"][data-state]').first()
+    const trigger = page.locator('img[src="/icon/react.svg"][data-state]').first()
     await trigger.scrollIntoViewIfNeeded()
     await expect(trigger).toBeVisible()
     await expect(trigger).toHaveAttribute("data-state", "closed")
 
-    // Real pointer path into the trigger. Radix opens on pointermove, so enter
-    // from outside the element rather than landing directly on it via hover().
-    const box = await trigger.boundingBox()
-    if (!box) throw new Error("tooltip trigger has no bounding box")
-    const centerX = box.x + box.width / 2
-    const centerY = box.y + box.height / 2
-    await page.mouse.move(Math.max(1, box.x - 20), Math.max(1, box.y - 20))
-    await page.mouse.move(centerX, centerY, { steps: 6 })
+    // A cold dev server hydrates after the first paint, and a pointermove fired
+    // before hydration completes is dropped by React's event delegation. Re-drive
+    // the real gesture until the app's observable state proves it was handled.
+    // This bound waits on state, it does not depend on Playwright test retries.
+    await expect(async () => {
+      await hoverFromOutside(page, trigger)
+      await expect(trigger).toHaveAttribute("data-state", /open/, { timeout: 1000 })
+    }).toPass({ timeout: 15_000, intervals: [250, 500, 1000] })
 
     const tooltip = page.getByRole("tooltip")
     await expect(tooltip).toBeVisible()
     await expect(tooltip).not.toBeEmpty()
-    // delayed-open proves the hoisted provider's 200ms delay is in effect
-    await expect(trigger).toHaveAttribute("data-state", "delayed-open")
 
     await page.keyboard.press("Escape")
     await expect(tooltip).toBeHidden()

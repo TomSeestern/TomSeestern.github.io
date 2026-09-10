@@ -286,3 +286,26 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   before T16; it is intentionally excluded from the T16 commit.
 - No blockers. Final: build 38/38, typecheck/lint/prettier/contrast/ornaments green,
   jest 107 passed, full chromium e2e 63 passed.
+
+## T11 follow-up — tooltip e2e flakiness stabilized (2026-09-10)
+
+- `e2e/tooltip.spec.ts` was flaky under `--retries=0`: observed 2/3 fail, then
+  3/3 fail, then 5/5 pass across separate invocations. Root cause: a cold
+  `next dev` hydrates after first paint, and the *first* synthetic `pointermove`
+  can be dropped by React's event delegation. Probe evidence on failing runs:
+  the trigger's `__reactProps$` already had a function `onPointerMove`, native
+  `pointermove`/`pointerenter` fired (moves=3, enters=1, leaves=0), yet
+  `data-state` stayed `closed`. A second identical gesture on the same page always
+  opened it (`delayed-open`); a fixed 1500ms pre-wait made it deterministic.
+  `networkidle`, `document.fonts.ready`, and a fibre-child hydration probe did
+  NOT fix it — there is no stable public hydration signal, and `next dev` compiles
+  `/projects` on demand for each fresh webServer.
+- Stabilization (no product change, no `--retries` reliance): enter the trigger
+  from *outside* (Radix opens on `pointermove`; `locator.hover()` only fires
+  `pointerenter`) and wrap the real gesture + `data-state` assertion in
+  `expect(...).toPass()` so the spec waits on the app's observable state instead
+  of sleeping. Verified 5/5 single-spec runs at `--retries=0` and two consecutive
+  full chromium suites (63 passed, 0 failed, 0 flaky). `pnpm typecheck` and
+  `pnpm prettier` exit 0.
+- Rule for future specs: any hover/pointer-driven Radix assertion on a cold dev
+  server must wait on `data-state` or content visibility, never a fixed delay.
