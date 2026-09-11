@@ -1,0 +1,15 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 prettier /home/tom/Projects/tomsegbers-de
+> prettier --check "**/*.{js,jsx,ts,tsx}"
+
+Checking formatting...
+[warn] app/contact/ContactForm.tsx
+[warn] Code style issues found in the above file. Run Prettier to fix.
+ ELIFECYCLE  Command failed with exit code 1.

@@ -402,3 +402,38 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   prettier/test (19 suites / 126 tests)/contrast (24/24)/ornaments/images (99/99)
   green; build 38/38; full chromium e2e 65 passed twice (0 failed / 0 flaky);
   axe-only 8 passed; enriched 375px `scrollWidth == clientWidth`.
+
+## T21 — cert-env null poisoning blocked `next build`; pre-existing e2e flake (2026-09-11)
+
+- **`NIX_SSL_CERT_FILE=null` / `SYSTEM_CERTIFICATE_PATH=null` break `next/font`.**
+  The devShell already nulls `PNPM_HOME`/`npm_config_prefix`; it ALSO nulls the
+  TLS trust env. First `pnpm build` after `rm -rf .next` failed:
+  `next/font error: Failed to fetch Inter|Newsreader from Google Fonts`
+  (`curl` → `SSL verification result: unable to get local issuer certificate (20)`).
+  Removing `.next` had also discarded the cached font files. Fix (env, not
+  product): `unset NIX_SSL_CERT_FILE SYSTEM_CERTIFICATE_PATH; export
+  SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt` → fonts.googleapis.com HTTP 200,
+  build 38/38. Apply this to build/e2e/storybook/manual-QA when fonts are cold.
+- **Pre-existing e2e flake under host load, stash-controlled.** Host load
+  averaged 27–34. `interactions.spec.ts:80` (a home CTA keyboard navigation)
+  failed once in isolation with `Received string: ""` while the error-context
+  snapshot showed the page HAD reached `/projects` — a >5s `toHaveURL`
+  observation. `git stash push` of the two Header files → SAME failure on
+  unmodified HEAD (`04c-interactions-HEAD.log`). Not a T21 regression; the
+  canonical `CI=true … --workers=1` run was clean (71 passed, 0 failed, 0 flaky).
+- **Manual-QA probe needs `load`/`networkidle`, not `domcontentloaded`.** Filling
+  the contact form right after `domcontentloaded` raced React hydration and the
+  submit produced no alert. Switching to `{ waitUntil: "load" }` +
+  `waitForLoadState("networkidle")` made the result deterministic.
+- **Next.js dev overlay adds a `role="alert"` node** to the DOM (empty text), so a
+  `getByRole("alert")` count on `/contact` in DEV is 1 even on the success path.
+  Not a product issue; production e2e asserts `role="status"` explicitly and the
+  failure alert is covered by Jest against a mocked `sendEmail`.
+- **Ordering:** `next dev` (Playwright webServer) clobbers the production `.next`,
+  so `pnpm build` (38/38) was captured BEFORE the e2e runs; no build-artifact gate
+  ran after e2e except the manual-QA dev probe (dev-mode DOM, which is the point).
+- Scope: `.omo/boulder.json` is orchestrator-owned and excluded; `null/` is the
+  pre-existing untracked env artifact and excluded. No new dependency, no
+  `--no-verify`/`SKIP=`, no `.skip()`. Final: build 38/38; full chromium e2e 71
+  passed (0 failed / 0 flaky); axe 8 passed; storybook smoke 6 passed.
+

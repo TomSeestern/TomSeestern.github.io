@@ -1,0 +1,25 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+[TEST] 
+[TEST] > tomsegbers-de@0.0.0 test-storybook /home/tom/Projects/tomsegbers-de
+[TEST] > cross-env FORCE_COLOR=1 test-storybook
+[TEST] 
+[SB] (node:1416672) [DEP0066] DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+[SB] (Use `node --trace-deprecation ...` to show where the warning was created)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/Button/[22m[1mButton.stories.tsx[22m
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/ArticleTeaser/[22m[1mArticleTeaser.stories.tsx[22m
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/ProjectTeaser/[22m[1mProjectTeaser.stories.tsx[22m
+[TEST] 
+[TEST] [1mTest Suites: [22m[1m[32m3 passed[39m[22m, 3 total
+[TEST] [1mTests:       [22m[1m[32m6 passed[39m[22m, 6 total
+[TEST] [1mSnapshots:   [22m0 total
+[TEST] [1mTime:[22m        5.552 s
+[TEST] [2mRan all test suites[22m[2m.[22m
+[TEST] npx wait-on tcp:127.0.0.1:6006 && pnpm test-storybook exited with code 0
+--> Sending SIGTERM to other processes..
+[SB] npx http-server storybook-static --port 6006 --silent exited with code 0

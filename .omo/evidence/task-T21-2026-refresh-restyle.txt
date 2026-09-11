@@ -1,0 +1,139 @@
+# T21 — De-Flowbite targeted replacement (D11) — Evidence Ledger
+
+Timestamp (UTC): 2026-09-11T19:31:32Z
+Timestamp (local): 2026-09-11 21:31:32 +0200
+Pre-commit HEAD: 705e56a feat(projects): additive case-study template
+Branch: main
+Plan: .omo/plans/2026-refresh-restyle.md §T21 (line 416; checkbox line 703 — orchestrator-owned)
+Decision: D11 — targeted replacement ONLY (Navbar, Breadcrumb, Alert). Card KEPT.
+Env: nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'
+     PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
+     node v22.23.1, Next.js 15.5.24, Playwright (chromium)
+
+NOTE 1: the `paths[0] … Received null` + `[ERROR] Refusing to run pnpm@10.15.1 …`
+lines printed by every `nix develop` invocation are the flake shellHook's own
+version probes (README-documented quirk). Commands below exited 0 with real output.
+
+NOTE 2 (new, this task): `pnpm build` initially failed with
+`next/font error: Failed to fetch Inter|Newsreader from Google Fonts` — the
+devShell also exports `NIX_SSL_CERT_FILE=null` and `SYSTEM_CERTIFICATE_PATH=null`,
+which poisons Node's TLS trust store (the same null-value class as `PNPM_HOME`).
+Fix used for the build / e2e / storybook / manual-QA runs:
+`unset NIX_SSL_CERT_FILE SYSTEM_CERTIFICATE_PATH; export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt`.
+After that, `curl https://fonts.googleapis.com/...` returned HTTP 200 and the
+build succeeded. This is an environment fix, NOT a product change.
+
+## Commits (one primitive per commit, in the required order)
+
+1. `15257c2 refactor(ui): replace Navbar with in-tree header`
+   — components/Header/Header.tsx (rewritten), components/Header/Header.test.tsx (+4 tests), e2e/header-nav.spec.ts (new)
+2. `218bfa4 refactor(ui): replace Breadcrumb with in-tree breadcrumb`
+   — components/Breadcrumb/Breadcrumb.tsx + .test.tsx (new), app/projects/entry/[slug]/page.tsx, app/blog/entry/[slug]/page.tsx, e2e/breadcrumb.spec.ts (new)
+3. `fe98d41 refactor(ui): replace Alert with in-tree alert`
+   — components/Alert/Alert.tsx + .test.tsx (new), app/contact/ContactForm.tsx, app/contact/ContactForm.test.tsx, e2e/contact.spec.ts
+
+Evidence/notepads are committed separately (below) so the three product commits
+stay pure per-primitive. `.omo/boulder.json` (orchestrator-owned) and `null/`
+are excluded throughout. No `--no-verify`, no `SKIP=`, no `.skip()`, no new
+dependency (the X/chevron icons are inline SVG).
+
+## TDD port-before-swap (R6.3 / R16.6)
+
+For each primitive the observable contract was locked in a test and confirmed
+GREEN against the Flowbite implementation BEFORE the swap, then kept green after:
+
+- Header: `e2e/header-nav.spec.ts` (open/close, Enter/Space, desktop) —
+  GREEN on Flowbite: `.omo/evidence/t21-verify/01-header-flowbite.log` (3 passed).
+  After swap: 4 passed incl. the aria-expanded/aria-controls disclosure test
+  (`02-header-intree.log`).
+- Breadcrumb: `e2e/breadcrumb.spec.ts` (landmark, ol>li×3, link crumbs, last
+  crumb non-link mirroring the H1) — GREEN on Flowbite: `06-breadcrumb-flowbite.log`
+  (2 passed). After swap, +aria-current (current crumb is not a link) — 2 passed.
+- Alert: `ContactForm.test.tsx` failure-alert role=alert + Dismiss, and the e2e
+  success `role="status"` attribute — GREEN on Flowbite: Jest 6 passed,
+  `e2e/contact.spec.ts` 9 passed (`10-contact-flowbite.log`). After swap:
+  11 Jest passed + 9 e2e passed (`13-contact-intree.log`).
+
+## Per-primitive contract preserved / added
+
+| Primitive | Preserved | Added (accessibility improvement) |
+|---|---|---|
+| Navbar → Header | brand accessible name "Tom Segbers Logo Tom Segbers", Contact CTA focus ring `accent-soft-foreground-dark`, nav links + aria-current, mobile collapse, desktop nav, CTA first "Contact" link inside `<nav>` | `aria-expanded`, `aria-controls="site-nav"`, `type="button"` toggle, `aria-label="Main navigation"` landmark |
+| Breadcrumb | `nav aria-label="Breadcrumb"`, `<ol>`, link crumbs, last crumb `<span>` mirroring H1, `truncate` on current crumb (plus `min-w-0` on the li/span chain — T17 lesson) | `aria-current="page"` on the current crumb |
+| Card | UNTOUCHED (`ProjectTeaser.tsx`, `ArticleTeaser.tsx` keep `Card`) | — |
+
+## Flowbite surface after T21
+
+`grep -rn 'from "flowbite-react"' app components` returns exactly:
+- components/ProjectTeaser/ProjectTeaser.tsx:1  `import { Card } from "flowbite-react"`
+- components/ArticleTeaser/ArticleTeaser.tsx:2  `import { Card } from "flowbite-react"`
+
+No Navbar / Breadcrumb / Alert import remains. `components/Tooltip`,
+`components/Button`, `components/Providers/TooltipProvider.tsx` untouched.
+
+## Manual QA (real Chromium against `next dev --port 3031`)
+
+Started `next dev --port 3031` (E2E_CONTACT_FORM_SUCCESS=true, SSL_CERT_FILE
+fixed), drove it with a real Chromium probe, then killed the listener
+(pid 1418800; port confirmed free). Raw output:
+`.omo/evidence/t21-verify/t21-manual-qa.json`; probe: `t21-probe.mjs`;
+server log: `portal-dev.log`.
+
+    header   : initialAriaExpanded=false  ariaControls=site-nav  navHiddenBeforeOpen=true
+               afterOpenAriaExpanded=true  navVisibleAfterOpen=true  afterCloseAriaExpanded=false
+    breadcrumb: landmarkVisible=true  orderedListItems=3
+               currentAriaCurrent="page"  currentIsLink=false
+               currentText="Memorable Ebeltoft Cheesecake – A Sweet Souvenir"
+    alert    : statusCount=1  statusRole="status"
+               statusText="Success! Email sent successfully."  dismissButtonVisible=true
+
+(`failureAlertCount=1` with empty text is the Next.js dev overlay's own
+`role="alert"` node, not the product failure alert — the failure path is covered
+by `ContactForm.test.tsx` against a mocked `sendEmail`.)
+
+## Gate results (all via the nix wrapper; fresh logs in .omo/evidence/t21-verify/)
+
+1. `pnpm typecheck`   EXIT=0  — log 11-typecheck.log (03, 07 also clean)
+2. `pnpm lint`        EXIT=0  — 47 problems (0 errors, 47 pre-existing warnings; no new warnings) — 12-lint.log
+3. `pnpm prettier`    EXIT=0  — "All matched files use Prettier code style!" — 11c-prettier.log
+4. `pnpm test`        EXIT=0  — Test Suites 21 passed/21; Tests 141 passed/141
+   (126 baseline + 4 Header + 5 Breadcrumb + 5 Alert + 1 ContactForm failure = 141;
+   the two new primitive suites are included) — 20-jest.log
+5. `pnpm build`       EXIT=0  — "✓ Generating static pages (38/38)" — 21c-build.log
+6. `pnpm contrast`    EXIT=0  — all 24 pair(s) meet minimums — 20-contrast.log
+   `pnpm ornaments`   EXIT=0  — no banned ornament or token — 20-ornaments.log
+   `pnpm images`      EXIT=0  — 99 image(s) within budget — 20-images.log
+7. Full chromium e2e  EXIT=0  — `71 passed (4.8m)` — 0 failed, 0 flaky — 22-e2e-full.log
+   (canonical: `export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; CI=true pnpm exec playwright test --project=chromium --workers=1`)
+8. axe only           EXIT=0  — `8 passed (51.7s)` — 23-axe.log. Allowlist stays `[]`.
+9. `pnpm build-storybook` EXIT=0 (24-storybook-build.log);
+   `pnpm test-storybook` served via the CI concurrently recipe → EXIT=0,
+   Test Suites 3 passed/3, Tests 6 passed/6 — 24b-storybook-smoke.log
+
+## e2e reliability note (pre-existing flake, not T21)
+
+Host load averaged 27–34 during this session. `interactions.spec.ts:80`
+("keyboard activation follows a home CTA without a pointer") failed once during
+spec isolation with `Received string: ""` while the error-context snapshot showed
+the page HAD reached `/projects` (a >5s `toHaveURL` observation under load).
+
+Stash control (T15/T17 method): `git stash push -- components/Header/Header.tsx
+components/Header/Header.test.tsx` → the same test failed identically on the
+unmodified HEAD (`04c-interactions-HEAD.log`). Conclusion: pre-existing
+e2e/dev-server timing flake, not caused by the header replacement. The full
+canonical suite (CI=true, retries=2) was CLEAN: 71 passed, 0 failed, 0 flaky.
+
+## Commit scope (this evidence commit)
+
+Force-added (`.omo/` is gitignored):
+- .omo/evidence/task-T21-2026-refresh-restyle.txt
+- .omo/evidence/t21-verify/**  (raw logs, portal-dev.log, t21-probe.mjs, t21-manual-qa.json)
+- .omo/notepads/2026-refresh-restyle/learnings.md, issues.md
+
+EXCLUDED deliberately: `.omo/boulder.json` (orchestrator-owned) and `null/`
+(pre-existing untracked Playwright/pnpm store artifact). No route/slug/content
+change; build count stays 38.
+
+## Token usage (R22.1)
+
+Not instrumented by this worker; no provider token counter was available in-session.

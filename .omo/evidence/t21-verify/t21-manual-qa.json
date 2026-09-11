@@ -1,0 +1,29 @@
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  
+  git:   2.54.0
+{
+  "header": {
+    "initialAriaExpanded": "false",
+    "ariaControls": "site-nav",
+    "navHiddenBeforeOpen": true,
+    "afterOpenAriaExpanded": "true",
+    "navVisibleAfterOpen": true,
+    "afterCloseAriaExpanded": "false"
+  },
+  "breadcrumb": {
+    "landmarkVisible": true,
+    "orderedListItems": 3,
+    "currentAriaCurrent": "page",
+    "currentText": "Memorable Ebeltoft Cheesecake – A Sweet Souvenir",
+    "currentIsLink": false
+  },
+  "alert": {
+    "statusCount": 1,
+    "statusRole": "status",
+    "statusText": "Success! Email sent successfully.",
+    "dismissButtonVisible": true,
+    "failureAlertCount": 1,
+    "failureAlertText": ""
+  }
+}
