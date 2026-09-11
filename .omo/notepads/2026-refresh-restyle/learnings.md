@@ -428,3 +428,37 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   prettier/contrast/ornaments green; jest 16 suites / 112 passed; full chromium
   e2e `CI=true --workers=1` 64 passed TWICE (0 failed / 0 flaky); axe-only 8
   passed. Optional RSS feed DEFERRED (non-blocking).
+
+## T22 — image pipeline (avif/webp) + own remote image + dead hero JPG (2026-09-11)
+
+- Third provider-crash recovery: the working tree was already the finished T22
+  change set. `git diff` + reading `scripts/check-image-size.mjs` confirmed it
+  was self-consistent, so no rewrite — only verification + evidence + commit.
+- Self-hosting beat an allowlist: `react-markdown` emits a plain `<img>`, so
+  `next/image` never optimizes the cheesecake photo — the on-disk webp bytes ship
+  verbatim. Self-hosting (`/img/cheesecake-ebeltoft.webp`, 93,924 B) keeps
+  `remotePatterns` and CSP `img-src 'self'` un-widened. The `plantoeat` host is
+  gone from the live path; it survives only in the explanatory `next.config.mjs`
+  comment. The About-page portrait keeps its webp replacement (30.6 KB); only the
+  442,942 B `.jpg` original was dropped.
+- Gate-is-not-a-tautology proof: `scripts/check-image-size.mjs` is zero-dep and
+  stats bytes only. Fed a temp dir with a 300 KB image, a 60 KB `hero-*` image,
+  and a 10 KB control → exit 1 with exactly the two right FAIL rows; probe
+  removed. Real tree: 99/99 PASS, largest is the new 91.7 KB webp.
+- Playwright gotcha: `playwright` is NOT a direct dep — the runnable import is
+  `{ chromium } from "@playwright/test"` (no top-level `playwright` in
+  `node_modules`, only `@playwright/test`). A probe script under `.omo/` resolves
+  bare imports by walking up to the repo `node_modules`.
+- `.next` lifecycle gotcha: Playwright's `webServer` runs `pnpm exec next dev
+  --port 3030`, which overwrites `.next`. `pnpm start` after an e2e run fails
+  with "Could not find a production build". Re-run `pnpm build` immediately
+  before any `pnpm start` proof.
+- Remote-image live proof (production build, real chromium): naturalWidth 1024,
+  naturalHeight 608, complete true, 0 console errors, 0 remotePatterns/next-image/
+  CSP mentions. `pass: true`.
+- Final: typecheck/lint (0 errors, 47 pre-existing warnings)/prettier/test green
+  (jest 16 suites / 112 passed); build 38/38; images 99/99; contrast 24/24;
+  ornaments green; full chromium e2e `CI=true --workers=1` 64 passed TWICE
+  (0 failed / 0 flaky); axe-only 8 passed.
+- T05 note: does not weaken the LCP<2500 budget; only removes the third-party
+  origin from the blog-detail critical path. No fresh Lighthouse number claimed.

@@ -1,0 +1,190 @@
+T22 — Image pipeline (avif/webp) + own remote image + dead hero JPG removal
+=========================================================================
+Plan:     .omo/plans/2026-refresh-restyle (T22)
+Repo:     /home/tom/Projects/tomsegbers-de
+Commit base HEAD at verification start: fc8f531
+Collected: 2026-09-11T13:17Z–13:45Z (UTC)
+Env:      nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'
+          PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
+          node v22.23.1, Next.js 15.5.24, Playwright (chromium)
+
+NOTE: the `ERROR The "paths[0]" argument must be of type string. Received null`
+line that every `nix develop` invocation prints is the flake shellHook's own
+version probe (README-documented PNPM_HOME=null quirk), NOT a command failure.
+Every gate below printed its real command output after it and exited 0.
+
+Scope verified in working tree (nothing else touched):
+  M next.config.mjs                               — images.formats/deviceSizes/minimumCacheTTL
+  M content/blog/2019-ebeltoft-cheesecake-recipe.md — remote URL → /img/cheesecake-ebeltoft.webp
+  A public/img/cheesecake-ebeltoft.webp           — 93,924 B (self-hosted)
+  D public/img/Tom_Segbers_Frontal.jpg            — dead original (webp replacement kept)
+  M package.json                                  — "images" script
+  M .forgejo/workflows/check.yml                  — image-size gate step
+  A scripts/check-image-size.mjs                  — zero-dep byte-budget gate
+  Note: the live site still ships public/img/Tom_Segbers_Frontal.webp (30.6 KB);
+        only the 442,942 B .jpg original was dropped.
+
+Remote-image decision: SELF-HOST. No plantoeat.s3.amazonaws.com allowlist entry
+was added, so CSP `img-src 'self'` and `next.config.mjs` remotePatterns stay
+un-widened. `plantoeat` now appears in the repo only inside the explanatory
+comment at next.config.mjs:45.
+
+-------------------------------------------------------------------------------
+1) STATIC GATES  (log: /tmp/t22-gate.log)
+-------------------------------------------------------------------------------
+$ pnpm typecheck            → exit 0   (tsc --noEmit)
+$ pnpm test                 → exit 0   (jest: 16 suites / 112 tests passed, 9.3s)
+$ pnpm lint                 → exit 0   (ESLint: 0 errors, 47 pre-existing warnings)
+$ pnpm prettier             → exit 0   (All matched files use Prettier code style!)
+
+-------------------------------------------------------------------------------
+2) PRODUCTION BUILD  (log: /tmp/t22-build.log)
+-------------------------------------------------------------------------------
+$ pnpm build                → exit 0
+  ✓ Compiled successfully in 27.5s
+  ✓ Generating static pages (38/38)
+Page count matches the T02 baseline (38), not the plan's stale 36.
+
+-------------------------------------------------------------------------------
+3) PROJECT GATES  (log: /tmp/t22-gates.log)
+-------------------------------------------------------------------------------
+$ pnpm images               → exit 0
+    Image byte-budget gate
+      root   : public
+      limits : image 200 KB, hero 50 KB
+      scanned: 99 image(s)
+    IMAGE SIZE GATE PASSED — 99 image(s) within budget.
+    Largest rows:
+      PASS  image   91.7 KB  200 KB  public/img/cheesecake-ebeltoft.webp
+      PASS  image   79.9 KB  200 KB  public/img/logo.png
+      PASS  image   64.3 KB  200 KB  public/img/screenshots/projects.webp
+      PASS  image   58.8 KB  200 KB  public/img/layzrgg_logo.png
+      PASS  image   51.6 KB  200 KB  public/img/screenshots/home.webp
+      PASS  image   40.8 KB  200 KB  public/img/screenshots/blog.webp
+      PASS  image   30.6 KB  200 KB  public/img/Tom_Segbers_Frontal.webp
+      PASS  image   24.3 KB  200 KB  public/img/screenshots/contact.webp
+      ... 91 more all PASS (0 FAIL, 0 hero-budget rows)
+
+$ pnpm contrast             → exit 0
+    CONTRAST GATE PASSED — all 24 pair(s) meet their minimums.
+$ pnpm ornaments            → exit 0
+    ORNAMENT GATE PASSED — no banned ornament or token found (88 source files).
+
+-------------------------------------------------------------------------------
+4) FULL E2E — run TWICE per R16.9  (logs: /tmp/t22-e2e1.log, /tmp/t22-e2e2.log)
+-------------------------------------------------------------------------------
+Command:
+  export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
+  CI=true pnpm exec playwright test --project=chromium --workers=1
+
+RUN 1: exit 0 → 64 passed (5.6m)  — 0 failed, 0 flaky, 0 skipped
+RUN 2: exit 0 → 64 passed (5.1m)  — 0 failed, 0 flaky, 0 skipped
+
+-------------------------------------------------------------------------------
+5) AXE-ONLY a11y  (log: /tmp/t22-axe.log)
+-------------------------------------------------------------------------------
+$ CI=true pnpm exec playwright test e2e/a11y.spec.ts --project=chromium --workers=1
+  → exit 0 → 8 passed (1.3m)
+a11y allowlist remains EMPTY (no entries added).
+
+-------------------------------------------------------------------------------
+6) REMOTE-IMAGE LOAD PROOF — production build, real browser
+-------------------------------------------------------------------------------
+Because the e2e webServer runs `next dev` (which overwrites .next), the
+production build was regenerated before this proof:
+  $ pnpm build → exit 0 → ✓ Generating static pages (38/38)
+Then `pnpm start` served the production build on http://127.0.0.1:3000 and a
+Playwright chromium page opened the route.
+
+Probe: .omo/t22-remote-load.mjs  (script imports { chromium } from @playwright/test)
+  - waits for server readiness (fetch poll)
+  - page.goto('/blog/entry/2019-ebeltoft-cheesecake-recipe', waitUntil:'networkidle')
+  - locator('img[src*="cheesecake-ebeltoft"]'), await visible, await el.decode()
+  - captures console 'error' + pageerror; fails if any matches
+    /remotePatterns|next\/image|Content Security Policy|CSP|hostname .* is not configured/i
+
+OBSERVED RESULT (verbatim JSON):
+{
+  "route": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+  "image": {
+    "src": "/img/cheesecake-ebeltoft.webp",
+    "currentSrc": "http://127.0.0.1:3000/img/cheesecake-ebeltoft.webp",
+    "naturalWidth": 1024,
+    "naturalHeight": 608,
+    "complete": true
+  },
+  "consoleErrorCount": 0,
+  "consoleErrors": [],
+  "offendingErrors": [],
+  "pass": true
+}
+→ naturalWidth 1024 > 0: the on-disk webp bytes decoded and painted.
+→ 0 console errors; ZERO mentions of remotePatterns / next/image / CSP.
+
+Server startup log (/tmp/t22-start.log) confirms Next.js 15.5.24 `next start`
+(local http://localhost:3000). Port freed after the probe (`fuser -k 3000/tcp`).
+
+-------------------------------------------------------------------------------
+7) DEAD-JPG PROOF
+-------------------------------------------------------------------------------
+$ grep -rn "Tom_Segbers_Frontal" app components content lib public
+  → no matches (exit 1)
+$ ls public/img/Tom_Segbers_Frontal.jpg
+  → No such file or directory
+The replacement public/img/Tom_Segbers_Frontal.webp (30.6 KB) remains and is
+referenced by the About page; only the 442,942 B JPG original is gone.
+
+-------------------------------------------------------------------------------
+8) IMAGE-SIZE GATE — FAILING-FIRST DEMO (then cleaned up)
+-------------------------------------------------------------------------------
+Probe dir /tmp/t22-probe (not committed):
+  oversized-image.png  307,200 B  → must FAIL the 200 KB image budget
+  oversized-hero.png    61,440 B  → must FAIL the 50 KB hero budget
+  small-ok.png          10,240 B  → must PASS
+
+$ node scripts/check-image-size.mjs /tmp/t22-probe
+  STATUS  KIND       SIZE  BUDGET  PATH
+  FAIL    image  300.0 KB  200 KB  /tmp/t22-probe/oversized-image.png
+  FAIL    hero    60.0 KB   50 KB  /tmp/t22-probe/oversized-hero.png
+  PASS    image   10.0 KB  200 KB  /tmp/t22-probe/small-ok.png
+  IMAGE SIZE GATE FAILED — 2 image(s) over budget
+  → exit 1  (PROBE_GATE_EXIT=1)
+
+$ rm -rf /tmp/t22-probe   → removed (confirmed absent)
+This proves the gate is not a tautology: it fails first, then passes on the
+real tree (99/99 within budget).
+
+-------------------------------------------------------------------------------
+9) INTEGRITY
+-------------------------------------------------------------------------------
+public/img/cheesecake-ebeltoft.webp
+  bytes : 93,924
+  sha256: c4debfd42ead279fc96ca16946f899c3297615aa1156eaff46d9d7424ae6d737
+
+-------------------------------------------------------------------------------
+10) T02 BASELINE / T05 BUDGET NOTE (not weakened)
+-------------------------------------------------------------------------------
+T02 baseline recorded blog-detail LCP 3562 ms with the remote
+plantoeat image as the LCP element; T05's Lighthouse LCP < 2500 ms budget was
+already failing on that route and remains UNCHANGED. This task only removes the
+third-party origin from the critical path (same-origin, 93.9 KB, immutable
+cache headers); it does not touch the T05 budget or hide content to pass it.
+A fresh Lighthouse re-measure is out of T22 scope and is not claimed here.
+
+-------------------------------------------------------------------------------
+11) COMMAND / EXIT SUMMARY
+-------------------------------------------------------------------------------
+pnpm typecheck                                          exit 0
+pnpm test                                               exit 0  (112/112)
+pnpm lint                                               exit 0  (0 errors / 47 warn)
+pnpm prettier                                           exit 0
+pnpm build                                              exit 0  (38/38)
+pnpm images                                             exit 0  (99/99)
+pnpm contrast                                           exit 0  (24/24 pairs)
+pnpm ornaments                                          exit 0
+playwright full e2e (chromium) run 1                    exit 0  (64 passed)
+playwright full e2e (chromium) run 2                    exit 0  (64 passed)
+playwright axe-only a11y.spec.ts                        exit 0  (8 passed)
+remote-load probe (production, chromium)                pass: true
+image-size gate probe (oversized temp dir)              exit 1  (expected FAIL)
+grep Tom_Segbers_Frontal across app components content lib public → no matches

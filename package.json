@@ -13,6 +13,7 @@
     "prettier:fix": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "contrast": "node scripts/check-contrast.mjs",
     "ornaments": "node scripts/check-ornaments.mjs",
+    "images": "node scripts/check-image-size.mjs",
     "analyze": "cross-env ANALYZE=true pnpm build",
     "budget:bundle": "node scripts/check-bundle-budget.mjs",
     "lighthouse": "lhci autorun",

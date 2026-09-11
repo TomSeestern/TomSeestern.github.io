@@ -30,6 +30,22 @@ const config = withPlugins([[withBundleAnalyzer({enabled: env.ANALYZE})]], {
         ];
     },
     images: {
+        // Negotiate AVIF first, then WebP; the optimizer falls back to the
+        // source format for clients that advertise neither.
+        formats: ["image/avif", "image/webp"],
+        // Explicit width ladder for `sizes`-driven srcset generation. Pinning it
+        // (instead of inheriting Next's default) keeps generated URLs stable
+        // across framework upgrades and drops the unused 3840px tier.
+        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+        // Optimized derivatives are content-addressed and never change, so cache
+        // them at the edge for 31 days instead of Next's 60s default.
+        minimumCacheTTL: 2678400,
+        // The corpus's only remote image (the cheesecake recipe photo) is
+        // self-hosted at public/img/cheesecake-ebeltoft.webp, so no
+        // plantoeat.s3.amazonaws.com pattern is needed: react-markdown emits a
+        // plain <img> that next/image never optimizes, and self-hosting keeps
+        // the CSP img-src 'self' policy un-widened. The entries below exist for
+        // Storybook/Flowbite placeholder assets only.
         remotePatterns: [
             {protocol: "https", hostname: "flowbite.s3.amazonaws.com"},
             {protocol: "https", hostname: "placehold.co"},

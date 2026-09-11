@@ -348,3 +348,20 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Scope note: `.omo/boulder.json` is orchestrator-owned and intentionally excluded
   from the T18 commit; it remains the only modified file after committing.
 - Optional RSS feed DEFERRED (non-blocking); no route or dependency added.
+
+## T22 — image pipeline: no blockers (2026-09-11)
+
+- No gate failed; no fix required. The recovered 6-file product diff (next.config
+  images block, markdown src, new webp, deleted jpg, `images` script + CI step,
+  check-image-size.mjs) passed every gate on the first clean run.
+- Environmental notes, not product defects:
+  - Playwright `webServer` (`next dev`) clobbers the production `.next`; rebuild
+    before `pnpm start`. Cost one wasted start attempt.
+  - `playwright` package absent (only `@playwright/test`) → probe import fixed.
+  - The `paths[0] ... Received null` line from every `nix develop` call is the
+    flake shellHook's version probe (benign); it does not affect exit codes.
+- `.omo/t22-remote-load.mjs` is a throwaway probe under gitignored `.omo/`; the
+  committed evidence is `.omo/evidence/task-T22-2026-refresh-restyle.txt`.
+- Scope note: `.omo/boulder.json` is orchestrator-owned and intentionally excluded
+  from the T22 commit; it remains the only modified file after committing.
+- No blockers.

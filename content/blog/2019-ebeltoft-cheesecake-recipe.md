@@ -18,7 +18,7 @@ During a sailing trip to Ebeltoft, Denmark, I stopped at a small café called Ca
 
 This recipe is my Ebeltoft cheesecake reminder. It is simple, uses ingredients you can find in most supermarkets, and brings me back to that afternoon in Ebeltoft.
 
-![Cheesecake](https://plantoeat.s3.amazonaws.com/recipes/27780019/ff607b4d2e47d1a41516a6bb87fc82c02283dc8f-original.jpg?1614617117)
+![Cheesecake](/img/cheesecake-ebeltoft.webp)
 
 ## Ingredients
 
