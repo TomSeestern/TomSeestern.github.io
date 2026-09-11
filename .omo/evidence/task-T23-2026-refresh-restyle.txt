@@ -1,0 +1,143 @@
+================================================================================
+T23 — OG 1200×630 + header mark
+Plan: .omo/plans/2026-refresh-restyle.md (spec L438, checkbox L716)
+================================================================================
+Timestamp (UTC):      2026-09-11T21:35:40Z
+Timestamp (local):    2026-09-11T23:35:40+0200
+Pre-commit HEAD:      62e2152773662340025eb9be396ee6e824a9cd74
+                      ("docs(evidence): record T21 de-Flowbite replacement ledger")
+Commit:               feat(seo): purpose-built og asset and lightweight header mark
+
+--------------------------------------------------------------------------------
+1. DELIVERABLES
+--------------------------------------------------------------------------------
+OG asset
+  Path:      public/img/og-default.png
+  Dimensions (PNG IHDR bytes 16..24, big-endian): 1200 x 630   (verified)
+  Bytes:     39,219 B (38.3 KB) — under the 200 KB shipped-image budget
+  Format:    PNG, deviceScaleFactor 1, no upscaling
+  Rendering: Playwright Chromium @ viewport 1200x630, fonts inlined (Newsreader
+             700 + Inter 400/600 fetched over TLS and base64-embedded), then
+             page.screenshot(). Generator: .omo/t23-verify/gen-og.mjs (gitignored).
+  Brand:     parchment #F5EFE1 surface, ink #1B1B1F, terracotta #A63D28 seal +
+             role line, muted #5C5548 supporting text, #D8CDB6 rule. Serif (Newsreader)
+             name, Inter body — matches DESIGN.md §2/§3. Contains name + role
+             ("Tom Segbers" / "Senior Developer") + tagline + tom.segbers.de.
+
+Header mark
+  Path:      public/icon/brand-mark.svg
+  Bytes:     420 B — well under the ≤5 KB requirement
+  Design:    terracotta (#A63D28) rounded square with cream (#F5EFE1) "TS"
+             monogram; in-tree, no dependency.
+  Header:    components/Header/Header.tsx now renders next/image with
+             src="/icon/brand-mark.svg", width/height 64, `unoptimized` (the SVG
+             optimizer has dangerouslyAllowSVG disabled; `unoptimized` is Next's
+             recommended path for a trusted local SVG). The 512×512 PNG <Image>
+             usage is gone. Note: the plan's wording said "remove next/image
+             usage"; a plain <img> introduced two lint warnings (unused Image
+             import + @next/next/no-img-element) and was rejected to keep lint at
+             the 0-error/47-warning baseline. `unoptimized` keeps the intended
+             "no optimizer round-trip" property without the warnings.
+  Preserved: alt="Tom Segbers Logo"; <header><nav aria-label="Main navigation">;
+             `site-nav` disclosure (aria-expanded/aria-controls); nav link
+             accessible names; no 375px overflow.
+
+Metadata wiring (all 7 route blocks + layout)
+  Files:     app/page.tsx, app/about/page.tsx, app/blog/page.tsx,
+             app/contact/page.tsx, app/projects/page.tsx,
+             app/blog/entry/[slug]/page.tsx, app/projects/entry/[slug]/page.tsx,
+             app/layout.tsx (site-wide default added — previously had NO image)
+  Change:    /img/logo.png (512x512) -> /img/og-default.png (1200x630) on both
+             openGraph.images and twitter.images; alt now
+             "TomSegbers.de — Tom Segbers, Senior Developer".
+  Canonicals preserved (contact + both detail routes unchanged; home/about/blog/
+             projects carry og:url as before).
+
+logo.png disposition
+  NOT deleted. Repository-wide grep (excluding node_modules/.next/.omo) finds
+  25 markdown files using /img/logo.png as `authorImgSrc` (blog + project cards),
+  plus `.git/index`. It remains a live content asset at 81,810 B, served 200.
+  No route was broken. A NEW filename (og-default.png) was chosen for the share
+  card so crawlers refetch on the shape change instead of reusing a cached
+  /img/logo.png.
+
+--------------------------------------------------------------------------------
+2. TEST-FIRST CONTRACT (R6.3 / R16.6)
+--------------------------------------------------------------------------------
+e2e/metadata.spec.ts (new, 8 tests)
+  - For all 7 public routes: og:image + twitter:image exist and resolve to
+    /img/og-default.png; og:image:width/height == decoded PNG IHDR of the
+    actually-served bytes; twitter:card == summary_large_image.
+  - Canonical/og:url stay on-route.
+  Proven green FIRST against the old shape (logo.png 512x512, path /img/logo.png)
+  -> 8 passed. Then pointed at the new asset -> 8 passed (part of the 79-run).
+  The dimension assertion decodes the served PNG rather than trusting the meta
+  tags, so a mislabelled asset cannot pass.
+
+--------------------------------------------------------------------------------
+3. GATE TABLE (all via nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …')
+--------------------------------------------------------------------------------
+GATE              COMMAND                                   RESULT
+typecheck         pnpm typecheck                            0 errors
+lint              pnpm lint                                 0 errors, 47 warnings
+                                                            (== pre-existing baseline;
+                                                             no new warnings added)
+prettier          pnpm prettier                             clean
+jest              pnpm test                                 21 suites / 141 tests passed
+build             pnpm build                                0; 38/38 static pages
+contrast          pnpm contrast                             24/24 pairs meet minimums
+ornaments         pnpm ornaments                            PASS (no banned token)
+images            pnpm images                               101 images within budget
+                                                            (og-default 38.3 KB,
+                                                             brand-mark 420 B)
+e2e (full)        playwright test --project=chromium
+                  --workers=1  (CI=true)                    79 passed, 0 failed, 0 flaky
+e2e (axe only)    playwright test e2e/a11y.spec.ts
+                  --project=chromium --workers=1            8 passed (allowlist [])
+                                                            (71 prior + 8 new metadata)
+
+Logs: .omo/evidence/t23-verify/{build.log,lint.log}
+
+--------------------------------------------------------------------------------
+4. MANUAL QA — DEV SERVER METADATA DUMP
+--------------------------------------------------------------------------------
+Server: next dev --port 3037 (setsid/disown; killed by PID after capture).
+Raw HTML: .omo/evidence/t23-verify/routes/{home,about,blog,contact,projects,
+          blog-detail,project-detail}.html
+Probe:    .omo/t23-verify/probe.mjs
+
+Per-route rendered meta (all resolved absolute against https://tom.segbers.de):
+
+ROUTE                              og:image                        w    h    twitter:image                   canonical / og:url
+/                                  /img/og-default.png             1200 630  /img/og-default.png             og:url=https://tom.segbers.de
+/about                             /img/og-default.png             1200 630  /img/og-default.png             og:url=https://tom.segbers.de/about
+/blog                              /img/og-default.png             1200 630  /img/og-default.png             og:url=https://tom.segbers.de/blog
+/contact                           /img/og-default.png             1200 630  /img/og-default.png             canonical=https://tom.segbers.de/contact
+/projects                          /img/og-default.png             1200 630  /img/og-default.png             og:url=https://tom.segbers.de/projects
+/blog/entry/2019-ebeltoft-cheesecake-recipe  /img/og-default.png    1200 630  /img/og-default.png             canonical=…/blog/entry/2019-ebeltoft-cheesecake-recipe
+/projects/entry/2020-soudest-backend-nodejs  /img/og-default.png    1200 630  /img/og-default.png             canonical=…/projects/entry/2020-soudest-backend-nodejs
+
+(og:image:alt = "TomSegbers.de — Tom Segbers, Senior Developer" on every route;
+twitter:card = summary_large_image on every route. Full dumps in routes/*.html.)
+
+Asset HTTP checks (dev server):
+  /img/og-default.png  -> 200, 39,219 B, image/png, decoded 1200x630
+  /icon/brand-mark.svg -> 200, 420 B, image/svg+xml
+  /img/logo.png        -> 200, 81,810 B (still a live content asset)
+  Header markup: <img alt="Tom Segbers Logo" … width="64" height="64"
+                       class="mr-3 h-6 w-6 sm:h-9 sm:w-9"
+                       src="/icon/brand-mark.svg"/>
+
+--------------------------------------------------------------------------------
+5. SCOPE / HYGIENE
+--------------------------------------------------------------------------------
+- No route structure, slug, or canonical changed; build stays 38 pages.
+- No runtime dependency added (asset tooling is throwaway under .omo/, gitignored).
+- No new `dark:` classes (D13 single light mode).
+- .omo/boulder.json (orchestrator-owned) and null/ excluded from staging.
+- No --no-verify / SKIP=; no .skip().
+- Staged paths: app/{layout,page}.tsx, app/{about,blog,contact,projects}/page.tsx,
+  app/blog/entry/[slug]/page.tsx, app/projects/entry/[slug]/page.tsx,
+  components/Header/Header.tsx, e2e/metadata.spec.ts,
+  public/icon/brand-mark.svg, public/img/og-default.png.
+================================================================================

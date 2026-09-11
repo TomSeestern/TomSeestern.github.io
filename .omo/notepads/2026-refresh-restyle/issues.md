@@ -437,3 +437,18 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   `--no-verify`/`SKIP=`, no `.skip()`. Final: build 38/38; full chromium e2e 71
   passed (0 failed / 0 flaky); axe 8 passed; storybook smoke 6 passed.
 
+
+## T23 — OG asset + header mark (2026-09-11)
+
+- **No blockers.** One self-inflicted lint detour: a plain `<img>` for the brand
+  mark raised 2 warnings (unused `Image`, `no-img-element`) → reverted to
+  `next/image unoptimized`; lint back to baseline 47 warnings / 0 errors.
+- **`logo.png` is NOT orphaned by this task.** Repo-wide grep (excl
+  node_modules/.next/.omo) shows 25 `content/**` markdown files still use it as
+  `authorImgSrc`; it also matches `layzrgr_logo.png` in `about/page.tsx`. Left in
+  place per MUST DO ("if still referenced anywhere, leave it"). The OG swap only
+  removed the `metadata.openGraph/twitter` references.
+- **`null/` untracked artifact + `.omo/boulder.json`** excluded from staging as
+  before (orchestrator-owned / env artifact).
+- Scope: no route/slug/canonical change; build 38/38; no runtime dep; no new
+  `dark:`; no `--no-verify`/`SKIP=`/`.skip()`.

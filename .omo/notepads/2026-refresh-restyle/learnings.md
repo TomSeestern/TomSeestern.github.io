@@ -543,3 +543,37 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   ornaments green; images 99/99; full chromium e2e 71 passed (0 failed /
   0 flaky); axe-only 8 passed; storybook smoke 3 suites / 6 tests.
 
+
+## T23 — purpose-built OG card + lightweight header mark (2026-09-11)
+
+- **`next/image` + local SVG: use `unoptimized`.** The image optimizer has
+  `dangerouslyAllowSVG` off, so `/icon/brand-mark.svg` through `next/image`
+  without `unoptimized` 400s. A plain `<img>` for the mark trips BOTH
+  `@next/next/no-img-element` and an unused-`Image`-import warning (lint went
+  47→49). `next/image … unoptimized` renders the SVG verbatim, keeps the
+  accessible name/role, and holds lint at the 0-error/47-warning baseline.
+- **A shape-agnostic OG test that decodes the served PNG is the honest oracle.**
+  `e2e/metadata.spec.ts` reads bytes 16..24 (IHDR width/height, big-endian) of
+  the response body and compares against `og:image:width|height`. It passed on
+  the OLD 512×512 logo first, then on the new 1200×630 card — so the assertion
+  is behaviour-locked, not written to fit the new asset.
+- **`locator.getAttribute` on an OPTIONAL tag hangs a full test timeout.** An
+  absent `link[rel=canonical]` (home/about/blog/projects have only `og:url`)
+  makes Playwright wait 30s. Query optionals with
+  `page.evaluate(() => document.querySelector(…)?.getAttribute(…) ?? null)`
+  instead. The per-route loop also needs `test.setTimeout(120_000)` — 7 `goto`s
+  exceed the default 30s.
+- **OG font inlining avoids Chromium TLS trust issues.** Fetch the Google Fonts
+  CSS + woff2/ttf in Node (with the host CA bundle), base64-embed as
+  `@font-face` data URIs, then `page.setContent` + `document.fonts.ready` +
+  `screenshot()`. No network dependency inside the browser; deterministic card.
+- **New filename beats same-path cache-bust for OG.** Chose `og-default.png`
+  (not a restyled `logo.png`) so crawlers refetch; `logo.png` stays as the
+  `authorImgSrc` for 25 markdown cards, so it is NOT dead and must not be
+  deleted.
+- **`deviceScaleFactor: 1` + explicit 1200×630 viewport** yields a byte-exact
+  1200×630 PNG; still decode IHDR to prove it (screenshot settings are not
+  evidence).
+- Final: build 38/38; full chromium e2e 79 passed (71 prior + 8 metadata) 0
+  failed/0 flaky; axe-only 8 passed; contrast 24/24; ornaments/images green;
+  lint 0 errors/47 warnings; jest 21/141; typecheck/prettier clean.
