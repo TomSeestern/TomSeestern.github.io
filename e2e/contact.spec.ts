@@ -122,6 +122,7 @@ test.describe("contact form", () => {
 
     const status = page.getByRole("status")
     await expect(status).toBeVisible({ timeout: 10000 })
+    await expect(status).toHaveAttribute("role", "status")
     await expect(status).toContainText("Email sent successfully.")
   })
 })

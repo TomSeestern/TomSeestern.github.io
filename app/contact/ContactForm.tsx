@@ -1,6 +1,6 @@
 "use client"
-import { Alert } from "flowbite-react"
 import React, { useState } from "react"
+import { Alert } from "../../components/Alert/Alert"
 import { sendEmail, type SendEmailResult } from "../../lib/sendEmail"
 
 type FieldName = "name" | "email" | "message"
@@ -91,12 +91,7 @@ export default function ContactForm() {
   return (
     <section className="bg-surface dark:bg-surface-dark">
       {showConfirmation && (
-        <Alert
-          role="status"
-          color="success"
-          onDismiss={() => setShowConfirmation(false)}
-          className="fixed inset-x-1/3 top-8 z-50"
-        >
+        <Alert variant="success" onDismiss={() => setShowConfirmation(false)} className="fixed inset-x-1/3 top-8 z-50">
           <span className="font-medium">Success!</span> Email sent successfully.
         </Alert>
       )}
@@ -110,7 +105,7 @@ export default function ContactForm() {
         </p>
 
         {formError && (
-          <Alert color="failure" onDismiss={() => setFormError(null)} className="mb-6">
+          <Alert variant="failure" onDismiss={() => setFormError(null)} className="mb-6">
             {formError}
           </Alert>
         )}

@@ -65,6 +65,23 @@ describe("ContactForm", () => {
     fireEvent.click(screen.getByRole("button", { name: "Send Message" }))
 
     const status = await screen.findByRole("status")
+    expect(status).toHaveAttribute("role", "status")
     expect(status).toHaveTextContent("Email sent successfully.")
+  })
+
+  it("announces submission failures as an assertive alert that can be dismissed", async () => {
+    mockSendEmail.mockResolvedValue({ success: false, errors: { _form: "Failed to send email." } })
+    render(<ContactForm />)
+
+    fireEvent.change(screen.getByLabelText("Your Name"), { target: { value: "Tom" } })
+    fireEvent.change(screen.getByLabelText("Your Email"), { target: { value: "sender@example.com" } })
+    fireEvent.change(screen.getByLabelText("Your Message"), { target: { value: "Hello." } })
+    fireEvent.click(screen.getByRole("button", { name: "Send Message" }))
+
+    const alert = await screen.findByRole("alert")
+    expect(alert).toHaveTextContent("Failed to send email.")
+
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss" }))
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument()
   })
 })
