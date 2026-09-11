@@ -1,9 +1,9 @@
-import { Breadcrumb, BreadcrumbItem } from "flowbite-react"
 import { Metadata, ResolvingMetadata } from "next"
 import { metadata as layoutMetadata } from "@/app/layout"
 import { notFound } from "next/navigation"
 import { HiHome } from "react-icons/hi"
 import ReactMarkdown from "react-markdown"
+import { Breadcrumb, BreadcrumbItem } from "@/components/Breadcrumb/Breadcrumb"
 import CaseStudyHero from "@/components/CaseStudyMeta/CaseStudyHero"
 import CaseStudyMeta from "@/components/CaseStudyMeta/CaseStudyMeta"
 import { getMarkdownEntry, getMarkdownSlugs, parseFrontmatter } from "@/lib/markdown"
@@ -35,12 +35,7 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
             Home
           </BreadcrumbItem>
           <BreadcrumbItem href="/projects">Projects</BreadcrumbItem>
-          <BreadcrumbItem
-            className="truncate"
-            theme={{ href: { off: "flex items-center text-sm font-medium text-muted" } }}
-          >
-            {fileContent.data.title || "Content "}
-          </BreadcrumbItem>
+          <BreadcrumbItem>{fileContent.data.title || "Content "}</BreadcrumbItem>
         </Breadcrumb>
       </div>
 
