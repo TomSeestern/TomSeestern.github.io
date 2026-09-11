@@ -43,6 +43,8 @@ jobs:
         run: nix develop -c pnpm ornaments
       - name: Image size gate
         run: nix develop -c pnpm images
+      - name: Font budget gate
+        run: nix develop -c pnpm fonts
       - name: Unit & Integration tests
         run: nix develop -c pnpm test
       - name: Smoke & Acceptance tests
