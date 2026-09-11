@@ -1,7 +1,7 @@
 import fs from "fs"
 import os from "os"
 import path from "path"
-import { getAllMarkdownEntries } from "./markdown"
+import { getAllMarkdownEntries, parseFrontmatter } from "./markdown"
 
 const TEST_DIRECTORY_PREFIX = "tomsegbers-markdown-reader-"
 
@@ -310,5 +310,55 @@ describe("getAllMarkdownEntries", () => {
     expect(entry?.role).toBe("")
     expect(entry?.outcome).toBe("")
     expect(entry?.heroImage).toBe("")
+  })
+})
+
+describe("parseFrontmatter", () => {
+  it("returns typed additive case-study fields when present", () => {
+    // Given
+    const rawFrontmatter = {
+      title: "Enriched entry",
+      role: "Lead Developer",
+      outcome: "Shipped to production",
+      heroImage: "/img/hero.webp",
+      metrics: [{ label: "Users", value: "1200" }],
+    }
+
+    // When
+    const frontmatter = parseFrontmatter(rawFrontmatter)
+
+    // Then
+    expect(frontmatter.role).toBe("Lead Developer")
+    expect(frontmatter.outcome).toBe("Shipped to production")
+    expect(frontmatter.heroImage).toBe("/img/hero.webp")
+    expect(frontmatter.metrics).toEqual([{ label: "Users", value: "1200" }])
+  })
+
+  it("falls back to safe additive defaults when case-study fields are absent", () => {
+    // Given
+    const rawFrontmatter = { title: "Legacy entry" }
+
+    // When
+    const frontmatter = parseFrontmatter(rawFrontmatter)
+
+    // Then
+    expect(frontmatter.role).toBe("")
+    expect(frontmatter.outcome).toBe("")
+    expect(frontmatter.heroImage).toBe("")
+    expect(frontmatter.metrics).toEqual([])
+  })
+
+  it("falls back to an empty metrics array and empty strings when case-study fields are malformed", () => {
+    // Given
+    const rawFrontmatter = { role: 42, outcome: ["invalid"], heroImage: null, metrics: "not-an-array" }
+
+    // When
+    const frontmatter = parseFrontmatter(rawFrontmatter)
+
+    // Then
+    expect(frontmatter.role).toBe("")
+    expect(frontmatter.outcome).toBe("")
+    expect(frontmatter.heroImage).toBe("")
+    expect(frontmatter.metrics).toEqual([])
   })
 })

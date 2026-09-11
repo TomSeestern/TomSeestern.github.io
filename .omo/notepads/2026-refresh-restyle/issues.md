@@ -365,3 +365,40 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Scope note: `.omo/boulder.json` is orchestrator-owned and intentionally excluded
   from the T22 commit; it remains the only modified file after committing.
 - No blockers.
+
+## T19 — case-study template: environmental e2e flake, not a regression (2026-09-11)
+
+- The recovered T19 product diff needed NO fix; it passed typecheck/lint/prettier/
+  test/build/contrast/ornaments/images on the first clean run. The only friction
+  was e2e.
+- **Pre-existing e2e flake under host contention.** During this session the host
+  (22 cores) was oversubscribed by unrelated projects — load average 28–35
+  (ohmyroadmap Stryker mutation runs, a SongsOfTheOuterRim KVM harness, another
+  pytest job). Under that load the PRE-T19 test `e2e/dark-mode.spec.ts:40`
+  ("public routes render a single light semantic surface") intermittently exceeds
+  its default 30s timeout on the first attempt (8 sequential `page.goto`s; one
+  project-detail route is cold-compiled by `next dev` on demand), then passes on
+  retry. Over 12 full runs the CLEAN ones were run1, run9, run11, run12 (65
+  passed, 0 flaky each); the others had only this one test flake/fail and
+  reported 64 passed; every run exited 0 except run10.
+- T15/T17 stash-control applied: `git stash push` of the 3 recovered tracked
+  product files → full suite on the PRE-T19 tree ran `65 passed (3.1m)`, 0 flaky.
+  When load later fell to ~11, run11/run12 were 65 passed / 0 flaky in 3.6–3.7m.
+  Conclusion: timing sensitivity of that pre-existing spec, external-load-driven,
+  not caused by T19. No source/spec/config workaround was applied (out of scope).
+- The new T19 spec `e2e/case-study.spec.ts` passed in every run.
+- **`dark:prose-invert` flag (separate cleanup).** `app/projects/entry/[slug]/page.tsx`
+  `<article>` keeps `prose prose-lg max-w-none dark:prose-invert`. It is
+  pre-existing and inert: `tailwind.config.js` is `darkMode: "class"` and D13/T07
+  removed the machinery that ever set `.dark`, so the variant never activates.
+  Left untouched per task scope; belongs to a later dead-utility cleanup.
+- **`null/` directory.** A pre-existing untracked `null/store/v11/...` (plus
+  `null/chromium_headless_shell-1228/...` once Playwright resolved the null
+  browsers path) exists from the devShell's `PNPM_HOME`/`PLAYWRIGHT_BROWSERS_PATH`=null
+  quirk. It is NOT staged and NOT committed.
+- Harness: one `task_update` returned `task_lock_unavailable` (same todo-sync race
+  as T09/T11); retried and completed.
+- No product blockers. Final: typecheck/lint (0 errors, 47 pre-existing warnings)/
+  prettier/test (19 suites / 126 tests)/contrast (24/24)/ornaments/images (99/99)
+  green; build 38/38; full chromium e2e 65 passed twice (0 failed / 0 flaky);
+  axe-only 8 passed; enriched 375px `scrollWidth == clientWidth`.

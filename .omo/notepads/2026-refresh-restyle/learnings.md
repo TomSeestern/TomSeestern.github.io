@@ -462,3 +462,36 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   (0 failed / 0 flaky); axe-only 8 passed.
 - T05 note: does not weaken the LCP<2500 budget; only removes the third-party
   origin from the blog-detail critical path. No fresh Lighthouse number claimed.
+
+## T19 — case-study template, additive render (2026-09-11)
+
+- Fourth provider-crash recovery (after T17/T18/T22). Working tree was the
+  finished T19 change set: `page.tsx` imports CaseStudyHero/Meta + parseFrontmatter
+  and renders hero before `<article>` / meta after the `<h1>`; `lib/markdown.ts`
+  exports `markdownFrontmatterSchema` + `MarkdownFrontmatter` + `parseFrontmatter`;
+  `lib/markdown.test.ts` adds a `parseFrontmatter` block. No rewrite — verify,
+  close the one gap, gate, evidence, commit.
+- Closing the enriched-render gap with Jest (a committed `content/projects/*.md`
+  would have added a 39th static route and broken the build-count invariant):
+  `app/projects/entry/[slug]/page.test.tsx` mocks ONLY the filesystem reader —
+  `jest.mock("@/lib/markdown", () => ({ ...jest.requireActual("@/lib/markdown"),
+  getMarkdownEntry: jest.fn() }))` — so the REAL `parseFrontmatter` Zod schema is
+  the integration under test. `react-markdown` is mocked exactly as the blog page
+  test does. This is the right seam: raw frontmatter in, rendered template out.
+- The page test typechecked clean only after casting the mocked reader result:
+  `{ data, content }` is not a full `matter.GrayMatterFile`, so
+  `as unknown as ReturnType<typeof getMarkdownEntry>` is required (a direct `as`
+  is rejected by TS). `pnpm typecheck` covers test files — ts-jest does not.
+- Test count moved 112 → 126 (16 → 19 suites): +3 parseFrontmatter, +9 CaseStudyMeta/Hero,
+  +2 new page test. Build stayed 38/38 because the test mocks the reader and adds
+  no content file.
+- Fresh 375px overflow proof: temp enriched `content/projects/zz-…md` + a
+  `next dev --port 3030` server + a `.omo/t19-overflow.mjs` chromium probe, then
+  DELETE the fixture. Result: `documentScrollWidth === documentClientWidth` at
+  375/768/1280; heroCount 1, metaCount 1, all role/outcome/metric strings present.
+- `PLAYWRIGHT_BROWSERS_PATH` MUST be exported for any standalone probe: the nix
+  devShell leaves it `null`, so Playwright resolves the browser path to
+  `<repo>/null/chromium_headless_shell-1228/...` and launch fails. The canonical
+  e2e command already exports `$HOME/.cache/ms-playwright`.
+- Full chromium e2e is 65 tests now (prior 64 + the new `e2e/case-study.spec.ts`);
+  it passed 65/65 with 0 flaky on run11 + run12 once host load fell from ~28 to ~11.

@@ -1,0 +1,33 @@
+[
+  {
+    "slug": "zz-t19-case-study-fixture",
+    "width": 375,
+    "heroCount": 1,
+    "metaCount": 1,
+    "scrollWidth": 375,
+    "metaText": "ROLE\nExample Role (fixture)\nOUTCOME\nExample outcome text that exists only to verify the template renders labelled rows.\nEXAMPLE METRIC A\n42\nEXAMPLE METRIC B\n99%"
+  },
+  {
+    "slug": "zz-t19-case-study-fixture",
+    "width": 768,
+    "heroCount": 1,
+    "metaCount": 1,
+    "scrollWidth": 768,
+    "metaText": "ROLE\nExample Role (fixture)\nOUTCOME\nExample outcome text that exists only to verify the template renders labelled rows.\nEXAMPLE METRIC A\n42\nEXAMPLE METRIC B\n99%"
+  },
+  {
+    "slug": "zz-t19-case-study-fixture",
+    "width": 1280,
+    "heroCount": 1,
+    "metaCount": 1,
+    "scrollWidth": 1280,
+    "metaText": "ROLE\nExample Role (fixture)\nOUTCOME\nExample outcome text that exists only to verify the template renders labelled rows.\nEXAMPLE METRIC A\n42\nEXAMPLE METRIC B\n99%"
+  },
+  {
+    "slug": "2020-soudest-backend-nodejs",
+    "width": 1280,
+    "heroCount": 0,
+    "metaCount": 0,
+    "legacy": true
+  }
+]

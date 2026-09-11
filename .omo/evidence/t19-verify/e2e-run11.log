@@ -1,0 +1,14 @@
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 65 tests using 1 worker
+·[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+·[WebServer] [TypeError: fetch failed] {
+[WebServer]   [cause]: [Error: unable to get local issuer certificate] {
+[WebServer]     code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+[WebServer]   }
+[WebServer] }
+·······························································
+  65 passed (3.7m)

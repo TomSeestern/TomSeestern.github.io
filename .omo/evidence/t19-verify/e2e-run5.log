@@ -1,0 +1,73 @@
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 65 tests using 1 worker
+·[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+·[WebServer] [TypeError: fetch failed] {
+[WebServer]   [cause]: [Error: unable to get local issuer certificate] {
+[WebServer]     code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+[WebServer]   }
+[WebServer] }
+················××±··············································
+
+  1) [chromium] › e2e/dark-mode.spec.ts:40:5 › public routes render a single light semantic surface 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.goto: Test timeout of 30000ms exceeded.
+    Call log:
+      - navigating to "http://127.0.0.1:3030/projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers", waiting until "load"
+
+
+      30 |
+      31 | async function expectLightSurface(page: Page, route: string): Promise<void> {
+    > 32 |   await page.goto(route)
+         |              ^
+      33 |
+      34 |   // Exactly one mode: never the dark class, always the light surface.
+      35 |   await expect(page.locator("html")).not.toHaveClass(/dark/)
+        at expectLightSurface (/home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:32:14)
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:57:9
+
+    Error Context: test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('body')
+    Expected: "rgb(245, 239, 225)"
+    Received: ""
+
+    Call log:
+      - Expect "toHaveCSS" with timeout 5000ms
+      - waiting for locator('body')
+
+
+      34 |   // Exactly one mode: never the dark class, always the light surface.
+      35 |   await expect(page.locator("html")).not.toHaveClass(/dark/)
+    > 36 |   await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+         |                                      ^
+      37 |   await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
+      38 | }
+      39 |
+        at expectLightSurface (/home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:36:38)
+        at /home/tom/Projects/tomsegbers-de/e2e/dark-mode.spec.ts:55:3
+
+    Error Context: test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/dark-mode-public-routes-re-d9ab5-ngle-light-semantic-surface-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 flaky
+    [chromium] › e2e/dark-mode.spec.ts:40:5 › public routes render a single light semantic surface ─
+  64 passed (8.6m)

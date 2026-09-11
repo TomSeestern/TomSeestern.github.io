@@ -1,0 +1,165 @@
+# T19 — Case-study template (additive render) — Evidence Ledger
+
+Timestamp (UTC): 2026-09-11T17:20:47Z
+Timestamp (local): 2026-09-11 19:20:47 +0200
+Pre-commit HEAD: 7ed6b29 perf(images): avif/webp pipeline, own remote image, drop dead hero jpg
+Branch: main
+Plan: .omo/plans/2026-refresh-restyle.md §T19 (line 396)
+Env: nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'
+     PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
+     node v22.23.1, Next.js 15.5.24, Playwright (chromium)
+
+NOTE: the `ERROR The "paths[0]" argument must be of type string. Received null`
+line printed by every `nix develop` invocation is the flake shellHook's own
+version probe (README-documented PNPM_HOME=null quirk), NOT a command failure.
+Every gate printed its real output after it and exited 0. Likewise the
+`[ERROR] Refusing to run pnpm@10.15.1 …` line is the shell's version-switch
+probe; the project pnpm still ran and every command below produced real output.
+
+## Recovery context
+
+The previous worker crashed at the LLM-provider level AFTER writing the feature
+but BEFORE committing. The recovered working tree is the authoritative
+implementation; this session verified it, closed one coverage gap, ran the full
+gate to green, and committed. The recovered product files were NOT rewritten.
+
+Recovered change set (HEAD 7ed6b29):
+
+- M `app/projects/entry/[slug]/page.tsx` (+8/−1) — imports `CaseStudyHero`,
+  `CaseStudyMeta`, `parseFrontmatter`; renders `<CaseStudyHero src={frontmatter.heroImage} />`
+  before `<article>` and `<CaseStudyMeta role outcome metrics />` after the `<h1>`.
+- M `lib/markdown.ts` (+22/−1) — exports `markdownFrontmatterSchema`,
+  `MarkdownFrontmatter`, and `parseFrontmatter(data: unknown): MarkdownFrontmatter`;
+  `createMarkdownEntry` now parses through it instead of spreading raw `.data`.
+- M `lib/markdown.test.ts` (+52) — adds a `parseFrontmatter` describe block
+  (present / absent / malformed).
+- ?? `components/CaseStudyMeta/CaseStudyHero.tsx` + `CaseStudyHero.test.tsx`
+- ?? `components/CaseStudyMeta/CaseStudyMeta.tsx` + `CaseStudyMeta.test.tsx`
+- ?? `e2e/case-study.spec.ts` — degrade-path assertion for the legacy project
+  `/projects/entry/2020-soudest-backend-nodejs` (hero 0, meta 0, h1 + body visible).
+
+`git diff --stat` before commit = 3 tracked files, 121 insertions / 50 deletions
+(the 3 modified product/test files); 4 new component files; 1 new e2e spec.
+
+## The one coverage gap (fixed in this session)
+
+Acceptance says "Legacy files render unchanged; enriched fixture renders
+metrics/hero". The enriched render was proven only by the crashed worker's
+throwaway content fixture (`.omo/evidence/t19/capture.json`) — there was no
+committed regression test for it, and a committed `content/projects/` file would
+add a 39th static route and break the build-count invariant. Fixed with a Jest
+page test instead (no content file, no route):
+
+- A `app/projects/entry/[slug]/page.test.tsx` (new) — mocks ONLY the filesystem
+  reader, not the schema:
+  `jest.mock("@/lib/markdown", () => ({ ...jest.requireActual("@/lib/markdown"), getMarkdownEntry: jest.fn() }))`
+  so the REAL `parseFrontmatter` Zod schema is the integration under test.
+  `react-markdown` is mocked exactly as `app/blog/entry/[slug]/page.test.tsx` does.
+  - enriched: raw data `{ title, role, outcome, heroImage, metrics:[{label,value},{label,value}] }`
+    → `getAllByTestId("case-study-hero")` length 1; `getByTestId("case-study-meta")`
+    contains "Role"/role value, "Outcome"/outcome value, and both metric
+    label/value pairs.
+  - legacy: raw data `{ title }` → `queryByTestId("case-study-hero")` null,
+    `queryByTestId("case-study-meta")` null, and the `<h1>` still renders.
+
+## 375px horizontal-overflow check (explicit, fresh re-measurement)
+
+A temporary enriched fixture was created, measured against a real
+`next dev --port 3030` server with Chromium at 375/768/1280, then DELETED
+(the working tree is back to 21 `content/projects/` files; no content file was
+committed). Raw output: `.omo/evidence/t19/overflow-375.json`. Probe script:
+`.omo/t19-overflow.mjs` (gitignored throwaway).
+
+    width=375  documentScrollWidth=375 == documentClientWidth=375  heroCount=1 metaCount=1
+    width=768  documentScrollWidth=768 == documentClientWidth=768  heroCount=1 metaCount=1
+    width=1280 documentScrollWidth=1280 == documentClientWidth=1280 heroCount=1 metaCount=1
+    metaText = "ROLE\nExample Role (fixture)\nOUTCOME\nExample outcome…\nEXAMPLE METRIC A\n42\nEXAMPLE METRIC B\n99%"
+
+At 375px `documentScrollWidth === documentClientWidth === 375`: no horizontal
+overflow. This agrees with the crashed worker's prior capture
+(`.omo/evidence/t19/capture.json`, reused read-only as prior art).
+
+## Gate commands and exit codes
+
+All run via `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'`
+from /home/tom/Projects/tomsegbers-de. Fresh logs in `.omo/evidence/t19-verify/`.
+
+1. `pnpm typecheck`   EXIT=0    (tsc --noEmit; log typecheck.log)
+2. `pnpm lint`        EXIT=0    — 47 problems (0 errors, 47 pre-existing
+   import/order + tailwind-shorthand warnings; none from the new files) (lint.log)
+3. `pnpm prettier`    EXIT=0    — "All matched files use Prettier code style!" (prettier.log)
+4. `pnpm test`        EXIT=0    — Test Suites 19 passed/19; Tests 126 passed/126
+   (112 baseline + 3 parseFrontmatter + 9 CaseStudyMeta + 2 new page test;
+   the new `app/projects/entry/[slug]/page.test.tsx` is included and green) (test.log)
+5. `pnpm build`       EXIT=0    — "✓ Compiled successfully in 28.7s" /
+   "✓ Generating static pages (38/38)" (build.log)
+6. `pnpm contrast`    EXIT=0    — CONTRAST GATE PASSED — all 24 pair(s) meet minimums (contrast.log)
+7. `pnpm ornaments`   EXIT=0    — ORNAMENT GATE PASSED — no banned ornament or token (ornaments.log)
+8. `pnpm images`      EXIT=0    — IMAGE SIZE GATE PASSED — 99 image(s) within budget (images.log)
+9. Full chromium e2e  — canonical command, run twice, BOTH CLEAN:
+   `export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; CI=true pnpm exec playwright test --project=chromium --workers=1`
+   - run11: EXIT=0 — `65 passed (3.7m)` — 0 failed, 0 flaky (e2e-run11.log)
+   - run12: EXIT=0 — `65 passed (3.6m)` — 0 failed, 0 flaky (e2e-run12.log)
+   (65 = the prior 64 + the new `e2e/case-study.spec.ts`.)
+10. axe only
+    `CI=true pnpm exec playwright test --project=chromium --workers=1 e2e/a11y.spec.ts`
+    EXIT=0 — `8 passed (2.1m)` (axe.log). Allowlist stays EMPTY.
+
+### e2e reliability note (transparency, not a T19 regression)
+
+The host shared its 22 cores with unrelated projects (load average reached
+~28–35 during this session — ohmyroadmap Stryker mutation runs, a KVM e2e
+harness, another pytest job). Under that external load the PRE-EXISTING
+`e2e/dark-mode.spec.ts:40` ("public routes render a single light semantic
+surface") intermittently exceeds its default 30s test timeout on its FIRST
+attempt — it does 8 sequential `page.goto`s and one project-detail route is
+cold-compiled by `next dev` on demand — then passes on retry (Playwright
+`CI=true` gives retries=2). Observed over 12 full runs:
+
+- CLEAN (65 passed, 0 failed, 0 flaky): run1, run9, run11, run12.
+- Environmentally flaky/failed (all exit 0 except run10): runs 2–8 and run10;
+  every failure was that same pre-existing test, and every other test passed.
+- Stash control (T15/T17 method): `git stash push` of the 3 recovered tracked
+  product files → full suite `65 passed (3.1m)`, 0 failed, 0 flaky on the
+  PRE-T19 tree (e2e-stash-control.log), confirming the timing sensitivity is a
+  pre-existing/e2e-harness property, not introduced by the case-study template.
+- No source, spec, or product change was made to work around it (out of scope).
+- The new T19 spec `e2e/case-study.spec.ts` passed in EVERY run, including all
+  flaky ones.
+
+## Commit scope
+
+Product/test files:
+- app/projects/entry/[slug]/page.tsx            (recovered, M)
+- lib/markdown.ts                               (recovered, M)
+- lib/markdown.test.ts                          (recovered, M)
+- components/CaseStudyMeta/CaseStudyHero.tsx    (recovered, ??)
+- components/CaseStudyMeta/CaseStudyHero.test.tsx (recovered, ??)
+- components/CaseStudyMeta/CaseStudyMeta.tsx    (recovered, ??)
+- components/CaseStudyMeta/CaseStudyMeta.test.tsx (recovered, ??)
+- e2e/case-study.spec.ts                        (recovered, ??)
+- app/projects/entry/[slug]/page.test.tsx       (NEW this session — coverage gap)
+
+Evidence/notepads staged alongside (force-added; `.omo/` is gitignored):
+- .omo/evidence/task-T19-2026-refresh-restyle.txt
+- .omo/evidence/t19-verify/**  and  .omo/evidence/t19/overflow-375.json
+- .omo/notepads/2026-refresh-restyle/learnings.md, issues.md
+
+EXCLUDED deliberately: `.omo/boulder.json` (orchestrator-owned) and the stray
+`null/` directory (pre-existing Playwright/pnpm store artifact from the
+`null`-valued devShell env vars) — neither is staged.
+No `content/projects/` file was added (build stays 38).
+No `--no-verify`, no `SKIP=`, no dependency added.
+
+Message: `feat(projects): additive case-study template`
+
+## Out of scope (flagged, not touched)
+
+`article.prose dark:prose-invert` on the project detail page is pre-existing and
+inert: `tailwind.config.js` is `darkMode: "class"` and no `.dark` class is ever
+applied (D13/T07). Recorded in `.omo/notepads/2026-refresh-restyle/issues.md`
+for a separate cleanup; not changed here.
+
+## Token usage (R22.1)
+
+Not instrumented by this worker; no provider token counter was available in-session.

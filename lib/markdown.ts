@@ -3,7 +3,10 @@ import path from "path"
 import matter from "gray-matter"
 import { z } from "zod"
 
-const markdownFrontmatterSchema = z.object({
+/** Schema for blog and project frontmatter. Every field is defaulted AND caught,
+ *  so parsing never throws and the additive case-study fields resolve to empty
+ *  values for legacy files. */
+export const markdownFrontmatterSchema = z.object({
   title: z.string().default("Untitled").catch("Untitled"),
   articleDate: z.coerce.date().default(new Date("1990-01-01")).catch(new Date("1990-01-01")),
   articleContent: z.string().default("Failed to load content").catch("Failed to load content"),
@@ -20,6 +23,21 @@ const markdownFrontmatterSchema = z.object({
     .default([])
     .catch([]),
 })
+
+/** Validated frontmatter shape, inferred from {@link markdownFrontmatterSchema}. */
+export type MarkdownFrontmatter = z.infer<typeof markdownFrontmatterSchema>
+
+/**
+ * Parses raw gray-matter frontmatter into the typed {@link MarkdownFrontmatter}
+ * shape. Detail routes use this to read the additive case-study fields
+ * (`role`, `outcome`, `heroImage`, `metrics`) without duplicating the schema or
+ * casting. Never throws for object input — every field has a safe fallback.
+ *
+ * @param data - Raw `.data` from a gray-matter result.
+ */
+export function parseFrontmatter(data: unknown): MarkdownFrontmatter {
+  return markdownFrontmatterSchema.parse(data)
+}
 
 /** Parsed frontmatter + computed fields for a single markdown content file.
  *  All fields carry Zod `.default()` / `.catch()` fallbacks, so malformed
@@ -95,7 +113,7 @@ export function getMarkdownSlugs(dir: string): { slug: string }[] {
 function createMarkdownEntry(dirPath: string, urlPrefix: string, filename: string): MarkdownEntry {
   const slug = path.basename(filename, ".md")
   const { data } = matter(fs.readFileSync(path.join(dirPath, filename), "utf8"))
-  const frontmatter = markdownFrontmatterSchema.parse(data)
+  const frontmatter = parseFrontmatter(data)
 
   return {
     id: slug,

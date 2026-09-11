@@ -4,7 +4,9 @@ import { metadata as layoutMetadata } from "@/app/layout"
 import { notFound } from "next/navigation"
 import { HiHome } from "react-icons/hi"
 import ReactMarkdown from "react-markdown"
-import { getMarkdownEntry, getMarkdownSlugs } from "@/lib/markdown"
+import CaseStudyHero from "@/components/CaseStudyMeta/CaseStudyHero"
+import CaseStudyMeta from "@/components/CaseStudyMeta/CaseStudyMeta"
+import { getMarkdownEntry, getMarkdownSlugs, parseFrontmatter } from "@/lib/markdown"
 
 const CONTENT_DIR = "content/projects"
 
@@ -21,6 +23,8 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
   if (!fileContent) {
     notFound()
   }
+
+  const frontmatter = parseFrontmatter(fileContent.data)
 
   return (
     <>
@@ -41,8 +45,10 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
       </div>
 
       <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
+        <CaseStudyHero src={frontmatter.heroImage} />
         <article className="prose prose-lg max-w-none dark:prose-invert">
           <h1 className="text-h1-sm sm:text-h1">{fileContent.data.title || "Project"}</h1>
+          <CaseStudyMeta role={frontmatter.role} outcome={frontmatter.outcome} metrics={frontmatter.metrics} />
           <ReactMarkdown components={{ h1: () => null }}>{fileContent.content}</ReactMarkdown>
         </article>
       </div>
