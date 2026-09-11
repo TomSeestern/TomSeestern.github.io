@@ -97,6 +97,25 @@ describe("ArticleTeaser", () => {
     expect(screen.getByRole("link", { name: /read more/i })).toHaveAttribute("href", fullArticleLink)
   })
 
+  it("surfaces the first content tag as the card category chip", () => {
+    // Given
+    // When
+    renderArticleTeaser({ tags: ["Recipes", "Cheesecake"] })
+
+    // Then
+    expect(screen.getByTestId("article-tag")).toHaveTextContent("Recipes")
+    expect(screen.queryByText("Cheesecake")).not.toBeInTheDocument()
+  })
+
+  it("omits the category chip when the article has no tags", () => {
+    // Given
+    // When
+    renderArticleTeaser()
+
+    // Then
+    expect(screen.queryByTestId("article-tag")).not.toBeInTheDocument()
+  })
+
   it("renders relative publish date with suffix", () => {
     // Given
     // When

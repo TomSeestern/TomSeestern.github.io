@@ -1,0 +1,26 @@
+
+> tomsegbers-de@0.0.0 test /home/tom/Projects/tomsegbers-de
+> cross-env FORCE_COLOR=1 jest
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/contact/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mprojects.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mmarkdown.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1msendEmail.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/blog/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/TimelineEntry/[22m[1mTimelineEntry.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Button/[22m[1mButton.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/PersonTeaser/[22m[1mPersonTeaser.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/projects/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Footer/[22m[1mFooter.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Tooltip/[22m[1mTooltip.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/contact/[22m[1mContactForm.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/blog/entry/[slug]/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Header/[22m[1mHeader.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/ArticleTeaser/[22m[1mArticleTeaser.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/ProjectTeaser/[22m[1mProjectTeaser.test.tsx[22m
+
+[1mTest Suites: [22m[1m[32m16 passed[39m[22m, 16 total
+[1mTests:       [22m[1m[32m112 passed[39m[22m, 112 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        5.179 s
+[2mRan all test suites[22m[2m.[22m

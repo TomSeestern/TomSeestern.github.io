@@ -1,0 +1,4 @@
+
+> tomsegbers-de@0.0.0 typecheck /home/tom/Projects/tomsegbers-de
+> node_modules/typescript/bin/tsc --noEmit
+

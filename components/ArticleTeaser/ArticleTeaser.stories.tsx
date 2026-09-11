@@ -41,6 +41,12 @@ const meta: Meta<typeof ArticleComponent> = {
       },
       description: "URL to the full article",
     },
+    tags: {
+      control: {
+        type: "object",
+      },
+      description: "Content tags; the first renders as the card category chip",
+    },
   },
   decorators: [
     (Story) => (
@@ -62,6 +68,7 @@ export const Default: Story = {
     authorImgSrc: "https://placehold.co/400x400.png",
     authorName: "Author Name",
     fullArticleLink: "/link/to/article",
+    tags: ["Tutorial"],
   },
 }
 

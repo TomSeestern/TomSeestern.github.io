@@ -30,17 +30,17 @@ function Articles() {
   const articles = getAllBlogPosts()
 
   return (
-    <section className="bg-surface dark:bg-surface-dark">
+    <section className="bg-surface">
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
-        <div className="mx-auto mb-8 max-w-screen-sm text-center lg:mb-16">
-          <h1 className="mb-4 text-h1-sm text-foreground dark:text-foreground-dark lg:text-h1">Blog</h1>
-          <p className="font-light text-muted dark:text-muted-dark sm:text-xl">
-            Thoughts on technology, homelabs, and software engineering.
+        <header className="mx-auto max-w-measure-lead text-center">
+          <h1 className="text-h1-sm text-foreground sm:text-h1">Blog</h1>
+          <p className="mt-4 text-body-lg font-light text-muted sm:text-xl">
+            Thoughts on technology, homelabs, and software engineering. {articles.length} posts, newest first.
           </p>
-        </div>
+        </header>
         <h2 className="sr-only">Blog entries</h2>
-        <div className="grid gap-8 lg:grid-cols-2">
-          {articles.map((article, index) => (
+        <div className="motion-rise mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
+          {articles.map((article) => (
             <ArticleComponent
               key={article.id}
               title={article.title}
@@ -49,6 +49,7 @@ function Articles() {
               authorImgSrc={article.authorImgSrc}
               authorName={article.authorName}
               fullArticleLink={article.fullArticleLink}
+              tags={article.tags}
             />
           ))}
         </div>

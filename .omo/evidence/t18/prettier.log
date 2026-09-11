@@ -1,0 +1,6 @@
+
+> tomsegbers-de@0.0.0 prettier /home/tom/Projects/tomsegbers-de
+> prettier --check "**/*.{js,jsx,ts,tsx}"
+
+Checking formatting...
+All matched files use Prettier code style!

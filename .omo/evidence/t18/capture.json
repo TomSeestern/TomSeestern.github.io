@@ -1,0 +1,47 @@
+[
+  {
+    "viewport": "375x812",
+    "screenshot": "/home/tom/Projects/tomsegbers-de/.omo/evidence/t18-blog-375.png",
+    "articleLinkAnchors": 3,
+    "uniqueBlogEntries": 3,
+    "tagChips": 3,
+    "tagChipTexts": [
+      "Homelab Automation",
+      "Homelab",
+      "Recipes"
+    ],
+    "introPostsMention": "Thoughts on technology, homelabs, and software engineering. 3 posts, newest first.",
+    "documentScrollWidth": 375,
+    "documentClientWidth": 375
+  },
+  {
+    "viewport": "768x1024",
+    "screenshot": "/home/tom/Projects/tomsegbers-de/.omo/evidence/t18-blog-768.png",
+    "articleLinkAnchors": 3,
+    "uniqueBlogEntries": 3,
+    "tagChips": 3,
+    "tagChipTexts": [
+      "Homelab Automation",
+      "Homelab",
+      "Recipes"
+    ],
+    "introPostsMention": "Thoughts on technology, homelabs, and software engineering. 3 posts, newest first.",
+    "documentScrollWidth": 768,
+    "documentClientWidth": 768
+  },
+  {
+    "viewport": "1280x960",
+    "screenshot": "/home/tom/Projects/tomsegbers-de/.omo/evidence/t18-blog-1280.png",
+    "articleLinkAnchors": 3,
+    "uniqueBlogEntries": 3,
+    "tagChips": 3,
+    "tagChipTexts": [
+      "Homelab Automation",
+      "Homelab",
+      "Recipes"
+    ],
+    "introPostsMention": "Thoughts on technology, homelabs, and software engineering. 3 posts, newest first.",
+    "documentScrollWidth": 1280,
+    "documentClientWidth": 1280
+  }
+]

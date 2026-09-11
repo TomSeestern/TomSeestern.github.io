@@ -1,0 +1,125 @@
+# T18 — Blog listing + ArticleTeaser card polish — Evidence Ledger
+
+Timestamp (UTC): 2026-09-11T12:03:10Z
+Timestamp (local): 2026-09-11 14:03:10 +0200
+Pre-commit HEAD: 55bb78b feat(projects): archive layout with featured flag
+Branch: main
+
+## Recovery context
+
+The previous worker crashed at the LLM-provider level AFTER writing the feature
+but BEFORE committing. Four coherent product files were recovered from the
+working tree, unchanged since capture:
+
+- app/blog/page.tsx — token/measure polish; intro appends `{articles.length} posts,
+  newest first.`; `tags` forwarded to each card; `motion-rise` 1/2-col grid
+- components/ArticleTeaser/ArticleTeaser.tsx — content-derived tag chip from
+  frontmatter `tags[0]` (omitted when absent); token hierarchy; relative date;
+  read-more control; `max-w-measure-card` body
+- components/ArticleTeaser/ArticleTeaser.test.tsx — +2 tag-chip tests
+- components/ArticleTeaser/ArticleTeaser.stories.tsx — tags arg + Default story
+
+This session verified the recovered diff, ran the full gate to green (no
+regression found — no rewrite, no fix needed), wrote this ledger and commits.
+The blob is byte-identical to the captured screenshots; all product files were
+inspected with `git diff -- app/blog/page.tsx components/ArticleTeaser/`.
+
+## 375px horizontal-overflow check (explicit)
+
+The T17 grid `min-width: auto` bug does NOT recur here. `capture.json` (the
+prior worker's own measurement on the recovered tree) records
+`documentScrollWidth == documentClientWidth` at 375 / 768 / 1280:
+
+- 375x812: scrollWidth 375 == clientWidth 375
+- 768x1024: scrollWidth 768 == clientWidth 768
+- 1280x960: scrollWidth 1280 == clientWidth 1280
+
+The `min-w-0` guard already present on the Flowbite `Card` root in
+`ArticleTeaser.tsx` plus `line-clamp-2` (no `truncate`) keeps the grid track
+from being forced to a nowrap min-content width. No code change required.
+
+## Gate commands and exit codes
+
+All commands run via:
+    nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'
+from /home/tom/Projects/tomsegbers-de. Fresh logs: `.omo/evidence/t18-verify/`.
+(The prior worker's crash-time logs remain in `.omo/evidence/t18/`.)
+
+1. `pnpm typecheck`  EXIT=0
+   Log: .omo/evidence/t18-verify/typecheck.log
+
+2. `pnpm lint`       EXIT=0 — 47 problems (0 errors, 47 warnings, all pre-existing
+   repo-wide import/order + tailwind shorthand; none introduced by T18)
+   Log: .omo/evidence/t18-verify/lint.log
+
+3. `pnpm prettier`   EXIT=0 — clean
+   Log: .omo/evidence/t18-verify/prettier.log
+
+4. `pnpm test`       EXIT=0 — Test Suites 16 passed/16; Tests 112 passed/112
+   Log: .omo/evidence/t18-verify/test.log
+
+5. `pnpm build`      EXIT=0 — `✓ Generating static pages (38/38)`
+   Log: .omo/evidence/t18-verify/build.log
+
+6. `node scripts/check-contrast.mjs`  EXIT=0 — 24 pairs meet minimums
+   Log: .omo/evidence/t18-verify/contrast.log
+
+7. `node scripts/check-ornaments.mjs` EXIT=0 — no banned ornament/token
+   Log: .omo/evidence/t18-verify/ornaments.log
+
+8. Full chromium e2e — run 1 of 2
+   `export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; CI=true pnpm exec playwright test --project=chromium --workers=1`
+   EXIT=0 — `64 passed (3.5m)` — 0 failed, 0 flaky
+   Log: .omo/evidence/t18-verify/e2e-run1.log
+
+9. Full chromium e2e — run 2 of 2 (flakiness proof, R16.9)
+   `CI=true pnpm exec playwright test --project=chromium --workers=1`
+   EXIT=0 — `64 passed (3.6m)` — 0 failed, 0 flaky
+   Log: .omo/evidence/t18-verify/e2e-run2.log
+
+10. axe only
+    `CI=true pnpm exec playwright test e2e/a11y.spec.ts --project=chromium --workers=1`
+    EXIT=0 — `8 passed (1.0m)`
+    Log: .omo/evidence/t18-verify/axe.log
+
+Ran TWICE cleanly; the prior crash-session flake on
+`responsive.spec.ts:104` (dev-server-on-demand `/projects` compile under
+concurrent load) did not reproduce in either isolated run.
+
+## Screenshots (three, captured on this exact tree)
+
+- .omo/evidence/t18-blog-375.png   (375x812, 1 column)
+- .omo/evidence/t18-blog-768.png   (768x1024, 1 column)
+- .omo/evidence/t18-blog-1280.png  (1280x960, 2 columns)
+Capture script: .omo/evidence/t18-capture.mjs
+
+Measured (capture.json): 3 article link anchors, 3 unique blog entries, 3 tag
+chips (Homelab Automation / Homelab / Recipes), intro copy
+"Thoughts on technology, homelabs, and software engineering. 3 posts, newest first."
+
+Visual read: h1 "Blog" + intro present; each card shows a content-derived
+category pill, uppercase relative date, title (`line-clamp-2` ellipsis), teaser
+(`line-clamp-3`), divider, author avatar/name and a terracotta "Read more →".
+No clipping, overflow, or layout breakage at any of the three widths.
+
+## RSS feed
+
+DEFERRED — non-blocking. The optional RSS feed was NOT added in this task; it
+is out of scope for the token/card polish and no route or dependency was
+introduced for it.
+
+## Commit
+
+Product files (4):
+- app/blog/page.tsx
+- components/ArticleTeaser/ArticleTeaser.tsx
+- components/ArticleTeaser/ArticleTeaser.test.tsx
+- components/ArticleTeaser/ArticleTeaser.stories.tsx
+
+Evidence/notepad staged alongside (force-added; `.omo/` is gitignored).
+Message: `feat(blog): token-aligned listing and card polish`
+No `--no-verify`, no `SKIP=` used.
+
+## Token usage (R22.1)
+
+Not instrumented by this worker; no provider token counter was available in-session.

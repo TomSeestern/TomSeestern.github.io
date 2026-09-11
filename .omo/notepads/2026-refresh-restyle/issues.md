@@ -332,3 +332,19 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   and must stay out of the commit.
 - No blockers. Final: build 38/38; full chromium e2e 64 passed TWICE (0 failed /
   0 flaky); axe 8 passed; typecheck/lint/prettier/test green.
+
+## T18 — blog listing + card polish: no blockers (2026-09-11)
+
+- No gate failures, no regression, no fix required. The recovered 4-file diff was
+  byte-identical to what produced `.omo/evidence/t18-blog-{375,768,1280}.png`;
+  capture.json already recorded scrollWidth == clientWidth at all three widths.
+- The prior crash-session's full e2e run 1 logged 1 FLAKY
+  (`responsive.spec.ts:104`, `page.goto("/projects")` timeout). It did NOT
+  reproduce in either isolated verification run (64 passed, 0 flaky, twice). Most
+  likely dev-server on-demand `/projects` compile under concurrent load from the
+  crashed worker; this is environmental, not a product regression. If it recurs
+  in isolation, apply the T11 pattern (wait on observable state, not a fixed
+  delay) to the responsive spec.
+- Scope note: `.omo/boulder.json` is orchestrator-owned and intentionally excluded
+  from the T18 commit; it remains the only modified file after committing.
+- Optional RSS feed DEFERRED (non-blocking); no route or dependency added.

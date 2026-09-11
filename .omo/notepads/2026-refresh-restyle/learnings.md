@@ -402,3 +402,29 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   (0 failed / 0 flaky); axe-only 8 passed; typecheck/lint/prettier/test green
   (jest 16 suites / 110 passed). /projects = 21 unique entries, 63 anchors,
   4 featured badges, no overflow at 375/768/1280.
+
+## T18 — blog listing + ArticleTeaser card polish (2026-09-11)
+
+- Second provider-crash recovery in a row (T17 was the first). Pattern that works:
+  treat the working tree as the source of truth, `git diff` the named files to
+  confirm the change set is self-consistent, then verify gates and commit — do
+  NOT re-implement. T18 needed no fix; the recovered 4-file diff passed every
+  gate on the first clean run.
+- The category chip is content-derived, not a hardcoded label: `tags?: readonly
+  string[]` is forwarded from `getAllBlogPosts()` and `const [primaryTag] = tags
+  ?? []` renders `tags[0]`; the chip is omitted entirely when `tags` is absent or
+  empty. Two Jest tests lock this (first tag shown, second tag NOT shown, chip
+  absent when no tags). All three `content/blog/*.md` carry `tags:` frontmatter
+  (Homelab Automation / Homelab / Recipes), so the live path always resolves.
+- Grid-overflow lesson from T17 applied preemptively: the Flowbite `Card` root in
+  `ArticleTeaser.tsx` keeps `min-w-0`, and the title uses `line-clamp-2` rather
+  than `truncate`. Result: scrollWidth == clientWidth at 375/768/1280 with zero
+  extra work. Remember `truncate` (nowrap) sets the grid track min-content to the
+  full string width; `line-clamp-*` does not.
+- `.omo/` is gitignored, so evidence + notepad files must be `git add -f`-ed.
+  Keep the commit scope to the 4 product files + evidence/notepad; `boulder.json`
+  is orchestrator-owned and stays out.
+- Final: build 38/38; typecheck/lint (0 errors, 47 pre-existing warnings)/
+  prettier/contrast/ornaments green; jest 16 suites / 112 passed; full chromium
+  e2e `CI=true --workers=1` 64 passed TWICE (0 failed / 0 flaky); axe-only 8
+  passed. Optional RSS feed DEFERRED (non-blocking).

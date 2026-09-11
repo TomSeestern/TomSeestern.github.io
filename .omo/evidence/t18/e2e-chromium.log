@@ -1,0 +1,63 @@
+
+> tomsegbers-de@0.0.0 e2e:headless /home/tom/Projects/tomsegbers-de
+> playwright test --project=chromium --workers=1
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 64 tests using 1 worker
+·[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+·[WebServer]  ⨯ The requested resource "https://placehold.co/512x512?text=Various" has type "image/svg+xml" but dangerouslyAllowSVG is disabled. Consider adding the "unoptimized" property to the <Image>.
+···········································××±··················
+
+  1) [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at mobile ─────────────────
+
+    Error: page.goto: net::ERR_NETWORK_IO_SUSPENDED at http://127.0.0.1:3030/projects
+    Call log:
+      - navigating to "http://127.0.0.1:3030/projects", waiting until "load"
+
+
+      112 |
+      113 |       // When
+    > 114 |       await page.goto(path)
+          |                  ^
+      115 |
+      116 |       // Then
+      117 |       await expect(page.locator("main")).toBeVisible()
+        at /home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:114:18
+
+    Error Context: test-results/responsive-projects-remains-usable-at-mobile-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.goto: Test timeout of 30000ms exceeded.
+    Call log:
+      - navigating to "http://127.0.0.1:3030/projects", waiting until "load"
+
+
+      112 |
+      113 |       // When
+    > 114 |       await page.goto(path)
+          |                  ^
+      115 |
+      116 |       // Then
+      117 |       await expect(page.locator("main")).toBeVisible()
+        at /home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:114:18
+
+    Error Context: test-results/responsive-projects-remains-usable-at-mobile-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/responsive-projects-remains-usable-at-mobile-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/responsive-projects-remains-usable-at-mobile-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 flaky
+    [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at mobile ──────────────────
+  63 passed (8.0m)
