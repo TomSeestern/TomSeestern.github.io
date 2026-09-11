@@ -1,0 +1,92 @@
+
+> tomsegbers-de@0.0.0 lint /home/tom/Projects/tomsegbers-de
+> eslint . --ext .ts,.tsx
+
+
+/home/tom/Projects/tomsegbers-de/app/about/page.tsx
+    1:8   warning  'path' is defined but never used. Allowed unused vars must match /^_/u                                                            @typescript-eslint/no-unused-vars
+    3:1   warning  `../../components/PersonTeaser/PersonTeaser` import should occur before import of `../../components/TimelineEntry/TimelineEntry`  import/order
+    4:1   warning  `next/image` import should occur before import of `path`                                                                          import/order
+    5:1   warning  `react` import should occur before import of `path`                                                                               import/order
+    6:1   warning  `next` import should occur before import of `path`                                                                                import/order
+   45:15  warning  Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!                                                                tailwindcss/enforces-shorthand
+  126:21  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!                                                                tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/app/blog/entry/[slug]/page.tsx
+   3:1   warning  `@/app/layout` import should occur after import of `react-markdown`       import/order
+  30:21  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!        tailwindcss/enforces-shorthand
+  57:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/blog/page.test.tsx
+  21:1  warning  `./page` import should occur before import of `../../lib/blog`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/blog/page.tsx
+   3:1   warning  `next` import should occur before import of `../../components/ArticleTeaser/ArticleTeaser`  import/order
+  43:35  warning  'index' is defined but never used. Allowed unused args must match /^_/u                     @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/layout.tsx
+  6:1  warning  `next` type import should occur before import of `react`         import/order
+  7:1  warning  `next/font/google` import should occur before import of `react`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/page.tsx
+  87:22  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/app/projects/entry/[slug]/page.tsx
+   3:1   warning  `@/app/layout` import should occur after import of `react-markdown`       import/order
+  30:21  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!        tailwindcss/enforces-shorthand
+  57:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/projects/page.test.tsx
+  28:1  warning  `./page` import should occur before import of `../../lib/markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/projects/page.tsx
+   3:1   warning  `next` import should occur before import of `next/image`            import/order
+  57:22  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/app/sitemap.ts
+  3:1  warning  `gray-matter` import should occur before import of `fs`  import/order
+  4:1  warning  `next` import should occur before import of `fs`         import/order
+
+/home/tom/Projects/tomsegbers-de/components/ArticleTeaser/ArticleTeaser.tsx
+  60:18  warning  Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+  78:13  warning  Classnames 'h-7, w-7' could be replaced by the 'size-7' shorthand!  tailwindcss/enforces-shorthand
+  91:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/Footer/Footer.tsx
+   2:1   warning  `next/image` import should occur before import of `react`                import/order
+   9:29  warning  'props' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  28:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!       tailwindcss/enforces-shorthand
+  35:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!       tailwindcss/enforces-shorthand
+  42:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!       tailwindcss/enforces-shorthand
+  49:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!       tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/Header/Header.tsx
+  23:11  warning  Classnames 'h-6, w-6' could be replaced by the 'size-6' shorthand!           tailwindcss/enforces-shorthand
+  23:11  warning  Classnames 'sm:h-9, sm:w-9' could be replaced by the 'sm:size-9' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/PersonTeaser/PersonTeaser.tsx
+  23:9  warning  Classnames 'h-12, w-12' could be replaced by the 'size-12' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/ProjectTeaser/ProjectTeaser.test.tsx
+   3:1  warning  `@testing-library/react` import should occur before import of `date-fns`     import/order
+  10:1  warning  `./ProjectTeaser` import should occur before import of `../../lib/icon-map`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/ProjectTeaser/ProjectTeaser.tsx
+   1:1   warning  `flowbite-react` import should occur after import of `date-fns`                                                                                                                                                                                                                          import/order
+   2:1   warning  `react` import should occur after import of `next/link`                                                                                                                                                                                                                                  import/order
+   3:1   warning  `../Tooltip/Tooltip` import should occur after import of `../../lib/icon-map`                                                                                                                                                                                                            import/order
+  31:3   warning  'imageUrl' is defined but never used. Allowed unused args must match /^_/u                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  43:7   warning  Classnames 'h-full, w-full' could be replaced by the 'size-full' shorthand!                                                                                                                                                                                                              tailwindcss/enforces-shorthand
+  78:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  96:20  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!                                                                                                                                                                                                                       tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/lib/markdown.ts
+  3:1  warning  `gray-matter` import should occur before import of `fs`  import/order
+  4:1  warning  `zod` import should occur before import of `fs`          import/order
+
+/home/tom/Projects/tomsegbers-de/lib/sendEmail.tsx
+  3:1  warning  `await-to-js` import should occur before import of `next/headers`  import/order
+
+✖ 48 problems (0 errors, 48 warnings)
+  0 errors and 38 warnings potentially fixable with the `--fix` option.
+

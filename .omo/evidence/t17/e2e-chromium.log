@@ -1,0 +1,89 @@
+
+> tomsegbers-de@0.0.0 e2e:headless /home/tom/Projects/tomsegbers-de
+> playwright test --project=chromium --workers=1
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 64 tests using 1 worker
+·[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+·[WebServer]  ⨯ The requested resource "https://placehold.co/512x512?text=Various" has type "image/svg+xml" but dangerouslyAllowSVG is disabled. Consider adding the "unoptimized" property to the <Image>.
+···········································××F··················
+
+  1) [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at mobile ─────────────────
+
+    Error: [{"className":"sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-white","left":-1,"right":0,"tagName":"A"},{"className":"rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark","left":41,"right":585,"tagName":"A"},{"className":"truncate text-h3-sm text-foreground dark:text-foreground-dark","left":41,"right":585,"tagName":"H3"},{"className":"shrink-0 rounded-full bg-accent-soft px-2.5 py-1 text-caption font-semibold uppercase tracking-widest text-accent-soft-foreground","left":597,"right":689.609375,"tagName":"SPAN"},{"className":"rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark","left":41,"right":606,"tagName":"A"}]
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 375
+    Received:    875
+
+      88 |   }))
+      89 |
+    > 90 |   expect(geometry.scrollWidth, JSON.stringify(geometry.overflowingElements)).toBeLessThanOrEqual(geometry.clientWidth)
+         |                                                                              ^
+      91 | }
+      92 |
+      93 | function expectGridColumnCount(page: Page, selector: string, expectedColumnCount: number): Promise<void> {
+        at expectDocumentFitsViewport (/home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:90:78)
+        at /home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:120:9
+
+    Error Context: test-results/responsive-projects-remains-usable-at-mobile-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [{"className":"sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-white","left":-1,"right":0,"tagName":"A"},{"className":"rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark","left":41,"right":585,"tagName":"A"},{"className":"truncate text-h3-sm text-foreground dark:text-foreground-dark","left":41,"right":585,"tagName":"H3"},{"className":"shrink-0 rounded-full bg-accent-soft px-2.5 py-1 text-caption font-semibold uppercase tracking-widest text-accent-soft-foreground","left":597,"right":689.609375,"tagName":"SPAN"},{"className":"rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark","left":41,"right":606,"tagName":"A"}]
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 375
+    Received:    875
+
+      88 |   }))
+      89 |
+    > 90 |   expect(geometry.scrollWidth, JSON.stringify(geometry.overflowingElements)).toBeLessThanOrEqual(geometry.clientWidth)
+         |                                                                              ^
+      91 | }
+      92 |
+      93 | function expectGridColumnCount(page: Page, selector: string, expectedColumnCount: number): Promise<void> {
+        at expectDocumentFitsViewport (/home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:90:78)
+        at /home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:120:9
+
+    Error Context: test-results/responsive-projects-remains-usable-at-mobile-chromium-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/responsive-projects-remains-usable-at-mobile-chromium-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/responsive-projects-remains-usable-at-mobile-chromium-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #2 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Error: [{"className":"sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-white","left":-1,"right":0,"tagName":"A"},{"className":"rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark","left":41,"right":585,"tagName":"A"},{"className":"truncate text-h3-sm text-foreground dark:text-foreground-dark","left":41,"right":585,"tagName":"H3"},{"className":"shrink-0 rounded-full bg-accent-soft px-2.5 py-1 text-caption font-semibold uppercase tracking-widest text-accent-soft-foreground","left":597,"right":689.609375,"tagName":"SPAN"},{"className":"rounded transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark","left":41,"right":606,"tagName":"A"}]
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 375
+    Received:    875
+
+      88 |   }))
+      89 |
+    > 90 |   expect(geometry.scrollWidth, JSON.stringify(geometry.overflowingElements)).toBeLessThanOrEqual(geometry.clientWidth)
+         |                                                                              ^
+      91 | }
+      92 |
+      93 | function expectGridColumnCount(page: Page, selector: string, expectedColumnCount: number): Promise<void> {
+        at expectDocumentFitsViewport (/home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:90:78)
+        at /home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:120:9
+
+    Error Context: test-results/responsive-projects-remains-usable-at-mobile-chromium-retry2/error-context.md
+
+  1 failed
+    [chromium] › e2e/responsive.spec.ts:104:9 › projects remains usable at mobile ──────────────────
+  63 passed (4.0m)
+ ELIFECYCLE  Command failed with exit code 1.

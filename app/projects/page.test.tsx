@@ -1,20 +1,34 @@
 import { render, screen } from "@testing-library/react"
-import { getAllProjects } from "../../lib/projects"
 import { MarkdownEntry } from "../../lib/markdown"
 
 jest.mock("../../components/ProjectTeaser/ProjectTeaser", () => {
-  return function ProjectTeaser({ title, ctaLink }: { readonly title: string; readonly ctaLink: string }) {
-    return <a href={ctaLink}>{title}</a>
+  return function ProjectTeaser({
+    title,
+    ctaLink,
+    featured,
+  }: {
+    readonly title: string
+    readonly ctaLink: string
+    readonly featured?: boolean
+  }) {
+    return (
+      <a href={ctaLink} data-featured={featured ? "true" : undefined}>
+        {title}
+      </a>
+    )
   }
 })
 
 jest.mock("../../lib/projects", () => ({
   getAllProjects: jest.fn(),
+  selectFeaturedProjects: jest.fn(),
 }))
 
+import { getAllProjects, selectFeaturedProjects } from "../../lib/projects"
 import Articles from "./page"
 
 const mockGetAllProjects = jest.mocked(getAllProjects)
+const mockSelectFeaturedProjects = jest.mocked(selectFeaturedProjects)
 
 function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
   return {
@@ -65,6 +79,7 @@ const projects: MarkdownEntry[] = [
 describe("Articles (projects)", () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockSelectFeaturedProjects.mockReturnValue([])
   })
 
   it("renders page heading", () => {
@@ -97,17 +112,20 @@ describe("Articles (projects)", () => {
     expect(projectLinks.map((link) => link.textContent)).toEqual(projects.map((p) => p.title))
   })
 
-  it("renders view-all anchor with focus-visible ring styles", () => {
-    // Given
+  it("marks the subset returned by selectFeaturedProjects as featured", () => {
+    // Given — only the first project is selected for the featured marker.
     mockGetAllProjects.mockReturnValue(projects)
+    mockSelectFeaturedProjects.mockReturnValue(projects.filter((project) => project.id === "project-alpha"))
 
     // When
     render(<Articles />)
 
     // Then
-    const viewAllLink = screen.getByRole("link", { name: /view all projects/i })
-    expect(viewAllLink).toHaveAttribute("href", "/projects")
-    expect(viewAllLink.className).toMatch(/focus-visible:ring/)
+    expect(mockSelectFeaturedProjects).toHaveBeenCalledWith(projects)
+    const featuredLinks = screen.getAllByRole("link").filter((link) => link.getAttribute("data-featured") === "true")
+
+    expect(featuredLinks).toHaveLength(1)
+    expect(featuredLinks[0]).toHaveTextContent("Project Alpha")
   })
 
   it("renders blog link anchor with focus-visible ring styles", () => {

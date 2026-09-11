@@ -375,3 +375,30 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Final capture numbers (production): node 206/207/206, featured links 4, founder
   beats 4, `.animate-marquee*` 0, scrollWidth==clientWidth at 375/768/1280.
   Screenshots + `t16-capture.mjs` in `.omo/evidence/`.
+
+## T17 — projects archive + featured flag (2026-09-11)
+
+- Recovered from a provider-level crash that happened AFTER the feature was
+  written but BEFORE commit. Six coherent files were already in the working tree;
+  the job was verify + finish evidence + commit, not re-implement. `git status`
+  plus `git diff` was enough to confirm the change set was self-consistent.
+- T17 reuses `selectFeaturedProjects` from T16 (`lib/projects.tsx`) unchanged:
+  the page computes the flagged id set once and passes `featured={set.has(id)}`
+  to each `ProjectTeaser`, so the presentational component stays dumb and the
+  home + archive pages share ONE selection rule. `FEATURED_PROJECT_COUNT = 4`
+  and `MIN_PROJECT_COUNT = 21` remain single-sourced in
+  `e2e/fixtures/expectations.ts`.
+- A CSS-grid gotcha worth remembering: a Tailwind `truncate` (`white-space:
+  nowrap`) `<h3>` inside a grid item sets the track's min-content to the FULL
+  title width. `min-w-0` on the inner flex `<a>` is NOT enough — the grid ITEM
+  itself (here the Flowbite `Card` root) needs `min-w-0` to shrink below
+  min-content. Without it, one long title expands a `grid-cols-1` track past a
+  375px viewport (observed scrollWidth 875). One class on the Card fixes every
+  row.
+- Because `.omo/` is gitignored, new evidence must be `git add -f`-ed; the commit
+  scope is still only the 6 product files + evidence/notepad (boulder.json stays
+  orchestrator-owned and out of the commit).
+- Final: build 38/38; full chromium e2e `CI=true --workers=1` 64 passed TWICE
+  (0 failed / 0 flaky); axe-only 8 passed; typecheck/lint/prettier/test green
+  (jest 16 suites / 110 passed). /projects = 21 unique entries, 63 anchors,
+  4 featured badges, no overflow at 375/768/1280.

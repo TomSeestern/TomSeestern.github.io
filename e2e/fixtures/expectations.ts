@@ -31,6 +31,11 @@ export const COPY = {
   notFound: {
     h1: "404",
   },
+  projects: {
+    h1: "Showcasing My Journey in Technology and Innovation",
+    archiveH2: "All projects",
+    selectedBadge: "Selected",
+  },
 } as const
 
 /** Posts published under `content/blog/` (asserted as an exact count). */

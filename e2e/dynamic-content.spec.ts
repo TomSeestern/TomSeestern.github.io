@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
 
-import { BLOG_POST_COUNT, MIN_PROJECT_COUNT } from "./fixtures/expectations"
+import { BLOG_POST_COUNT, COPY, FEATURED_PROJECT_COUNT, MIN_PROJECT_COUNT } from "./fixtures/expectations"
 
 async function expectNoBrowserErrors(page: Page, runJourney: () => Promise<void>): Promise<void> {
   const browserErrors: string[] = []
@@ -58,10 +58,12 @@ test("project listing discovers a detail route and breadcrumb returns to project
     await page.goto("/projects")
     // <a> wraps <h3> in ProjectTeaser, not nested inside — use a[href^=...]
     const projectLinks = page.locator('a[href^="/projects/entry/"]')
+    const projectTeasers = page.getByTestId("project-teaser")
 
-    // Then
+    // Then — the archive renders every entry as a teaser.
     await expect(projectLinks.first()).toBeVisible()
     expect(await projectLinks.count()).toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
+    expect(await projectTeasers.count()).toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
     const detailUrl = await projectLinks.first().getAttribute("href")
     expect(detailUrl).toMatch(/^\/projects\/entry\/[^/]+$/)
 
@@ -86,5 +88,32 @@ test("project listing discovers a detail route and breadcrumb returns to project
     await expect(page).toHaveURL(/\/projects$/)
     await expect(projectLinks.first()).toBeVisible()
     expect(await projectLinks.count()).toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
+  })
+})
+
+test("project archive presents the featured selection as selected", async ({ page }) => {
+  await expectNoBrowserErrors(page, async () => {
+    // Given
+    await page.goto("/projects")
+    await expect(page.getByRole("heading", { level: 1, name: COPY.projects.h1 })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 2, name: COPY.projects.archiveH2 })).toBeVisible()
+
+    // Then — the shared selection rule marks exactly FEATURED_PROJECT_COUNT entries.
+    const featuredCards = page.locator('[data-featured="true"]')
+    await expect(featuredCards).toHaveCount(FEATURED_PROJECT_COUNT)
+    await expect(page.getByTestId("featured-badge")).toHaveCount(FEATURED_PROJECT_COUNT)
+    await expect(page.getByTestId("featured-badge").first()).toHaveText(COPY.projects.selectedBadge)
+
+    for (const index of Array.from({ length: FEATURED_PROJECT_COUNT }, (_, i) => i)) {
+      const card = featuredCards.nth(index)
+      await expect(card).toBeVisible()
+      await expect(card.locator('a[href^="/projects/entry/"]').first()).toHaveAttribute(
+        "href",
+        /^\/projects\/entry\/[^/]+$/
+      )
+    }
+
+    // And — the whole archive stays reachable alongside the featured markers.
+    expect(await page.getByTestId("project-teaser").count()).toBeGreaterThanOrEqual(MIN_PROJECT_COUNT)
   })
 })

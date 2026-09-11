@@ -156,4 +156,40 @@ describe("ProjectTeaser", () => {
     // Then
     expect(container.querySelector(".h-full.w-full")).toHaveClass("hover:z-50", "motion-safe:hover:-translate-y-1")
   })
+
+  it("marks the card root as a project teaser and tags featured state", () => {
+    // Given
+    mockGetIconPath.mockReturnValue(null)
+
+    // When
+    const { container } = renderTeaser({ ...baseProps, featured: true })
+
+    // Then
+    const root = container.querySelector('[data-testid="project-teaser"]')
+    expect(root).toBeInTheDocument()
+    expect(root).toHaveAttribute("data-featured", "true")
+  })
+
+  it("shows a Selected badge for a featured project", () => {
+    // Given
+    mockGetIconPath.mockReturnValue(null)
+
+    // When
+    renderTeaser({ ...baseProps, featured: true })
+
+    // Then
+    expect(screen.getByTestId("featured-badge")).toHaveTextContent("Selected")
+  })
+
+  it("does not mark or badge a regular project", () => {
+    // Given
+    mockGetIconPath.mockReturnValue(null)
+
+    // When
+    const { container } = renderTeaser(baseProps)
+
+    // Then
+    expect(container.querySelector('[data-testid="project-teaser"]')).not.toHaveAttribute("data-featured")
+    expect(screen.queryByTestId("featured-badge")).not.toBeInTheDocument()
+  })
 })

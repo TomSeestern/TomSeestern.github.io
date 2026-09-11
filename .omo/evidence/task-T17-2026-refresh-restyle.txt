@@ -1,0 +1,105 @@
+# T17 — Projects archive layout with featured flag — Evidence Ledger
+
+Timestamp (UTC): 2026-09-11T01:51:25Z
+Timestamp (local): 2026-09-11 03:51:25 +0200
+Pre-commit HEAD: e46f66f test(e2e): stabilize tooltip hover spec
+Branch: main
+
+## Recovery context
+
+The previous worker crashed at the LLM-provider level BEFORE committing. The six
+coherent product files were recovered from the working tree. This session
+verified them, found and fixed ONE genuine gate regression (see below), then ran
+the full gate to green. T17 reuses `selectFeaturedProjects` from T16
+(`lib/projects.tsx`); `e2e/fixtures/expectations.ts` is the single source for the
+archive copy + counts.
+
+## Regression found and fixed (NOT a rewrite)
+
+`responsive.spec.ts:104` "projects remains usable at mobile" was RED with
+`scrollWidth=875 > clientWidth=375`. Proof it was T17-caused, not pre-existing:
+
+    git stash push -- <the 6 T17 files>
+    playwright test e2e/responsive.spec.ts --project=chromium --workers=1 --retries=0 -g "projects remains usable"
+    -> EXIT=0, 3 passed   (HEAD = pre-T17)
+    git stash pop
+
+Root cause: the new flex header row (`title link` + `Selected` badge) left the
+Flowbite `Card` as a grid item with `min-width: auto`; the `truncate` (nowrap)
+`<h3>` set the grid track's min-content to the full title width, so the whole
+`grid-cols-1` track expanded past the viewport. Minimal fix, one class:
+
+    components/ProjectTeaser/ProjectTeaser.tsx
+    - className="h-full w-full transition-colors ..."
+    + className="h-full w-full min-w-0 transition-colors ..."
+
+`min-w-0` lets the grid item shrink below min-content; the existing
+`min-w-0` on the title `<Link>` + `truncate` then ellipsize correctly. No
+markup, behavior, or feature change. Covered by the existing
+`responsive.spec.ts` guard (R6.3 regression check already in place).
+
+## Gate commands and exit codes
+
+All commands run via:
+    nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'
+
+1. Production build
+   `pnpm build`
+   EXIT=0 — `✓ Compiled successfully`, `✓ Generating static pages (38/38)`
+   Log: .omo/evidence/t17/build.log ; prod rebuild: .omo/evidence/t17/build-prod.log
+
+2. Full chromium e2e — run 1 of 2
+   `CI=true pnpm exec playwright test --project=chromium --workers=1`
+   EXIT=0 — `64 passed (3.5m)` — 0 failed, 0 flaky
+   Log: .omo/evidence/t17/e2e-run1.log
+
+3. Full chromium e2e — run 2 of 2 (flakiness proof, R16.9)
+   `CI=true pnpm exec playwright test --project=chromium --workers=1`
+   EXIT=0 — `64 passed (3.9m)` — 0 failed, 0 flaky
+   Log: .omo/evidence/t17/e2e-run2.log
+
+4. axe only
+   `CI=true pnpm exec playwright test e2e/a11y.spec.ts --project=chromium --workers=1`
+   EXIT=0 — `8 passed (45.5s)`
+   Log: .omo/evidence/t17/a11y.log
+
+5. Fast gates (re-run this session, defensively after the fix)
+   `pnpm typecheck`  EXIT=0
+   `pnpm lint`       EXIT=0 — 0 errors, 48 warnings (all pre-existing)
+   `pnpm prettier`   EXIT=0 — "All matched files use Prettier code style!"
+   `pnpm test`       EXIT=0 — Test Suites 16 passed, Tests 110 passed
+   Logs: /tmp/opencode/t17-{typecheck,lint,prettier,test}.log
+
+## Project link count on /projects (production build, `pnpm start`)
+
+Capture script: `.omo/evidence/t17-capture.mjs` (exit 0)
+Runner: `pnpm start` on 127.0.0.1:3000, then `node .omo/evidence/t17-capture.mjs`
+
+- project link anchors `a[href^="/projects/entry/"]`: **63** (>= MIN_PROJECT_COUNT 21)
+- unique project entry hrefs: **21** (the actual archive size)
+- `[data-testid="project-teaser"]`: 21
+- featured badges / featured cards: 4 / 4 (FEATURED_PROJECT_COUNT)
+- no horizontal overflow: scrollWidth == clientWidth at all three viewports
+
+## Screenshots (three, landscape viewports)
+
+- .omo/evidence/t17-projects-375.png   (375x812, 1 column)
+- .omo/evidence/t17-projects-768.png   (768x1024, 2 columns)
+- .omo/evidence/t17-projects-1280.png  (1280x960, 2 columns)
+Visual read: hero h1 + "All projects" h2 present; 4 orange "SELECTED" pills on
+PayMeNow/ISeeUnet/SkinShark/RefundHero; titles/descriptions truncated with
+ellipsis, no clipping or overflow; layout coherent.
+
+## Commit
+
+Product files (6): app/projects/page.tsx, app/projects/page.test.tsx,
+components/ProjectTeaser/ProjectTeaser.tsx,
+components/ProjectTeaser/ProjectTeaser.test.tsx, e2e/dynamic-content.spec.ts,
+e2e/fixtures/expectations.ts
+Evidence/notepad files staged alongside (force-added; `.omo/` is gitignored).
+Message: `feat(projects): archive layout with featured flag`
+No `--no-verify`, no `SKIP=` used.
+
+## Token usage (R22.1)
+
+Not instrumented by this worker; no provider token counter was available in-session.

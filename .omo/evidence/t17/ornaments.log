@@ -1,0 +1,8 @@
+
+> tomsegbers-de@0.0.0 ornaments /home/tom/Projects/tomsegbers-de
+> node scripts/check-ornaments.mjs
+
+Banned-ornament gate — scanned 87 source file(s)
+Banned terms: laurel, bust, spqr, colosseum, toga, papyrus, gold, marble
+
+ORNAMENT GATE PASSED — no banned ornament or token found.

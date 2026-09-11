@@ -309,3 +309,26 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   `pnpm prettier` exit 0.
 - Rule for future specs: any hover/pointer-driven Radix assertion on a cold dev
   server must wait on `data-state` or content visibility, never a fixed delay.
+
+## T17 — flex header row caused a real mobile grid overflow (2026-09-11)
+
+- The previous worker crashed at the LLM-provider level before committing. Its
+  last e2e log (`.omo/evidence/t17/e2e-chromium.log`) showed 1 failed / 63 passed:
+  `responsive.spec.ts:104` "projects remains usable at mobile", scrollWidth 875
+  at a 375 viewport. This was a genuine regression from T17, NOT pre-existing.
+- Proof method reused from T15/T16: `git stash push -- <T17 files>`, run the
+  single spec at `--retries=0` against HEAD -> EXIT=0 / 3 passed, then
+  `git stash pop`. Cheap and conclusive.
+- Root cause: the new `flex items-start justify-between` header row (title link
+  + `Selected` badge) left the Flowbite `Card` (the CSS-grid item) with
+  `min-width: auto`; the nowrap `truncate` `<h3>` therefore set the grid track's
+  min-content to the widest title, expanding the `grid-cols-1` track past the
+  viewport. `min-w-0` on the inner `<Link>` did not help because the grid ITEM is
+  the Card. Fix = `min-w-0` on the Card root className; no markup/behavior change,
+  and the pre-existing `responsive.spec.ts` already guards it (R6.3 satisfied by
+  an existing check, so no spec edit was in scope).
+- Recovery hygiene: write evidence + notepad appends, then one atomic commit of
+  the 6 product files + evidence/notepads. `boulder.json` is orchestrator-owned
+  and must stay out of the commit.
+- No blockers. Final: build 38/38; full chromium e2e 64 passed TWICE (0 failed /
+  0 flaky); axe 8 passed; typecheck/lint/prettier/test green.
