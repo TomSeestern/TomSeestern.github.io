@@ -35,11 +35,12 @@ export function Header() {
           className="flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft"
         >
           <Image
-            src="/img/logo.png"
+            src="/icon/brand-mark.svg"
             className="mr-3 h-6 w-6 sm:h-9 sm:w-9"
             alt="Tom Segbers Logo"
-            width={512}
-            height={512}
+            width={64}
+            height={64}
+            unoptimized
           />
           <span className="self-center whitespace-nowrap text-xl font-semibold text-foreground">Tom Segbers</span>
         </a>

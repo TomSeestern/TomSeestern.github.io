@@ -26,9 +26,18 @@ export const metadata: Metadata = {
     siteName: "TomSegbers.de",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "/img/og-default.png",
+        width: 1200,
+        height: 630,
+        alt: "TomSegbers.de — Tom Segbers, Senior Developer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    images: ["/img/og-default.png"],
   },
 }
 
