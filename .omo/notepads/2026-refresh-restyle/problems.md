@@ -215,3 +215,23 @@ Full context: `.omo/decisions/2026-09-10-refresh-scope-decisions.md`.
   metadata + a11y, not toast placement). Real, small, user-visible.
 - **`app/not-found.tsx` h2** has an exact token candidate (`text-h2-sm
   tracking-tight`) deferred from T08 (file was outside that task's named scope).
+
+---
+
+## BLOCKER 3 — T31 Lighthouse version parity needs network `[~]` (verified)
+
+**Verified 2026-09-12:** this environment cannot reach the npm registry.
+`curl -s -o /dev/null -w "%{http_code}" https://registry.npmjs.org/lighthouse`
+returns **000** (timeout). `npm view @lhci/cli@latest` inside `nix develop`
+produces no output. Only the installed versions are available locally:
+`node_modules/.pnpm/lighthouse@12.6.1`, `node_modules/.pnpm/@lhci+cli@0.15.1`.
+
+**Consequence:** T31 (align the gate's Lighthouse major with the baseline's 13.4.1)
+cannot be implemented or verified on this machine even after Tom decides — it needs a
+networked environment to fetch a different `@lhci/cli`/`lighthouse`. Any such change
+must also re-capture the T02 baseline with the SAME version.
+
+**Do not** attempt `pnpm add`/`npx -y lighthouse@13.4.1` here: it will hang/fail on
+the registry, and `npx -y lighthouse@13.4.1` (the parity Arm A) also requires the
+registry unless the exact version is already cached. Check for a local cache first:
+`ls ~/.npm/_npx/*/node_modules/lighthouse`.
