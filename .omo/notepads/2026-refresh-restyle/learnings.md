@@ -1204,3 +1204,24 @@ axe (8), and the host-blocked Lighthouse timing gate.
 
 Code-gate sweep now complete except e2e/axe (running) and the host-blocked
 Lighthouse timing gate.
+
+## 2026-09-12 — e2e green at HEAD (79 passed); cert-var placement gotcha
+
+`pnpm exec playwright test --project=chromium --workers=1` inside `nix develop`
+→ **79 passed** (7.5 min). Fresh observation at HEAD, matching F5's 79.
+
+**Gotcha (cost 2 failed attempts):** the cert vars must be exported *inside* the
+`nix develop -c bash -c '...'` environment, not just in the outer shell. Playwright's
+`webServer` boots `next dev`, whose `next/font` Google fetch fails with
+`UNABLE_TO_GET_ISSUER_CERT_LOCALLY` otherwise. Working form:
+```
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix;
+  export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; export CI=true;
+  export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt;
+  export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt;
+  pnpm exec playwright test --project=chromium --workers=1'
+```
+Also: bare `node_modules/.bin/playwright test` fails (`pnpm: command not found`)
+because `playwright.config.ts` `webServer.command` calls `pnpm`. Use the devShell.
+Expected WebServer noise (not failures): `placehold.co` SVG refused, Next 16
+deprecation warnings, cross-origin dev note.
