@@ -138,7 +138,7 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── flake.nix                  # Nix devShell: Node 22, pnpm, git, Chromium libs
 ├── flake.lock
 ├── .forgejo/
-│   └── workflows/             # Forgejo Actions CI (check, e2e, bundle analysis)
+│   └── workflows/             # Forgejo Actions CI (check, e2e, bundle, lighthouse, screenshots)
 ├── .envrc                     # direnv entry: `use flake`
 ├── package.json
 ├── pnpm-lock.yaml
@@ -159,6 +159,7 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── page.tsx               # Home: hero, projects marquee, blog teasers
 │   ├── not-found.tsx
 │   ├── about/page.tsx
+│   ├── api/health/route.ts    # Health-check endpoint (returns {status:"ok"})
 │   ├── contact/page.tsx       # Contact form ("use client")
 │   ├── blog/page.tsx          # Blog listing
 │   ├── blog/entry/[slug]/page.tsx   # Blog detail, generateStaticParams
@@ -186,17 +187,17 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── icon-map.ts            # Maps technology strings to icon paths
 │   ├── sendEmail.tsx          # Server action, Resend contact form
 │   ├── markdown.test.ts
+│   ├── projects.test.ts
 │   └── sendEmail.test.tsx
 ├── content/
 │   ├── blog/*.md              # Blog posts
 │   └── projects/*.md          # Project entries
 ├── e2e/
-│   ├── home.spec.ts
-│   ├── static-routes.spec.ts
-│   └── dynamic-content.spec.ts
-├── tests/                     # Jest test helpers
+│   ├── *.spec.ts              # 13 Playwright e2e specs (home, blog, contact, a11y, …)
+│   └── fixtures/              # axe config, route expectations, a11y allowlist
+├── tests/                     # Budget fixtures (bundle baseline, contrast pairs)
 ├── public/
-│   ├── img/                   # Photos and the OG logo
+│   ├── img/                   # Photos, OG logo, and Showcase screenshots
 │   └── icon/                  # SVG icons used in components
 ├── .storybook/
 │   ├── main.ts
@@ -204,7 +205,8 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── styles/
 │   └── tailwind.css           # Tailwind entry, imports Flowbite
 └── scripts/
-    └── check-project-frontmatter.js  # Validates project Markdown frontmatter
+    ├── check-*.{js,mjs}       # CI gates: frontmatter, contrast, ornaments, images, fonts, bundle
+    └── update-readme-screenshots.ts  # Captures Showcase screenshots from a dev server
 ```
 
 ## Content
