@@ -1081,3 +1081,16 @@ wait is now delegated to a background monitor (`wait-for-quiet-host-then-F5-ligh
   `F5_LIGHTHOUSE_GREEN` / `F5_LIGHTHOUSE_RED` / `F5_HOST_STILL_BUSY` marker.
 - Budgets untouched (2500/0.1/200). If RED on a quiet host, it is a real finding
   requiring a real fix — escalate to Tom, do not edit the budget.
+
+## 2026-09-12 — CORRECTION: F5 auto-resume monitor did NOT launch
+
+The immediately preceding entry stated the wait was "delegated to a background
+monitor (`wait-for-quiet-host-then-F5-lighthouse`)". **That is false.**
+`monitor_start` rejected the command (`[ERROR] monitor_start failed`). The
+monitor subsystem caps runtime at 30 min (`max_runtime_ms=1800000`) and my
+480-min polling loop + build/lighthouse run was out of scope, so it never ran.
+
+No monitor is active. F5 remains a plain manual block: it must be resumed on a
+quiet host by the documented command (see `problems.md` BLOCKER 1). Do not
+assume any automated waiter exists. Correction recorded per R19.1 (no claim
+without verification).
