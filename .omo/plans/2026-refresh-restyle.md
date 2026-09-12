@@ -745,9 +745,11 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 - [x] **T29. Tag pages** (D9 approved 2026-09-12)
   - **DELIVERED (2026-09-12).** `/tags` index + `/tags/[tag]` archive; `lib/tags.ts` normalizes 87 raw tag forms to 86 canonical keys with deterministic URL-safe slugs (`C++` → `c-plus-plus`), throwing on slug collisions. Entries reuse `ArticleTeaser`/`ProjectTeaser`. Sitemap + axe matrix (12/12) extended, footer link added. Verified: typecheck, prettier, lint 0 errors, Jest 162/162, build 127 static pages, full e2e 83 passed. Commit `ddc18da`. Found and fixed a footer touch-target regression in the same commit (see below).
   - Depends: T10,T24 | Category: `quick` | Skills: [`programming`, `frontend`]
-- [~] **T20. About portrait + founder arc** (structural non-gated; content gated)
+- [x] **T20. About portrait** (structural half complete 2026-09-12; copy stays with T25)
+  - **DELIVERED (2026-09-12).** Portrait re-homed from the (now type-led) home hero to About, in a fixed `aspect-[4/5]` box with explicit sizing + `loading="lazy"`. Measured at 375×812: 320×400, top=1519px (below fold), **CLS=0**, `alt` present, optimized via `_next/image`. No duotone/filter — T20's "travertine/basalt duotone" wording is stale Rome-concept language superseded by D13. `PersonTeaser` untouched. Verified: typecheck, prettier, lint 0 errors, images 101 (30.6 KB), build 127 pages, responsive 26, axe 12. Commit `db4aa96`.
   - Depends: T14,T15,T24 | Category: `visual-engineering` | Skills: [`frontend`, `visual-qa`, `playwright`]
-  - QA: portrait lazy/dims/no CLS; axe green.
+  - QA: portrait lazy/dims/no CLS; axe green. ✅ all satisfied.
+  - **Open design question (not blocking):** `FounderArc` renders on Home only; T20's "founder-arc reuse" was structural, so it was NOT duplicated into About. Whether About should also host the arc is a design call for Tom.
 
 ### Wave 6 (Final Verification — all must approve)
 

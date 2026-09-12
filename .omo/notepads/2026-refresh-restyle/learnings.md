@@ -1560,3 +1560,26 @@ on routes the tag work never opened.
 `tags` ∪ `technologies`. Always measure with the app's own parser rather than
 `grep -A`, which bleeds into adjacent frontmatter fields (my first grep produced
 196 tag "occurrences" — wrong).
+
+**T20 portrait delivered (2026-09-12) — stale Rome language caught before implementation:**
+The plan's T20 wording "duotone travertine/basalt" is **superseded design language**:
+D13 removed dark mode, so "basalt" (dark ground) has no place, and
+`scripts/check-ornaments.mjs` bans `gold`/`marble` as whole words. The task
+would have produced an off-system, dark-filtered portrait had the wording been
+followed literally. Implemented as a **plain** 4:5 portrait instead (no filter).
+**Lesson: T20-era plan prose predates D13; re-read design intent against the
+current decisions file before implementing any visual "art direction" wording.**
+
+Portrait re-homed from the home hero (T16 deliberately made the hero type-led)
+to About, in `aspect-[4/5]` + `max-w-xs`, `fill`, `loading="lazy"`. Measured at
+375×812: **320×400 (ratio 0.800), top=1519px (below fold), CLS=0**, `alt="Portrait
+of Tom Segbers"`. `PersonTeaser` NOT touched — T20 listed it, but it is a *company*
+teaser used inside timeline entries, and repurposing it would have broken that usage.
+
+Open question for Tom (not blocking): `FounderArc` renders on Home only; T20's
+"founder-arc reuse" was structural, so it was deliberately NOT duplicated into About.
+
+**Repeat operational note:** every Playwright run booting its own `next dev`
+**wipes `.next/`**, so `pnpm start` then fails with "Could not find a production
+build". Always `pnpm build` immediately before any `next start` measurement; do
+not chain build → e2e → start in one pass.
