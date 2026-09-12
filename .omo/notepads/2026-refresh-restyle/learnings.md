@@ -1298,3 +1298,26 @@ Fixed in `7419e08 docs: sync README app tree with repository`. Verified: no
 
 Lesson: when a task changes a page's composition (T16 removed the marquee), its
 tree comment in README is a same-commit update target — invisible to lint/prettier.
+
+## 2026-09-12 — UPDATE: a validated F5 auto-run monitor IS now running
+
+Supersedes the earlier "CORRECTION: F5 auto-resume monitor did NOT launch" entry.
+That failure was my over-complex inline command; a **file-based** script works:
+
+- Script: `/tmp/f5-watch.sh` (outside the repo, so no tracked-file churn).
+- Monitor: `mon_eb44e17b` (label `f5-lighthouse-autorun`), delivery mode `idle`,
+  match pattern `^F5_`. Runtime is bounded to ~10 min of polling (40 × 15 s), well
+  inside the 30-min `max_runtime_ms` cap.
+- Gate (validated design): counts 3 consecutive 15 s samples with **CPU busy ≤30%
+  AND ≤3 `child-process-proxy-worker`** before running. This is the exact gate the
+  08:15 attempt lacked (it launched into 99–100% CPU and produced void numbers).
+- On trigger: `rm -rf .next` → `pnpm build && pnpm lighthouse` with
+  `PLAYWRIGHT_BROWSERS_PATH` + `SSL_CERT_FILE` + `NODE_EXTRA_CA_CERTS`; log to
+  `/tmp/f5-monitor.log`; emits `F5_HOST_QUIET` / `F5_LIGHTHOUSE_GREEN|RED` /
+  `F5_HOST_STILL_BUSY`.
+- Budgets untouched (2500/0.1/200). A RED on a quiet host is a real finding → escalate
+  to Tom (D3 font-strategy tradeoff), do NOT edit the budget.
+
+CADENCE NOTE: the script self-limits to ~10 min, so if the host stays saturated it
+will exit `F5_HOST_STILL_BUSY` and need re-arming. That is intentional — it avoids
+an unbounded waiter, and each re-arm re-validates the quiet gate from scratch.
