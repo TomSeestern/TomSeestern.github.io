@@ -1321,3 +1321,32 @@ That failure was my over-complex inline command; a **file-based** script works:
 CADENCE NOTE: the script self-limits to ~10 min, so if the host stays saturated it
 will exit `F5_HOST_STILL_BUSY` and need re-arming. That is intentional — it avoids
 an unbounded waiter, and each re-arm re-validates the quiet gate from scratch.
+
+## 2026-09-12 06:52Z — F5 auto-run monitor completed: NO quiet window found
+
+Monitor `mon_eb44e17b` (`f5-lighthouse-autorun`) ran its full bounded window
+(40 × 15 s ≈ 10 min) and exited with:
+
+```
+F5_WAITING i=8  busy=99%  workers=22  quiet=0
+F5_WAITING i=16 busy=99%  workers=23  quiet=0
+F5_WAITING i=24 busy=99%  workers=22  quiet=0
+F5_WAITING i=32 busy=100% workers=22  quiet=0
+F5_WAITING i=40 busy=99%  workers=22  quiet=0
+F5_HOST_STILL_BUSY (no quiet window in ~10min)
+```
+
+The quiet gate (3 consecutive samples with CPU ≤30% AND ≤3 workers) never fired, so
+the monitor correctly **did not** run `pnpm build && pnpm lighthouse` — no wasteful
+build, no void Lighthouse numbers. `/tmp/f5-monitor.log` was never created, exactly
+as designed (created only on trigger).
+
+Host after the window: CPU busy 99.1%, loadavg 38.6, 24 workers, Stryker parent
+`2902322` elapsed **1h26m**. The external `ohmyroadmap` mutation run has now pinned
+all 22 cores for **~9 hours** total.
+
+**Decision:** do NOT re-arm indefinitely. The bounded monitor proved the gate works;
+re-arming every 10 min would be loop behavior (R19.2) with no new information while
+the same Stryker process holds the CPU. F5 stays `[~]`; resume is a manual action
+for Tom (or me, on request) once `stryker` is gone / CPU is quiet. The validated
+one-shot script is preserved at `/tmp/f5-watch.sh` for that moment.
