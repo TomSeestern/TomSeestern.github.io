@@ -686,3 +686,43 @@ different element being scored**.
 
 Supersedes §11's "font-swap bound, not paint bound" conclusion and the "
 same Lighthouse version/method" premise in both §11 and §12.
+
+---
+
+## §16. Decisive deduction: the paragraph revert CANNOT make /projects pass
+
+Same-tool evidence (all LH 12.6.1), no cross-version assumption:
+
+| state | revision | element | LCP (LH12.6.1) | verdict |
+|---|---|---|---|---|
+| **pre-restyle** | `1b1062e` (T05) | **`h1`** | **2632** (median-of-3) | FAIL |
+| post-restyle | run 6 | `p.mt-4` | 2923 (1 clean run) | FAIL |
+
+Implication: reverting the intro paragraph to `text-base font-normal` restores the
+**h1-as-LCP** condition — which read **2632 ms** under the gate's own tool *before*
+the restyle. Even if the revert removed the entire +291 ms delta, `/projects` would
+land at ≈2632 ms, still **132 ms over budget**. So the one-line paragraph revert is
+**not sufficient**; it is at best a partial improvement.
+
+The plan's T05 expectation — "expected to go green once the restyle (D-series) + T22
+remote-image fix land" — is therefore **false for `/projects`**. The restyle did not
+bring it under budget, and the cross-version comparison + element switch masked that
+for five attempts. **`/projects` has never passed the LCP budget at any measured
+revision under any tool.**
+
+### What this means
+- `/projects` is a **genuine, pre-existing LCP overage** that needs a real
+  performance fix — not a measurement re-read and not a one-line class revert.
+- The page's distinguishing property vs every passing route is **document/DOM work**:
+  212 KB HTML and 21 cards vs `/blog`'s 41 KB HTML at near-identical JS (209 vs
+  200 KB First Load). The simulated render delay is main-thread-bound
+  (`styleLayout` +196 ms, `other` +395 ms simulated).
+- Candidate real fixes (all D3-compatible, all requiring a quiet-host LCP
+  verification): `content-visibility:auto` + `contain-intrinsic-size` on card
+  containers; deferring below-fold card rendering; reducing per-card DOM. Each must
+  be validated against CLS/axe/e2e as well as LCP.
+- **Plan gap:** no task in the plan owns a `/projects` LCP fix, because T05 assumed
+  the restyle would deliver it. F5 cannot pass until one exists.
+
+Budgets stay 2500/0.1/200. No blind code change: the fix requires quiet-host
+verification of the LCP effect.

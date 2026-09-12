@@ -142,3 +142,30 @@ change**; the version confound does not rescue it. The quiet-host A/B (BLOCKER 1
 remains the required next step before any code change — but the framing "probably just
 a methodology artifact" is withdrawn. If Arm B shows the paragraph revert returns LCP
 under 2500 ms under the gate's LH12, the fix is a real, cheap product fix.
+
+---
+
+## Addendum 2 (2026-09-12): the paragraph revert is provably insufficient
+
+Same-tool (LH 12.6.1) readings remove any cross-version doubt:
+
+- **Pre-restyle** `/projects`, revision `1b1062e`, element **`h1`**: **2632 ms**
+  (T05 median-of-3) — FAIL.
+- **Post-restyle** `/projects`, run 6, element **`p.mt-4`**: 2923 ms — FAIL.
+
+Reverting the paragraph restores the h1-as-LCP condition measured at **2632 ms**.
+Even a perfect revert leaves `/projects` ≈132 ms over budget. **The one-line revert
+is not a fix.**
+
+This also falsifies the plan's T05 expectation that the restyle would bring
+`/projects` under budget. `/projects` is a genuine pre-existing overage requiring a
+real performance fix (reduce document/DOM critical render work: 212 KB HTML / 21
+cards vs `/blog` 41 KB at near-equal JS). Decision §4's "if Arm B returns LCP <2500,
+the fix is cheap" is **revised**: Arm B is now a *diagnostic* to quantify how much of
+the +291 ms the paragraph change contributes, not a candidate complete fix.
+
+**Revised next action:** on a quiet host, (a) measure the current build with
+`lighthouse@13.4.1` for parity, (b) test a real DOM/render-cost reduction on
+`/projects` (e.g. `content-visibility:auto` + `contain-intrinsic-size` on card
+containers) under the gate's LH12.6.1, verifying LCP *and* CLS/axe/e2e. This is a new,
+unowned fix — recommend Tom add it as an explicit task (R19.4).
