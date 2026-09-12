@@ -1017,3 +1017,61 @@ Lighthouse route needs.
   burning CPU; do not arm an in-session watcher (30-min cap < 15 h job).
 - Exact validated command: §18. Artifacts: `armA-projects-lh13.json`,
   `armA2-projects-lh13.json`.
+
+---
+
+## §23. Additional root cause: the host CPU is FREQUENCY-CLAMPED (not only contended)
+
+While investigating why Arm A/A2 ran at half the baseline's `benchmarkIndex`, a second,
+independent cause surfaced: the package is running in a **frequency-capped state**, not
+just under CPU contention.
+
+Observed 2026-09-12 12:59–13:01 local (host up 23 h 50 m):
+```
+governor (all cores):      powersave
+energy_performance_pref:   performance
+cpu0 hw cap:               4.5 GHz   (other cores 4.8 GHz)
+scaling_max:               4.5 GHz
+current avg across 22 cores: ~1.42 GHz   (max seen 1.90 GHz)
+thermal zone x86_pkg_temp:  71–72 °C
+package_throttle_count:     172,672   (since boot)
+core_throttle_count:        69,085    (since boot)
+```
+A single-thread spin test held only **1.80 GHz** — the core did not ramp toward its
+4.5–4.8 GHz ceiling even under a dedicated busy loop.
+
+### Correlation with the F5 measurements
+| reading | benchmarkIndex | ratio vs baseline 2762 | ~max-freq ratio (1.90/4.8) |
+|---|---:|---:|---:|
+| Arm A | 1213 | 0.439 | 0.396 |
+| Arm A2 | 1343 | 0.486 | 0.396 |
+| run 6 `/projects` | 1842 | 0.667 | 0.396 |
+
+The Arm A/A2 ratios sit close to the current max-frequency ratio, which means **a large
+share of the "slowness" is a frequency cap, not just queueing.** This is consistent with
+the FCP being nearly unchanged while LCP/TBT inflate: a 4× CPU-throttled Lighthouse
+simulation multiplies a host that is *already* running at ~40 % of its rated clock.
+
+### Consequence (important for the next session)
+The `benchmarkIndex ≥ 2510` requirement may be **unreachable on this host in its current
+power/thermal state**, even with an idle CPU — because the governor is `powersave` and
+the package shows 172 k throttle events after 24 h at load. The gate needs a machine
+that can actually clock near its rating.
+
+Loading the external job is therefore necessary but possibly not sufficient:
+1. stop the external load (the Forgejo runner job + the local Python/Jest process), AND
+2. confirm the package can ramp (`scaling_cur_freq` approaching ~4.5 GHz on a busy core;
+   possibly set governor to `performance` — requires root, which this shell does not
+   have: `sudo -n` denies).
+
+If, after (1)+(2), `benchmarkIndex` still cannot reach ~2510, F5's Lighthouse budget is
+**not measurable on this host by design** and should be judged in CI (`.forgejo/workflows/lighthouse.yml`)
+or deferred to Tom's machine — not re-run here.
+
+### External load identified (for Tom)
+- The Stryker job is a **Forgejo Actions runner job**:
+  `/var/lib/forgejo-runner-3/work/116d92a83fe2b930/...` (node + `stryker`), ~40 min
+  elapsed at check time, ~118–120 % CPU each across many workers.
+- A separate local **Python/Jest** process also burns ~100 % CPU
+  (`.../Projects/Ful...`, `python -m pytest tests/test_d...`).
+- Both were still active at 13:01 local; total host loadavg ~10 with CPU busy 46 %.

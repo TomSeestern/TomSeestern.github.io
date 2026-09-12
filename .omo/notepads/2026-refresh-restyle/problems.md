@@ -288,3 +288,20 @@ speed**. The external Stryker job has held the box ~15 h.
 `tap-runner`), read `environment.benchmarkIndex`; `bi ≥ 2510` + LCP < 2500 ⇒ gate passes
 with no code change, else T30 is real. Command: F5 ledger §18. No code change is
 authorised until then.
+
+### NEW (2026-09-12): the host is FREQUENCY-CLAMPED, not just contended
+
+Beyond the external job, the CPU itself is capped: `governor=powersave`, current ~1.4 GHz
+avg / 1.9 GHz max against a 4.5–4.8 GHz ceiling, `x86_pkg_temp` 71–72 °C, and 172,672
+package throttle events after 24 h up. A dedicated spin loop reached only 1.80 GHz.
+
+The F5 `benchmarkIndex` ratios (Arm A 0.44, Arm A2 0.49 of the baseline's 2762) sit close
+to the current max-frequency ratio (~0.40), so much of the "slowness" is a **clock cap**,
+not only queueing. `benchmarkIndex ≥ 2510` may be **unreachable on this host** even when
+idle. Setting the governor to `performance` needs root — not available here (`sudo -n`
+denies).
+
+**Implication:** if a quiet host alone does not lift `benchmarkIndex` toward 2510, F5's
+Lighthouse budget is not measurable on this machine and must be judged in CI
+(`.forgejo/workflows/lighthouse.yml`) or on Tom's machine. This is a host/power issue,
+not a code issue — do not weaken the budget and do not "fix" the site for it.
