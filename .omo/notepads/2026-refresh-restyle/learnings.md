@@ -10,40 +10,6 @@ _Entries T01–T18 and the pre-re-review F-wave audits archived to
 `archive/2026-09-12/learnings.md` on 2026-09-12 to satisfy R1.7 (50-entry cap).
 Newest entries follow._
 
-## T22 — image pipeline (avif/webp) + own remote image + dead hero JPG (2026-09-11)
-
-- Third provider-crash recovery: the working tree was already the finished T22
-  change set. `git diff` + reading `scripts/check-image-size.mjs` confirmed it
-  was self-consistent, so no rewrite — only verification + evidence + commit.
-- Self-hosting beat an allowlist: `react-markdown` emits a plain `<img>`, so
-  `next/image` never optimizes the cheesecake photo — the on-disk webp bytes ship
-  verbatim. Self-hosting (`/img/cheesecake-ebeltoft.webp`, 93,924 B) keeps
-  `remotePatterns` and CSP `img-src 'self'` un-widened. The `plantoeat` host is
-  gone from the live path; it survives only in the explanatory `next.config.mjs`
-  comment. The About-page portrait keeps its webp replacement (30.6 KB); only the
-  442,942 B `.jpg` original was dropped.
-- Gate-is-not-a-tautology proof: `scripts/check-image-size.mjs` is zero-dep and
-  stats bytes only. Fed a temp dir with a 300 KB image, a 60 KB `hero-*` image,
-  and a 10 KB control → exit 1 with exactly the two right FAIL rows; probe
-  removed. Real tree: 99/99 PASS, largest is the new 91.7 KB webp.
-- Playwright gotcha: `playwright` is NOT a direct dep — the runnable import is
-  `{ chromium } from "@playwright/test"` (no top-level `playwright` in
-  `node_modules`, only `@playwright/test`). A probe script under `.omo/` resolves
-  bare imports by walking up to the repo `node_modules`.
-- `.next` lifecycle gotcha: Playwright's `webServer` runs `pnpm exec next dev
-  --port 3030`, which overwrites `.next`. `pnpm start` after an e2e run fails
-  with "Could not find a production build". Re-run `pnpm build` immediately
-  before any `pnpm start` proof.
-- Remote-image live proof (production build, real chromium): naturalWidth 1024,
-  naturalHeight 608, complete true, 0 console errors, 0 remotePatterns/next-image/
-  CSP mentions. `pass: true`.
-- Final: typecheck/lint (0 errors, 47 pre-existing warnings)/prettier/test green
-  (jest 16 suites / 112 passed); build 38/38; images 99/99; contrast 24/24;
-  ornaments green; full chromium e2e `CI=true --workers=1` 64 passed TWICE
-  (0 failed / 0 flaky); axe-only 8 passed.
-- T05 note: does not weaken the LCP<2500 budget; only removes the third-party
-  origin from the blog-detail critical path. No fresh Lighthouse number claimed.
-
 ## T19 — case-study template, additive render (2026-09-11)
 
 - Fourth provider-crash recovery (after T17/T18/T22). Working tree was the
@@ -1189,3 +1155,29 @@ before treating the wave as passed. This session initially reported F1–F4 as
 **Action taken:** F1, F2, F3 and F4 re-dispatched in parallel against the exact
 `962b6a2..HEAD` product-path delta, each instructed to return a fresh verdict. The
 prior approvals are not treated as cover for the new code.
+
+## 2026-09-12 (session 16) — Stale Final-Wave approvals: a wave verdict only covers its reviewed SHA
+
+- **The defect class:** F1–F4 all returned APPROVE at commit `962b6a2`. Then 1,108
+  insertions across 13 product files landed (T20/T24/T28/T29 + footer/sitemap/axe).
+  A wave approval binds to the tree it *reviewed*, not to "the plan" — so four green
+  verdicts silently went stale. Fresh F1 caught it and correctly REJECTED (B1/B1a).
+  Rule to carry: **before reporting a Final Verification Wave as passed, re-run it
+  against the current HEAD whenever product code landed after the previous verdict.**
+  Detect with `git diff --stat <approved-sha> HEAD -- app/ components/ lib/ e2e/`.
+- **Remedy pattern that worked:** re-run each stale gate against the exact delta
+  (`962b6a2..HEAD`), not the whole history, and require each fresh ledger to cite the
+  new HEAD SHA in its header. F2/F3/F4 all re-ran → APPROVE; a fresh independent F1
+  then confirmed closure → APPROVE. Total: 3 evidence appends + 4 commits, no product
+  change (the product was never wrong — only the paper trail was).
+- **Subagent write-loss under provider instability:** both F1 and F2 returned verdicts
+  but crashed before persisting their ledgers. The orchestrator transcribed the captured
+  output into the ledger and labelled it as a transcription ("§12"), then the F2 verifier
+  later wrote its own first-party "§13" when re-prompted. Lesson: when a verifier's write
+  is lost, preserve the verdict with explicit provenance, and prefer re-prompting the same
+  session to write first-party over leaving only a transcription.
+- **R1.7 cap is a live constraint, not a one-time cleanup:** archiving 21 entries brought
+  `learnings.md` to exactly 50, so appending this entry required archiving one more (T22).
+  The 50-entry cap means every new entry after the cap needs a matching archive move.
+- `task(task_id=...)` on an expired session fails with `Task not found for session`;
+  re-dispatch fresh rather than retrying the dead session id.
