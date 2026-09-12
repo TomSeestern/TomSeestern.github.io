@@ -752,6 +752,22 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 - [x] **F3. Real manual QA** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `visual-qa`, `frontend`]
 - [x] **F4. Scope fidelity** — Depends: all | Category: `deep` | Skills: [`review-work`, `git-master`]
 - [~] **F5. Regression gate** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `frontend`, `debugging`]
+  - **Status: UNJUDGED, not failed (2026-09-12).** Code-controlled gates all green.
+    Lighthouse cannot be judged: an external `ohmyroadmap` Stryker job held this
+    22-core host ~15 h, and **every** post-restyle LHR came from a host slower than
+    the baseline (`benchmarkIndex` 598–2416 vs baseline 2511–3064) — incomparable.
+    F5 ledger §19–§22.
+  - **RESUME — exactly one action:** run the Arm A command (F5 ledger §18: offline
+    cached Lighthouse 13.4.1 + `CHROME_PATH=/etc/profiles/per-user/tom/bin/chromium`,
+    matched to the T02 baseline) on `/projects`, and read
+    `environment.benchmarkIndex`. Require `bi ≥ 2510` and CPU ≤ ~25 % with no burning
+    `tap-runner`; otherwise the reading is void — do not judge from it.
+    - `bi ≥ 2510` **and** LCP < 2500 ⇒ the gate's LCP criterion **passes with no code
+      change** (§21 estimates ≈2414 ms at the baseline's `bi` 2762).
+    - LCP > 2500 at valid speed ⇒ `/projects` genuinely fails ⇒ T30 is real.
+  - **Do NOT** run while the host is busy, **do NOT** arm in-session watchers (30-min
+    monitor cap < the external job's runtime), and **do NOT** weaken the
+    2500/0.1/200 budgets.
 
 ### Wave 7 (F5-UNBLOCK — added 2026-09-12, R19.4 plan amendment)
 
