@@ -272,3 +272,19 @@ host slower than every baseline run** (run 6 bi 598–2416; T02 bi 2511–3064; 
 
 This supersedes the earlier "genuine regression / plausibly worsened" framing in this
 file. No code change is authorised until that reading exists.
+
+### TERMINAL F5 STATE (2026-09-12): host never reached valid speed; gate UNJUDGED
+
+Two Arm A attempts (10:13Z, 10:47Z) with the correct offline toolchain both produced
+full LHRs but at `benchmarkIndex` 1213 and 1343 vs the baseline's 2762 — **49 % and
+44 % of baseline speed**, i.e. incomparable under the §19 rule. Across all post-restyle
+readings (`/projects` bi 1842 / 1213 / 1343) **none was ever taken at baseline-comparable
+speed**. The external Stryker job has held the box ~15 h.
+
+**F5 is UNJUDGED, not failed.** §21's model estimates `/projects` ≈2414 ms corrected to
+`bi` 2762 (likely passing) — an extrapolation, not a measurement; do not claim a pass.
+
+**Next session: run Arm A once on a genuinely idle host** (CPU ≤25 %, no burning
+`tap-runner`), read `environment.benchmarkIndex`; `bi ≥ 2510` + LCP < 2500 ⇒ gate passes
+with no code change, else T30 is real. Command: F5 ledger §18. No code change is
+authorised until then.

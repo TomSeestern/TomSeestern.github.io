@@ -973,3 +973,47 @@ If it reads < 2500 → `/projects` passes, T30 is unnecessary, and F5's only rem
 gap is the host-speed requirement. If it reads > 2500 → T30 is real.
 
 No code change is authorised either way until that reading exists.
+
+---
+
+## §22. Arm A2 (2026-09-12 10:47Z) — still host-speed limited; NO valid reading obtainable today
+
+Second Arm A attempt, same correct toolchain (LH 13.4.1 + nix Chromium 149.0.7827.200,
+matched to baseline). Server came up cleanly, `lh_rc=0`, full LHR produced.
+
+| metric | baseline (bi 2762) | Arm A2 (bi 1343) | Δ |
+|---|---:|---:|---:|
+| LCP | 2588 | 4219 | +1631 |
+| FCP | 1054 | 1070 | +16 |
+| TBT | 85 | 465 | +380 |
+| CLS | 0 | 0 | 0 |
+
+**Verdict by the §19 rule: INCOMPARABLE.** Arm A2 ran at `benchmarkIndex` **1343**
+= 0.486 × the baseline's 2762 — nearly 2× slower. Per the comparability rule the
+reading cannot be used; the +1631 ms LCP with only +16 ms FCP is again the classic
+CPU-oversubscription signature, not a product result.
+
+**Cumulative host-speed record for /projects (all post-restyle):**
+| attempt | benchmarkIndex | ratio vs 2762 | usable? |
+|---|---:|---:|---|
+| run 5 (cleanest /projects) | — | — | no (mid-ramp) |
+| run 6 | 1842 | 0.67 | no |
+| Arm A | 1213 | 0.44 | no |
+| Arm A2 | 1343 | 0.49 | no |
+
+**Not one post-restyle `/projects` reading has ever been taken at baseline-comparable
+host speed.** The external `ohmyroadmap` Stryker job has kept this 22-core box busy for
+~15 h; brief dips (CPU 16–19 %) never held long enough for the ~90 s a single
+Lighthouse route needs.
+
+### Terminal state for F5 (for the next session)
+- The gate is **unjudged, not failed**. §21's host-speed model estimates `/projects`
+  at ≈2414 ms when corrected to `bi` 2762 — i.e. *likely passing* — but that is an
+  extrapolation from a noisy regression, not a measurement. Do not report it as a pass.
+- **The only remaining action is to run Arm A on a genuinely idle host** and read
+  `environment.benchmarkIndex`. If `bi ≥ 2510` and LCP < 2500 ⇒ F5's LCP gate passes
+  with no code change; if LCP > 2500 ⇒ T30 is a real fix.
+- Stop conditions: do not run while CPU busy > ~25 % or any `tap-runner` process is
+  burning CPU; do not arm an in-session watcher (30-min cap < 15 h job).
+- Exact validated command: §18. Artifacts: `armA-projects-lh13.json`,
+  `armA2-projects-lh13.json`.
