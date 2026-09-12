@@ -1140,3 +1140,23 @@ need a quiet host. At HEAD `ae1ebb8`:
 
 This upgrades the F5 backing evidence from "carry-forward" to "observed green at the
 current HEAD" for 3 of 4 load-insensitive budget gates.
+
+## 2026-09-12 — fonts gate green at HEAD (direct host-node run)
+
+The `nix develop` wrapper timed out (host saturated), so re-ran the zero-dependency
+script directly with the host Node (`node scripts/check-font-budget.mjs`) against the
+existing `.next`:
+
+```
+families: Inter, Newsreader (2/2)
+Inter      e4af272ccee01ff0-s.p.woff2   47.3 KiB
+Newsreader cdda087ff4cb1a1a-s.p.woff2   23.4 KiB
+First-load woff2: 70.7 KiB / 100.0 KiB budget
+Newsreader:       23.4 KiB / 60.0 KiB budget
+FONT BUDGET GATE PASSED
+```
+
+All **4** load-insensitive budget gates (contrast 24/24, ornaments, images 101,
+fonts 70.7 KiB) are now observed green at the current HEAD, not merely carried
+forward. Lesson: for zero-dependency gate scripts, invoke the system `node`
+directly to sidestep a slow/contended `nix develop` shell startup.
