@@ -1583,3 +1583,28 @@ Open question for Tom (not blocking): `FounderArc` renders on Home only; T20's
 **wipes `.next/`**, so `pnpm start` then fails with "Could not find a production
 build". Always `pnpm build` immediately before any `next start` measurement; do
 not chain build → e2e → start in one pass.
+
+**CRITICAL process discovery (2026-09-12): the Final Verification Wave went stale.**
+
+F1–F4 were all `APPROVE` at commit `962b6a2` (2026-09-12 04:02). **After** that
+approval, four user-facing features landed that the wave never saw:
+
+| commit | feature | product-code impact |
+|---|---|---|
+| `5ae1601` | T24 legal scaffold | +312 lines, 2 new routes |
+| `fefcf7d` | D8 labelled testimonial | +113 lines, new component |
+| `ddc18da` | T29 tag pages | +603 lines, 86 new routes |
+| `db4aa96` | T20 About portrait | +13 lines |
+
+Delta since the reviewed point: **1,108 insertions across 13 product-code files**
+(`git diff --stat 962b6a2 HEAD -- app/ components/ lib/ e2e/`).
+
+**Lesson:** a Final Verification Wave approval is only valid for the commit range it
+reviewed. Any product-code commit *after* the wave invalidates it. Wave approval must
+name its reviewed SHA, and the orchestrator must re-check "has anything landed since?"
+before treating the wave as passed. This session initially reported F1–F4 as
+"APPROVE" without qualifying the SHA — corrected here.
+
+**Action taken:** F1, F2, F3 and F4 re-dispatched in parallel against the exact
+`962b6a2..HEAD` product-path delta, each instructed to return a fresh verdict. The
+prior approvals are not treated as cover for the new code.
