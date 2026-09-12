@@ -1094,3 +1094,22 @@ No monitor is active. F5 remains a plain manual block: it must be resumed on a
 quiet host by the documented command (see `problems.md` BLOCKER 1). Do not
 assume any automated waiter exists. Correction recorded per R19.1 (no claim
 without verification).
+
+## 2026-09-12 — AGENTS.md orphaned-heading cleanup (R29.3/R39.3)
+
+Two structural fragments sat inside AGENTS.md's rule list, contradicting or
+interrupting the rules around them:
+
+- `## Unreleased` / `### Added` / `### Fixed` (between R5.4 and R5.5) — an orphaned
+  CHANGELOG skeleton, directly contradicting R5.4's own body ("does not currently
+  maintain a CHANGELOG.md").
+- `## Resource usage` (between R22.1 and R22.2) — wrong-level h2 interrupting the
+  R22.x block inside `### Resource economics — tracking only`.
+
+Removed in `6c23756 docs(agents): remove orphaned headings from rule list` (8 lines).
+Verified: orphan grep empty; rule count 242 unchanged; AGENTS.md now has exactly two
+h2 sections (`## Project rules`, `## Superseded rules`).
+
+Distinct from the flagged L66/L88 rule-*content* drift (owned by T41) — these carried
+no rule, tag, or justification, so deleting them changed no rule's meaning.
+Note: `.md` is outside `pnpm lint`/`pnpm prettier`, so only explicit greps catch this.
