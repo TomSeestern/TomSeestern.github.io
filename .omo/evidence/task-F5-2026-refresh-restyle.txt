@@ -233,3 +233,35 @@ the T05 budget has never been met by this codebase on these two routes.
   shift. Closing it likely needs design-perf work (e.g. `font-display: optional` /
   a text-LCP font strategy) and therefore Tom's sign-off, since D3 mandates the
   carved serif H1/H2 treatment.
+
+### LCP phase diagnosis (best runs from the 2026-09-12 F5 attempt)
+
+LHCI's `largest-contentful-paint-element` phase table, best (min-LCP) run per route:
+
+```
+/projects   LCP=2874  FCP=1057   TTFB=454  Load Delay=0  Load Time=0  Render Delay=2420
+/           LCP=2292  FCP=913    TTFB=457  Load Delay=0  Load Time=0  Render Delay=1835
+```
+
+Key facts:
+- **Load Delay = 0 and Load Time = 0** on both routes → the LCP element is text
+  (confirmed: `/projects` LCP node is
+  `section.bg-surface > div > div > p.mt-4` — the intro paragraph). There is NO
+  image/resource bottleneck to fix; T22's self-hosted image already removed the one
+  that existed on the blog-detail route.
+- **Render Delay dominates** (~1.8–2.4 s). Since `font-display` scores 1 and the
+  LCP element is body text in a swapped web font, this is the classic
+  fallback→web-font swap gap: FCP paints the fallback, LCP fires when the real face
+  renders. Under D3 the headline/body faces are self-hosted (Inter + Newsreader);
+  the preloaded first-load payload is only 70.7 KiB, so on a quiet host this gap
+  should be far smaller.
+- **Contamination caveat:** the host degraded from 16 % → 55 % CPU during this run
+  (and `/contact` TBT swung 166→2030 ms across its 3 runs). Render delay is
+  main-thread-sensitive, so these absolute numbers are inflated. They are useful as
+  a *shape* (render-bound, not load-bound) but not as a verdict.
+
+Implication if a quiet-host run still shows `/projects` LCP > 2500 with a large
+render delay: the fix is a font/LCP strategy change (e.g. `display: optional`,
+preload tuning, or shipping the display face only above the fold) — a design-perf
+tradeoff that D3 (carved serif) makes non-trivial and that requires Tom's sign-off.
+It is NOT a bundle-size or asset problem: bundle is at baseline and LCP loads 0 bytes.
