@@ -752,3 +752,23 @@ Navbar/Breadcrumb/Alert as Flowbite primitives after T21 replaced them in-tree.
 - Lesson: when a task replaces a third-party primitive with an in-tree one,
   grep the docs for the old library name in the SAME commit — the code grep
   ("no import remains") passes while prose silently lies.
+
+## F2 follow-up — README script table drift corrected (2026-09-12)
+
+Second doc-drift item from F2: the README "Available Scripts" table claims
+"From `package.json`:" but was missing the five gates this plan added.
+
+- Added rows: `pnpm typecheck`, `pnpm contrast`, `pnpm ornaments`, `pnpm images`,
+  `pnpm fonts` (grouped: typecheck in the lint/quality block; the four gates after
+  `budget:bundle`).
+- Intentionally omitted: `budget:lighthouse` (a pure alias of `lighthouse`),
+  `postinstall` (internal `patch-package` hook), `screenshots:update` (not a
+  contributor gate) — the table documents contributor-facing scripts only.
+- All 25 table rows are exactly 84 chars, preserving the existing alignment.
+- Parity oracle used:
+  `node -e '… pkg.filter(x=>!t.includes("`pnpm "+x+"`"))'` → now reports only the
+  three intentionally-omitted scripts.
+- Commit: `d8d4017 docs: document design and quality gate scripts in README`.
+- Lesson: when a plan adds a `package.json` script, the README scripts table is a
+  same-commit update target (R5.2). Neither `pnpm lint` nor `pnpm prettier` covers
+  `.md`, so markdown drift is invisible to the code gates.
