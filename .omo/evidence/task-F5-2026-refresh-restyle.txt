@@ -1206,3 +1206,67 @@ F5 Lighthouse remains **UNJUDGED**. The four post-restyle `/projects` readings s
 `bi` 1213–1643; none is comparable to the baseline. The evidence now points to a
 **borderline** result rather than a clear pass or fail, which strengthens the case for
 resolving it in a controlled measurement rather than guessing.
+
+---
+
+## §27. Host-independent gate re-verification at HEAD `db4aa96`/`a314531` (2026-09-12)
+
+F5 cannot be judged on Lighthouse while the host is contended, but the other
+Success-Criteria gates are CPU-insensitive and CAN be re-verified at the current
+HEAD. Doing so closes gaps left by earlier runs (which predated T29's 86 new tag
+routes).
+
+### Success Criterion #2 — bundle budget: **PASS**
+Ran the canonical CI path (`pnpm analyze` → `node report-bundle-size.js` →
+`node scripts/check-bundle-budget.mjs`), not a shortcut:
+
+```
+PASS — 18 entries within budget.
+Note: 4 route(s) absent from baseline — absolute limit only:
+  /datenschutz/page (140 B gzip)
+  /impressum/page (140 B gzip)
+  /tags/[tag]/page (108,329 B gzip)
+  /tags/page (3,713 B gzip)
+```
+
+Shared first-load JS `__global` = **102,254 B gzip (99.9 KiB)** vs the 130 KiB
+budget → 77 % of budget, unchanged by the 86 new tag routes (they reuse the
+existing `ProjectTeaser`/`ArticleTeaser` graph rather than adding a new one).
+
+### NEW observation — `/tags/[tag]` is now the app's heaviest route
+`/tags/[tag]/page` = **108,329 B gzip**, the largest single route:
+
+| route | gzip |
+|---|---:|
+| **/tags/[tag]/page** | **108,329** (new) |
+| /projects/page | 106,762 |
+| /blog/page | 97,660 |
+| /page (home) | 97,660 |
+| /about/page | 5,500 |
+| /tags/page | 3,713 |
+
+Cause: the archive imports **both** `ArticleTeaser` and `ProjectTeaser`, and the
+latter pulls in Flowbite `Card` + `Tooltip` + `icon-map`. It is **within the
+180 KiB route budget and therefore passing**, and it is not a regression (the
+route did not exist before). But every one of the 86 tag pages now ships ~108 KiB
+of JS even when it lists a single entry. This is the highest-value future perf
+target on the site; recorded here, NOT acted on (no budget was weakened, no
+scope was expanded).
+
+### Success Criterion #4 (partial) — contrast + ornaments: **PASS**
+- `pnpm contrast` → all **24** pairs meet their minimums.
+- `pnpm ornaments` → no banned ornament or token found.
+
+### Still unjudgeable (unchanged)
+Lighthouse LCP/TBT on `/projects` + the F5 verdict. Host at re-verification time:
+loadavg **28.6**, **22** `tap-runner` processes, avg clock **1.00 GHz**. The
+precondition remains an idle CPU (baseline `bi` 2510–3064; every post-restyle run
+`bi` 1213–1842).
+
+### Reconfirmed from baseline data (already in §20, restated for completeness)
+The T02 baseline was itself **over the 2500 ms LCP budget on 3 of 7 routes**:
+`/` 2830, `/blog/entry/…cheesecake` 3562, `/projects` 2588 (all at `bi` 2510–3064,
+a fast host). So F5's LCP criterion was never fully green pre-restyle either;
+`/projects` is a **pre-existing** breach, not one the restyle introduced. CLS was
+0.000 on all 7 baseline routes and on **every** post-restyle LHR (Arm A–A4, run 6),
+so the CLS half of Criterion #3 is satisfied on evidence robust to host speed.
