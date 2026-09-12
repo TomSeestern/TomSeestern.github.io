@@ -134,7 +134,7 @@ separate perf task, not a scope change here.
 - Prior environmental diagnosis: `.omo/evidence/t05-lighthouse/environmental-diagnosis-2026-09-11.txt`
 - F1/F2/F3/F4 ledgers: `.omo/evidence/task-F{1,2,3,4}-2026-refresh-restyle.txt`
 
-## 4. ADDENDUM 2026-09-12 — code gates RE-OBSERVED at later HEAD (not carried forward)
+## 7. ADDENDUM 2026-09-12 — code gates RE-OBSERVED at later HEAD (not carried forward)
 
 F5's original code-gate run was at HEAD `88c68f9`. Between then and now only
 `DESIGN.md`, `README.md`, `AGENTS.md`, `.gitignore`, and one comment-only line in
@@ -166,7 +166,7 @@ Repro gotchas recorded this session:
 - Playwright: run inside `nix develop` AND export the cert vars **inside** that shell,
   else `next dev`'s font fetch fails with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`.
 
-## 5. ADDENDUM 2026-09-12 07:40 local — Lighthouse RUN COMPLETED (still red; contaminated)
+## 8. ADDENDUM 2026-09-12 07:40 local — Lighthouse RUN COMPLETED (still red; contaminated)
 
 After 8h+ of CPU saturation, the host finally opened a window: at run start
 CPU busy was **16.0%**, loadavg 4.4 (vs ~95% / ~50 for the prior 8h), 21 idle
@@ -266,7 +266,7 @@ preload tuning, or shipping the display face only above the fold) — a design-p
 tradeoff that D3 (carved serif) makes non-trivial and that requires Tom's sign-off.
 It is NOT a bundle-size or asset problem: bundle is at baseline and LCP loads 0 bytes.
 
-## 6. ADDENDUM 2026-09-12 08:15 — second F5 attempt: CONTAMINATED, DISCARD
+## 9. ADDENDUM 2026-09-12 08:15 — second F5 attempt: CONTAMINATED, DISCARD
 
 After the partially-contaminated 07:40 run, a quiet-window search polled host CPU for
 **40 × 15 s = 10 min** before starting. **No quiet window appeared** — every sample
