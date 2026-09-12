@@ -842,6 +842,15 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
     loadavg 25.7/25.3/26.2 on 22 cores; nine `cc1plus` compilers (external job) plus
     `.opencode-wrapp` at 98.5% CPU. No Lighthouse run attempted (a void reading cannot
     decide the gate). Disposition unchanged: `[~]` UNJUDGED, not failed.
+  - **Arm A attempt #5 2026-09-12T20:30Z (F5 ledger §29): reading VOID.** Window
+    looked quiet at start (loadavg 5.41, 0 `cc1plus`), so the validated §18 command
+    was run against F3's 127/127 build with LH 13.4.1 + nix Chromium 149.0.7827.200
+    (both match T02). Result: `benchmarkIndex` **1900 < 2510** → not comparable,
+    **not judged**. A fresh `cc1`/`cc1plus` burst (ClosedLoopOS build) pushed loadavg
+    back to 22 within a minute of the run. /projects LCP 3989 ms is unused (void);
+    CLS 0.000 and TBT 167.7 ms still PASS. Artifact `armA5-projects-lh13.json`.
+    Confirm: **F5 cannot be judged from inside an active agent session on this shared
+    host** — the harness itself held ~98% CPU.
 
 ### Wave 7 (F5-UNBLOCK — added 2026-09-12, R19.4 plan amendment)
 

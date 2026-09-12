@@ -1392,3 +1392,45 @@ No Lighthouse run attempted (correctly — a void reading cannot decide the gate
 This is the same disposition as §25–§27: F5 remains `[~]` UNJUDGED, not failed.
 Resolution requires the reading to be taken OUTSIDE this agent session, on an
 otherwise-idle host.
+
+════════════════════════════════════════════════════════════════════════════
+§29 — F5 Arm A attempt #5 (2026-09-12T20:30:12Z→20:32:04Z) — reading VOID
+════════════════════════════════════════════════════════════════════════════
+The quietest window observed this session (loadavg 5.41 at command start, **0**
+`cc1plus` processes, port 3000 free, cached LH 13.4.1 + nix Chromium 149.0.7827.200
+both present). Server: F3's 127/127 production build (`.next/BUILD_ID=zZkweZ6DZq7qMmMm88Bpr`,
+built 21:15; all later commits touch only `.omo/` docs). So a like-for-like attempt
+against the T02 baseline was finally possible.
+
+Command: exactly the validated §18 Arm A command, output to
+`.omo/evidence/f5-lighthouse/armA5-projects-lh13.json` (`LIGHTHOUSE_EXIT=0`).
+
+Observed (`armA5-projects-lh13.json`):
+  lighthouseVersion: 13.4.1              ✓ matches T02 baseline tool
+  hostUserAgent: HeadlessChrome/149.0.0.0 ✓ matches T02 baseline browser
+  environment.benchmarkIndex: 1900       ✗ **VALIDITY GATE FAILED (< 2510)**
+  largest-contentful-paint: 3989 ms      (VOID — not comparable)
+  cumulative-layout-shift: 0.000         PASS
+  total-blocking-time: 167.7 ms          PASS
+  first-contentful-paint: 1059.6 ms
+  speed-index: 2392.3 ms
+  performance score: 0.85
+  metrics.observedLargestContentfulPaint: 1375 ms (unthrottled)
+
+**Disposition: the reading is VOID and is NOT judged.** Per the pre-registered rule
+(§19–§22, plan Success-Criterion #3), a reading with `benchmarkIndex < 2510` is not
+comparable to the T02 baseline (bi 2511–3064) and cannot decide the LCP/TBT gate.
+No claim about `/projects` passing or failing is made from it.
+
+**New diagnostic datum (why it still fell short):** the external contention did not
+stay absent. The post-run host probe (20:33:17Z) shows a fresh compiler burst —
+`cc1`/`cc1plus` at 78–200% CPU from a ClosedLoopOS `tsup`/`cc1` build job — which
+pushed loadavg back to 22.10 within ~1 minute of the run. The `benchmarkIndex` of
+1900 reflects that mid-run interference even though the *start* looked quiet.
+Conclusion stands: **a valid reading cannot be obtained while this host is shared
+with bursty external build jobs AND this agent session.** The harness
+(`.opencode-wrapp`) held ~98% CPU throughout.
+
+Server stopped at 22:39Z; port 3000 confirmed closed; no stray `next-server`.
+Artifact retained: `armA5-projects-lh13.json` (VOID, for the record).
+F5 disposition unchanged: `[~]` **UNJUDGED, not failed**.
