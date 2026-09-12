@@ -85,7 +85,7 @@
       "plan_name": "2026-refresh-restyle",
       "status": "blocked",
       "started_at": "2026-09-10T18:26:19.216Z",
-      "updated_at": "2026-09-12T20:03:19.175Z",
+      "updated_at": "2026-09-12T20:46:02.301Z",
       "session_ids": [
         "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP",
         "opencode:ses_f69286b03ffe0zCLNuhY68BsoR",
@@ -118,13 +118,13 @@
           "updated_at": "2026-09-12T02:08:54.674Z"
         }
       },
-      "blocked_reason": "Updated 2026-09-12 (session 16). Plan 28 done / 8 blocked / 0 open.\n\nFINAL VERIFICATION WAVE F1-F4: ALL FRESH-APPROVE at HEAD. A stale-wave defect was found and fixed: F1-F4 had been approved at 962b6a2, but 1,108 insertions across 13 product files landed afterward, so those approvals did not cover HEAD. F1 re-audit correctly REJECTED on that basis (B1/B1a). Remedy executed: F2/F3/F4 each re-ran against the exact 962b6a2..HEAD delta and wrote fresh ledgers citing ancestor SHAs (F2 APPROVE, F3 APPROVE, F4 APPROVE); the R1.7 notepad cap was fixed (50 current + 21 archived = 71, no loss). A fresh independent F1 then confirmed all findings CLOSED and returned APPROVE.\nVerdicts: F1 APPROVE | F2 APPROVE | F3 APPROVE | F4 APPROVE. Commits: 55b54f9, 0307954, 42f56f9.\n\nONLY open Final-Wave item: F5 Lighthouse LCP/TBT on /projects - UNJUDGED, not failed. Every CPU-insensitive F5 criterion is GREEN (see prior reason). The one missing datum is a single /projects LHR at benchmarkIndex >= 2510 on an idle host; every post-restyle LHR so far came from a host slower than baseline (bi 598-2416 vs 2511-3064) and is incomparable. Run OUTSIDE this agent session (the harness is a top CPU consumer). bi>=2510 + LCP<2500 => gate passes with NO code change; LCP>2500 => T30 is real. /projects is a PRE-EXISTING breach (T02 baseline: / 2830, cheesecake 3562, /projects 2588).\n\nWave 7: T30 blocked on that reading (possibly unnecessary); T31 = Tom process decision + npm registry unreachable.\nWave 5 human-gated (R19.1): T24 real legal facts, T25 positioning/founder-arc copy, T26 cleared case-study metrics, T27 two posts, T28 LAYKZR metrics+consent. T29 DONE, T20 structural DONE (copy stays with T25).\n\nBudgets NOT weakened (2500/0.1/200). No --no-verify, no skipped tests. Unpushed."
+      "blocked_reason": "Updated 2026-09-12 (session 16). Plan 28 done / 8 blocked / 0 open.\n\nFINAL VERIFICATION WAVE F1-F4: ALL FRESH-APPROVE at HEAD. A stale-wave defect was found and fixed: F1-F4 had been approved at 962b6a2, but 1,108 insertions across 13 product files landed afterward, so those approvals did not cover HEAD. F1 re-audit correctly REJECTED (B1/B1a). Remedy executed: F2/F3/F4 each re-ran against the exact 962b6a2..HEAD delta and wrote fresh ledgers citing ancestor SHAs (all APPROVE); R1.7 notepad cap fixed (50 current + 22 archived). A fresh independent F1 then confirmed all findings CLOSED and returned APPROVE.\nVerdicts: F1 APPROVE | F2 APPROVE | F3 APPROVE | F4 APPROVE. Commits: 55b54f9, 0307954, 42f56f9.\n\nONLY open Final-Wave item: F5 Lighthouse LCP/TBT on /projects - UNJUDGED, not failed. All CPU-insensitive F5 criteria GREEN.\nF5 Arm A ATTEMPT #5 (2026-09-12T20:30Z, ledger sec29): first viable window this session (loadavg 5.4 at start, 0 cc1plus). Ran the validated sec18 command against F3 127/127 build with LH 13.4.1 + nix Chromium 149.0.7827.200 (both match T02). Result: benchmarkIndex 1900 < 2510 => reading VOID, NOT judged. A cc1/cc1plus burst pushed loadavg back to 22 within a minute. Artifact armA5-projects-lh13.json. CLS 0.000 + TBT 167.7ms still PASS.\nF5 sec30 diagnostic: the agent session itself owns ~40 long-lived node procs (14 lsp-daemon + 26 codegraph) + harness near a full core, so the measurement host is never idle while the orchestrator session runs. CONCLUSION: F5 cannot be judged from inside an active agent session on this shared host. No further in-session attempts warranted.\nResume (OUTSIDE this session, on an idle host): ledger sec18 Arm A command. bi>=2510 + LCP<2500 => LCP gate passes with NO code change; LCP>2500 => T30 is real. /projects is a PRE-EXISTING breach (T02 baseline: / 2830, cheesecake 3562, /projects 2588).\n\nWave 7: T30 blocked on that reading (possibly unnecessary); T31 = Tom process decision + npm registry unreachable.\nWave 5 human-gated (R19.1): T24 real legal facts, T25 positioning/founder-arc copy, T26 cleared case-study metrics, T27 two posts, T28 LAYKZR metrics+consent. T29 DONE, T20 structural DONE (copy stays with T25).\n\nBudgets NOT weakened (2500/0.1/200). No --no-verify, no skipped tests. Unpushed."
     }
   },
   "active_plan": "/home/tom/Projects/tomsegbers-de/.omo/plans/2026-refresh-restyle.md",
   "started_at": "2026-09-10T18:26:19.216Z",
   "status": "blocked",
-  "updated_at": "2026-09-12T20:03:19.177Z",
+  "updated_at": "2026-09-12T20:46:02.315Z",
   "session_ids": [
     "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP",
     "opencode:ses_f69286b03ffe0zCLNuhY68BsoR",
