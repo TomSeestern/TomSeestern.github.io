@@ -603,3 +603,86 @@ This is a **real finding requiring a code decision**, not a green run. Budgets s
 the `/projects` intro paragraph to `text-base font-normal` on mobile, (b) font
 strategy change (`display: optional` / preload tuning), (c) byte-level LCP-path
 work on the paragraph. Each needs a clean-host A/B to verify.
+
+---
+
+## §15. RETRACTION of §11 + corrected `/projects` diagnosis (Oracle consult, verified)
+
+Independent diagnosis (Oracle) forced a re-read of the raw LHRs. **§11's central
+claim is retracted.** Three corrections, all verified against the artifacts:
+
+### 15.1 §11 is FALSE: baseline and gate used DIFFERENT Lighthouse majors
+
+| dataset | lighthouseVersion | how it was produced |
+|---|---|---|
+| `.omo/evidence/baseline/lighthouse/*.json` (all 7) | **13.4.1** | `npx -y lighthouse` (T02 ledger L60/L70) |
+| `.lighthouseci` run-6 LHRs | **12.6.1** | `pnpm lighthouse` → `@lhci/cli@0.15.1` → bundled `lighthouse@12.6.1` (lockfile L6228) |
+
+§11 line 398 claimed "Back-to-back FCP vs LCP (same Lighthouse version/method)".
+**That is factually wrong.** The `+312 ms` restyle-vs-baseline delta is therefore
+**confounded by a major-version change in the measuring instrument** and cannot be
+attributed to the restyle. Any future baseline comparison MUST state the Lighthouse
+version.
+
+### 15.2 The real page got FASTER; only the simulated number got worse
+
+| reading | baseline (LH13) | restyle (LH12) | source |
+|---|---:|---:|---|
+| **observed (real trace) LCP** | **303 ms** | **190 ms** | `metrics.details.items[0].observedLargestContentfulPaint` |
+| observed FCP | 303 ms | 190 ms | same |
+| simulated LCP | 2588 | 2923 | `audits["largest-contentful-paint"]` |
+| simulated TTFB (Lantern constant) | 165.25 | 453.70 | phase table |
+| modeled render delay | 137.88 | 2469.05 | phase table |
+| real `server-response-time` | 14 ms | 8 ms | `server-response-time` |
+| observed CLS | 0 | 0 | `metrics` |
+
+In the **real, unthrottled trace the restyle paints LCP 113 ms *faster*** (303→190).
+The 2923 ms is **Lantern model output**: `453.7 + 2469.05 = 2922.75`, where 453.7 is
+the simulated-throttling TTFB constant (real server time is 8 ms). The §11 claim that
+the phase table decomposes real "font swap" cost is wrong — it decomposes the model.
+
+### 15.3 The LCP *element* switched h1 → p (a real, explained change)
+
+| | baseline | restyle |
+|---|---|---|
+| element | `section > div > div > h1.mt-3` | `section > div > div > p.mt-4` |
+| box | 380 × **158** | 380 × **189** |
+| source | `lcp-breakdown-insight` (LH13) | `lcp-phases-insight` (LH12) |
+
+T05 saw the h1, run 5/6 see the p. Cause: the intro paragraph changed
+`text-base font-normal` (1rem/400) → `text-body-lg font-light` (1.125rem/300)
+(`app/projects/page.tsx:44`; `tailwind.config.js` fontSize tokens), making it the
+largest text box. So part of every cross-run "LCP got worse" comparison is simply **a
+different element being scored**.
+
+### 15.4 What is NOT established / one Oracle assertion I could not verify
+
+- Oracle asserted `lcpInvalidated: false`. **That field does not exist in the LHR**
+  (`metrics.details.items[0]` has no `lcpInvalidated` key in this Lighthouse output).
+  Do not cite it. What IS true: observed LCP == observed FCP (190 = 190) and CLS = 0,
+  which is consistent with no large late re-fire — but that is the supportable form.
+- Font-swap as the mechanism is **unsupported**: both faces are preloaded
+  (`cdda087…` Newsreader 23.9 KiB, `e4af272…` Inter 48.4 KiB), Newsreader applies only
+  to `h1,h2` (`styles/tailwind.css:14-19`) while the LCP element is Inter body text,
+  and the real LCP paints at 190 ms (before the modelled render delay). §11's
+  "font-swap bound" framing is withdrawn.
+- **Unproven root cause of the simulated delta:** restyle observed main-thread
+  559 ms vs baseline 333 ms (+226 ms observed → +904 ms simulated, `mainthread-work-breakdown`
+  2236 vs 1332). Whether that is product code (21 cards) or residual host load is not
+  separable from these two single runs across two tool versions.
+
+### 15.5 Consequence / disposition
+
+- Budgets stay 2500/0.1/200. No budget change.
+- `/projects` may not be a regression at all — it may be a **methodology artifact**
+  (tool version + element switch). Pre-existing baseline was 2588 (LH13) > 2500.
+- **Cheapest decisive experiment (needs a quiet host):** measure the CURRENT build
+  with the *baseline's* tool (`lighthouse@13.4.1`) on `/projects` and compare to 2588.
+  If ≈2588 → the delta is tooling; if ≈2920 → real. In the same window, A/B the intro
+  paragraph reverted to `text-base font-normal` under the gate's LH12.6.1.
+- Oracle's full ranked fix list (paragraph revert, `content-visibility` on cards,
+  `display:optional`, archives pagination [Tom], Lighthouse-version parity) is a
+  candidate menu for Tom, not applied work.
+
+Supersedes §11's "font-swap bound, not paint bound" conclusion and the "
+same Lighthouse version/method" premise in both §11 and §12.
