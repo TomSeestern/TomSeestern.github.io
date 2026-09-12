@@ -727,3 +727,28 @@ Recorded in issues.md; do NOT fix in F3 (scope: no product changes).
 T16 scaffold, T25 copy is `[~]` human-gated; 3-post blog grid leaves one cell empty
 (content count); legacy project detail has no hero/meta (intended degrade);
 blog H1 is DOM "Blog" rendered uppercase via CSS.
+
+## F2 follow-up — T21 doc drift corrected (2026-09-12)
+
+Closed the F2 "COMPONENT doc drift" nit: README.md + DESIGN.md still described
+Navbar/Breadcrumb/Alert as Flowbite primitives after T21 replaced them in-tree.
+
+- `README.md`: Flowbite bullet now states `Card`-only; components tree gained the
+  6 real components that were missing (`Alert/`, `Breadcrumb/`, `CaseStudyMeta/`,
+  `FeaturedSet/`, `FounderArc/`, `Providers/`) and `Header/` no longer says
+  "Flowbite Navbar". Tree now matches `ls components/` exactly (14 entries).
+- `DESIGN.md` §5: "Flowbite primitives" → "Component primitives"; names the
+  in-tree header/breadcrumb/alert/tooltip-provider and keeps Flowbite only for
+  `Card`.
+- `DESIGN.md` focus paragraph: the old claim "Primary Flowbite-pattern CTAs
+  retain their compatible `primary-*` focus rings" was FALSE — `grep -rn
+  "ring-primary"` returns zero hits; the header CTA uses
+  `focus-visible:ring-accent-soft-foreground-dark`. Replaced with the real
+  behaviour (solid CTAs use the darker ring variant for contrast on filled
+  terracotta).
+- Verified: `grep -rn "Flowbite Navbar"` → no match; `pnpm ornaments` → PASS;
+  README tree == real `components/` dir. Doc-only, no product code touched.
+- Commit: `2ca9583 docs: correct Flowbite primitive references after T21`.
+- Lesson: when a task replaces a third-party primitive with an in-tree one,
+  grep the docs for the old library name in the SAME commit — the code grep
+  ("no import remains") passes while prose silently lies.
