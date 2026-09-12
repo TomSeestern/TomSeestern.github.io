@@ -968,3 +968,13 @@ mobile-budget collection.
   The recurring `null/` codegraph artifact is confirmed untracked.
 
 **Conclusion:** release hygiene holds. Nothing to fix.
+
+## 2026-09-12 — Changed spec passes Prettier (R3.1)
+
+`e2e/dark-mode.spec.ts` (comment-only edit) verified:
+- `pnpm exec prettier --check e2e/dark-mode.spec.ts` → exit 0 ("All matched files
+  use Prettier code style!"). The R3.1 formatting gate is not regressed.
+- `pnpm exec eslint e2e/dark-mode.spec.ts` could not complete: killed by the
+  180 s tool timeout because the host is at loadavg ~54 (external Stryker, 23
+  workers). This is environmental, not a code signal — and the edit is
+  comment-only, so no lint rule can be affected. Re-run when the host is quiet.
