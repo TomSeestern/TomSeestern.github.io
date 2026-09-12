@@ -10,7 +10,7 @@
 
 **What it will NOT do:** No new runtime dependencies, no framer-motion/GSAP/motion, no `next-themes`, no `output:'export'`, no Tailwind v4 / CSS-custom-property migration, no Roman props or Latin nav, no route renames, no fabricated metrics/testimonials/clients, no newsletter, no RUM/analytics.
 
-**Effort:** XL (~29 todos + 5 final gates, 6 waves / 7 phases)
+**Effort:** XL (~29 todos + 5 final gates, 6 waves / 7 phases; +2 F5-unblock todos in Wave 7, added 2026-09-12)
 **Risk:** High at Phase 0 (red CI, measurement harness) and Phase 5 (human content gate); Medium elsewhere (Flowbite blast radius, image pipeline ordering, e2e copy/count assertions).
 **Decisions I made for you (defaults; see Open Decisions):** restyle-first MVP; marquee dies, featured set of 4; Inter-only carved (serif optional); single accent `#2563eb` (terracotta optional); featured flag inside `/projects` (no `/work` route); keep `flowbite-theme-mode`; targeted Flowbite replacement; tag pages deferred; testimonial deferred; cheesecake archived.
 
@@ -18,7 +18,7 @@ Your next move: confirm the Open Decisions you care about, then `/start-work 202
 
 ---
 
-> TL;DR (machine): XL effort, HIGH risk at W0 (CI red + harness) and W5 (human gate). 29 todos + 5 final gates, 6 waves. W0 fix lint + baseline + bundle-budget/axe/Lighthouse harness. W1 zero-visual-change foundation (theme-init/FOUC, token drift, dead OTel, additive markdown schema, single Tooltip provider, contact a11y). W2 tokens/type/motif (contrast-gated). W3 page rebuild. W4 image pipeline + OG. W5 human-gated content. W6 full verification. No new runtime deps. TDD for behavior changes; baseline+tests-after for config/docs. Evidence per todo in `.omo/evidence/`. Restyle-first MVP decoupled from content gate.
+> TL;DR (machine): XL effort, HIGH risk at W0 (CI red + harness) and W5 (human gate). 29 todos + 5 final gates, 6 waves (+ Wave 7 F5-unblock, 2026-09-12). W0 fix lint + baseline + bundle-budget/axe/Lighthouse harness. W1 zero-visual-change foundation (theme-init/FOUC, token drift, dead OTel, additive markdown schema, single Tooltip provider, contact a11y). W2 tokens/type/motif (contrast-gated). W3 page rebuild. W4 image pipeline + OG. W5 human-gated content. W6 full verification. W7 `/projects` LCP fix + Lighthouse version parity. No new runtime deps. TDD for behavior changes; baseline+tests-after for config/docs. Evidence per todo in `.omo/evidence/`. Restyle-first MVP decoupled from content gate.
 
 ## Context
 
@@ -813,5 +813,9 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 6. **Wave 3 + Wave 4** — start T22 (Wave 4) alongside Wave 3; parallel T16, T17, T18, T21; then T19 after T17+T22.
 7. **Wave 5** — HOLD for Tom; run only approved content todos, per-file approval before commit.
 8. **Wave 6** — F1–F5 in parallel; surface results; await explicit user okay.
+9. **Wave 7 (F5-unblock, added 2026-09-12)** — T31 (Lighthouse version parity) is a Tom
+   process decision; T30 (`/projects` LCP fix) requires a quiet-host LCP verification
+   before any commit. Both are `[~]` blocked; do not start either while the external
+   Stryker job saturates the host.
 
 > Every todo: write `.omo/evidence/task-<ID>-2026-refresh-restyle.txt`, update `.omo/boulders/`, run the todo's exact QA command, commit atomically with a conventional message, and never bypass hooks.
