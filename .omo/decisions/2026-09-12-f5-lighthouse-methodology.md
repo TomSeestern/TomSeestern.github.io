@@ -91,3 +91,54 @@ element is Inter body text, not the Newsreader display face — so the earlier
 - `@lhci/cli` is not upgraded/re-pinned by this decision — that is a separate,
   deliberate process choice to be made only if/when Arm A demonstrates the version
   confound materially affects the verdict.
+
+---
+
+## Addendum (2026-09-12): version confound quantified on identical product code
+
+A stronger control exists inside the existing artifacts, and it **partially corrects
+Decision §3 above**. T02 (LH **13.4.1**, revision `74689e8`) and T05 (LH **12.6.1**,
+revision `1b1062e`) bracket a window in which **no product code changed**:
+`git diff --name-only 74689e8..1b1062e` lists only `e2e/`, `.forgejo/`, `scripts/`,
+`package.json`, `pnpm-lock.yaml`, `tests/`, `.omo/` — **no `app/`, `components/`,
+`lib/`, `styles/`, `public/`**. So T02 is a same-page LH13 reading and T05 a same-page
+LH12 reading of identical product code. T05−T02 is a direct tool-bias estimate.
+
+| route | T02 LH13.4.1 | T05 LH12.6.1 | tool bias (T05−T02) |
+|---|---:|---:|---:|
+| `/` | 2830 | 2589 | −241 |
+| `/about` | 2384 | 2362 | −22 |
+| **`/projects`** | **2588** | **2632** | **+44** |
+| `/blog` | 2489 | 2105 | −384 |
+| `/contact` | 2256 | 2255 | −1 |
+| cheesecake | 3562 | 3690 | +128 |
+| soudest | 2127 | 2104 | −23 |
+
+Two consequences:
+
+1. **The version confound is real and route-dependent** (−384 … +128, median −22).
+   This justifies the "record the `lighthouseVersion` in every comparison" rule.
+2. **On `/projects` it is small (+44 ms).** The tool change therefore does **not**
+   explain the `/projects` overage. Decision §3's "it may be a methodology artifact,
+   not a regression" is **too strong and is corrected here.**
+
+### Corrected `/projects` verdict
+
+- **Pre-restyle, under the gate's own tool (LH 12.6.1), `/projects` was ALREADY over
+  budget**: T05 median-of-3 = **2632 ms** (`task-T05` §4, revision `1b1062e`). It has
+  never passed.
+- **Post-restyle under the same tool**, the only remotely clean run reads **2923 ms**
+  (run 6) — but that single run was collected ~19 s *after* host re-saturation began
+  (08:32:36Z) and the other two `/projects` runs were 4342 / 4287. So the **+291 ms is
+  suggestive, not proven**.
+- The LCP **element** genuinely switched from `h1` (T02 *and* T05) to the intro
+  `p` (run 6) — T05 vs run 6 are the *same* LH12, so this is a **product** change, not
+  tooling: the paragraph grew from `text-base font-normal` to `text-body-lg font-light`.
+- The real-trace paint is not slower (observed LCP 190 ms run 6 vs 303 ms T02), but
+  those are different tools, so that comparison is also not like-for-like.
+
+**Net:** `/projects` is a **pre-existing overage, plausibly worsened by the paragraph
+change**; the version confound does not rescue it. The quiet-host A/B (BLOCKER 1)
+remains the required next step before any code change — but the framing "probably just
+a methodology artifact" is withdrawn. If Arm B shows the paragraph revert returns LCP
+under 2500 ms under the gate's LH12, the fix is a real, cheap product fix.
