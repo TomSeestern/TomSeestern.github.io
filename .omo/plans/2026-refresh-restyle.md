@@ -838,6 +838,10 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
   - **Do NOT** run while the host is busy, **do NOT** arm in-session watchers (30-min
     monitor cap < the external job's runtime), and **do NOT** weaken the
     2500/0.1/200 budgets.
+  - **Re-probe 2026-09-12T20:19:39Z (F5 ledger §28):** precondition still unmet —
+    loadavg 25.7/25.3/26.2 on 22 cores; nine `cc1plus` compilers (external job) plus
+    `.opencode-wrapp` at 98.5% CPU. No Lighthouse run attempted (a void reading cannot
+    decide the gate). Disposition unchanged: `[~]` UNJUDGED, not failed.
 
 ### Wave 7 (F5-UNBLOCK — added 2026-09-12, R19.4 plan amendment)
 

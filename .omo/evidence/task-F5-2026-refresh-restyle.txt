@@ -1367,3 +1367,28 @@ continuously contended by the external Stryker job plus this agent harness since
 routes, so `/projects` (2588 ms at `bi` 2762) is a **pre-existing** breach, not a
 restyle regression. A valid reading requires `bi ≥ 2510` and cannot be taken from
 inside this session.
+
+════════════════════════════════════════════════════════════════════════════
+§28 — F5 precondition re-probe (2026-09-12T20:19:39Z)
+════════════════════════════════════════════════════════════════════════════
+Command (read-only):
+  $ uptime; ps aux | grep -cE '[t]ap-runner|[s]tryker'
+  $ ps -eo pcpu,comm --sort=-pcpu | awk 'NR>1 && $1>50' | head -12
+
+Observed:
+  load average: 25.74 / 25.29 / 26.22 (22 cores → sustained ~1.2× oversubscribed)
+  top consumers >50% CPU:
+    98.5  .opencode-wrapp        ← this agent harness itself
+    ~84–89  nine× cc1plus        ← native compilation in another job
+    157   node
+    (the 1300% `ps` row is the measurement command itself, not load)
+
+Conclusion: F5's precondition ("only precondition: an **idle CPU**") is UNMET.
+The host is oversubscribed by an external compile job AND by `.opencode-wrapp`
+(the harness for this session). A `/projects` LHR taken now would land at
+`benchmarkIndex` well below 2510 and be VOID per §19–§22.
+
+No Lighthouse run attempted (correctly — a void reading cannot decide the gate).
+This is the same disposition as §25–§27: F5 remains `[~]` UNJUDGED, not failed.
+Resolution requires the reading to be taken OUTSIDE this agent session, on an
+otherwise-idle host.
