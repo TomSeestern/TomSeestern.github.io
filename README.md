@@ -148,7 +148,7 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── jest.config.js
 ├── jest.setup.js
 ├── playwright.config.ts
-├── tailwind.config.js
+├── tailwind.config.js         # Tailwind config; registers Flowbite + typography plugins
 ├── postcss.config.js
 ├── prettier.config.js
 ├── .eslintrc.js
@@ -203,7 +203,7 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── main.ts
 │   └── preview.ts
 ├── styles/
-│   └── tailwind.css           # Tailwind entry, imports Flowbite
+│   └── tailwind.css           # Tailwind entry: base/components/utilities + display & motion layers
 └── scripts/
     ├── check-*.{js,mjs}       # CI gates: frontmatter, contrast, ornaments, images, fonts, bundle
     └── update-readme-screenshots.ts  # Captures Showcase screenshots from a dev server
