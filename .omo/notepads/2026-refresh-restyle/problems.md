@@ -235,3 +235,16 @@ must also re-capture the T02 baseline with the SAME version.
 the registry, and `npx -y lighthouse@13.4.1` (the parity Arm A) also requires the
 registry unless the exact version is already cached. Check for a local cache first:
 `ls ~/.npm/_npx/*/node_modules/lighthouse`.
+
+### UPDATE: F5 Arm A is OFFLINE-RUNNABLE (cached Lighthouse 13.4.1 verified)
+
+Correction to BLOCKER 3 and to the "F5 needs network" inference: a complete
+**Lighthouse 13.4.1** (the exact baseline version) is in the npx cache and runs
+offline — `node ~/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse/cli/index.js
+--version` → `13.4.1`, exit 0. Chrome is present at
+`~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome`.
+
+**Therefore F5's Arm A parity experiment is blocked ONLY by host contention, not by
+network.** Resume command is in F5 ledger §17. This finally enables a like-for-like
+`/projects` comparison against the 2588 ms baseline — the measurement no F5 run has
+yet achieved.

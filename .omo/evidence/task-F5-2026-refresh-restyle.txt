@@ -726,3 +726,43 @@ revision under any tool.**
 
 Budgets stay 2500/0.1/200. No blind code change: the fix requires quiet-host
 verification of the LCP effect.
+
+---
+
+## §17. F5 Arm A is runnable OFFLINE — cached Lighthouse 13.4.1 verified
+
+The parity experiment (Arm A: measure the current build with the baseline's exact
+Lighthouse) was thought to need the npm registry. **It does not.** A complete
+Lighthouse **13.4.1** is already in the npx cache and executes offline:
+
+```
+$ node /home/tom/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse/cli/index.js --version
+13.4.1                       # exit 0, no network
+```
+
+Verified facts (2026-09-12):
+- `~/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse/package.json` → version
+  **13.4.1** = the exact version T02 used for the baseline (`task-T02…` L60).
+- CLI entrypoint present: `.../.bin/lighthouse`; executes and prints `13.4.1`.
+- Chrome available: `~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome`
+  (and `chromium-1200/chrome-linux/chrome`).
+- Registry is unreachable (`curl registry.npmjs.org` → HTTP 000), but **Arm A needs
+  no registry** — only `CHROME_PATH` + the cached CLI.
+
+**Consequence:** F5's version-parity comparison is **not** network-blocked; it is
+blocked **only** by host contention. Exact resume command (once the host is quiet):
+
+```
+CHROME_PATH=$HOME/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome \
+node $HOME/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse/cli/index.js \
+  'http://127.0.0.1:3000/projects' \
+  --output=json --output-path=.omo/evidence/f5-lighthouse/armA-projects-lh13.json \
+  --quiet --chrome-flags='--headless --no-sandbox'
+```
+Then compare `armA-projects-lh13.json` LCP to the stored baseline **2588 ms**
+(`.omo/evidence/baseline/lighthouse/projects.json`, also LH 13.4.1) — a like-for-like
+comparison at last, which no F5 run has achieved.
+
+**Correction to T31's blocker note:** the *registry* blocker applies to **changing**
+the gate's Lighthouse version (upgrade/pin). It does **not** block Arm A, which merely
+runs the already-cached baseline version.
