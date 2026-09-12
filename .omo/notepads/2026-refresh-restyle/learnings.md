@@ -1385,3 +1385,23 @@ entry being a directory, not a file, is just Next's RSC route layout.)
 
 Lesson: Next's `next build` route table byte figures are route-payload sizes, not
 HTTP response sizes — do not read them as page weight.
+
+## 2026-09-12 — T05 gap closed: shared-runner variance envelope documented
+
+T05's plan requirement "median-of-runs **and** documented tolerances for shared
+runners" was only half met — `.lighthouserc.js` did the median but documented no
+tolerance, so the five ambiguous F5 Lighthouse attempts had no noise band to
+distinguish host contention from a real regression.
+
+- `.lighthouserc.js` header comment now records the tolerance rule (comment-only;
+  budgets/aggregation/runs/throttling untouched).
+- Raw per-route min..max envelopes + the T02/T05-run-B context rows are in
+  `.omo/evidence/task-T05-2026-refresh-restyle.txt` **§8**.
+- Envelope highlights from F5 run 5 (07:45Z, quiet at launch, re-saturated
+  mid-sweep): LCP `/projects` 2898..3978, `/blog` 2307..3423; TBT `/` 129..376,
+  `/blog` 209..267. A single-route red inside its own band is NOT a regression —
+  re-read on a quiet host before any code action.
+- **Lesson:** budget gates that run on shared CI/local hosts need a *documented*
+  noise envelope or every red becomes unfalsifiable triage. The gate stays
+  meaningful only on an uncontended host; documenting the band does not weaken
+  the budget (R19.1 — all numbers cited from the run, none invented).

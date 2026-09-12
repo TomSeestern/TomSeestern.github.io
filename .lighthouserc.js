@@ -6,6 +6,13 @@
  * median of 3 runs per route. TBT is the lab proxy for INP — these are not
  * field p75 numbers.
  *
+ * Shared-runner variance / tolerance: on a contended host the median LCP can
+ * swing widely between runs — observed per-route envelopes are recorded in
+ * `.omo/evidence/task-T05-2026-refresh-restyle.txt` §8. A single-route red is
+ * therefore not proof of regression; re-read it on an uncontended host before
+ * acting. TBT minima straddling 200 ms under contention are likewise not a
+ * regression signal.
+ *
  * Chrome resolution: Lighthouse needs a Chrome/Chromium binary. CI has no
  * browser on PATH inside `nix develop`, so when no `CHROME_PATH` is set we fall
  * back to the Playwright Chromium that `pnpm exec playwright install chromium`

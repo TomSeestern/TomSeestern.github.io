@@ -125,3 +125,34 @@ Action pins reused unchanged (no unrelated bumps):
 - .omo/evidence/t05-lighthouse/assertion-results.json
 - .omo/evidence/t05-lighthouse/parse-medians.mjs    (median parser)
 Commit message: test(ci): add Lighthouse mobile budgets (LCP/CLS/TBT)
+
+------------------------------------------------------------
+8. Shared-runner variance envelope (observed 2026-09-12)
+------------------------------------------------------------
+Source: F5 run 5, 2026-09-12 07:45Z — verified-quiet-at-launch window that the
+external `ohmyroadmap` Stryker job re-saturated mid-sweep. 21/21 LHRs, 0 errors.
+
+LCP min..max (ms), 3 runs each:
+  / 2173..2332 | /about 2038..2107 | /blog 2307..3423
+  cheesecake 2781..3084 | /projects 2898..3978 | soudest 2043..2180
+  /contact 2337..3372
+
+TBT min..max (ms), 3 runs each:
+  / 129..376 | /about 46..83 | /blog 209..267 | cheesecake 74..160
+  /projects 92..193 | soudest 78..128 | /contact 178..236
+
+Context (ms):
+  route       T02 baseline LCP   T05 run B median (2026-09-10 19:26Z)
+  /           2830               2589
+  /about      2384               2362
+  /blog       2489               2105
+  cheesecake  3562               3690
+  /projects   2588               2632
+  soudest     2127               2104
+  /contact    2256               2255
+
+Interpretation rule: the gate is only meaningful on an uncontended host. An
+isolated LCP red whose reading sits inside the observed per-route band above
+must be re-read on a quiet host before any code action. TBT minima straddling
+200 ms under contention are likewise not a regression signal. This documents
+noise; it does not excuse failures or relax the budget (2500/0.1/200).
