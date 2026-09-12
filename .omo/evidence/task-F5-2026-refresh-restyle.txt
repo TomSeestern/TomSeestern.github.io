@@ -818,3 +818,44 @@ same Chromium). This is the first apples-to-apples `/projects` reading available
 ### Also correct §17's command equivalently
 Any Arm A command must use `CHROME_PATH=/etc/profiles/per-user/tom/bin/chromium`
 inside `nix develop`, not the Playwright Chromium path.
+
+---
+
+## §19. Arm A executed (2026-09-12 10:13Z) — like-for-like method VALIDATED, reading CONTAMINATED
+
+The parity experiment finally ran with a matching toolchain:
+- Lighthouse **13.4.1** = baseline (verified in-file).
+- Chromium **149.0.0.0** (`/etc/profiles/per-user/tom/bin/chromium`) = baseline.
+- `formFactor=mobile`, `cpuSlowdownMultiplier=4`, same categories/URL.
+
+| metric | T02 baseline | Arm A current | Δ |
+|---|---:|---:|---:|
+| LCP | 2588 | 4027 | **+1439** |
+| FCP | 1054 | 1112 | +57 |
+| TBT | 85 | 394 | +309 |
+| CLS | 0 | 0 | 0 |
+| server-response-time | 14 | 20 | +6 |
+
+**But the reading is CONTAMINATED — decisively proven by `environment.benchmarkIndex`:**
+- baseline: **2762**
+- Arm A: **1213**  → the host was **2.3× slower** during Arm A.
+- Post-run loadavg was 19.5 (host re-saturated during the run; the 16 % CPU sample
+  at launch was a brief dip).
+
+### Why this is still worth recording
+1. **Method validated end-to-end**: the offline cached LH 13.4.1 + nix Chromium
+   command works, launches the production server, and produces a real LHR. Arm A is
+   now a repeatable, correct procedure — it just needs a quiet window.
+2. **`benchmarkIndex` is the definitive contamination detector**, far better than
+   FCP or TBT. Baseline 2762 vs Arm A 1213 is unambiguous. **Every future F5 LHR
+   must report `environment.benchmarkIndex` and only be compared when within ~10 %.**
+   This supersedes the FCP-envelope heuristic used in §14.
+3. The shape (+57 FCP, +1439 LCP, +309 TBT) is exactly the CPU-oversubscription
+   signature seen in run 5/6 — not a bundle/asset regression (server 20 ms, CLS 0).
+
+**Disposition:** Arm A is **inconclusive by contamination**, not evidence of a
+regression. `/projects` remains a genuine pre-existing overage (§16). Re-run Arm A on
+a host with `benchmarkIndex` ≥ ~2500 for a valid comparison to 2588.
+
+**Superseding rule for F5:** reject any run whose `benchmarkIndex` deviates >10 % from
+the baseline's 2762, regardless of how the absolute LCP looks.

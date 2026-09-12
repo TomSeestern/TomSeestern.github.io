@@ -1442,3 +1442,28 @@ plan's owner. Do not bulk-rewrite task IDs to silence a cosmetic warning.
 **Lesson:** when a continuation hook reports `0/0` but the file has dozens of
 checkboxes, suspect a format mismatch before suspecting missing work. Verify with the
 file, and do not perform risky normalisations just to make a counter move.
+
+## 2026-09-12 — F5 contamination detector: use `benchmarkIndex`, not FCP
+
+Arm A (the offline LH 13.4.1 parity run) finally executed with a matching toolchain and
+proved the method works — but its reading was contaminated, and the tell was
+`environment.benchmarkIndex`:
+
+- T02 baseline `benchmarkIndex` = **2762**
+- Arm A `benchmarkIndex` = **1213** → host **2.3×** slower during the run
+
+Arm A's LCP read 4027 (vs baseline 2588) with FCP only +57 and TBT +309 — the classic
+CPU-oversubscription shape, not a bundle regression. The 16 % CPU sample taken seconds
+before launch was a brief dip; the host re-saturated mid-run (post-run loadavg 19.5).
+
+**Rule:** every Lighthouse LHR used for a budget verdict MUST report
+`environment.benchmarkIndex`, and two readings are only comparable when the index is
+within ~10 %. Absolute LCP/CPU-busy samples are not sufficient — `benchmarkIndex` is
+the objective, in-artifact measure of host speed. Prefer it over the earlier FCP
+envelope heuristic.
+
+**Also learned:** F5 Arm A is offline-runnable. A complete Lighthouse 13.4.1 sits in
+`~/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse` and runs with no registry; the
+baseline browser is `/etc/profiles/per-user/tom/bin/chromium` (Chromium 149.0.7827.200),
+NOT the Playwright Chromium (different build; fails with `libglib-2.0.so.0` outside
+`nix develop`).
