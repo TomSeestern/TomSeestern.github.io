@@ -630,3 +630,44 @@ updates to T40/T41. Two valid fixes for that task: (a) create `docs/adr/0007-…
 (and any real ADRs) plus `docs/architecture.md`, or (b) reword R5.5/R5.8 to reflect
 that no ADR/diagram tree exists yet. Either way the stale link at L1577 must resolve
 (R2.6: body prose cross-references must be valid).
+
+## 2026-09-12 — FLAGGED (pre-existing, out of scope): AGENTS.md says "yarn"; project is pnpm-only
+
+AGENTS.md carries **11 `yarn` command references** and an explicit false claim:
+
+- R3.1 tag: `[auto: yarn lint && yarn prettier — CI check.yml]` + body (L122/L124)
+- R4.13 (L232): "Dependencies are managed via Yarn (`yarn.lock`) … **No pnpm is used.**"
+- R6.1 (L330): "`check.yml` runs `yarn lint`, `yarn prettier`, `yarn test`…"
+- R6.5 tag + body (L350/L352): `[auto: yarn build — CI check.yml (Storybook smoke)]`
+- R9.1 (L440), R9.3 (L452), R9.7 (L476), R10.1 (L496), R11.4 (L564)
+- R16.7 justification (L788): "`yarn test` is the canonical test command"
+
+Reality: `package.json` `packageManager: pnpm@10.15.1`, `pnpm-lock.yaml` is the lockfile,
+**no `yarn.lock`**, and every CI step runs `nix develop -c pnpm …` (e.g.
+`pnpm install --frozen-lockfile`). The `[auto:]` tags therefore name commands that
+would fail.
+
+Provenance: the pnpm migration `cd93098 build: migrate from yarn to pnpm` (2026-07-20
+11:07) is an **ancestor** of the AGENTS.md rewrite `9c6dc6f` (2026-07-20 11:10) — the
+"yarn"/"No pnpm is used" text was already false when written. Both predate the plan
+baseline `74689e8`, so this is pre-existing debt, not this plan's.
+
+Disposition: NOT edited — same class/owner as the L66/L88 `no scripts/`, R5.3 ToC,
+and `docs/` dangling-reference flags above; AGENTS.md doc updates are deferred to
+T40/T41 per ADR-0007. **Note for T41:** these are `[auto:]` enforcement tags naming
+wrong commands — R2.2/R2.3 make this a correctness issue, not just cosmetics.
+
+## 2026-09-12 — FLAGGED (pre-existing): AGENTS.md R24.1 names a nonexistent spec
+
+AGENTS.md L1100 (R24.1, "Browser-side hydration verification") says:
+
+> "Current e2e coverage is minimal (`e2e/example.spec.ts`). Expand as the site grows."
+
+`e2e/example.spec.ts` does not exist. The suite now has **13** specs
+(`a11y, breadcrumb, case-study, contact, dark-mode, dynamic-content, header-nav,
+home, interactions, metadata, responsive, static-routes, tooltip`) plus `fixtures/`.
+The claim is doubly stale (file gone AND "minimal" is no longer true).
+
+Pre-existing (R24.1 text predates the plan; the plan added most of those specs).
+Owner: T41 / whatever refreshes AGENTS.md. Fix: point R24.1 at the real spec
+directory and drop the "minimal" characterisation.
