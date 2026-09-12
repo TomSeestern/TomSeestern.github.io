@@ -696,3 +696,26 @@ cannot support right now (99.9 % CPU). Whoever picks up T15 follow-ups or the
 Wave-5 pass should delete both `animation.marquee*` and `keyframes.marquee*` and
 re-run `pnpm build && node scripts/check-bundle-budget.mjs` (expected: bytes
 unchanged, since tree-shaken).
+
+## 2026-09-12 — FOOTGUN: `/stop-continuation` DELETES the tracked `.omo/boulder.json`
+
+**Symptom.** Running the builtin `/stop-continuation` to break this session's
+artifact-driven BOULDER CONTINUATION loop caused `git status` to show:
+` D .omo/boulder.json` — i.e. it **deleted** the tracked boulder file.
+
+**Why it matters.** `.omo/boulder.json` is a single multi-work ledger: it held
+state for **three** works — the completed `2026-portfolio-overhaul-d227bbc8`,
+`2026-readme-screenshots-ci-14344580`, and the active `2026-refresh-restyle-36d71cc0`
+(with a 2,282-char `blocked_reason`). The command's description says it "clears
+the boulder state for the current project"; in practice it removes the whole
+file, so stopping continuation for **this** work silently discards **all** works'
+audit state. That is an R1.2/R1.4 violation if not caught.
+
+**Recovery.** `git checkout -- .omo/boulder.json` restores it (it is force-added
+to git, `git add -f`). Verified: 3 works intact, active id + 2282-char reason
+restored, tree clean.
+
+**Guidance for future sessions.** Before running `/stop-continuation`, copy the
+file aside (`cp .omo/boulder.json /tmp/opencode/boulder.bak.json`); after, check
+`git status --porcelain` and restore with `git checkout -- .omo/boulder.json` if
+it shows a deletion. Do NOT rely on the command to preserve other works' state.
