@@ -904,3 +904,27 @@ Note: `accent.light` == `accent.DEFAULT` (`#A63D28`) is an intentional semantic 
 items owned by Wave 5 (T20/T24–T29), not code invariants.
 
 **Conclusion:** every code-enforceable binding decision holds. No product change.
+
+## 2026-09-12 — F5 code-gate greens still valid (no product change since)
+
+F5's code-controlled gates ran green at HEAD `88c68f9`:
+typecheck · lint (0 err/47 warn) · prettier · jest · build (38/38, 102 kB shared) ·
+contrast (24/24) · ornaments · images (101) · fonts (70.7 KiB) · bundle budget (14/14) ·
+e2e (79) · axe (8).
+
+Since `88c68f9`, the **only non-`.omo` files changed are `DESIGN.md` and `README.md`**:
+
+```
+git diff --name-only 88c68f9..HEAD -- . ':(exclude).omo'
+→ DESIGN.md
+→ README.md
+```
+
+Product code (`app/`, `components/`, `lib/`, `scripts/`, configs, CSS) is byte-identical.
+Therefore every F5 code-gate result still holds at the current HEAD; the only F5 item
+outstanding is the Lighthouse mobile-budget run, which is host-blocked (see F5 evidence
+§5). Re-running the full code gate suite is unnecessary until product code changes again.
+
+Caveat: this is a *logical* carry-forward, not a fresh re-run. If any code gate is ever
+re-executed it must be on a quiet host; and the Lighthouse numbers must be (re)collected
+on the same quiet host before F5 can be marked green.
