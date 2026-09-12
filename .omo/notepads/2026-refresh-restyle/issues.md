@@ -553,3 +553,28 @@ Owner of the fix = whatever task executes the AGENTS.md refresh (T41).
 **Action for that owner:** replace both blanket claims with a pointer to the real
 `scripts/` gates, and re-evaluate whether any `[manual]` rule can now be promoted
 to `[auto:]` given the scripts + CI steps that exist (R2.3).
+
+## 2026-09-12 — FLAGGED (pre-existing, out of scope): AGENTS.md R5.3 ToC claim
+
+R5.3 body reads: "AGENTS.md and README.md **each have a table of contents**."
+Reality: README.md has one (`## Table of Contents`, 11 valid anchors, verified in
+sync with its 11 h2 sections); **AGENTS.md has none** (`grep -nE '^#+ (Table of
+Contents|Contents)' AGENTS.md` → no match). The two real h2 sections in AGENTS.md
+are `## Project rules` and `## Superseded rules`.
+
+Provenance (not this plan's debt): the claim was added in
+`9c6dc6f docs: rewrite content, README, and AGENTS.md` (pre-plan; AGENTS.md's
+`-S"Table of Contents"` history is that single commit). This restyle plan never
+owned AGENTS.md prose.
+
+Disposition: NOT edited. Same class as the L66/L88 `no scripts/` flag above — it is
+AGENTS.md **rule content**, and AGENTS.md's own Superseded-rules section defers
+AGENTS.md doc updates to a later docs task (T40/T41 per ADR-0007). Unowned rule-prose
+edits would be scope creep (R1.3). Two valid fixes for T41's owner — pick per intent:
+(a) add a real ToC to AGENTS.md, or (b) amend R5.3 to name only README.md (and
+note AGENTS.md is index-free because its rules are numbered).
+
+Contrast: the orphaned `## Unreleased` / `## Resource usage` headings (commit
+`6c23756`) WERE fixed because they carried no rule, tag, or prose — deleting them
+changed no rule's meaning. Rule-content drift is left to T41; structural dead
+headings are safe to reap.
