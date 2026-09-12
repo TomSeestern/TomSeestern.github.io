@@ -928,3 +928,16 @@ outstanding is the Lighthouse mobile-budget run, which is host-blocked (see F5 e
 Caveat: this is a *logical* carry-forward, not a fresh re-run. If any code gate is ever
 re-executed it must be on a quiet host; and the Lighthouse numbers must be (re)collected
 on the same quiet host before F5 can be marked green.
+
+## 2026-09-12 — Process-rule spot audit (R20.3, R19.8) — pass
+
+- **R20.3 evidence freshness:** all **27/27** `task-*-2026-refresh-restyle.txt`
+  ledgers carry a collection timestamp. Formats vary (`Date (UTC):`, `date_utc:`,
+  `Collected (UTC):`, `^- Collected:`), so a naive single-pattern grep reports
+  false negatives — check for any of the four.
+- **R19.8 plan TL;DR:** present (`## TL;DR (For humans)` + a machine TL;DR line).
+- **R20.2 triage tree:** exercised for real earlier — T17/T18/T22 worker crashes were
+  classified (provider failure, not regression) and recovered on a working category;
+  F5 host contention was triaged as environmental with a documented resume path.
+
+No change required; recorded for completeness so the next session does not re-audit.
