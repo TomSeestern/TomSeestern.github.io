@@ -85,12 +85,20 @@
       "plan_name": "2026-refresh-restyle",
       "status": "blocked",
       "started_at": "2026-09-10T18:26:19.216Z",
-      "updated_at": "2026-09-12T15:55:43.273Z",
+      "updated_at": "2026-09-12T18:21:35.876Z",
       "session_ids": [
-        "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
+        "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP",
+        "opencode:ses_f69286b03ffe0zCLNuhY68BsoR",
+        "opencode:ses_f69283d17ffegSYl1dXfW2CZ2F",
+        "opencode:ses_f6928099cffeLYoUoMJhR5JyPo",
+        "opencode:ses_f69260448ffeTFTuDga6PFSfY3"
       ],
       "session_origins": {
-        "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP": "direct"
+        "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP": "direct",
+        "opencode:ses_f69286b03ffe0zCLNuhY68BsoR": "appended",
+        "opencode:ses_f69283d17ffegSYl1dXfW2CZ2F": "appended",
+        "opencode:ses_f6928099cffeLYoUoMJhR5JyPo": "appended",
+        "opencode:ses_f69260448ffeTFTuDga6PFSfY3": "appended"
       },
       "agent": "atlas",
       "task_sessions": {
@@ -112,12 +120,20 @@
   "active_plan": "/home/tom/Projects/tomsegbers-de/.omo/plans/2026-refresh-restyle.md",
   "started_at": "2026-09-10T18:26:19.216Z",
   "status": "blocked",
-  "updated_at": "2026-09-12T15:55:43.277Z",
+  "updated_at": "2026-09-12T18:21:35.876Z",
   "session_ids": [
-    "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
+    "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP",
+    "opencode:ses_f69286b03ffe0zCLNuhY68BsoR",
+    "opencode:ses_f69283d17ffegSYl1dXfW2CZ2F",
+    "opencode:ses_f6928099cffeLYoUoMJhR5JyPo",
+    "opencode:ses_f69260448ffeTFTuDga6PFSfY3"
   ],
   "session_origins": {
-    "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP": "direct"
+    "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP": "direct",
+    "opencode:ses_f69286b03ffe0zCLNuhY68BsoR": "appended",
+    "opencode:ses_f69283d17ffegSYl1dXfW2CZ2F": "appended",
+    "opencode:ses_f6928099cffeLYoUoMJhR5JyPo": "appended",
+    "opencode:ses_f69260448ffeTFTuDga6PFSfY3": "appended"
   },
   "plan_name": "2026-refresh-restyle",
   "task_sessions": {
