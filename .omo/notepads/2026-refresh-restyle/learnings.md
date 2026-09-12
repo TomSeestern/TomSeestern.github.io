@@ -880,3 +880,27 @@ Cross-refs verified:
   always CI/Vercel-injected.
 
 **Conclusion:** no secret is committed. R18.1 holds.
+
+## 2026-09-12 — Binding decisions D1–D13 confirmed at source level
+
+F4 asserted fidelity from diffs; this audit confirms each decision against the
+files themselves (Round-2 resolutions supersede the Round-1 table):
+
+| # | Resolution | Source evidence | Result |
+| --- | --- | --- | --- |
+| D2 | Marquee UX-call | no `marquee` in `app/page.tsx`/components (only a historical comment in TooltipProvider) | retired ✔ |
+| D3 | Two fonts Inter + Newsreader | `app/layout.tsx` imports both from `next/font/google`; only these two in built CSS | ✔ |
+| D4 | Two warm accents, no blue (R2 supersedes `#2563eb`) | 0 blue palette classes / blue hex in product code or tokens; terracotta `#A63D28` + oxblood `#5E2130` present | ✔ |
+| D5 | Featured flag inside `/projects`, no `/work` | `app/projects/page.tsx` uses `selectFeaturedProjects` + `data-featured`; no `app/work` route or `/work` refs | ✔ |
+| D6 | LAYZR included (needs clearance) | absent from `content/projects/` — correctly gated to T26/T28 | gated ✔ |
+| D7 | Cheesecake kept in blog | `content/blog/2019-ebeltoft-cheesecake-recipe.md` present, no archive route | ✔ |
+| D9 | Tag pages included — deferred | no `app/tags` route (T29 human-gated) | deferred ✔ |
+| D11 | Targeted Flowbite, keep `Card` | only `Card` imported from `flowbite-react` (ArticleTeaser, ProjectTeaser); Header/Breadcrumb/Alert in-tree | ✔ |
+| D12 | Theme key voided by D13 | `flowbite-theme-mode` absent from all source | voided ✔ |
+| D13 | One light mode, parchment, no blue | `darkMode:"class"` + no writer + no CSS escape; `surface.DEFAULT #F5EFE1`; no blue | ✔ |
+
+Note: `accent.light` == `accent.DEFAULT` (`#A63D28`) is an intentional semantic alias
+(DESIGN.md: "Filled button surface"), not drift. `D1`, `D8`, `D10` are scope/content
+items owned by Wave 5 (T20/T24–T29), not code invariants.
+
+**Conclusion:** every code-enforceable binding decision holds. No product change.
