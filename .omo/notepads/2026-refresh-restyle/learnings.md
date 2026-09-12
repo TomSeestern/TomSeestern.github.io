@@ -792,3 +792,30 @@ Third and fourth doc-drift items from F2 (after the scripts-table fix):
 - **Lesson:** a "restyle" plan that adds gates/scripts/specs must include a
   same-plan README/AGENTS truthfulness task, or complete it in the orchestrator's
   close-out. The `.md` files are invisible to every automated gate.
+
+## 2026-09-12 — Gate falsifiability audit (all 5 scripts proven to fail)
+
+F1's core finding was an *unwired* gate (font budget). The adjacent defect class
+is an *unfalsifiable* gate — one that always exits 0, producing a false green.
+Orchestrator proved each gate actually fails on a real violation, using injected
+fixtures (the gates were built to accept them; no repo state was mutated):
+
+| Gate | Negative probe | Result |
+| --- | --- | --- |
+| `check-contrast.mjs <manifest>` | `#999999` on `#ffffff` (2.85:1, text min 4.5) | exit 1 ✔ |
+| `check-contrast.mjs <manifest>` | unknown `kind:"mystery"` | exit 1 ✔ |
+| `check-image-size.mjs <root>` | 250 000 B webp vs 200 KB budget | exit 1 ✔ |
+| `check-ornaments.mjs` | temp `zzz-ornament-probe.ts` containing `"gold"` | exit 1 ✔ (probe deleted) |
+| `check-font-budget.mjs` | sandbox `.next` with 3 `@font-face` families | exit 1 ✔ |
+| `check-font-budget.mjs` | Newsreader absent from built CSS | exit 1 ✔ |
+| `check-bundle-budget.mjs` | route +62.5% vs baseline (limit +10%) | exit 1 ✔ |
+| `check-bundle-budget.mjs` | `__global` 140 KB vs 130 KB shared budget | exit 1 ✔ |
+| `check-bundle-budget.mjs` | baseline file deleted | exit 1 ✔ (loud, not silent) |
+
+Happy-path positive controls for each also exit 0. No repo file changed; no
+`.next` rebuild needed (font/bundle gates resolve paths from their own location,
+so a sandboxed copy exercises the real logic). Tree clean afterwards.
+
+**Lesson:** when a plan's completion depends on budget gates, verify them in
+*both* directions — wired AND falsifiable. A gate that cannot fail is a
+documented green light on a red road.
