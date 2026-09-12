@@ -2,6 +2,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 import { MetadataRoute } from "next"
+import { getAllTags } from "@/lib/tags"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://tom.segbers.de"
@@ -31,6 +32,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tags`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/contact`,
@@ -82,5 +89,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   })
 
-  return [...staticRoutes, ...blogRoutes, ...projectRoutes]
+  // Dynamic tag routes
+  const tagRoutes = getAllTags().map((tag) => ({
+    url: `${baseUrl}/tags/${tag.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }))
+
+  return [...staticRoutes, ...blogRoutes, ...projectRoutes, ...tagRoutes]
 }

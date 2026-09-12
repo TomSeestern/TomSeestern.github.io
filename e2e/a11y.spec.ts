@@ -22,6 +22,8 @@ export const A11Y_ROUTES = [
   "/blog/entry/2019-ebeltoft-cheesecake-recipe",
   "/projects",
   "/projects/entry/2020-soudest-backend-nodejs",
+  "/tags",
+  "/tags/c-plus-plus",
   "/contact",
   "/impressum",
   "/datenschutz",

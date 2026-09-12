@@ -20,31 +20,31 @@ export function Footer({ ...props }: FooterProps) {
         </a>
         . All rights reserved.
       </p>
-      <div className="flex items-center justify-center space-x-1">
+      <div className="flex flex-wrap items-center justify-center gap-1">
         <a
           href="https://linkedin.com/in/tomsegbers/"
-          className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+          className="inline-flex shrink-0 cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
         >
           <Image className={"h-4 w-4 dark:invert"} src={"/icon/linkedin.svg"} alt="" width={32} height={32} />
           <span className="sr-only">LinkedIn</span>
         </a>
         <a
           href="https://twitter.com/TomSegbers"
-          className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+          className="inline-flex shrink-0 cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
         >
           <Image className={"h-4 w-4 dark:invert"} src={"/icon/twitter.svg"} alt="" width={32} height={32}></Image>
           <span className="sr-only">Twitter</span>
         </a>
         <a
           href="https://www.github.com/TomSegbers/"
-          className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+          className="inline-flex shrink-0 cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
         >
           <Image className={"h-4 w-4 dark:invert"} src={"/icon/github.svg"} alt="" width={32} height={32}></Image>
           <span className="sr-only">GitHub</span>
         </a>
         <a
           href="/contact"
-          className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+          className="inline-flex shrink-0 cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
         >
           <Image className={"h-4 w-4 dark:invert"} src={"/icon/mail.svg"} alt="" width={32} height={32}></Image>
           <span className="sr-only">Email</span>
@@ -52,14 +52,20 @@ export function Footer({ ...props }: FooterProps) {
         {/* No legal/privacy icon exists in public/icon/, so these reuse the
             icon-link base class string as visible text links. */}
         <a
+          href="/tags"
+          className="inline-flex shrink-0 cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+        >
+          Tags
+        </a>
+        <a
           href="/impressum"
-          className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+          className="inline-flex shrink-0 cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
         >
           Impressum
         </a>
         <a
           href="/datenschutz"
-          className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+          className="inline-flex shrink-0 cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
         >
           Datenschutz
         </a>
