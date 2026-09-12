@@ -48,3 +48,6 @@ storybook-static/
 # OhMyOpenCode state
 .omo/
 
+# CodeGraph tooling artifact (MCP server writes a relative-path SQLite index here)
+/null/
+
