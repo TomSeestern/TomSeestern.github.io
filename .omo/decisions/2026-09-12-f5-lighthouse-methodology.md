@@ -200,3 +200,26 @@ ran at bi 1842 (0.67 × baseline). Neither leg supports a delta. The revert rema
 restyle improved, worsened, or left it unchanged is **UNMEASURED**. Resolving it needs
 one `/projects` LHR at `benchmarkIndex ≥ 2510` (LH 13.4.1 + nix Chromium). Until then
 F5 is unjudgeable and no code change is authorised.
+
+---
+
+## Addendum 4 (2026-09-12): host-speed model suggests `/projects` may pass
+
+Across run-6's 21 LHRs, `LCP` regressed on `ln(benchmarkIndex)` with slope
+**−1257 ms per e-fold** (within-route concordance 62 %, n=21 — noisy). Applying it:
+run-6 `/projects` = 2923 ms at `bi` 1842 ⇒ **≈2414 ms at the baseline's `bi` 2762**,
+i.e. likely **under the 2500 ms budget**. The pre-restyle valid datapoint is 2588 ms at
+`bi` 2762 (`h1` element).
+
+**Implication:** the most probable state is that `/projects` **passes at
+baseline-comparable host speed**, and the recurring 2900–4300 ms readings are dominated
+by host contention (run-6 `bi` 598–2416, all below the baseline's 2511–3064). If so,
+F5's LCP gate needs **no code change** — only a valid-speed run.
+
+**Consequences for the decision:**
+- §16 "revert provably insufficient" — withdrawn (invalid T05 leg, see Addendum 3).
+- T30 "`/projects` LCP fix" — **premature**; do not start it.
+- The gate is **unjudged**, not failed. One `/projects` LHR at `bi ≥ 2510` decides.
+
+This remains an extrapolation, not a measurement; it is recorded to prevent an
+unnecessary code change, not to claim a pass.

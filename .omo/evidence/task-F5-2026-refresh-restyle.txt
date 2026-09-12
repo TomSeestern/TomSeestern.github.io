@@ -916,3 +916,60 @@ The single highest-value action is now unambiguous: obtain **one** `/projects` L
 host with `benchmarkIndex ≥ 2510` (ideally ≥ 2762 to match T02), using LH 13.4.1 +
 nix Chromium (Arm A command, §18). That single reading resolves the restyle's effect.
 Until then, F5 cannot be judged either way, and no code change is justified.
+
+---
+
+## §21. benchmarkIndex→LCP relation: run 6's /projects may actually PASS at baseline speed
+
+Regressing run-6's 21 LHRs (all routes, single sweep, same tool/browser/config) of LCP
+on `ln(benchmarkIndex)` gives a strong negative slope:
+
+```
+dLCP / dln(bi)  =  -1257 ms per e-fold
+=> a host 2x faster (ln diff 0.69) lowers LCP by ~870 ms
+```
+
+Within-route concordance (higher `bi` ⇒ lower LCP): **13 concordant / 8 discordant =
+62 %** — noisy at n=21, and route effects are pooled, so treat the magnitude as
+indicative, not exact.
+
+### Applying it to the open question
+
+run 6's `/projects` clean run: **LCP 2923 ms at `bi` 1842**. Baseline host speed for
+that route is **`bi` 2762**, ratio 1.499, `ln` = 0.405:
+
+```
+extrapolated LCP at baseline speed ≈ 2923 − (1257 × 0.405) ≈ 2414 ms  →  under 2500
+```
+
+And the pre-restyle valid datapoint (T02) is **2588 ms at bi 2762** with the `h1` as
+LCP element.
+
+**So the most probable reading of the evidence is the opposite of my §16 claim:**
+- `/projects` was over budget pre-restyle (2588, valid, fast host).
+- The restyle's clean reading, once corrected for host speed, lands **≈2400 ms** —
+  i.e. the restyle **may have brought `/projects` under budget** (h1 → larger `p`
+  element, but a shorter critical path), and the 2923 ms we kept seeing is mostly a
+  slow-host artifact (bi 1842 = 67 % of baseline).
+
+**This is an extrapolation from a noisy regression, NOT a measurement** — it must not be
+presented as a pass. But it materially changes the disposition: the prior framing
+("/projects genuinely fails", "the revert is insufficient") is **not supported** once
+host speed is accounted for. The earlier claims assumed absolute LCP numbers were
+comparable; §20 showed they were not.
+
+### Net correction to the record
+- §16 ("revert provably insufficient") — **withdrawn** (depended on invalid T05 leg).
+- §20 ("restyle effect unmeasured") — **stands**.
+- §21 (this) — the best available estimate is that **`/projects` passes at
+  baseline-comparable host speed**, which would make F5's LCP gate satisfiable with
+  **no code change at all**.
+- T30 ("real `/projects` LCP fix") is therefore **premature**; it should not start
+  until one LHR at `bi ≥ 2510` either confirms or refutes this estimate.
+
+### Decisive next action (unchanged, now higher-value)
+One `/projects` LHR at `benchmarkIndex ≥ 2510` (LH 13.4.1 + nix Chromium, §18 command).
+If it reads < 2500 → `/projects` passes, T30 is unnecessary, and F5's only remaining
+gap is the host-speed requirement. If it reads > 2500 → T30 is real.
+
+No code change is authorised either way until that reading exists.
