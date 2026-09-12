@@ -99,6 +99,31 @@ another in-session watcher unless the host is *already* quiet and only needs a s
 confirmation streak. The correct trigger is a human/operator signal that the
 `ohmyroadmap` Stryker run has finished — then run F5 once, immediately.
 
+**UPDATE 2026-09-12 08:29Z — run 6, FIRST GENUINELY CLEAN-HOST SUBSET. This is a
+REAL CODE FINDING, not just an environmental block.** The corrected CPU-delta
+detector (tap-runner processes burned **0 CPU-seconds over 20 s**) caught a true
+idle window at CPU 19 %/loadavg 5. The host re-saturated at 08:32:36Z, but the
+first four routes + one `/projects` run + two soudest runs were collected cleanly
+(FCP at the ~906 ms baseline envelope). Results:
+
+- **6/7 routes PASS** on clean readings. `/` 2258, `/about` 2062, `/blog` 2364
+  (TBT 212 marginal; 3rd run TBT 617 was contamination), cheesecake **2286** (was
+  3562 baseline — T22 confirmed fixed), soudest 2067.
+- **`/projects` genuinely FAILS**: its one clean run reads **LCP 2923 ms** (FCP
+  1057, server-response-time 8 ms, TBT 162) — reproducing run 5's cleanest 2898.
+  Baseline was 2588, **also over 2500**. FCP unchanged (1055→1057) ⇒ not
+  first-paint; the FCP→LCP gap grew 1534→1866 ms. Cause **not yet established**
+  (LCP element is the *Inter* intro paragraph; `Load Delay 0 / Load Time 0 /
+  Render Delay 2469 ms`). Neither the font-swap nor the paragraph-class-change
+  hypothesis is proven — needs a quiet-host A/B.
+- **`/contact`** has no fully clean run (lowest LCP 2380 inside budget but
+  TBT-contaminated); one more clean sweep would close it.
+
+**Consequence:** F5's "all budgets met on every public route" **cannot** be met by
+measurement while `/projects` sits at ~2900 ms. This needs a code decision +
+quiet-host A/B, not another run. Budgets stay 2500/0.1/200. See F5 ledger §14 and
+run-6 artifacts under `.omo/evidence/f5-lighthouse/run6/`.
+
 ---
 
 ## BLOCKER 2 — Wave 5 content `[~]` (human gate, R19.1)

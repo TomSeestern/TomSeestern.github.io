@@ -536,3 +536,70 @@ one sub-run and 3978 in the next within one sweep.
 - The 2500 ms budget stays untouched either way.
 
 This supersedes the stronger "genuine LCP regression / font-swap bound" wording in §11–§12.
+
+---
+
+## §14. F5 Lighthouse run 6 — FIRST GENUINELY CLEAN-HOST SUBSET, 2026-09-12 08:29Z
+
+**Launch conditions (verified idle by the corrected detector):** CPU busy
+19.3/18.9/19.5 % over 3×15 s; loadavg 5.05; `tap-runner` processes present (22)
+but **0 cumulative CPU-seconds burned over a 20 s sample** — i.e. the Stryker pool
+was idle *between batches*, which is exactly why the old worker-count gate was
+wrong and why the CPU-delta gate was right. This is the first attempt that entered
+a truly quiet window.
+
+**Re-saturation:** the external job resumed at **08:32:36Z** (first `/projects`
+run onward). Post-run loadavg 32.8. Collection: 21/21 LHRs, 0 runtime errors.
+
+**Contamination tell — FCP:** baseline FCP is ~905 ms (and ~1055 ms on
+`/projects`). Runs whose FCP broke that envelope are contention, not product:
+
+| window | route | FCP | LCP | TBT | verdict |
+|---|---|---:|---:|---:|---|
+| 08:29:57–08:32:16 | `/`, `/about`, `/blog`, cheesecake | 906–927 | see below | ≤212 | **CLEAN** |
+| 08:32:36 | `/projects` | 1106 | 4342 | 1246 | contaminated |
+| 08:32:55 | `/projects` | **1057** | **2923** | 162 | **CLEAN** |
+| 08:33:19 | `/projects` | 1289 | 4287 | 1566 | contaminated |
+| 08:33:31–08:33:44 | soudest | 906–908 | 2058–2067 | 93–189 | **CLEAN** |
+| 08:34:00 | soudest | 947 | 2964 | 471 | contaminated |
+| 08:34:21 | `/contact` | 1424 | 3899 | 1250 | contaminated |
+| 08:34:39 | `/contact` | 962 | 3867 | 1082 | contaminated (TBT) |
+| 08:34:56 | `/contact` | 980 | 2380 | 608 | contaminated (TBT) |
+
+**Clean medians (routes with all 3 runs clean):**
+| route | LCP med | LCP | TBT med | TBT |
+|---|---:|---|---:|---|
+| `/` | 2258 | PASS | 172 | PASS |
+| `/about` | 2062 | PASS | 51 | PASS |
+| `/blog` | 2364 | PASS | 212 | FAIL (marginal; 3rd run TBT 617 is contamination) |
+| cheesecake | 2286 | PASS | 76 | PASS |
+| soudest | 2067 | PASS | 189 | PASS |
+| `/projects` | *(1 truly clean run: 2923)* | **FAIL** | 162 | PASS |
+| `/contact` | *(no fully clean run)* | — | — | — |
+
+**Decisive findings:**
+1. **Cheesecake route genuinely FIXED.** Baseline 3562 → clean 2286 ms. The T22
+   remote-image self-hosting removed the pre-existing 1 s overage. This was the
+   plan's anticipated T22 outcome and it is now confirmed on a clean host.
+2. **`/projects` genuinely still over budget.** Its single clean run reads
+   **LCP 2923 ms** (FCP 1057, server-response-time 8 ms, TBT 162) — consistent
+   with run 5's cleanest (2898). Baseline was 2588, also over 2500. So `/projects`
+   never passed, and the restyle did not fix it. FCP is identical to baseline
+   (1055/1057 vs 1054), so this is **not** first-paint: the FCP→LCP gap grew
+   1534 → 1866 ms.
+3. **Cause is NOT established.** The clean `/projects` LCP element is the intro
+   paragraph `section > div > div > p.mt-4` — **Inter** text, not the Newsreader
+   H1 — phase table `Load Delay 0 / Load Time 0 / Render Delay 2469 ms`. Both the
+   font-swap hypothesis and a layout/typography hypothesis (the paragraph's class
+   changed baseline `text-base font-normal` → restyle `text-body-lg font-light`)
+   remain unverified. Do **not** assert either without an A/B on a quiet host.
+4. **`/contact`** has no fully clean run; its lowest LCP is 2380 (inside budget)
+   but that run is TBT-contaminated. One more clean sweep would close it.
+
+**Consequence for F5:** with `/projects` LCP > 2500 in every clean reading, F5's
+"all budgets met on every public route" cannot be satisfied by measurement as-is.
+This is a **real finding requiring a code decision**, not a green run. Budgets stay
+2500/0.1/200. Escalate to Tom: candidate fixes (all D3-compatible) are (a) revert
+the `/projects` intro paragraph to `text-base font-normal` on mobile, (b) font
+strategy change (`display: optional` / preload tuning), (c) byte-level LCP-path
+work on the paragraph. Each needs a clean-host A/B to verify.
