@@ -292,3 +292,134 @@ Non-blocking findings:
 
 Once F3's fresh ledger lands, F1 is to be re-run; with fresh F2/F3/F4 ledgers the
 B1/B1a blockers resolve and the expected verdict is APPROVE.
+
+
+================================================================================
+F1 — POST-REMEDY RE-AUDIT (fresh independent auditor) — 2026-09-12
+================================================================================
+Auditor: fresh F1 session (R19.5 independent; read-only compliance audit).
+HEAD SHA: 03079542d7ad785f85dbc7feb7de80ef3c870cbf (short 0307954)
+HEAD subject: "docs(evidence): persist F3 fresh APPROVE + F2 first-party ledger"
+UTC timestamp at verdict: 2026-09-12T19:53:58Z
+git status --porcelain: " M .omo/boulder.json" (orchestrator-owned bookkeeping only)
+git log --oneline -6: 0307954, 6628d3e, 55b54f9, 0723b75, f545d68, 342d4fd
+
+Product-drift guard:
+  $ git diff --stat 962b6a2 HEAD -- app/ components/ lib/ e2e/
+  -> 13 files changed, 1108 insertions(+), 14 deletions(-)   [MATCHES brief exactly]
+
+--------------------------------------------------------------------------------
+B1 (BLOCKING) — stale-wave ledgers — CLOSED
+--------------------------------------------------------------------------------
+All cited SHAs verified as ancestors of HEAD:
+  $ git merge-base --is-ancestor 0723b75 HEAD      -> ANCESTOR-OF-HEAD
+  $ git merge-base --is-ancestor 6628d3e HEAD      -> ANCESTOR-OF-HEAD
+  $ git merge-base --is-ancestor 55b54f9 HEAD      -> ANCESTOR-OF-HEAD
+  $ git merge-base --is-ancestor 962b6a2 HEAD      -> yes
+
+F2 fresh ledger (.omo/evidence/task-F2-2026-refresh-restyle.txt):
+  - §12 (orchestrator transcription) present; §13 (first-party) present at line 403
+    and supersedes §12 + §§1–11. §13 cites HEAD 0723b754dfb17f6d90a371079976568be9071d0c
+    (line 416), timestamp 2026-09-12T18:59:12Z (line 417).
+  - Explicitly reviews the delta: line 413 "git diff --stat 962b6a2 HEAD --
+    app/ components/ lib/ e2e/ -> 13 files, 1108 insertions / 14 deletions".
+  - §13.1 HEAD-drift addendum records the concurrent docs-only move to 6628d3e and
+    states the product delta stays 13/1108/14 (lines 474–486).
+  - Observed: "F2 VERDICT: APPROVE" (line 469).
+  -> (a) SHA ancestor OK  (b) 962b6a2..HEAD delta reviewed OK  -> F2 CLOSED
+
+F3 fresh ledger (.omo/evidence/task-F3-2026-refresh-restyle.txt):
+  - "F3 FRESH RE-RUN" section at line 239. Cites HEAD-at-run-start
+    0723b754... (line 242) and run-end 6628d3eb... (line 243).
+  - Documents the concurrent .omo-only HEAD move: "0723b754 -> 6628d3eb mid-run",
+    merge-base ancestor YES, name-only diff over app/components/lib/e2e = EMPTY
+    (line 244).
+  - Reviews the delta: "13 files changed, 1108 insertions(+), 14 deletions(-)"
+    (line 247).
+  - Observed: "F3 VERDICT: APPROVE" (line 252; also closing line 361).
+  -> (a) SHA ancestor OK  (b) delta reviewed OK  (c) concurrent .omo move cited OK
+     -> F3 CLOSED
+
+F4 fresh ledger (.omo/evidence/task-F4-2026-refresh-restyle.txt):
+  - "FRESH RE-AUDIT (supersedes the stale 962b6a2-bound ledger)" section at line 317.
+  - Cites HEAD SHA 0723b754... (line 319), subject/date 0723b75 (line 320).
+  - Reviews the delta: line 321–322 "git diff --stat 962b6a2 HEAD -- app/ components/
+    lib/ e2e/ -> 13 files, +1108/-14 (matches the brief exactly; app/blog diff EMPTY)".
+  - Observed: "F4 VERDICT: APPROVE" (line 500).
+  -> (a) SHA ancestor OK  (b) delta reviewed OK  -> F4 CLOSED
+
+--------------------------------------------------------------------------------
+B1a (BLOCKING) — false claims in the stale F4/F3 ledgers — CLOSED
+--------------------------------------------------------------------------------
+F4's fresh re-audit contains an explicit "STALE-CLAIM CORRECTIONS" block (lines
+467–477) that corrects each falsehood:
+  - tag route: "app/tags does NOT exist (T29 deferred) -> FALSE. app/tags/page.tsx
+    (80 L) and app/tags/[tag]/page.tsx (133 L) exist, T29 [x], commit ddc18da."
+  - testimonials: "No testimonial/endorsement/client-quote strings -> FALSE.
+    components/Testimonials/Testimonials.tsx exists (67 L), rendered on /about, and
+    is visible LABELLED examples only (D8)."
+  - page count: "38/38 pages built -> superseded. T29 evidence: build
+    'Generating static pages (127/127)' ... README documents 127 static pages /
+    17 route patterns."
+
+Independent tree spot-check confirms the corrections are factually grounded:
+  $ ls app/tags/page.tsx app/tags/[tag]/page.tsx components/Testimonials/Testimonials.tsx lib/tags.ts
+  -rw-r--r-- 2912 app/tags/page.tsx
+  -rw-r--r-- 4069 app/tags/[tag]/page.tsx
+  -rw-r--r-- 2663 components/Testimonials/Testimonials.tsx
+  -rw-r--r-- 6091 lib/tags.ts
+  $ grep -n "127/127" .omo/evidence/task-T29-2026-refresh-restyle.txt
+  -> "| 5 | pnpm build | exit 0, Generating static pages (127/127), routes include
+     /tags and /tags/[tag] |"
+  -> F4 corrections verified against the tree and T29 evidence. B1a CLOSED.
+
+--------------------------------------------------------------------------------
+N1 (MINOR) — R1.7 notepad cap — CLOSED
+--------------------------------------------------------------------------------
+  $ grep -c "^## " .omo/notepads/2026-refresh-restyle/learnings.md
+  -> 50
+  $ grep -c "^## " .omo/notepads/2026-refresh-restyle/archive/2026-09-12/learnings.md
+  -> 21
+  Sum = 71 (equals the prior over-cap count); no entries lost.
+  $ git show --stat 55b54f9  -> archive/2026-09-12/learnings.md (+435) and
+    learnings.md (-422), confirming the archive landed in commit 55b54f9.
+  -> N1 CLOSED.
+
+--------------------------------------------------------------------------------
+Previously-compliant baseline re-confirmed at HEAD 0307954
+--------------------------------------------------------------------------------
+Plan counts (ground truth from plan file, not the boulder parser):
+  $ grep -cE "^\s*- \[ \]"   -> 0
+  $ grep -cE "^\s*- \[x\]"   -> 28
+  $ grep -cE "^\s*- \[~\]"   -> 8           [matches expected 0/28/8]
+Every [x] task has a ledger: all 24 IDs (T01–T23, T29) resolve to an existing
+.omo/evidence/task-<ID>-2026-refresh-restyle.txt (0 missing).
+Every [~] row carries a concrete blocker:
+  T24–T28 [HUMAN_GATE]; F5 UNJUDGED; T30 [BLOCKED: needs quiet-host verification];
+  T31 [BLOCKED: Tom process decision].
+F5 remains [~] and UNJUDGED (plan line 808: "UNJUDGED, not failed"), not falsely
+claimed done.
+Lighthouse budgets intact:
+  .lighthouserc.js:111 LCP maxNumericValue 2500
+  .lighthouserc.js:112 CLS maxNumericValue 0.1
+  .lighthouserc.js:113 TBT maxNumericValue 200
+  $ git diff 962b6a2 HEAD -- .lighthouserc.js -> comment-only (+7 lines); no numeric
+  change (grep for +/- lines containing 2500|0.1|200 returned only a comment).
+No bypass/skip/only at HEAD:
+  $ git grep -nE "\.skip\(|\.only\(|--no-verify|SKIP=" -- app components lib e2e
+    scripts package.json          -> exit 1 (no hits)
+Tree clean apart from orchestrator-owned .omo/ bookkeeping:
+  $ git status --porcelain -> " M .omo/boulder.json" only.
+
+--------------------------------------------------------------------------------
+Verdict
+--------------------------------------------------------------------------------
+B1 CLOSED (F2/F3/F4 fresh ledgers cite ancestor SHAs and each review the
+962b6a2..HEAD delta; F2 APPROVE, F3 APPROVE, F4 APPROVE).
+B1a CLOSED (F4 fresh section corrects the tag-route, testimonial, and page-count
+claims; independently confirmed against the tree).
+N1 CLOSED (50 current + 21 archived = 71; no entry lost).
+No product file, test, config, or plan was modified by this audit; no git state
+changes were made. Only this evidence ledger was appended.
+
+F1 VERDICT: APPROVE
