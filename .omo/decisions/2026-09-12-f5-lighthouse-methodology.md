@@ -169,3 +169,34 @@ the +291 ms the paragraph change contributes, not a candidate complete fix.
 `/projects` (e.g. `content-visibility:auto` + `contain-intrinsic-size` on card
 containers) under the gate's LH12.6.1, verifying LCP *and* CLS/axe/e2e. This is a new,
 unowned fix — recommend Tom add it as an explicit task (R19.4).
+
+---
+
+## Addendum 3 (2026-09-12): retroactive `benchmarkIndex` audit — Addendum 2 partly withdrawn
+
+Applying the new `benchmarkIndex` comparability rule (§19) backwards over every LHR
+we hold shows **no post-restyle reading was taken at baseline-comparable host speed**:
+
+| dataset | tool | benchmarkIndex |
+|---|---|---|
+| T02 baseline (7) | LH 13.4.1 | **2511 – 3064** |
+| T05 pre-restyle | LH 12.6.1 | **not preserved** |
+| run 6 post-restyle | LH 12.6.1 | **598 – 2416** (max below baseline min) |
+| Arm A post-restyle | LH 13.4.1 | **1213** |
+
+**What survives:** `/projects` was genuinely over budget pre-restyle — T02 measured
+**2588 ms at bi 2762** (fast, comparable host) with the `h1` as LCP element. That is a
+valid pre-restyle datapoint already over 2500 (caveat: measured with LH 13.4.1).
+
+**What is withdrawn:** Addendum 2's "the restyle plausibly worsened `/projects` by
+~+291 ms" and the assertion that the paragraph revert is "provably insufficient".
+Both rested on T05 = 2632 ms being a valid pre-restyle reading, but **T05 did not
+preserve `benchmarkIndex`**, so its host speed is unknown; and run 6's `/projects` leg
+ran at bi 1842 (0.67 × baseline). Neither leg supports a delta. The revert remains
+*unlikely to suffice* (inference from the valid T02 h1 = 2588 datapoint + the small
++44 ms tool bias), but that is inference, not proof.
+
+**Corrected verdict:** `/projects` is a **genuine pre-existing overage**; whether the
+restyle improved, worsened, or left it unchanged is **UNMEASURED**. Resolving it needs
+one `/projects` LHR at `benchmarkIndex ≥ 2510` (LH 13.4.1 + nix Chromium). Until then
+F5 is unjudgeable and no code change is authorised.

@@ -256,3 +256,19 @@ Arm A must use **`CHROME_PATH=/etc/profiles/per-user/tom/bin/chromium`**
 the Playwright Chromium in `~/.cache/ms-playwright` — that one is a different build
 and fails with `libglib-2.0.so.0: cannot open shared object file` outside the dev
 shell. Full corrected command in F5 ledger §18.
+
+### CORRECTION (F5 ledger §20): the restyle's effect on /projects is UNMEASURED
+
+Applying the `benchmarkIndex` rule retroactively: **every post-restyle LHR came from a
+host slower than every baseline run** (run 6 bi 598–2416; T02 bi 2511–3064; Arm A
+1213). T05 (pre-restyle) preserved no `benchmarkIndex`, so its host speed is unknown.
+
+- **Survives:** `/projects` was genuinely over budget pre-restyle — T02 = 2588 ms at
+  bi 2762 (fast host), `h1` element.
+- **Withdrawn:** the "+291 ms restyle regression" and the "revert is provably
+  insufficient" claims — both depended on T05's 2632 being a valid reading.
+- **Corrected:** `/projects` is a genuine pre-existing overage; the restyle's effect is
+  **unmeasured**. One `/projects` LHR at `benchmarkIndex ≥ 2510` resolves it.
+
+This supersedes the earlier "genuine regression / plausibly worsened" framing in this
+file. No code change is authorised until that reading exists.

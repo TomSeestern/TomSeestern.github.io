@@ -859,3 +859,60 @@ a host with `benchmarkIndex` ≥ ~2500 for a valid comparison to 2588.
 
 **Superseding rule for F5:** reject any run whose `benchmarkIndex` deviates >10 % from
 the baseline's 2762, regardless of how the absolute LCP looks.
+
+---
+
+## §20. Retroactive benchmarkIndex audit — §16 overclaimed; restyle effect on /projects is UNMEASURED
+
+I applied the new rule (§19) backwards to every LHR we hold. Result: **no post-restyle
+reading was ever taken at a host speed comparable to the baseline.**
+
+| dataset | tool | benchmarkIndex | notes |
+|---|---|---|---|
+| T02 baseline (7 routes) | LH 13.4.1 | **2511 – 3064** | consistent fast host, 18 % spread |
+| T05 (pre-restyle) | LH 12.6.1 | **not preserved** | `lighthouseVersion`/`bi` not recorded |
+| run 6 (post-restyle) | LH 12.6.1 | **598 – 2416** | max 2416 < baseline min 2511 |
+| Arm A (post-restyle) | LH 13.4.1 | **1213** | contaminated |
+
+**Every post-restyle LHR came from a host slower than any baseline run.** So absolute
+post-restyle LCP numbers are inflated relative to the baseline, and the restyle's true
+effect on `/projects` has **never been measured**.
+
+### What this changes (and what survives)
+
+**SURVIVES — `/projects` was genuinely over budget pre-restyle.** T02 `/projects`
+= **2588 ms at benchmarkIndex 2762** (a fast, baseline-comparable host), element `h1`.
+That is a valid, uncontaminated datapoint on the *pre-restyle* code, and it is already
+over 2500. So `/projects` did not pass before the restyle either. (Caveat: T02 used
+LH 13.4.1; the gate uses 12.6.1.)
+
+**CORRECTED — §16's "the restyle plausibly worsened it by ~+291 ms" is withdrawn.**
+That comparison was T05 (2632) vs run 6 (2923), but:
+- T05's host speed is **unknown** (no `benchmarkIndex` preserved), and
+- run 6's `/projects` run was at bi **1842** (0.67 × baseline) — a slow host.
+Both legs are therefore unreliable for a delta. §16's claim that the revert is
+"provably insufficient" leaned on T05 = 2632 being valid; with T05's host unknown that
+specific leg is not provable.
+
+**STILL SUPPORTED — the h1-as-LCP condition is over budget.** T02 already shows the
+pre-restyle `h1` element at 2588 (LH13, fast host). Even granting the measured small
+tool bias (+44 on `/projects`), the h1 condition under LH12 lands ≈ 2630 — over budget.
+So the revert remains *unlikely to be sufficient*, but that is an inference, not the
+"proof" §16 asserted.
+
+### Corrected verdict for `/projects`
+
+- It is a **genuine pre-existing overage** (valid T02 datapoint, fast host).
+- Whether the restyle **improved, worsened, or left it unchanged is UNMEASURED** —
+  we lack a single post-restyle reading at bi ≥ 2510.
+- Therefore neither "the restyle regressed it" (my earlier claim) nor "it is only a
+  methodology artifact" (my later claim) is supportable. The honest state is
+  **insufficient comparable data**.
+- The paragraph-revert fix is **unproven** either way; the decisive Arm B A/B has not
+  run at valid speed.
+
+### Practical consequence
+The single highest-value action is now unambiguous: obtain **one** `/projects` LHR on a
+host with `benchmarkIndex ≥ 2510` (ideally ≥ 2762 to match T02), using LH 13.4.1 +
+nix Chromium (Arm A command, §18). That single reading resolves the restyle's effect.
+Until then, F5 cannot be judged either way, and no code change is justified.
