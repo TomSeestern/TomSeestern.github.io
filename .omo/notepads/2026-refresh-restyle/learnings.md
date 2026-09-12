@@ -1364,3 +1364,24 @@ Rationale for one more arm (not a loop): the current Stryker process `2902322` i
 no window. If this 18-min window also finds nothing, that is strong evidence the run
 is long-lived, and further arming would be loop behavior (R19.2). No build is burned
 unless the quiet gate actually passes.
+
+## 2026-09-12 — sitemap/robots output verified correct (closes a false lead)
+
+Earlier I flagged the build table's `sitemap.xml 133 B / robots.txt 133 B` as
+suspiciously small. Verified against the actual emitted bodies in the production
+`.next` from the F5 run:
+
+- `.next/server/app/sitemap.xml.body` → **5908 B, 29 `<url>` entries**
+  (5 static routes + 3 blog posts + 21 projects) — exactly matches
+  `app/sitemap.ts` logic. The "133 B" in the build table is Next's route/module
+  payload size, NOT the response body.
+- `.next/server/app/robots.txt.body` → correct:
+  `User-Agent: *` / `Allow: /` / `Sitemap: https://tom.segbers.de/sitemap.xml`.
+- Both `.meta` files report `status: 200` with correct content types
+  (`application/xml`, `text/plain`).
+
+**Conclusion: no defect. False lead closed.** (The `.next/server/app/sitemap.xml`
+entry being a directory, not a file, is just Next's RSC route layout.)
+
+Lesson: Next's `next build` route table byte figures are route-payload sizes, not
+HTTP response sizes — do not read them as page weight.
