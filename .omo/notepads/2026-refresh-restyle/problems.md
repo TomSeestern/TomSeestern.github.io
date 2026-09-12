@@ -297,11 +297,17 @@ package throttle events after 24 h up. A dedicated spin loop reached only 1.80 G
 
 The F5 `benchmarkIndex` ratios (Arm A 0.44, Arm A2 0.49 of the baseline's 2762) sit close
 to the current max-frequency ratio (~0.40), so much of the "slowness" is a **clock cap**,
-not only queueing. `benchmarkIndex ≥ 2510` may be **unreachable on this host** even when
-idle. Setting the governor to `performance` needs root — not available here (`sudo -n`
-denies).
+not only queueing.
 
-**Implication:** if a quiet host alone does not lift `benchmarkIndex` toward 2510, F5's
-Lighthouse budget is not measurable on this machine and must be judged in CI
-(`.forgejo/workflows/lighthouse.yml`) or on Tom's machine. This is a host/power issue,
-not a code issue — do not weaken the budget and do not "fix" the site for it.
+> **CORRECTED (F5 ledger §24): the clock cap is LOAD-INDUCED, not a host defect.**
+> T02 reached `benchmarkIndex` **2511–3064 on this very host** (2026-09-10 18:40–18:46Z)
+> under the **same** `governor=powersave` / `epp=performance` config running now. The
+> reduced clock is a power/thermal response to the external load, not a misconfiguration
+> — so `benchmarkIndex ≥ 2510` **is** reachable here once the load stops. The earlier
+> "unreachable on this host / not measurable by design" framing is **WITHDRAWN**; no
+> governor change is needed (and none is possible without root, which is unavailable).
+
+**Implication:** the only precondition is an **idle CPU**. Once the external Stryker job
+and the local pytest stop, this host should return to `bi ≈ 2510+` and Arm A will yield a
+valid reading. This is a host/power *symptom* of the external load, not a code issue —
+do not weaken the budget and do not "fix" the site for it.

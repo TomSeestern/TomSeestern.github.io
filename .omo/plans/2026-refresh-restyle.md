@@ -765,14 +765,14 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
     - `bi ≥ 2510` **and** LCP < 2500 ⇒ the gate's LCP criterion **passes with no code
       change** (§21 estimates ≈2414 ms at the baseline's `bi` 2762).
     - LCP > 2500 at valid speed ⇒ `/projects` genuinely fails ⇒ T30 is real.
-  - **PRECONDITION — the host CPU is frequency-clamped (F5 ledger §23).** In addition
-    to the external load, the package runs `governor=powersave` at ~1.4 GHz avg /
-    1.9 GHz max against a 4.5–4.8 GHz ceiling, with 172 k throttle events after 24 h
-    up. The observed `benchmarkIndex` ratios (~0.44) track that clock cap, so an idle
-    CPU alone may not lift `bi` to 2510. Before relying on a local run, confirm a busy
-    core ramps toward ~4.5 GHz; if it cannot, F5's Lighthouse budget is **not
-    measurable on this host** and must be judged in CI
-    (`.forgejo/workflows/lighthouse.yml`) or on another machine.
+  - **PRECONDITION — the host clocks down under sustained load (F5 ledger §23–§24).**
+    The package is an Intel Core Ultra 7 155H running `governor=powersave` / `epp=performance`
+    (hw max 4.5–4.8 GHz, RAPL 40 W sustained). While the external Stryker job pins the
+    CPU it clocks ~1.4 GHz avg, which alone depresses `benchmarkIndex`. This is a
+    **load-induced power/thermal response, not a defect**: T02 reached `bi` 2511–3064 on
+    this same host under the same governor config, so `bi ≥ 2510` **is** reachable once
+    the load stops. No governor change is needed (and none is possible without root).
+    Only precondition: an **idle CPU**.
   - **Do NOT** run while the host is busy, **do NOT** arm in-session watchers (30-min
     monitor cap < the external job's runtime), and **do NOT** weaken the
     2500/0.1/200 budgets.
