@@ -1225,3 +1225,14 @@ Also: bare `node_modules/.bin/playwright test` fails (`pnpm: command not found`)
 because `playwright.config.ts` `webServer.command` calls `pnpm`. Use the devShell.
 Expected WebServer noise (not failures): `placehold.co` SVG refused, Next 16
 deprecation warnings, cross-origin dev note.
+
+## 2026-09-12 — axe-only a11y run green at HEAD (8 passed)
+
+`pnpm exec playwright test e2e/a11y.spec.ts --project=chromium --workers=1` → **8 passed**
+(1.9 min). Allowlist is empty, so this is a strict zero-violation gate. Fresh observation
+at HEAD, matching F5's 8.
+
+**Complete fresh code-gate sweep at HEAD `ad5271b`** (all observed, not carried forward):
+typecheck ✓ · prettier ✓ · lint 0 err/47 warn ✓ · jest 21/141 ✓ · build 38 routes ✓ ·
+contrast 24/24 ✓ · ornaments ✓ · images 101 ✓ · fonts 70.7 KiB ✓ · bundle 14/14 ✓ ·
+e2e 79 ✓ · axe 8 ✓. Sole outstanding F5 item: the host-blocked Lighthouse timing gate.
