@@ -1350,3 +1350,17 @@ re-arming every 10 min would be loop behavior (R19.2) with no new information wh
 the same Stryker process holds the CPU. F5 stays `[~]`; resume is a manual action
 for Tom (or me, on request) once `stryker` is gone / CPU is quiet. The validated
 one-shot script is preserved at `/tmp/f5-watch.sh` for that moment.
+
+## 2026-09-12 06:55Z — final bounded F5 waiter armed (mon_6245d0dc)
+
+Re-armed once more with a longer poll window: `f5-lighthouse-wait18` (mon_6245d0dc),
+script `/tmp/f5-watch.sh` = 72 × 15 s poll (**18 min**) + quiet gate (3 consecutive
+samples CPU ≤30% AND ≤3 workers), leaving ~12 min inside the monitor's 30-min cap
+for build (~2 min) + lighthouse (~5 min). Emits `F5_HOST_QUIET` then
+`F5_LIGHTHOUSE_GREEN|RED`, or `F5_HOST_STILL_BUSY`.
+
+Rationale for one more arm (not a loop): the current Stryker process `2902322` is
+~1h27m old; the previous 10-min monitor proved the gate works and there was simply
+no window. If this 18-min window also finds nothing, that is strong evidence the run
+is long-lived, and further arming would be loop behavior (R19.2). No build is burned
+unless the quiet gate actually passes.
