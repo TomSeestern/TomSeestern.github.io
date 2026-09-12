@@ -248,3 +248,47 @@ Additionally closed since F1:
   host. Host has been continuously contended (loadavg ~25–48, 21–22 `tap-runner` processes).
 - **T24** Tom's legal facts · **T25** positioning/founder copy · **T26** cleared case-study
   metrics · **T27** two posts · **T28** LAYZR metrics + consent · **T30/T31** blocked as documented.
+
+════════════════════════════════════════════════════════════════════════════
+F1 — PLAN-COMPLIANCE FRESH RE-AUDIT (post-962b6a2 HEAD)
+════════════════════════════════════════════════════════════════════════════
+_Transcribed by the orchestrator from verifier session `ses_f69260448ffeTFTuDga6PFSfY3`
+(bg_c7f53b50, duration 16m43s). The verifier returned its verdict but did not persist
+it; the orchestrator recorded the captured output. Raw output:
+`tool_096f40fe4001R4zgw6Sin5k8CW` (1125 lines)._
+
+HEAD at re-audit: `0723b754dfb17f6d90a371079976568be9071d0c` (`0723b75`).
+Scope: full plan-compliance audit at post-962b6a2 HEAD, superseding the
+`9567331`-bound §above.
+
+## F1 VERDICT: REJECT
+
+Two BLOCKING findings — both about verification evidence being stale, NOT about
+the product work being wrong:
+
+| # | Sev | Finding | Location |
+|---|---|---|---|
+| B1 | **BLOCKING** | F2/F3/F4 marked `[x]` "verification passed" but their ledgers bind to `9567331`/`962b6a2`, never reference the four later commits, and are contradicted by HEAD (0723b75). Notepad claims re-dispatch but no fresh F2/F3/F4 evidence existed. | `.omo/evidence/task-F2/F3/F4-…txt`; plan lines 804–806; `learnings.md:1609` |
+| B1a | **BLOCKING** | F4 ledger states "`app/tags` -> does NOT exist (T29 deferred)" and "No testimonial/endorsement/client-quote strings" — both **FALSE at HEAD** (`lib/tags.ts`, `app/tags/*`, `components/Testimonials/*`). F3 built `38/38` pages; HEAD builds **127**. | `task-F4…txt:91,206,223`; `task-F3…txt:32` |
+
+Non-blocking findings:
+- **N1 MINOR** — R1.7 notepad cap exceeded: `learnings.md` 71 entries (>50), no archive.
+- I1 INFO — plan-internal stale lines corrected post-hoc (G4 route counts, G5 commits).
+- I2 INFO — `.omo/boulder.json` `task_sessions` stale `todo:1` key (harness parser).
+
+## What was genuinely compliant at HEAD (per F1)
+- 28 `[x]` / 8 `[~]` counts accurate; every `[x]` has a ledger; every `[~]` has a concrete reason.
+- T20/T24/T28/T29 deliveries real and spot-checked against the tree.
+- F5 remains honestly UNJUDGED; budgets 2500/0.1/200 intact.
+- Former MAJOR G1 (font-budget unwired) fixed — `package.json:17` + `check.yml:47`.
+- Boulder reason synced; hooks never bypassed; tree clean; `.omo/` force-added.
+
+## Remedy (owner: orchestrator) — required to flip F1 to APPROVE
+1. Re-run **F2, F3, F4** against the `962b6a2..HEAD` product delta and write FRESH
+   ledgers citing the new HEAD SHA. → F2 §12 persisted (`55b54f9`), F4 fresh section
+   persisted (`55b54f9`), F3 re-review in flight at time of writing.
+2. Archive the sub-50 learnings entries or record a waiver. → DONE: 21 oldest
+   entries archived to `archive/2026-09-12/learnings.md`, 50 remain (`55b54f9`).
+
+Once F3's fresh ledger lands, F1 is to be re-run; with fresh F2/F3/F4 ledgers the
+B1/B1a blockers resolve and the expected verdict is APPROVE.
