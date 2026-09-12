@@ -85,7 +85,7 @@
       "plan_name": "2026-refresh-restyle",
       "status": "blocked",
       "started_at": "2026-09-10T18:26:19.216Z",
-      "updated_at": "2026-09-12T10:32:00.000Z",
+      "updated_at": "2026-09-12T11:10:00.000Z",
       "session_ids": [
         "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
       ],
@@ -106,13 +106,13 @@
           "updated_at": "2026-09-12T02:08:54.674Z"
         }
       },
-      "blocked_reason": "T01-T23 + F1-F4 complete and committed. Plan 26 done / 10 blocked / 0 open (Wave 7 added under R19.4). F5: 6 LHCI attempts + Arm A. Run 6 gave the first clean-ish subset (cheesecake 2286 vs 3562 baseline - T22 confirmed). /projects remains the open question. KEY CORRECTION (ledger s20, decision Addendum 3): applying the new benchmarkIndex comparability rule RETROACTIVELY shows NO post-restyle reading was ever taken at baseline-comparable host speed (run6 bi 598-2416 vs T02 baseline bi 2511-3064; T05 preserved no bi; Arm A bi 1213). Therefore: (a) /projects WAS genuinely over budget pre-restyle (T02 = 2588ms at bi 2762, h1 element - valid datapoint); (b) the restyle effect on /projects is UNMEASURED; (c) the earlier +291ms regression claim AND the revert-is-provable claim are BOTH WITHDRAWN. NEW RULE: every F5 LHR must report environment.benchmarkIndex; readings comparable only within ~10%. This supersedes the FCP-envelope heuristic. SINGLE HIGHEST-VALUE ACTION: obtain ONE /projects LHR at benchmarkIndex >= 2510 (ideally >=2762) using LH 13.4.1 + nix Chromium 149.0.7827.200 - offline-runnable via the cached npx lighthouse. Command in F5 ledger s18. That one reading resolves the restyle effect; until then F5 is unjudgeable and NO code change is justified. Arm A method VALIDATED end-to-end offline (cached LH 13.4.1 + nix Chromium; no registry needed) - it ran and produced a real LHR; only host speed invalidated the reading. Wave 7 blocked: T30 (/projects LCP fix) pending quiet-host verification (R6.1/R8.1); T31 (LH version parity CI) = Tom process decision + no registry access. Wave 5 T20/T24-T29 human-gated (R19.1). BLOCKER: external ohmyroadmap Stryker job saturates the host (loadavg 10-64 for 14h+). Do not run Lighthouse or arm in-session watchers (30-min cap)."
+      "blocked_reason": "T01-T23 + F1-F4 complete/committed. Plan 26 done / 10 blocked / 0 open. F5 UNJUDGED, not failed: code gates green; Lighthouse unmeasurable because EVERY post-restyle LHR came from a host slower than the baseline (benchmarkIndex 598-2416 vs baseline 2511-3064). Toolchain MATCHED (offline cached LH 13.4.1 + nix Chromium 149.0.7827.200 = baseline) and method validated, but readings incomparable. TWO host root causes: (1) external Forgejo-runner Stryker job + a local python/pytest both burning CPU; (2) NEW - the host CPU is FREQUENCY-CLAMPED (governor=powersave, ~1.4GHz avg / 1.9GHz max vs 4.5-4.8GHz ceiling, 172k throttle events after 24h up). Observed bi ratios (~0.44) track the clock cap, so an idle CPU alone may not reach the required bi>=2510. CORRECTIONS made this session (all recorded): sec11 font-swap claim + same-version premise RETRACTED; sec16 revert-insufficient claim WITHDRAWN; sec20 retroactive bi audit showed no post-restyle reading at baseline speed; sec21 host-speed model estimates /projects ~2414ms corrected to bi 2762 => LIKELY PASSING (extrapolation, not a measurement). DECISIVE NEXT ACTION: run Arm A once (F5 ledger sec18) on a host that can actually clock near rating and read environment.benchmarkIndex. bi>=2510 + LCP<2500 => LCP gate passes with NO code change; LCP>2500 => T30 is real. If the host cannot ramp to ~4.5GHz, judge in CI (.forgejo/workflows/lighthouse.yml) or another machine - this is a host/power issue, not code. Wave 7 blocked: T30 (/projects LCP fix) possibly UNNECESSARY - do not start before a valid-speed reading; T31 (LH version parity CI) = Tom decision + no registry access. Wave 5 T20/T24-T29 human-gated (R19.1). Budgets NOT weakened (2500/0.1/200)."
     }
   },
   "active_plan": "/home/tom/Projects/tomsegbers-de/.omo/plans/2026-refresh-restyle.md",
   "started_at": "2026-09-10T18:26:19.216Z",
   "status": "blocked",
-  "updated_at": "2026-09-12T10:32:00.000Z",
+  "updated_at": "2026-09-12T11:10:00.000Z",
   "session_ids": [
     "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
   ],
