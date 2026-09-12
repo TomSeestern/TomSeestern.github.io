@@ -1047,3 +1047,21 @@ on home (2830) and projects (2588), so a fully-green run has never been recorded
 for those two routes. If, on a quiet host, they still exceed 2500, that is a
 genuine finding requiring a real fix (e.g. font/LCP-path work) — **not** a budget
 edit. Escalate to Tom rather than relax the gate.
+
+## 2026-09-12 — Storybook smoke integrity after T21 (de-Flowbite)
+
+T21 removed Flowbite `Navbar`/`Breadcrumb`/`Alert` (kept `Card`). Risk checked:
+a story importing a removed primitive would red the `check.yml` "Smoke &
+Acceptance tests" step. Result — clean:
+
+- Only 3 stories exist: `ArticleTeaser`, `Button`, `ProjectTeaser`
+  (`.storybook/main.ts` globs `../components/**/*.stories.*`).
+- None import `flowbite-react` or the removed Navbar/Breadcrumb/Alert. They import
+  their own sibling components, all of which exist:
+  `ArticleTeaser.tsx`, `Button.tsx`, `ProjectTeaser.tsx`; `ProjectTeaser.stories`
+  additionally imports the in-tree `Providers/TooltipProvider` (present).
+- `Card` (the one retained Flowbite primitive) is used by the teaser components the
+  stories render, so the smoke coverage still exercises it.
+
+**Conclusion:** the Storybook smoke gate is intact; T21 introduced no dangling story
+reference. No change required.
