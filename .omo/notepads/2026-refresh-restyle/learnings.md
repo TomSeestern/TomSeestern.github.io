@@ -1282,3 +1282,19 @@ not merely slow. Budgets remain untouched (2500 ms / 0.1 / 200 ms).
 This is the end of the executable surface: every code gate is freshly green at HEAD,
 both remaining items are correctly `[~]`, and the only actions left require the host
 to be quiet or the user to supply Wave 5 content/decisions.
+
+## 2026-09-12 — README app-tree second pass (marquee + metadata routes)
+
+`7a87fa7` (earlier structure sync) added `api/health/route.ts` but missed two more
+`app/` drifts:
+- stale comment `page.tsx # Home: hero, projects marquee, blog teasers` — T16/D2
+  retired the marquee (verified `grep -c marquee app/page.tsx` = 0). Now:
+  `# Home: hero, featured work, founder arc, blog teasers`.
+- missing `app/robots.ts`, `app/sitemap.ts`, and the Next file-convention icons
+  (`icon.png`/`apple-icon.png`/`favicon.ico`).
+
+Fixed in `7419e08 docs: sync README app tree with repository`. Verified: no
+`marquee` in README; robots/sitemap represented; box-drawing intact.
+
+Lesson: when a task changes a page's composition (T16 removed the marquee), its
+tree comment in README is a same-commit update target — invisible to lint/prettier.
