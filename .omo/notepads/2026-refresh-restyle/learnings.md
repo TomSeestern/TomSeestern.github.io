@@ -1124,3 +1124,19 @@ skipped assertion (R26.2, R16.9).
 
 Noted because the plan leans on e2e (79) + axe (8) + jest (141) as its behavior
 gate; a skipped test would make those counts cosmetic.
+
+## 2026-09-12 — Fresh (not carried-forward) run of load-insensitive gates
+
+Rather than rely only on the logical carry-forward, re-ran the gates that do not
+need a quiet host. At HEAD `ae1ebb8`:
+
+- `pnpm contrast` → exit 0, **24/24** pairs meet minimums (ui pairs 4.01/10.55/16.20
+  vs 3.0 shown in tail).
+- `pnpm ornaments` → exit 0, scanned 101 source files, no banned term.
+- `pnpm images` → exit 0, 101 images within budget.
+- `pnpm fonts` → did NOT complete: killed by the 240 s tool timeout because the
+  external Stryker run still holds 23 workers (loadavg ~31). This is environmental;
+  fonts only needs re-running on a quiet host (it reads `.next`, which exists).
+
+This upgrades the F5 backing evidence from "carry-forward" to "observed green at the
+current HEAD" for 3 of 4 load-insensitive budget gates.
