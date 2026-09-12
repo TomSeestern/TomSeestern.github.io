@@ -298,3 +298,77 @@ The correct gate is: do NOT run F5 unless ≥3 consecutive 15 s samples show CPU
 **Net state:** the only *partially* trustworthy F5 data is the 07:40 run (§5), which
 still showed a best-case `/projects` LCP of 2874 ms (render-bound, font-swap-shaped).
 A verdict still requires a genuinely quiet host. Budgets remain 2500/0.1/200.
+
+## 10. ADDENDUM 2026-09-12 — runs 3 & 4, plus a CORRECTION of my own run-3 report
+
+### Correction: the "14/14 failures" I initially attributed to run 3 were STALE
+Run 3 (07:17Z) aborted during *collection* (see below), so `lhci assert` never ran
+and `.lighthouseci/assertion-results.json` was never rewritten — it still held
+**run 2's** (06:15Z) output, which I had already voided. Reading that file and
+printing "run 3: 14/14" was my error: those numbers (LCP 3857/TBT 1399 etc.) are
+byte-identical to the voided run-2 record in §9. Run 3's *own* 8 LHRs show LCP
+**passing** (below). Lesson: `rm -rf .lighthouseci` before every Lighthouse run;
+never read an assertion file without checking its mtime against the run start.
+
+### Run 3 (07:17Z) — ABORTED, transient Chrome interstitial
+Build succeeded (`✓ Compiled successfully in 26.3s`). Collection ran `/` (3/3 ok),
+`/about` (3/3 ok), then `/blog` run #3 failed:
+`CHROME_INTERSTITIAL_ERROR — Chrome prevented page load with an interstitial`,
+finalUrl `chrome-error://chromewebdata/`. LHCI aborted before `assert`. This is a
+headless-Chrome navigation flake under load, not a site defect (the same `/blog`
+URL loaded fine in runs 1, 2 and 4). Its 8 completed LHRs (preserved log
+`.omo/evidence/f5-lighthouse/run3/`):
+```
+/       LCP 2169 / 2334 / 2290            (all PASS, <2500)
+/about  LCP 2075 / 2180 / 2107            (all PASS)
+/blog   LCP 2236 / 2256                   (PASS)
+```
+
+### Run 4 (07:25Z, host briefly at 13% CPU) — completed, but re-saturated mid-run
+Cleared `.lighthouseci` first, so results are unambiguous. 21/21 LHRs, 0 runtime
+errors. `lhci assert` ran and reported **8 failures**: TBT on `/` (224) and
+`/projects/entry/…` (307); LCP on `/blog` (3617), cheesecake (2829), `/projects`
+(3972), `/contact` (3764); TBT on `/blog` (682) and `/contact` (816).
+
+But the chronological LHR order shows the host **re-saturated during the run**:
+```
+07:25 / + /about   LCP 2114–2295   PASS      (early, quiet)
+07:26 /about r1    LCP 3468 TBT 758  FAIL    <- host ramping  (97.9% measured by 07:24→07:31)
+07:26-27 /blog     LCP 3434-3747   FAIL
+07:29 /contact     LCP 3723-3804 TBT 785-856 FAIL  (all 3, tight cluster)
+```
+The first routes measured (while quiet) pass; later routes (as Stryker reclaimed
+the CPU) fail. Whole-run CPU: 13% at start → 99% within ~15 min.
+
+### Cross-run synthesis (best observed LCP per route, all 4 runs, errors excluded)
+```
+route                       best LCP   budget   best TBT   budget
+/                             2114     PASS       155      PASS
+/about                        2002     PASS        52      PASS
+/blog                         2206     PASS       106      PASS
+/blog/entry/…cheesecake       2033     PASS        65      PASS
+/contact                      2016     PASS       166      PASS
+/projects                     2874     FAIL       128      PASS
+/projects/entry/…soudest      1883     PASS        55      PASS
+```
+Every route has at least one under-budget measurement **except `/projects` LCP**
+(min 2874 across 4 runs; also 2904 in run 4). Everything else fails only under
+load. `/projects` LCP is therefore the one *candidate* genuine overage.
+
+### `/projects` LCP: render-bound, not load- or asset-bound
+From its best LHR (run 1, host ~16% CPU):
+```
+LCP = 2874 ms   TTFB 454   Load Delay 0   Load Time 0   Render Delay 2420
+LCP element: section.bg-surface > div > div > p.mt-4   (the intro paragraph, TEXT)
+```
+Load Delay/Load Time are **zero** — no image or byte bottleneck. The gap is Render
+Delay, and `font-display` scores 1. On a text LCP served in a swapped self-hosted
+web font, this is the fallback→webfont swap, i.e. the D3 carved-type treatment.
+Whether it can be trimmed under 2500 ms **without touching D3** is unresolved; if
+it cannot, that is a design tradeoff for Tom, NOT a reason to edit the budget.
+
+### Disposition
+- Budgets stay **2500 / 0.1 / 200**. No false green written.
+- F5 stays `[~]`: still no run with the host quiet for the full ~6-minute sweep.
+- The single actionable lead (a quiet-host run to settle `/projects`) is documented
+  in §5; nothing here justifies weakening the gate.
