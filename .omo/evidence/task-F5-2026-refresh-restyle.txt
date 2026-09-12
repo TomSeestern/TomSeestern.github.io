@@ -1075,3 +1075,41 @@ or deferred to Tom's machine — not re-run here.
 - A separate local **Python/Jest** process also burns ~100 % CPU
   (`.../Projects/Ful...`, `python -m pytest tests/test_d...`).
 - Both were still active at 13:01 local; total host loadavg ~10 with CPU busy 46 %.
+
+---
+
+## §24. Correction to §23: the clock cap is LOAD-INDUCED, not a governor defect
+
+§23 raised the possibility that the host is "not measurable by design". A decisive
+counter-fact rules that out: **T02 reached `benchmarkIndex` 2511–3064 on this very
+host** (baseline recorded 2026-09-10 18:40–18:46Z, all 7 routes) with the **same**
+governor/EPP configuration running now (`governor=powersave`,
+`energy_performance_preference=performance`).
+
+| evidence | value |
+|---|---|
+| host | Intel Core Ultra 7 155H (mobile, 22 threads, hw max 4.5–4.8 GHz) |
+| T02 bi (quiet host, 2026-09-10) | 2511, 2762, 2859, 2911, 2925, 2961, **3064** |
+| post-restyle bi (loaded host, 2026-09-12) | 598–2416 |
+| current freq (loaded) | ~1.4 GHz avg vs 4.5–4.8 GHz cap |
+| RAPL sustained / burst | 40 W / 55 W |
+
+**Conclusion:** the reduced clock is a **power/thermal response to sustained load**,
+not a misconfiguration. This host CAN reach baseline `benchmarkIndex` (it did, on
+2026-09-10) — it simply cannot while ~20+ threads are pinned by the external Stryker
+job plus a local pytest. No governor change is required (and none is possible without
+root, which is unavailable — `sudo -n` denies).
+
+**This makes the §23 "unmeasurable by design" concern UNFOUNDED and withdraws it.**
+The correct precondition remains the simple one: an idle CPU. Once the external load
+stops, this host should return to `bi ≈ 2510+` and Arm A will yield a valid reading.
+
+### Net F5 root cause (final)
+1. **External load** — a Forgejo-runner Stryker job (`/var/lib/forgejo-runner-3/work/…`)
+   plus a local `python -m pytest` job, together pinning the mobile CPU for ~15 h.
+2. **Consequent power/thermal clock reduction** — ~1.4 GHz vs 4.5–4.8 GHz, a *symptom*
+   of (1), not an independent fault.
+
+Both are environmental. **Nothing here implicates the product code.** The gate is
+unjudged solely because a valid-speed measurement has not been possible since the
+restyle landed.
