@@ -54,15 +54,31 @@ assertion failures (LCP `/projects` 2898 best, LCP cheesecake 2781 best, TBT `/b
 
 Against the host-independent T02 baseline, **LCP improved on 5/7 routes**:
 `/` −542, `/about` −278, `/blog` −118, cheesecake −645, soudest −54. `cheesecake`
-was *already* over budget at baseline (3562) and improved. **`/projects` is the only
-genuine LCP regression** (baseline 2588 → 2898 best; FCP identical 1054→1055, 0 B
-loaded, Render Delay ~2445 ms on a text LCP = font swap). The TBT bumps on `/blog`
+was *already* over budget at baseline (3562) and improved. The TBT bumps on `/blog`
 and `/contact` track the Stryker ramp, not a product change. Full data: F5 ledger §12.
 
+**CORRECTION (F5 ledger §13) — `/projects` is an UNRESOLVED MEASUREMENT, not a proven
+regression.** Two earlier claims were wrong and are retracted:
+1. The LCP element on `/projects` is the **intro paragraph, which uses Inter** — *not*
+   the Newsreader H1. No element uses a `font-display`/`font-serif` utility; Newsreader
+   is applied only to `h1,h2` via the `styles/tailwind.css` base layer. So the LCP text
+   is the same face the baseline already used. "Font-swap bound" is **not** supported.
+2. The phase-table `TTFB=453 ms` is a Lighthouse simulated-throttling constant, not a
+   real server delay (identical 453 in all three sub-runs while the real
+   `server-response-time` audit is 7/9/18 ms). Do not cite it.
+
+What *is* supported: `Load Delay 0 / Load Time 0` ⇒ everything is in
+**Render Delay (2445/3504/3525 ms)** — main-thread-bound, exactly the phase the
+oversubscribed CPU inflates. `/projects` was **already over budget at baseline
+(2588 > 2500)**, so it has never passed; the restyle best (2898) cannot be separated
+from contention on this host. **No code change is justified.** A single clean-host
+re-read decides it.
+
 **No further runs until the host is genuinely idle for the full sweep** (the windows
-are too short to catch — an external job can resume mid-run). Do NOT re-run in a loop.
-`/projects` needs Tom's D3 font-strategy call; the TBT straddle needs one clean-host
-re-read before any code action.
+are too short to catch — an external job can resume mid-run, as happened at 07:45:25Z).
+Do NOT re-run in a loop. If `/projects` still exceeds 2500 ms on a clean host, escalate
+to Tom with a real LCP-path fix (and the D3 font decision); if it reads ≤2500, the
+restyle improved 6/7 routes and only the pre-existing baseline failure remains.
 
 ---
 

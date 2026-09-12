@@ -496,3 +496,43 @@ signature (blocking-JS stretching on the shared CPU).
 (TBT minima straddle the line; `/projects` LCP is font-bound and needs a D3 decision).
 The remaining blocker is *environmental* (external Stryker job), and `/projects`
 needs Tom's D3 call. No further runs until the host is genuinely idle for the full sweep.
+
+---
+
+## §13. CORRECTION to §11/§12 — `/projects` LCP attribution
+
+I re-read the run-5 LHRs before escalating, and **§11's "font-swap bound" framing is
+overstated**. Two facts do not support it:
+
+1. **The LCP element is the intro paragraph, which uses Inter — not Newsreader.**
+   Across all three run-5 `/projects` LHRs the element is
+   `section.bg-surface > div > div > p.mt-4`, nodeLabel "Here you can find some of my
+   …". Its classes are `text-body-lg font-light text-muted sm:text-xl`, i.e.
+   `fontFamily.body/sans` = **Inter** (verified in `tailwind.config.js`). Newsreader is
+   applied *only* to `h1,h2` via the `styles/tailwind.css` base layer; no element uses a
+   `font-display`/`font-serif` utility in `app/` or `components/`. So the LCP text is
+   the *same face the baseline already used* — it is not "the Newsreader swap".
+2. **The phase-table `TTFB=453 ms` is a simulation artifact, not a real server delay.**
+   It is identical (453) in all three `/projects` sub-runs while the real
+   `server-response-time` audit is 7 / 9 / 18 ms. 453 is a fixed Lighthouse
+   simulated-throttling constant, not measured TTFB. §11/§12 must not cite it as server
+   cost.
+
+What *is* supported: `Load Delay 0 / Load Time 0` ⇒ no subresource was pending, so the
+variance sits entirely in **Render Delay (2445 / 3504 / 3525 ms)** — a main-thread-bound
+phase. TBT was simultaneously elevated by the Stryker ramp. Render delay is exactly the
+phase a shared/oversubscribed CPU inflates, which is why the same route reads 2898 in
+one sub-run and 3978 in the next within one sweep.
+
+**Revised disposition for `/projects`:**
+- It is **not a proven regression** — it is an **unresolved measurement**. Baseline was
+  *already over budget* (LCP 2588 > 2500), so `/projects` has never passed; the restyle's
+  best reading (2898) is itself contention-inflated and cannot be separated from a real
+  delta on this host.
+- No code change is justified by this data. A **single clean-host re-read** is required
+  before any `/projects` LCP action. If it then reads ≤2500, the restyle improved 6/7
+  routes and only the pre-existing baseline failure remains; if >2500, it is a genuine
+  finding to escalate with a real LCP-path fix (and a D3 font decision from Tom).
+- The 2500 ms budget stays untouched either way.
+
+This supersedes the stronger "genuine LCP regression / font-swap bound" wording in §11–§12.
