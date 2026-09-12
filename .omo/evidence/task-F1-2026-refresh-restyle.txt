@@ -215,3 +215,36 @@ Token usage not instrumented in this audit session (no per-task counter exposed)
 Read-only audit: ~40 git reads, 5 gate-script executions, 2 workflow audits, no writes
 outside this ledger and the notepad append. No product/test/config file was modified.
 No commit was made; no --no-verify used.
+
+---
+
+## Closure of F1 findings G1–G8 (orchestrator, 2026-09-12)
+
+F1's verdict was APPROVE with findings carried to the final wave. Every finding is now
+closed. Verified by direct inspection, not assumption:
+
+| finding | severity | disposition | how verified |
+|---|---|---|---|
+| **G1** font-budget gate unwired | **MAJOR** | **CLOSED** by `88c68f9` — `"fonts": "node scripts/check-font-budget.mjs"` in `package.json:17` and `nix develop -c pnpm fonts` at `.forgejo/workflows/check.yml:47` | `grep` both files; `git log -S` shows `88c68f9 ci(design): wire font budget gate into CI` introduced both |
+| **G2** T01/T05 ledgers untracked | MODERATE | **CLOSED** — both force-added under the gitignored `.omo/` | `git ls-files --error-unmatch` returns both |
+| **G3** `boulder.json` stale | MODERATE | **CLOSED** — `blocked_reason` rewritten (3361 chars) to reflect 28 done / 8 blocked, the Wave 5 deliveries, the F5 gate matrix, and the §23→§24 clock-cap correction; `updated_at` 2026-09-12T15:55Z | read `boulder.json` |
+| **G4** plan said "36 routes" | MINOR | **CLOSED** — 0 occurrences remain; T10 now says "no route-count change (38 at T10 time; 127 now)" | `grep -c '36 route'` → 0 |
+| **G5** stale commit lines / Roman palette | MINOR | **CLOSED** — T07/T13/T15/T20 descriptions and the TL;DR now carry explicit HISTORICAL markers naming the actual commits (`d792fff`, `7e6e254`) and the D13/D4 supersession | read plan lines 7, 281, 339, 359, 414, 688 |
+| **G6** a11y runs light only | MINOR | **MOOT** under D13 (single light mode); already documented in the spec header + allowlist-integrity test | spec header |
+| **G7** untracked `null/` | INFO | **CLOSED** — directory absent | `ls -d null` → absent |
+| **G8** local `main` ahead of origin | INFO | **ACKNOWLEDGED, deliberately unpushed** — now **151** commits ahead. Not pushed pending the user's explicit go-ahead; F5 is not yet approved | `git rev-list --count` |
+
+Additionally closed since F1:
+- **Success Criterion #9 gap** — T20 and T29 were `[x]` with **no evidence ledger**. Both
+  written (`.omo/evidence/task-T20…txt`, `task-T29…txt`), plus partial ledgers for T24 and
+  T28, which carry committed deliverables. All 24 `[x]` tasks now have evidence files
+  (`commit ee2d6d2`).
+- **README drift (R5.2)** — README claimed 38 static routes (now 127 across 17 patterns) and
+  its structure trees omitted the legal/tag/Testimonials/tags.ts additions. Corrected with a
+  non-rotting "as of <date>" phrasing (`commit bd519cd`).
+
+### Remaining open, and who owns it
+- **F5 LCP/TBT on `/projects`** — unjudged; needs one valid reading (`bi ≥ 2510`) on an idle
+  host. Host has been continuously contended (loadavg ~25–48, 21–22 `tap-runner` processes).
+- **T24** Tom's legal facts · **T25** positioning/founder copy · **T26** cleared case-study
+  metrics · **T27** two posts · **T28** LAYZR metrics + consent · **T30/T31** blocked as documented.
