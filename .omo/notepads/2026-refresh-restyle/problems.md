@@ -29,7 +29,18 @@ Lighthouse's 4× CPU multiplier compounds the ~10× oversubscription. Evidence:
 - Home/projects were ALREADY over 2500 ms in the pre-restyle T02 baseline
   (2830 / 2588), so a green run for those two has never been recorded.
 
-**Resume (ONLY on a quiet host — `cat /proc/loadavg` ≈ ≤4, no `stryker` worker):**
+**Resume (ONLY on a quiet host):**
+
+> **Detection warning (learned 2026-09-12).** Counting
+> `child-process-proxy-worker` is **unreliable** — those pool processes sit idle
+> between batches (measured ~0 CPU-s over 30 s) while the machine still runs at
+> 96 % busy. The actual burners are Stryker's **short-lived `tap-runner` test
+> processes** (`node -r …/@stryker-mutator/tap-runner/… --test-reporter=tap
+> test/*.mjs`), each pinning ~100 % CPU; 45 `ohmyroadmap` processes were live.
+> Use `ps -eo pcpu,etime,args --sort=-pcpu | head` and `/proc/loadavg` — **not**
+> a worker count. Require loadavg ≈ ≤4 AND no `ohmyroadmap` runner in top CPU,
+> sampled over 3×15 s, immediately before launch.
+
 ```
 export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
