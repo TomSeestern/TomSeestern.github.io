@@ -165,3 +165,71 @@ Repro gotchas recorded this session:
   excludes (spurious "64 errors").
 - Playwright: run inside `nix develop` AND export the cert vars **inside** that shell,
   else `next dev`'s font fetch fails with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`.
+
+## 5. ADDENDUM 2026-09-12 07:40 local — Lighthouse RUN COMPLETED (still red; contaminated)
+
+After 8h+ of CPU saturation, the host finally opened a window: at run start
+CPU busy was **16.0%**, loadavg 4.4 (vs ~95% / ~50 for the prior 8h), 21 idle
+Stryker workers (2% CPU total). F5's Lighthouse command was executed:
+
+```
+rm -rf .next
+export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
+export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
+export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt
+nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build && pnpm lighthouse'
+→ EXIT 1 (LCP and TBT assertion failures)
+```
+
+Artifacts preserved: `.omo/evidence/f5-lighthouse/assertion-results.json`,
+`F5-run-2026-09-12.log` (raw LHRs were 8.3 MB; pruned, reproducible via the
+command above — they remain in the gitignored `.lighthouseci/`).
+
+### Result (median of 3, what LHCI asserts)
+
+```
+/                                          TBT  356 > 200   FAIL
+/projects                                  LCP 3982 > 2500  FAIL
+/projects                                  TBT  298 > 200   FAIL
+/blog/entry/2019-ebeltoft-cheesecake-recipe LCP 2763 > 2500 FAIL
+```
+4 failures. `/`, `/about`, `/blog`, `/projects/entry/…`, `/contact` passed LCP.
+
+### BUT the run is CONTAMINATED — host degraded mid-run
+
+CPU busy: 16.0% at start → 55.3% within ~5 min. The intra-run spread is far too
+large for a deterministic page, proving contention across the sample window:
+
+| route | TBT values (3 runs) | spread |
+| --- | --- | --- |
+| `/contact` | 196, 166, **2030** | 12× outlier |
+| `/` | 205, 356, 374 | 48% |
+| `/projects` | 257, 298, 344 | 29% |
+
+`/contact` TBT 2030 ms while the other two runs are 166/196 ms is a smoking gun:
+no code change can make the same byte-identical page swing 12×. The median method
+LHCI uses assumes low variance; this window violates that assumption.
+
+Best-case (min across 3) still shows two genuine-looking overages:
+- `/projects` LCP **2874** (all three runs 2874/3982/4007 are over 2500)
+- `/projects` TBT  257  (all three 257/298/344 are over 200)
+- `/` TBT 205 (marginal; other runs 356/374)
+
+### Cross-reference: these routes were ALREADY over budget pre-restyle
+
+T02 baseline (single run, pre-restyle): home LCP 2830, projects LCP 2588 — both
+above the 2500 budget. So `/projects` LCP being over is not a restyle regression;
+the T05 budget has never been met by this codebase on these two routes.
+
+### Disposition
+
+- Budgets NOT weakened (still 2500 / 0.1 / 200). No false green.
+- F5 remains `[~]`. This run is evidence that (a) the harness works end-to-end on a
+  real production build, and (b) a trustworthy verdict still requires a host that
+  stays quiet for the full ~5-minute run, which this window did not.
+- **Real-finding candidate to escalate:** `/projects` LCP is consistently >2500 even
+  at best-case, and its LCP element is the SSR `<h1>` text with FCP ~1057 ms — the
+  ~1800 ms FCP→LCP gap points at the Newsreader display-font swap (D3), not layout
+  shift. Closing it likely needs design-perf work (e.g. `font-display: optional` /
+  a text-LCP font strategy) and therefore Tom's sign-off, since D3 mandates the
+  carved serif H1/H2 treatment.
