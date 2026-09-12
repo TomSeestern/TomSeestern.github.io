@@ -156,8 +156,11 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── .pre-commit-config.yaml
 ├── app/
 │   ├── layout.tsx             # Root layout: Header, Footer, metadata, viewport
-│   ├── page.tsx               # Home: hero, projects marquee, blog teasers
+│   ├── page.tsx               # Home: hero, featured work, founder arc, blog teasers
 │   ├── not-found.tsx
+│   ├── robots.ts              # Metadata route: allow all, points to sitemap
+│   ├── sitemap.ts             # Metadata route: static + blog/project URLs
+│   ├── icon.png / apple-icon.png / favicon.ico  # Next file-convention icons
 │   ├── about/page.tsx
 │   ├── api/health/route.ts    # Health-check endpoint (returns {status:"ok"})
 │   ├── contact/page.tsx       # Contact form ("use client")
