@@ -1,0 +1,140 @@
+# Evidence — T01 Fix red `pnpm lint` (react-hooks plugin conflict)
+
+Task: T01 (2026-refresh-restyle)
+Date (UTC): 2026-09-10T18:40:01Z
+Repo: /home/tom/Projects/tomsegbers-de
+Base commit: 74689e85a5c11d51f6b2eb86531f08c08064d626
+Env: nix develop devShell — node v22.23.1, pnpm 10.15.1, git 2.54.0
+
+## How every command was run
+
+All pnpm commands were executed as:
+
+    nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm <script>'
+
+(pnpm is not on PATH outside the devShell; the devShell exports PNPM_HOME /
+npm_config_prefix which crash pnpm 10.)
+
+---
+
+## 1. Reproduction (BEFORE any change)
+
+Command:
+
+    nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm lint'
+
+Exit code: `LINT_EXIT=0`
+
+Exact output tail:
+
+    /home/tom/Projects/tomsegbers-de/lib/sendEmail.tsx
+      3:1  warning  `await-to-js` import should occur before import of `next/headers`  import/order
+
+    ✖ 55 problems (0 errors, 55 warnings)
+      0 errors and 45 warnings potentially fixable with the `--fix` option.
+
+### FINDING — plan premise does NOT reproduce as stated
+
+The plan (`.omo/plans/2026-refresh-restyle.md` T01, line 210) claims lint
+"currently fails loading both `eslint-config-react-app` and
+`eslint-config-next` react-hooks plugin". At base commit 74689e8 on a fully
+installed `node_modules`, `pnpm lint` **exits 0** with 0 errors and 55
+warnings. `.eslintrc.js:5` `extends` = `["next", "prettier",
+"plugin:storybook/recommended", "plugin:tailwindcss/recommended"]` — it never
+loads `react-app`, so the duplicate plugin is INERT at lint time.
+
+The duplicate nonetheless exists on disk. Proof (BEFORE):
+
+    $ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm why eslint-plugin-react-hooks'
+
+    devDependencies:
+    eslint-config-next 15.5.24
+    └── eslint-plugin-react-hooks 5.2.0
+    eslint-config-react-app 7.0.1
+    └── eslint-plugin-react-hooks 4.6.2
+
+Two distinct `eslint-plugin-react-hooks` copies (5.2.0 and 4.6.2) are
+installed. This is the latent duplicate-plugin conflict the plan refers to; it
+becomes live the moment any config extends `react-app` (as `next lint`-era
+configs did). Removing the unreferenced config is the correct structural fix.
+
+---
+
+## 2. Root cause
+
+- `eslint-config-react-app@7.0.1` is listed in `package.json` devDependencies
+  (line 104) but is referenced by NOTHING. `grep -rn "react-app"` across the
+  repo matches only `package.json` and `pnpm-lock.yaml`.
+- `.eslintrc.js` extends `next`, not `react-app`. Lint therefore resolves the
+  single `react-hooks@5.2.0` from `eslint-config-next`.
+- The stale `eslint-config-react-app` nonetheless drags in
+  `eslint-plugin-react-hooks@4.6.2`, producing two copies of the same ESLint
+  plugin in the dependency tree — the documented cause of the
+  "Cannot redefine plugin / duplicate plugin" class of ESLint failures when the
+  config is ever loaded.
+
+## 3. Fix
+
+1. Removed `"eslint-config-react-app": "^7.0.1"` from `package.json`
+   devDependencies (only file edited besides the lockfile).
+2. Ran `pnpm install` to regenerate + prune `pnpm-lock.yaml`.
+
+The install removed the entire now-orphaned subtree:
+`eslint-config-react-app@7.0.1`, `eslint-plugin-react-hooks@4.6.2`,
+`babel-preset-react-app@10.1.0` and their transitive entries
+(`pnpm-lock.yaml`: 554 lines deleted).
+
+    $ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm install'
+    devDependencies:
+    - eslint-config-react-app 7.0.1
+    Done in 33.4s using pnpm v10.15.1
+
+AFTER — single plugin copy:
+
+    $ nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm why eslint-plugin-react-hooks'
+    devDependencies:
+    eslint-config-next 15.5.24
+    └── eslint-plugin-react-hooks 5.2.0
+
+`pnpm why eslint-config-react-app` now returns no match.
+
+No rule was silenced, no `eslint-disable` added, no `.eslintrc.js` rule value
+changed. `git diff` touches only `package.json` and `pnpm-lock.yaml`.
+
+---
+
+## 4. Verification (AFTER fix) — all through the devShell
+
+    nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm lint'      -> LINT_EXIT=0
+    nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm prettier'  -> PRETTIER_EXIT=0
+    nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm typecheck' -> TYPECHECK_EXIT=0
+
+Exact tails:
+
+    lint:      ✖ 55 problems (0 errors, 55 warnings)
+               0 errors and 45 warnings potentially fixable with the `--fix` option.
+    prettier:  All matched files use Prettier code style!
+    typecheck: > node_modules/typescript/bin/tsc --noEmit   (no diagnostics)
+
+Rule-set unchanged: before 55 warnings / 0 errors, after 55 warnings / 0 errors.
+
+Guard checks:
+
+    git diff -- package.json pnpm-lock.yaml | grep -c "eslint-disable"  ->  0
+    git status --short  ->  M package.json
+                            M pnpm-lock.yaml
+                            M .omo/boulder.json   (pre-existing orchestrator state, NOT staged)
+
+## 5. Commit
+
+    fix(lint): resolve react-hooks plugin conflict from duplicate eslint config
+
+Staged: package.json, pnpm-lock.yaml only. Hooks run (no --no-verify / SKIP).
+
+## 6. Risk / follow-up
+
+- LOW risk: pure removal of an unreferenced devDependency; no runtime path,
+  no source file touched, lint/prettier/typecheck all green.
+- The plan's T01 description over-states the failure ("currently fails"); the
+  actual condition was a dormant duplicate plugin tree. Recorded in
+  `.omo/notepads/2026-refresh-restyle/issues.md`.

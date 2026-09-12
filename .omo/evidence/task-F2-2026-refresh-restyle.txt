@@ -1,0 +1,336 @@
+# F2 — Code Quality Review — 2026-refresh-restyle
+
+Task: F2 (final verification wave gate)
+Scope: commit range `e3e8de5~1..HEAD` (29 commits), files under `app/**`, `components/**`,
+`lib/**`, `scripts/**`, `e2e/**`, `tailwind.config.js`, `next.config.mjs`, `styles/**`.
+Host: local dev shell (Node 22 via `nix develop`).
+Date: 2026-09-12 (Europe/Berlin).
+Verdict: **APPROVE** (see §9).
+
+Baseline state at review time: working tree clean except orchestrator-owned
+`.omo/boulder.json`, appended notepads, and untracked `null/` (excluded per MUST NOT).
+
+---
+
+## 1. Baseline gates (run at HEAD)
+
+Command wrapper: `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; <cmd>'`
+
+| Gate       | Command           | Result                                            |
+| ---------- | ----------------- | ------------------------------------------------- |
+| Typecheck  | `pnpm typecheck`  | EXIT 0 — no output (clean)                        |
+| Lint       | `pnpm lint`       | EXIT 0 — 0 errors, 47 warnings (pre-existing base)|
+| Prettier   | `pnpm prettier`   | EXIT 0 — "All matched files use Prettier code style!" |
+| Jest       | `pnpm test`       | EXIT 0 — 21/21 suites, 141/141 tests, 0 snapshots |
+| Contrast   | `node scripts/check-contrast.mjs` | EXIT 0 — 24/24 pairs meet minimums  |
+| Ornaments  | `node scripts/check-ornaments.mjs`| EXIT 0 — 101 files, no banned term  |
+| Images     | `node scripts/check-image-size.mjs`| EXIT 0 — 101 images within budget  |
+
+Raw logs: `/tmp/opencode/f2-gates.log`, `/tmp/opencode/f2-contrast.log`,
+`/tmp/opencode/f2-ornaments.log`, `/tmp/opencode/f2-images.log`.
+
+**Lint baseline check (R3.1, F2 "no NEW warnings"):** 47 warnings, 0 errors — matches the
+documented baseline exactly. `imageUrl` unused-arg warning in `ProjectTeaser.tsx:31`
+was already present at merge-base (confirmed in `.omo/evidence/t07-e2e/lint.log:90` and
+`.omo/evidence/t17/lint.log:78`), so this plan introduced **zero new lint warnings**.
+No new `eslint-disable`.
+
+---
+
+## 2. Module-size table (R4.14 — ≤250 logic LOC)
+
+Method: `logic LOC = non-blank, non-comment, non-`import`/`from`, non-JSX-only lines`
+(approximation; upper bound = non-blank, non-comment only). TS/TSX/MJS across the full
+changed set.
+
+| approx logic | upper bound | file | note |
+| ---: | ---: | --- | --- |
+| 218 | 222 | `lib/markdown.test.ts` | test |
+| 202 | 204 | `e2e/responsive.spec.ts` | e2e test |
+| 201 | 201 | `tailwind.config.js` | config data (tokens) |
+| 155 | 158 | `scripts/check-bundle-budget.mjs` | standalone zero-dep CLI checker |
+| **136** | **180** | **`app/contact/ContactForm.tsx`** | **largest product module** |
+| 112 | 118 | `app/projects/page.test.tsx` | test |
+| 112 | 115 | `scripts/check-font-budget.mjs` | standalone zero-dep CLI checker |
+| 101 | 110 | `components/ProjectTeaser/ProjectTeaser.test.tsx` | test |
+| 93 | 95 | `components/ArticleTeaser/ArticleTeaser.test.tsx` | test |
+| 91 | 94 | `scripts/check-contrast.mjs` | standalone zero-dep CLI checker |
+| 86 | 87 | `e2e/contact.spec.ts` | e2e test |
+| 85 | 90 | `components/ArticleTeaser/ArticleTeaser.stories.tsx` | story (markup) |
+| 85 | 88 | `scripts/check-image-size.mjs` | standalone zero-dep CLI checker |
+| 83 | 137 | `app/about/page.tsx` | JSX-heavy |
+| 79 | 82 | `e2e/dynamic-content.spec.ts` | e2e test |
+| 74 | 76 | `e2e/interactions.spec.ts` | e2e test |
+| 72 | 75 | `e2e/static-routes.spec.ts` | e2e test |
+| 70 | 74 | `lib/markdown.ts` | |
+| 70 | 74 | `e2e/dark-mode.spec.ts` | e2e test |
+| 70 | 74 | `app/blog/page.test.tsx` | test |
+| 68 | 71 | `scripts/check-ornaments.mjs` | standalone zero-dep CLI checker |
+| 67 | 71 | `e2e/a11y.spec.ts` | e2e test |
+| 66 | 94 | `components/Header/Header.tsx` | T21 primitive |
+| 64 | 66 | `e2e/metadata.spec.ts` | e2e test |
+| 61 | 64 | `app/contact/ContactForm.test.tsx` | test |
+| 60 | 62 | `lib/projects.test.ts` | test |
+| 58 | 86 | `app/projects/entry/[slug]/page.tsx` | JSX |
+| 57 | 81 | `app/blog/entry/[slug]/page.tsx` | JSX |
+| 55 | 58 | `components/Header/Header.test.tsx` | test |
+| 53 | 90 | `components/ProjectTeaser/ProjectTeaser.tsx` | JSX |
+| 53 | 75 | `components/Tooltip/Tooltip.test.tsx` | test |
+| 53 | 56 | `components/CaseStudyMeta/CaseStudyMeta.test.tsx` | test |
+| 52 | 88 | `app/projects/page.tsx` | JSX |
+| 51 | 54 | `app/projects/entry/[slug]/page.test.tsx` | test |
+| 50 | 88 | `app/page.tsx` | JSX |
+| 50 | 71 | `app/layout.tsx` | |
+| 45 | 75 | `components/ArticleTeaser/ArticleTeaser.tsx` | JSX |
+| 43 | 44 | `e2e/header-nav.spec.ts` | e2e test |
+| 40 | 57 | `app/blog/page.tsx` | JSX |
+| 39 | 54 | `components/CaseStudyMeta/CaseStudyMeta.tsx` | T19 |
+| 35 | 38 | `next.config.mjs` | config |
+| 33 | 47 | `components/Breadcrumb/Breadcrumb.tsx` | T21 primitive |
+| 33 | 43 | `components/Alert/Alert.tsx` | T21 primitive |
+| 32 | 52 | `components/Breadcrumb/Breadcrumb.test.tsx` | test |
+| 32 | 34 | `e2e/home.spec.ts` | e2e test |
+| 31 | 31 | `e2e/fixtures/expectations.ts` | fixture |
+| 29 | 53 | `components/FeaturedSet/FeaturedSet.tsx` | T16 |
+| 29 | 37 | `components/ProjectTeaser/ProjectTeaser.stories.tsx` | story |
+| 28 | 30 | `components/Alert/Alert.test.tsx` | test |
+| 28 | 30 | `app/contact/page.tsx` | server shell |
+| 27 | 29 | `e2e/fixtures/axe.ts` | fixture |
+| 26 | 36 | `components/Tooltip/Tooltip.tsx` | |
+| 25 | 38 | `components/FounderArc/FounderArc.tsx` | T16 scaffold |
+| 25 | 27 | `e2e/tooltip.spec.ts` | e2e test |
+| 21 | 24 | `components/CaseStudyMeta/CaseStudyHero.test.tsx` | test |
+| 21 | 22 | `e2e/breadcrumb.spec.ts` | e2e test |
+| 16 | 21 | `components/CaseStudyMeta/CaseStudyHero.tsx` | T19 |
+| 16 | 17 | `app/contact/page.test.tsx` | test |
+| 12 | 14 | `lib/projects.tsx` | |
+| 8 | 9 | `e2e/case-study.spec.ts` | e2e test |
+| 8 | 8 | `e2e/fixtures/a11y-known-violations.ts` | fixture (empty allowlist) |
+| 4 | 6 | `components/Providers/TooltipProvider.tsx` | T11 |
+
+**R4.14 result: PASS.** No module exceeds 250 logic LOC. The largest *product* module
+is `app/contact/ContactForm.tsx` (≈136 logic / 180 upper bound) — the upper bound counts
+JSX attribute lines, so the true logic count is comfortably below the ceiling.
+`tailwind.config.js` (201) is declarative token/config data, not logic. Files over 200
+logic LOC are test/e2e suites and zero-dependency CLI checker scripts, both legitimate
+per the skill's `SIZE_OK` exception (single-responsibility standalone scripts) and
+outside the spirit of R4.14 (production logic). No split required.
+
+Named T21/T19/T16 modules checked explicitly:
+- `components/Header/Header.tsx` — 66 logic / 94 total ✅
+- `components/Breadcrumb/Breadcrumb.tsx` — 33 / 47 ✅
+- `components/Alert/Alert.tsx` — 33 / 43 ✅
+- `components/CaseStudyMeta/CaseStudyMeta.tsx` — 39 / 54; `CaseStudyHero.tsx` — 16 / 21 ✅
+- `components/FeaturedSet/FeaturedSet.tsx` — 29 / 53; `FounderArc/FounderArc.tsx` — 25 / 38 ✅
+
+---
+
+## 3. Type-safety sweep (R3.4)
+
+| Pattern | Product code | Test code |
+| --- | --- | --- |
+| `as any` | none | `app/blog/entry/[slug]/page.test.tsx:21` (pre-existing, out of range) |
+| `as unknown as` | none | `app/projects/entry/[slug]/page.test.tsx:25` (new; `{data, content}` → reader result) |
+| `@ts-ignore` / `@ts-expect-error` | none | none |
+| `eslint-disable` (new) | none | none |
+| `as` casts in added product lines | none found | — |
+
+- The only new `as unknown as` is in a **test fixture** (`page.test.tsx:25`), where the
+  test deliberately stubs the gray-matter reader result. Acceptable in test scope;
+  the file's own comment documents the seam. Not a product-code escape hatch.
+- Boundary parsing is correct: `lib/markdown.ts` uses a **Zod** schema
+  (`markdownFrontmatterSchema`) and `parseFrontmatter(data: unknown)` at the
+  frontmatter trust boundary; the contact form re-validates with a Zod schema in
+  `lib/sendEmail.tsx` (`contactFormSchema.safeParse`). No raw `unknown` leaks past a
+  boundary. `parseFrontmatter` is exported and typed `(data: unknown) → MarkdownFrontmatter`.
+- `@total-typescript/ts-reset` + `strict` + `noUncheckedIndexedAccess`: typecheck clean.
+
+**R3.4 result: PASS.**
+
+---
+
+## 4. Error-handling sweep (R3.5 / R17.6 / R25.1)
+
+- **`await-to-js` (R25.1):** `lib/sendEmail.tsx:3` imports `to` and the Resend call is
+  `const [error] = await to(resend.emails.send(emailData))` (line 123), with an explicit
+  `if (error) { console.error(error); return { success:false, ... } }`. Discriminated
+  `SendEmailResult = {success:true} | {success:false; errors}` is returned, never thrown.
+  `lib/sendEmail.tsx` was **not modified** in this range (unchanged); the pattern is
+  intact.
+- **No swallowed errors:** no empty `catch {}` in product code (grep returned none).
+  The two legitimate catches are documented:
+  - `lib/sendEmail.tsx:45` — `headers()` throws outside a request context; comment
+    explains it falls back to `127.0.0.1`. Intentional, documented, not swallowed.
+  - `lib/markdown.ts:94` — `getMarkdownEntry` returns `null` on unreadable file; the
+    caller (`notFound()`) handles it.
+  - `lib/icon-map.ts:19` — pre-existing best-effort icon-set load (unchanged file).
+- **No `console.*` in product code:** grep over `app/ components/ lib/` for
+  `console.log|debug|info|warn` returned none. The only `console.error` is in
+  `sendEmail.tsx` (unchanged) on a real Resend failure — correct.
+- **No broad `catch (e) {}` catch-alls** introduced.
+- Client form error handling: `ContactForm.handleAction` consumes the discriminated
+  result and routes `_form` vs per-field errors — no error is silently dropped.
+
+**R3.5 / R17.6 / R25.1 result: PASS.**
+
+---
+
+## 5. AI-slop sweep (remove-ai-slops, 10 categories)
+
+| # | Category | Finding |
+| --- | --- | --- |
+| 1 | Obvious comments | Clean. New comments explain *why* (e.g. `CaseStudyHero.tsx:20-21` CLS rationale, `TooltipProvider.tsx` provider-count rationale, `styles/tailwind.css` base-layer `!important` rationale). No `// increment counter` noise. |
+| 2 | Over-defensive code | Clean. No null checks for typed values, no try/catch around non-throwing code. Boundary validation is intentional (Zod at frontmatter + form). |
+| 3 | Excessive complexity | Clean. No nested ternaries; `ContactForm` uses early extraction; `buildMetaRows`/`carriesProof` are small single-purpose helpers. |
+| 4 | Needless abstraction | `AlertVariant` is a 2-value union (real), `TooltipProvider` is a genuine cross-cutting provider (removes ~168 nested providers), `FeaturedMonster` helper is reused via `.map`. No pass-through wrapper factory. |
+| 5 | Boundary violations | Clean. `components/**` and `lib/**` import neither `app/**`; `lib/` imports no component. Direction is downward (R4.15). |
+| 6 | Dead code | **One nit:** `ProjectTeaser.tsx` still declares and destructures the `imageUrl` prop (lines 21, 31) but never reads it. Pre-existing warning (present at merge-base), not introduced here; the plan passes `imageUrl={project.fullArticleLink}` from `app/projects/page.tsx:79`. Non-blocking, documented below. No debug leftovers, no unused imports, no `TODO/FIXME/HACK/XXX` anywhere. |
+| 7 | Duplication | Clean. Single-source fixtures (`e2e/fixtures/expectations.ts`), shared axe helpers, shared Breadcrumb/Alert primitives; no copy-paste branches. |
+| 8 | Performance equivalences | No risky algorithm changes; `TooltipProvider` and image pipeline are net improvements with tests. |
+| 9 | Missing tests | New behavior is covered: 8 new Jest suites (ContactForm, Alert, Breadcrumb, CaseStudyMeta/Hero, `[slug]` page, `lib/projects`, contact page, plus edits); e2e specs added for a11y, header-nav, breadcrumb, case-study, metadata, tooltip, contact. `FeaturedSet`/`FounderArc` are covered by e2e/home.spec.ts. |
+| 10 | Oversized modules | None >250 logic LOC (§2). |
+
+Also verified: no `TODO|FIXME|HACK|XXX`; no `.skip(`/`.only(`/`fit(`/`fdescribe(` across
+`app/ components/ lib/ e2e/`.
+
+**AI-slop result: PASS with 2 documented minor nits (see §8).**
+
+---
+
+## 6. D13 single-light-mode / new-`dark:` check
+
+Decision D13 = remove dark-mode machinery; ship one light mode. DESIGN.md §2:
+"`-dark` token values remain resolvable so the dormant `dark:*` utilities still compile,
+but no code adds the `dark` class and no dark surface is ever shown."
+
+- **No dark-mode machinery remains:** grep for `flowbite-theme-mode`,
+  `prefers-color-scheme`, `DarkThemeToggle`, `classList.add`, `localStorage` across
+  `app/ components/ lib/` returns **none**. No theme resolver script. `app/layout.tsx`
+  no longer sets `dark` on `<html>` (it sets `${inter.className} ${newsreader.variable}`).
+- **`darkMode: "class"` remains in `tailwind.config.js:29`** but no element ever receives
+  the `dark` class, so every `dark:*` utility is inert. This is the documented
+  DESIGN.md-compatible styling.
+- **Net new `dark:` in changed product files:**
+
+  | file | merge-base | HEAD | note |
+  | --- | ---: | ---: | --- |
+  | `app/contact/ContactForm.tsx` | 0 | 13 | verbatim relocation of the 13 dormant `dark:*` from the old `app/contact/page.tsx` (pre-`272bb2b`); net range delta 0 |
+  | `app/contact/page.tsx` | 13 | 0 | (the source that was relocated) |
+  | `components/ArticleTeaser/ArticleTeaser.tsx` | 8 | 9 | +1 `dark:text-muted` on the new date span in the T18 chip/date row |
+  | `components/ProjectTeaser/ProjectTeaser.tsx` | 10 | 10 | unchanged count |
+  | `app/page.tsx` | 19 | 0 | removed with marquee rewrite |
+  | `app/projects/page.tsx` | 8 | 0 | removed with archive rewrite |
+  | `app/blog/page.tsx` | 3 | 0 | removed |
+  | `app/layout.tsx` | 1 | 0 | removed |
+  | `components/Header/Header.tsx` | 2 | 0 | removed with T21 in-tree header (incl. `dark:text-foreground-dark` gone) |
+  | **all new T21/T19/T16 primitives** | — | **0** | Header, Breadcrumb, Alert, CaseStudyMeta, CaseStudyHero, FeaturedSet, FounderArc, TooltipProvider all carry zero `dark:` |
+
+  `app/about/page.tsx` retains its pre-existing dormant `dark:*` (inert, untouched scope).
+- **Net effect:** the plan *removed* more dormant `dark:*` than it added; the two
+  carry-overs (ContactForm relocation, ArticleTeaser date span) are inert and explicitly
+  permitted by DESIGN.md §2. No new theme toggle, no resolver, no persisted preference.
+- `e2e/dark-mode.spec.ts` now asserts a single light surface on every public route,
+  no toggle, no resolver script, no `localStorage` — the guard is present.
+
+**D13 result: PASS with a minor observation** (2 dormant `dark:*` carry-overs; both inert
+and DESIGN.md-sanctioned).
+
+---
+
+## 7. Accessibility / code-quality tokens (R15.x, R30.x)
+
+- **New T21 primitives ARIA/keyboard:**
+  - `Header.tsx` — `aria-expanded` + `aria-controls="site-nav"` on the toggle,
+    `aria-current="page"` on the active link, `sr-only` label that flips
+    "Open/Close main menu", closes menu on link activation. Covered by
+    `Header.test.tsx` (10 cases) and `e2e/header-nav.spec.ts` (4 cases incl.
+    Enter/Space keyboard operation and desktop-hides-toggle).
+  - `Breadcrumb.tsx` — `nav aria-label="Breadcrumb"`, `<ol>`, `aria-current="page"`
+    on the current crumb, `aria-hidden="true"` separators, `truncate` on the current
+    crumb. Covered by `Breadcrumb.test.tsx` + `e2e/breadcrumb.spec.ts`.
+  - `Alert.tsx` — `role="status"` for success, `role="alert"` for failure; dismiss
+    button is `type="button"` with `aria-label="Dismiss"`. Covered by
+    `Alert.test.tsx` + `ContactForm.test.tsx`/`e2e/contact.spec.ts`.
+- **Focus rings preserved (R15.4):** every new interactive element carries
+  `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft`
+  (or `-2` on the compact dismiss control, still visible). No bare `outline-none`.
+- **No new `dark:` on primitives** (§6) — single light mode.
+- **Reduced motion (R15.7):** global `@media (prefers-reduced-motion: reduce)` guard in
+  `styles/tailwind.css` plus `.motion-*` guarded by `no-preference`; verified by
+  `.omo/evidence/t15-motion/reduced-motion.log`.
+- **Skip link, `main#main-content tabIndex={-1}`** in `app/layout.tsx`; axe harness
+  (`e2e/a11y.spec.ts`) scans 7 public routes and fails on any unallowlisted
+  serious/critical violation. `KNOWN_VIOLATIONS` is empty (allowlist must shrink, and
+  has).
+- **Contrast gate (R15.2 / R15.8):** 24/24 pairs pass; new `accent-secondary` (wine) is
+  gated as text on surface/surface-muted (11.31:1) and as border (11.31:1). Verified
+  manually that dormant dark-token combinations are irrelevant (never rendered).
+
+**R15.x result: PASS.**
+
+---
+
+## 8. Documented minor nits (non-blocking)
+
+1. **Doc drift — `DESIGN.md` §5 (line 92)** still lists "Navbar, Card, Breadcrumb" as
+   Flowbite primitives, and **`README.md` (line 48 + structure tree line 166)** still
+   says Flowbite React provides "navbar … alerts" and `Header/ # Flowbite Navbar`.
+   T21 replaced Navbar/Breadcrumb/Alert with in-tree components; only `Card` remains
+   (confirmed: `grep -rn flowbite-react` → only the two `Card` imports). This is a
+   documentation-consistency nit (R5.2/R5.8), **not a code defect**; the plan's own
+   T21 scope note and the F1 audit already flagged doc/plan drift. Left untouched per the
+   F2 "review gate, no broad refactors" constraint.
+2. **`ProjectTeaser.tsx` `imageUrl` prop** is declared (line 21) and destructured
+   (line 31) but never read. Pre-existing (warning already in the merge-base/T07 lint
+   log), passed through by `app/projects/page.tsx:79`. No behavior impact; not introduced
+   by this plan.
+3. **Dormant `dark:*` carry-overs** — `app/contact/ContactForm.tsx` (13, verbatim
+   relocation) and `components/ArticleTeaser/ArticleTeaser.tsx` (+1 date span). Inert and
+   DESIGN.md-sanctioned (§6).
+
+Carried-forward from F1 (out of F2's code scope, re-confirmed):
+- **G1** `scripts/check-font-budget.mjs` exists and passes but is **not wired** into any
+  package script or `.forgejo/workflows/` (re-confirmed: `grep` finds no reference).
+- G2/G3 are orchestrator/state items (T01/T05 evidence tracking, stale
+  `.omo/boulder.json`), not code quality.
+
+---
+
+## 9. Per-rule notes (AGENTS.md)
+
+- **R3.1 ESLint + Prettier** — PASS (0 errors; 47 pre-existing warnings, no new).
+- **R3.4 Type safety** — PASS; no `as any`/`@ts-ignore`/`@ts-expect-error` in product
+  code; `unknown` + Zod at boundaries.
+- **R3.5 error hierarchy** — PASS; typed discriminated result, await-to-js.
+- **R4.14 module ceiling** — PASS; max product logic LOC ≈136.
+- **R4.15 dependency direction** — PASS; `components/`+`lib/` never import `app/`;
+  `lib/` never imports components.
+- **R4.16 circular deps** — PASS (no cross-import back-edges in the changed set;
+  typecheck + bundler clean).
+- **R5.2/R5.8 docs current** — NIT (§8.1): DESIGN.md/README primitive list lags T21.
+- **R15.4/R15.7/R15.11/R15.14** — PASS (focus rings, reduced motion, no telemetry,
+  single light mode).
+- **R17.6 no swallowed errors** — PASS.
+- **R25.1 await-to-js** — PASS (unchanged `sendEmail.tsx`).
+- **R30.x formatting** — PASS (Prettier clean; no manual alignment).
+- **R40.5 minimal public API** — PASS; new exports are intentional (`parseFrontmatter`,
+  `markdownFrontmatterSchema`, `TooltipProvider`, `Breadcrumb`/`BreadcrumbItem`,
+  `Alert`/`AlertVariant`, case-study types).
+
+---
+
+## 10. Verification baseline / reproducibility (R20.1)
+
+- Commands in §1 ran at HEAD `9567331` with a clean tree (product files).
+- Re-run: `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm typecheck && pnpm lint && pnpm prettier && pnpm test'`
+  → all EXIT 0. Pure-JS gates re-run individually → all EXIT 0.
+- Resource usage (R22.1): not instrumented by this worker; no provider token counter
+  available in-session.
+
+## 11. Verdict
+
+**F2 VERDICT: APPROVE**
+No blocking code-quality defect. All required gates green; no module over the R4.14
+ceiling; no escape hatches or swallowed errors in product code; AI-slop sweep clean
+apart from three documented, non-blocking nits (§8) — two of which are pre-existing and
+one of which is DESIGN.md-sanctioned. No product code was modified by this review.

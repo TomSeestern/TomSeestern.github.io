@@ -1,0 +1,98 @@
+# F3 journey run 2026-09-12T00:56:01.830Z base=http://127.0.0.1:3050
+
+===== DESKTOP JOURNEY (1280) =====
+SHOT desktop-home / -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-home__root.png (height=2849)
+PASS  home h1 present  — h1="TOM SEGBERS — SENIOR DEVELOPER"
+PASS  home featured set count=4  — count=4
+      featured titles: ["PayMeNow: Payment Status Application for eBay Sellers","ISeeUNet: Real-Time Drone Change Detection in Scrubland","SkinShark: NFT Marketplace for Minecraft Skin Trading","RefundHero - Transforming Train Ticket Reimbursements with Refund Hero"]
+PASS  home marquee retired (0 .animate-marquee)  — count=0
+FAIL  home og:image = /img/og-default.png  — og:image="https://tom.segbers.de/img/og-default.png"
+PASS  brand mark /icon/brand-mark.svg 200  — status=200 type=image/svg+xml
+PASS  brand mark accessible name "Tom Segbers Logo"  — alt="Tom Segbers Logo"
+SHOT desktop-featured-section / -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-featured-section__root.png (height=2849)
+PASS  featured click navigates to project detail  — /projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers -> /projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers
+SHOT desktop-project-detail-from-featured /projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-project-detail-from-featured__projects_entry_2021_paymenow_leveraging_tech_to_secure_payments_for_ebay_sellers.png (height=1401)
+PASS  legacy project: no case-study-hero  — count=0
+PASS  legacy project: no case-study-meta  — count=0
+PASS  legacy project article non-empty  — len=1736
+PASS  legacy project has h1  — h1="SOUDEST BACKEND - A MULTIMODAL TRAVEL PLANNER BACKEND WITH NODEJS"
+FAIL  project detail og:image = /img/og-default.png  — og:image="https://tom.segbers.de/img/og-default.png"
+SHOT desktop-project-detail-legacy /projects/entry/2020-soudest-backend-nodejs -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-project-detail-legacy__projects_entry_2020_soudest_backend_nodejs.png (height=1417)
+PASS  project detail breadcrumb present  — count=1
+FAIL  blog listing h1 = Blog  — h1="BLOG"
+PASS  blog listing has cards  — links=6
+      blog listing cardCount=6
+SHOT desktop-blog-listing /blog -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-blog-listing__blog.png (height=1273)
+PASS  blog post article non-empty  — len=1734
+PASS  blog post breadcrumb present  — count=1
+SHOT desktop-blog-post /blog/entry/2019-ebeltoft-cheesecake-recipe -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-blog-post__blog_entry_2019_ebeltoft_cheesecake_recipe.png (height=2656)
+PASS  contact form fields present  — name/email/message
+SHOT desktop-contact /contact -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-contact__contact.png (height=1011)
+PASS  contact email blur validation sets aria-invalid + error  — aria-invalid=true errNodes=1
+SHOT desktop-contact-validation /contact -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-contact-validation__contact.png (height=1035)
+PASS  contact submit has visible focus treatment  — {"outline":"none 3px","boxShadow":"none"}
+PASS  contact valid submit shows role=status success  — nodes=1 text="Success! Email sent successfully."
+SHOT desktop-contact-success /contact -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-contact-success__contact.png (height=1011)
+
+===== RESPONSIVE OVERFLOW (375 / 768 / 1280) =====
+PASS  overflow mobile-375 /  — scrollWidth=375 clientWidth=375
+SHOT mobile-375 / -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/mobile-375__root.png (height=3918)
+PASS  overflow mobile-375 /projects  — scrollWidth=375 clientWidth=375
+PASS  overflow mobile-375 /projects/entry/2020-soudest-backend-nodejs  — scrollWidth=375 clientWidth=375
+SHOT mobile-375 /projects/entry/2020-soudest-backend-nodejs -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/mobile-375__projects_entry_2020_soudest_backend_nodejs.png (height=2200)
+PASS  overflow mobile-375 /blog  — scrollWidth=375 clientWidth=375
+SHOT mobile-375 /blog -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/mobile-375__blog.png (height=1573)
+PASS  overflow mobile-375 /blog/entry/2019-ebeltoft-cheesecake-recipe  — scrollWidth=375 clientWidth=375
+PASS  overflow mobile-375 /contact  — scrollWidth=375 clientWidth=375
+SHOT mobile-375 /contact -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/mobile-375__contact.png (height=859)
+PASS  overflow tablet-768 /  — scrollWidth=768 clientWidth=768
+SHOT tablet-768 / -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/tablet-768__root.png (height=3047)
+PASS  overflow tablet-768 /projects  — scrollWidth=768 clientWidth=768
+PASS  overflow tablet-768 /projects/entry/2020-soudest-backend-nodejs  — scrollWidth=768 clientWidth=768
+SHOT tablet-768 /projects/entry/2020-soudest-backend-nodejs -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/tablet-768__projects_entry_2020_soudest_backend_nodejs.png (height=1333)
+PASS  overflow tablet-768 /blog  — scrollWidth=768 clientWidth=768
+SHOT tablet-768 /blog -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/tablet-768__blog.png (height=1205)
+PASS  overflow tablet-768 /blog/entry/2019-ebeltoft-cheesecake-recipe  — scrollWidth=768 clientWidth=768
+PASS  overflow tablet-768 /contact  — scrollWidth=768 clientWidth=768
+SHOT tablet-768 /contact -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/tablet-768__contact.png (height=1024)
+PASS  overflow desktop-1280 /  — scrollWidth=1280 clientWidth=1280
+PASS  overflow desktop-1280 /projects  — scrollWidth=1280 clientWidth=1280
+PASS  overflow desktop-1280 /projects/entry/2020-soudest-backend-nodejs  — scrollWidth=1280 clientWidth=1280
+PASS  overflow desktop-1280 /blog  — scrollWidth=1280 clientWidth=1280
+PASS  overflow desktop-1280 /blog/entry/2019-ebeltoft-cheesecake-recipe  — scrollWidth=1280 clientWidth=1280
+PASS  overflow desktop-1280 /contact  — scrollWidth=1280 clientWidth=1280
+
+===== KEYBOARD FLOW =====
+PASS  keyboard: first Tab lands on skip link (visible)  — visible=true focused=true
+SHOT keyboard-skip-link / -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/keyboard-skip-link__root.png (height=2849)
+PASS  keyboard: Enter on skip link moves focus to #main-content  — activeElement=main-content
+PASS  keyboard: mobile nav toggle Enter flips aria-expanded + reveals nav  — initial=false afterEnter=true navVisible=true
+SHOT keyboard-mobile-nav-open / -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/keyboard-mobile-nav-open__root.png (height=4094)
+PASS  keyboard: mobile nav toggle Space closes (aria-expanded=false)  — afterSpace=false
+PASS  keyboard: contact fields + submit reachable via Tab  — name=true email=true message=true submit=true
+PASS  keyboard: submit focus-ring visible  — {"boxShadow":"rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px","outline":"solid 2px"}
+
+===== PREFERS-REDUCED-MOTION: reduce =====
+PASS  reduced-motion /: 0 marquee  — count=0
+PASS  reduced-motion /: no animation >1ms running  — running=0
+PASS  reduced-motion /projects: 0 marquee  — count=0
+PASS  reduced-motion /projects: no animation >1ms running  — running=0
+PASS  reduced-motion /projects/entry/2020-soudest-backend-nodejs: 0 marquee  — count=0
+PASS  reduced-motion /projects/entry/2020-soudest-backend-nodejs: no animation >1ms running  — running=0
+PASS  reduced-motion /blog: 0 marquee  — count=0
+PASS  reduced-motion /blog: no animation >1ms running  — running=0
+PASS  reduced-motion /blog/entry/2019-ebeltoft-cheesecake-recipe: 0 marquee  — count=0
+PASS  reduced-motion /blog/entry/2019-ebeltoft-cheesecake-recipe: no animation >1ms running  — running=0
+PASS  reduced-motion /contact: 0 marquee  — count=0
+PASS  reduced-motion /contact: no animation >1ms running  — running=0
+SHOT reduced-motion-home / -> /home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/reduced-motion-home__root.png (height=2849)
+
+===== SUMMARY =====
+checks: 57, failures: 3
+  FAIL: home og:image = /img/og-default.png — og:image="https://tom.segbers.de/img/og-default.png"
+  FAIL: project detail og:image = /img/og-default.png — og:image="https://tom.segbers.de/img/og-default.png"
+  FAIL: blog listing h1 = Blog — h1="BLOG"
+console entries captured: 0
+console ERRORS: 0
+console WARNINGS: 0
+overflow failures: 0

@@ -1,0 +1,235 @@
+# F3 — Real Manual QA — 2026-refresh-restyle
+Task: F3. Real manual QA (final verification wave gate)
+Date: 2026-09-12
+Host: 22 cores, load average 30–48 (unrelated ClosedLoopOS gauntlet + SongsOfTheOuterRim
+E2E lane running concurrently). All timing-sensitive checks ran `--workers=1` where
+Playwright was used; the throwaway journey script is single-context sequential.
+
+F3 VERDICT: APPROVE
+
+Rationale: the full journey (home → featured set → project detail → blog listing →
+blog post → contact form) works on a clean production build with 0 console errors,
+0 console warnings, 0 horizontal-overflow failures, all keyboard flows correct, and
+all reduced-motion assertions correct. axe is 8/8 green on an empty allowlist.
+One real visual defect was found and quantified (success toast overlaps the header
+nav by 6px / 35% of nav glyph height at ≥768px), but it is PRE-EXISTING (introduced
+by the original contact page commit `e606a99`, carried verbatim through T21's
+in-tree Alert rewrite `fe98d41`/`272bb2b`) and outside the refresh-restyle scope.
+It is reported below as a named non-blocking defect, not a regression of this plan.
+The refresh's own visual brand (parchment/terracotta, carved Newsreader H1/H2,
+text-led hero, curated featured set, legacy case-study degrade, blog tag chips,
+contact form) reads as intended and is not broken/generic/misaligned.
+
+---
+
+## 1. Build / server provenance
+
+Production build (REQUIRED fidelity), `nix develop` with
+`NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt` for `next/font` Google fetch:
+
+- `[f3] build starting 2026-09-12T02:01:47+02:00`
+- `✓ Compiled successfully in 62s`
+- `✓ Generating static pages (38/38)`  (matches expected 38 static pages)
+- Clean rebuild after dev-server clobber: `✓ Compiled successfully in 2.2min`,
+  `✓ Generating static pages (38/38)`, `BUILD_ID=ImwkodMiBFGwRkCjjS8mn`.
+- Served with `next start --port 3050` and `E2E_CONTACT_FORM_SUCCESS=true`
+  (repro /proc env: `E2E_CONTACT_FORM_SUCCESS=true`), so the contact success path
+  is exercisable without hitting Resend.
+- Server killed at end of task; port 3050 confirmed closed (only F5's port-3030
+  `next dev` belongs to another concurrent agent, left untouched).
+
+### Environment confound encountered (documented so it is not misread as a defect)
+The `e2e/a11y.spec.ts` invocation starts its own `next dev --port 3030` (Playwright
+`webServer`), which writes a DEV `.next` and clobbers the production build
+(`.next/BUILD_ID` disappeared; `.next` mtime jumped ahead of the build). Probes 5–7
+executed against that dev server briefly produced CSS-less readings (nav list
+`display:block` at 375, inputs 21px high, submit 105×21). This is an environment
+artifact of running the axe suite against an existing prod server, NOT a product
+defect. After deleting `.next`, rebuilding production, and restarting, all values
+were correct (`#site-nav` `display:none` closed at 375; contact submit 145×44,
+inputs 343×42; toggle 40×40). No product code was changed to work around it.
+
+---
+
+## 2. Journey + coverage results (clean production build)
+
+Throwaway driver: `.omo/f3-journey.ts` (gitignored). Raw log:
+`.omo/evidence/f3/journey-run.log`; machine summary:
+`.omo/evidence/f3/journey-summary.json`.
+
+**Totals: 57 checks, 0 real failures, 0 console errors, 0 console warnings,
+18/18 overflow checks pass, 23 screenshots captured.**
+
+The 3 script "FAIL" lines are false alarms from overly strict string comparison,
+each disproved:
+1. `home og:image = /img/og-default.png` → actual `https://tom.segbers.de/img/og-default.png`.
+   Correct: `metadataBase` resolves relative OG URLs to an absolute URL (Next.js
+   contract). `new URL(...).pathname === "/img/og-default.png"` verified.
+2. `project detail og:image` → same absolute-URL behaviour, verified pathname.
+3. `blog listing h1 = Blog` → `h1.textContent === "Blog"` exactly; the rendered
+   "BLOG" is `text-transform: uppercase` (computed). DOM is correct.
+
+### 2.1 Route-by-route notes
+| Route | Result |
+|---|---|
+| `/` (home) | H1 "Tom Segbers — Senior Developer"; `FeaturedSet` count=4 (PayMeNow, ISeeUNet, SkinShark, RefundHero); marquee count=0; brand mark 200 `image/svg+xml`, alt "Tom Segbers Logo"; DOM nodes 200 (well under the 1500 ceiling); no overflow |
+| `/#featured-click` | Clicking first monument navigated `/projects/entry/2021-paymenow-...` (href honoured) |
+| `/projects` (archive) | H1 "Showcasing My Journey in Technology and Innovation"; 21 project cards; 4 "Selected" badges; no overflow |
+| `/projects/entry/2020-soudest-backend-nodejs` (legacy) | H1 present; `[data-testid=case-study-hero]` count=0; `[data-testid=case-study-meta]` count=0; `article.prose` len=1736; breadcrumb nav=1; no overflow |
+| `/blog` | H1 textContent "Blog" (CSS uppercase "BLOG"); 6 article links; tag chip rendered (e.g. HOMELAB AUTOMATION / HOMELAB / RECIPES); no overflow |
+| `/blog/entry/2019-ebeltoft-cheesecake-recipe` | H1 + H2 Ingredients/Preparation; image renders; breadcrumb nav=1; no overflow |
+| `/contact` | name/email/message present; email blur → `aria-invalid=true` + `#email-error`; submit focus ring (outline solid 2px + `rgb(222,164,140) 0 0 0 4px` shadow); valid submit → `role="status"` "Success! Email sent successfully."; no overflow |
+
+### 2.2 Console hygiene
+`consoleEntries: []` across all 6 journey routes × 3 viewports × reduced-motion ×
+keyboard, plus a dedicated sweep of all 6 OG routes (`CONSOLE_ISSUES []`). Zero
+errors, zero warnings, zero `pageerror`. (The only server-side stderr seen was a
+benign dev-only `fetch failed / unable to get local issuer certificate` during the
+axe suite's own dev server font fetch — not a client console error, not present on
+the production server.)
+
+### 2.3 Horizontal overflow (T17 `min-width:auto` bug class)
+`document.documentElement.scrollWidth === document.documentElement.clientWidth` on
+every route at 375/768/1280 — 18/18 pass (see §1 raw list). Examples:
+`/projects/entry/...` 375 sw=375; `/` 768 sw=768; `/blog` 1280 sw=1280.
+
+### 2.4 Keyboard
+- First `Tab` from load → skip link visible AND `document.activeElement`; PASS.
+- `Enter` → `document.activeElement.id === "main-content"`; PASS.
+- Mobile (375) nav toggle: `aria-expanded=false` → focus → `Enter` → `true` and
+  `#site-nav` visible; `Space` → `false`; PASS.
+- Contact: `#name`→`#email`→`#message`→submit reachable via Tab; submit focus-ring
+  computed (solid 2px + 4px soft ring); PASS.
+- Tab sweep of 10 home elements all carry a visible focus ring; PASS.
+
+### 2.5 Reduced motion (`reducedMotion: "reduce"`)
+All 6 routes: `.animate-marquee`/`.animate-marquee2` count=0, and
+`document.getAnimations()` filtered to duration>1ms = 0 → nothing animates. The
+global `@media (prefers-reduced-motion: reduce)` guard plus intrinsic
+`no-preference` wrapping of `.motion-rise/.motion-fade` both verified. PASS.
+Visual: reduced-motion home screenshot shows no element stuck at `opacity:0`.
+
+### 2.6 OG metadata (T23)
+`public/img/og-default.png`: HTTP 200, `image/png`, 1200×630, 39,219 bytes.
+`meta[property="og:image"]` resolves to `https://tom.segbers.de/img/og-default.png`
+(pathname `/img/og-default.png`) on `/`, `/projects`, `/blog`, `/contact`,
+`/projects/entry/2020-soudest-backend-nodejs`, `/blog/entry/2019-ebeltoft-...`.
+PASS.
+
+### 2.7 Brand mark (T23)
+`/icon/brand-mark.svg` → 200 `image/svg+xml`; header `<img>` alt="Tom Segbers Logo",
+natural 150×150, rendered 36×36 (`complete:true`). PASS.
+
+---
+
+## 3. Case-study template (enriched + legacy)
+
+- Legacy (`2020-soudest-backend-nodejs`): 0 hero / 0 meta containers — degrade
+  works (also covered by `e2e/case-study.spec.ts`). PASS.
+- Enriched path (optional task step): created a TEMPORARY fixture
+  `content/projects/f3-enriched-fixture-qa.md` (role/outcome/heroImage/2 metrics).
+  Rendered through the running server and asserted the markup: both
+  `data-testid="case-study-hero"` and `data-testid="case-study-meta"` present;
+  `Lead Developer` (Role), `Shipped to production and adopted by the team`
+  (Outcome), `Users`/`1200`, `Uptime`/`99.9%`, and the `cheesecake-ebeltoft.webp`
+  hero src all present (10 matches). PASS.
+  Fixture then DELETED; `content/projects/` back to 21 `.md` files;
+  `git status --short content/` clean. No content committed.
+
+---
+
+## 4. axe accessibility suite
+
+Command: `CI=true pnpm exec playwright test --project=chromium --workers=1 e2e/a11y.spec.ts`
+(under nix, `PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright`).
+Result: **8 passed (2.5m)**, EXIT=0, against an EMPTY allowlist
+(`e2e/fixtures/a11y-known-violations.ts`). Covers the 7 public routes + the
+allowlist integrity test in the single `light` scheme. (One dev-only
+`fetch failed / UNABLE_TO_GET_ISSUER_CERT_LOCALLY` in the dev server stderr is the
+known cert env quirk, not a test failure.)
+
+---
+
+## 5. Visual quality (real screenshots + captions)
+
+Screenshots: `.omo/evidence/f3/shots/` (23 PNGs; the required 20 journey captures
+run 1, plus 4 targeted proof crops). All 20 original captures validated as real
+PNGs with correct dimensions (89504e47 signature; widths match request).
+
+- **Brand palette:** body bg `rgb(245,239,225)` = parchment `#F5EFE1`; body ink
+  `rgb(27,27,31)` = `#1B1B1F`; contact button `rgb(127,46,30)` terracotta. Correct.
+- **Carved display type:** H1 `font-family "Newsreader"`, `text-transform:uppercase`,
+  `letter-spacing:1.2px`, `font-weight:800`, 48px; H2 Newsreader uppercase 0.9px.
+  Self-hosted Newsreader loaded (`document.fonts` shows Newsreader:loaded). Correct.
+- **Home:** type-led hero (no portrait), "Selected Work" 2×2 monument grid
+  (01–04 with rust ordinals, tech tuples, "View project"), Background scaffold,
+  "My Recent Blog Posts", footer. Clean, on-brand.
+- **Featured set → detail:** PAYMENOW detail renders breadcrumb, H1, prose; no
+  empty hero/meta for legacy. Correct.
+- **Blog listing:** centered "Blog", 3 cards in 2-col grid with tag chips
+  (HOMELAB AUTOMATION / HOMELAB / RECIPES), dates, avatar, "Read more".
+- **Project detail (legacy):** breadcrumb → H1 → prose, NO empty hero/meta box.
+  The "missing hero" is the intended degrade, not a defect.
+- **Contact:** centered H1 "Get in Touch", full-width labels/inputs/textarea,
+  submit; at 375 fields 343×42 and submit 145×44 (WCAG floor met; submit meets the
+  44px project primary-control bar).
+- **Mobile 375 / tablet 768:** 2-col/1-col layouts intact, no clipping, no
+  overflow; reduced-motion home fully opaque.
+- **Background section:** renders 4 non-factual beat labels (Origin, Turning Point,
+  Practice, Direction) with no copy. This is BY DESIGN — T16 ships a scaffold and
+  the copy is human-gated in T25 (`[~]` in the plan; plan line 367: "founder-arc
+  scaffold (4 static beats; copy human-gated in T25)"). Not a defect.
+
+### Visual defect found (PRE-EXISTING, non-blocking for this plan)
+**Success toast overlaps the header nav.**
+- Repro: 1280×900 → `/contact` → fill name/email/message → submit (E2E override).
+  At scrollY=0 the `role="status"` alert is `fixed inset-x-1/3 top-8 z-50`:
+  rect top=32, bottom=86, left=427, right=853. Header rect top=0, bottom=61.
+- Geometric overlap with nav links: About 328px², Projects 456px², Blog 248px²,
+  Contact 440px². Glyph-level measurement: each label's glyph box is 17px tall
+  (top 21, bottom 38); the alert covers 6px = **35% of nav glyph height**
+  (descenders of "j"/"p"/"g" hidden). At 375 the alert does NOT overlap nav
+  (menu is collapsed); at 700px viewport the user has scrolled past the header.
+- Provenance: introduced in the ORIGINAL contact implementation
+  `e606a99` ("Feature: Contact Page with Form using Resend") as Flowbite
+  `<Alert color="success" className="fixed inset-x-1/3 top-8 z-50">`; carried
+  verbatim into T21's in-tree Alert by `272bb2b` (`+className="fixed inset-x-1/3 top-8 z-50"`)
+  and `fe98d41`. `git merge-base --is-ancestor 272bb2b HEAD` = YES, but the
+  positioning predates this refresh plan and was not introduced/changed by it.
+  The plan's T21 scope was Flowbite removal, not toast repositioning.
+- Evidence: `shots/contact-success-topcrop.png`, `contact-success-navzoom.png`
+  (3×), `contact-success-glyphzoom.png` (4×), `desktop-contact-success__contact.png`.
+- Recommended fix (do NOT apply here): raise the alert below the header
+  (e.g. `top-20`) or reserve header height, or make it a non-overlapping inline
+  banner. Filed as a named defect for the backlog.
+
+No other visual defects: no broken images, no clipped text, no misalignment, no
+unbalanced/empty cards beyond the intended 3-post count, no generic/AI-slop UI.
+
+---
+
+## 6. Evidence index
+- Build: `.omo/evidence/f3/build.log`, `/tmp/opencode/f3-build2.log`
+- Server env proof: `/proc/<pid>/environ` grep (E2E_CONTACT_FORM_SUCCESS=true)
+- Journey log/summary: `.omo/evidence/f3/journey-run.log`,
+  `.omo/evidence/f3/journey-summary.json`
+- Screenshots: `.omo/evidence/f3/shots/` (23 files) + defect proof crops
+- axe: `.omo/evidence/f3/axe.log` → `8 passed (2.5m)`
+- Scripts (throwaway, gitignored, not committed): `.omo/f3-journey.ts`,
+  `.omo/probe*.ts`, `.omo/f3-*.sh`
+
+## 7. Guardrails honored
+- No product code, tests, or configs modified. `git status --short` shows only
+  pre-existing `.omo/*` modifications (not mine) and an untracked `null/`
+  (not mine) — I committed nothing, marked no plan checkboxes, did not touch
+  `.omo/boulder.json`, and left `null/**` alone.
+- Did NOT run Lighthouse (F5 owns it) or a full e2e sweep (F5 owns it).
+- Did NOT run the site's own e2e regression suite; only `e2e/a11y.spec.ts` as
+  required.
+- Server stopped; port 3050 free; no throwaway script left running.
+- Host-contention note: load 30–48 on 22 cores from unrelated projects. All
+  results reproducible; no timing flake required a masking code change.
+
+## 8. Resource note (R22.1)
+Task consumed roughly ~180–220k tokens across build, 6 Playwright probe scripts,
+23 screenshots, and vision captioning. Model: default (9router/default).

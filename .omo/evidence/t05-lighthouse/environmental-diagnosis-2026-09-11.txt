@@ -1,0 +1,102 @@
+T05 Lighthouse budget — environmental diagnosis addendum
+=========================================================
+
+Timestamp (UTC): 2026-09-11T23:05:00Z
+Timestamp (local): 2026-09-12 01:05:00 +0200
+Author: orchestrator (Atlas) — verification performed directly, not delegated
+Context: post-T23 full-gate run (`pnpm lighthouse`) returned EXIT=1 with 13
+failed assertions (LCP and/or TBT) across all 7 public routes.
+
+VERDICT: REGRESSION = NO. The red run is an artifact of host CPU starvation
+caused by an UNRELATED project, not a defect in this repository.
+
+------------------------------------------------------------
+1. Host contention (root cause)
+------------------------------------------------------------
+Measured repeatedly across ~20 minutes:
+
+  /proc/loadavg : 25.2 – 30.7   (22 logical cores)
+  workers       : 22–23 concurrent `@stryker-mutator/core` child-process-proxy
+                  workers, ~93–102 % CPU each, from /home/tom/Projects/ohmyroadmap
+  parent        : pid 1655703 `stryker`, elapsed 02:41:03 (still running)
+
+This is the same class of external-load interference already documented in
+`.omo/evidence/task-T19-2026-refresh-restyle.txt` and
+`.omo/notepads/2026-refresh-restyle/issues.md` (T18/T19 e2e flakes).
+
+------------------------------------------------------------
+2. Code-controlled, load-insensitive evidence (PASS)
+------------------------------------------------------------
+`nix develop -c bash -c '... node report-bundle-size.js && node scripts/check-bundle-budget.mjs'`
+-> EXIT 0, "PASS — 14 entries within budget."
+
+  __global (shared first-load) : 102,254 B  vs baseline 102,253 B   (+0.0%)
+  /page                        :  98,026 B  vs baseline 103,734 B   (-5.5%)
+  /blog/entry/[slug]/page      :  25,331 B  vs baseline  92,496 B  (-72.6%)
+  /projects/entry/[slug]/page  :  25,331 B  vs baseline  92,495 B  (-72.6%)
+  /contact/page                :   9,178 B  vs baseline  18,056 B  (-49.2%)
+  /projects/page               : 107,129 B  vs baseline 103,736 B   (+3.3%)
+  (all within the 130 KB shared / 180 KB route / +10 % growth budgets)
+
+`next build` route table shared JS = 102 kB (matches the 102,253 B baseline).
+No route regressed beyond budget. Detail routes improved ~73 % because T21
+replaced the Flowbite Breadcrumb (and T07/T13 trimmed dark-mode/legacy tokens).
+
+------------------------------------------------------------
+3. Timing evidence is garbage under starvation
+------------------------------------------------------------
+Lighthouse *simulated* mobile throttling (4x CPU) multiplies REAL CPU time.
+With the host already running at roughly 6–10x effective oversubscription, the
+simulated multiplier compounds, so both LCP and TBT explode together on an
+IDENTICAL bundle.
+
+Observed (unthrottled) First Contentful Paint, baseline vs this run:
+
+  route                          baseline   this run   ratio
+  /                                    180       2326   12.9x
+  /about                               237       1287    5.4x
+  /blog                                306       1276    4.2x
+  /contact                             138       1361    9.9x
+  /projects                            303        740    2.4x
+  /blog/entry/...-cheesecake           306        660    2.2x
+  /projects/entry/...-soudest           94       1314   14.0x
+
+A 2–14x inflation of unthrottled FCP on a byte-identical bundle is host
+contention, not application code.
+
+Corroborating: every LCP element Lighthouse recorded is server-rendered text
+or an already-in-DOM small image, none of which can genuinely take 3–4 s:
+  /                         <h1 class="max-w-measure-display ...">
+  /about                    <p class="text-xl font-medium ...">
+  /blog, /projects          <p class="mt-4 text-center ...">
+  /contact                  <p class="mb-8 text-center ...">
+  /projects/entry/...       <h1 class="text-h1-sm sm:text-h1">
+  /blog/entry/...           <img src="/img/cheesecake-ebeltoft.webp" alt="Cheesecake">
+
+------------------------------------------------------------
+4. Baseline was already partially red (pre-existing, known)
+------------------------------------------------------------
+T02 baseline medians (`.omo/evidence/baseline/lighthouse/*.json`) were already
+over the 2500 ms LCP budget on two routes:
+  home 2830 ms, projects 2588 ms (blog 2489, contact 2256, about 2384,
+  project-soudest 2127). T05's own ledger records "Gate currently RED on 3
+  routes' LCP". So a fully-green Lighthouse run has never been observed on this
+  host; it is a pre-existing budget-pressure item, not introduced by T19/T21/T23.
+
+------------------------------------------------------------
+5. Disposition
+------------------------------------------------------------
+- No product change is warranted: the code-controlled bundle budget PASSES with
+  margin, and the timing blow-up tracks host load, not bundle bytes.
+- A trustworthy Lighthouse number requires a quiet host (no external Stryker
+  workers). It cannot be produced reliably in this session and MUST NOT be
+  faked or hand-waved.
+- F5 (Regression gate) is instructed to re-run `pnpm lighthouse` and, if the
+  host is still starved, to record the environmental blocker explicitly rather
+  than assert a false green. A genuine green run is still required before the
+  wave can be declared APPROVED.
+
+Artefacts:
+- .lighthouseci/assertion-results.json   (13 failed assertions, this run)
+- .lighthouseci/localhost-*.json          (21 raw LHRs, this run)
+- .omo/evidence/baseline/lighthouse/*.json (T02 pre-restyle baseline)

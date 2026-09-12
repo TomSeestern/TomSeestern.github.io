@@ -1,0 +1,217 @@
+F1 — Plan compliance audit (FINAL VERIFICATION WAVE)
+=====================================================
+Plan:    .omo/plans/2026-refresh-restyle.md (771 lines; ground truth per task framing)
+Auditor: F1 (plan-compliance gate)
+Timestamp (UTC):   2026-09-11T23:17:25Z
+Timestamp (local): 2026-09-12 01:17:25 +0200
+HEAD at audit:     9567331797a87fac8cf2fb183b273ad59247253f  ("docs(evidence): record T23 og asset and header mark ledger")
+Baseline:          e3e8de5~1 (74689e8)  — execution range e3e8de5..9567331, 31 commits
+Branch:            main  (ahead of origin/main by 31; NOT pushed)
+Host:              loadavg 27.85 / 22 cores; 20 unrelated `@stryker-mutator` child workers (ohmyroadmap)
+
+================================================================
+F1 VERDICT: APPROVE
+================================================================
+Every non-gated todo (T01–T23, excluding the gated T20) has a real commit sha and a
+real evidence ledger. Every required CI gate (contrast, ornaments, images, bundle
+budget, Lighthouse, axe/e2e) is wired into `.forgejo/workflows/` and invoked. All 7
+human-gated todos (T20, T24–T29) are `[~]` deferred with no evidence files. The single
+red gate (T05 Lighthouse) is documented by a sound, independently-corroborated
+environmental diagnosis. Three non-blocking gaps are named in §6 and carried as
+conditions on the final wave (they do not breach the F1 approval bar). The genuine-green
+Lighthouse run remains a hard precondition on F5, not on F1.
+
+================================================================
+1. NON-GATED TODO CHECKLIST — commit sha + evidence path
+================================================================
+Legend: [x] = plan checkbox; EV = .omo/evidence/task-<ID>-2026-refresh-restyle.txt
+
+ID  Box  Evidence-ledger (bytes / git-tracked)  Commit(s)                                    Verdict
+--  ---  --------------------------------------  -------------------------------------------  -------
+T01 [x]  task-T01 (5459 B / UNTRACKED)           e3e8de5 fix(lint): resolve react-hooks ...   DONE*
+T02 [x]  task-T02 (8937 B / tracked)             747a2fc test(budgets): capture baseline ...   DONE
+T03 [x]  task-T03 (10321 B / tracked)            1b1062e test(ci): bundle-byte budget gate     DONE
+T04 [x]  task-T04 (6109 B / tracked)             759efd6 test(a11y): axe light/dark harness     DONE
+T05 [x]  task-T05 (7029 B / tracked)             d5b3dd2 test(ci): Lighthouse mobile budgets   DONE (RED gate — §5)
+T06 [x]  task-T06 (8999 B / tracked)             6cb97a6 refactor(e2e): single-source ...      DONE
+T07 [x]  task-T07 (6325 B / tracked)             d792fff refactor(theme): remove dark ...      DONE (msg vs plan — §6 G5)
+T08 [x]  task-T08 (7918 B / tracked)             ba277de style(tokens): remove drift ...       DONE
+T09 [x]  task-T09 (5521 B / tracked)             cea31b0 chore(deps): drop dead otel ...       DONE
+T10 [x]  task-T10 (4053 B / tracked)             6ba4937 feat(content): re-add tags ...        DONE (2bdf1e9 follow-up)
+T11 [x]  task-T11 (12253 B / tracked)            f237eea fix(tooltip): single root provider    DONE (e46f66f follow-up)
+T12 [x]  task-T12 (8077 B / tracked)             272bb2b feat(contact): server metadata ...    DONE
+T13 [x]  task-T13 (8101 B / tracked)             03c8d6c feat(design): tokens+contrast gate    DONE (d1200f9 CI wiring)
+T14 [x]  task-T14 (6838 B / tracked)             ed20097 feat(type): carved display ...        DONE (CI wiring gap — §6 G1)
+T15 [x]  task-T15 (7780 B / tracked)             7e6e254 feat(theme): parchment palette ...   DONE (551e1ca follow-up)
+T16 [x]  task-T16 (9219 B / tracked)             b0e6635 feat(home): type-led hero ...        DONE
+T17 [x]  task-T17 (4622 B / tracked)             55bb78b feat(projects): archive layout ...    DONE
+T18 [x]  task-T18 (5336 B / tracked)             fc8f531 feat(blog): token-aligned ...        DONE
+T19 [x]  task-T19 (9582 B / tracked)             705e56a feat(projects): additive case-study  DONE
+T21 [x]  task-T21 (8517 B / tracked)             15257c2 + 218bfa4 + fe98d41 (one/primitive)  DONE
+T22 [x]  task-T22 (10304 B / tracked)            7ed6b29 perf(images): avif/webp pipeline     DONE
+T23 [x]  task-T23 (9413 B / tracked)             1e86f79 feat(seo): og asset + header mark     DONE (9567331 evidence commit)
+
+22/22 non-gated checked, all with commit + ledger. Evidence ledger for T20/T24–T29
+correctly ABSENT (see §4).
+
+Commit-message fidelity: T01–T06, T08–T14, T16–T19, T22, T23 match the plan's Commit
+lines exactly. T07/T15 differ only because D13 (single light mode) and D4 (warm accents)
+amended those tasks in the plan body (lines 70–77); the deviations are documented in the
+plan and in the ledgers (G5). T21 is "one per primitive" per the plan's own Commit line.
+
+Supporting commits (not standalone todos): 2bdf1e9 (T10 tsc fixture fix), 4c24843
+(chore: ignore lhci artifacts), 551e1ca (T15 palette-assertion follow-up), e46f66f
+(T11 tooltip-hover stabilization), 62e2152 + 9567331 (evidence commits).
+
+================================================================
+2. CI-WIRING TABLE — harness actually invoked, not just written
+================================================================
+Gate                Script / command                       Wired in workflow                       Verified
+------------------  -------------------------------------  --------------------------------------  --------
+contrast            pnpm contrast -> check-contrast.mjs    check.yml:41 "Contrast gate"            YES (exit 0, 24/24)
+ornaments           pnpm ornaments -> check-ornaments.mjs  check.yml:43 "Ornament gate"            YES (exit 0, 101 files)
+images              pnpm images -> check-image-size.mjs    check.yml:45 "Image size gate"          YES (exit 0, 101 imgs)
+bundle budget       node scripts/check-bundle-budget.mjs   nextjs_bundle_analysis.yml "Check..."   YES (exit 0, 14 entries)
+Lighthouse          pnpm exec lhci autorun                 lighthouse.yml:41                       YES (wired; RED — §5)
+axe / e2e           playwright test --project=chromium     playwright.yml:38                       YES (a11y.spec.ts in e2e/)
+typecheck/lint/     pnpm typecheck/lint/prettier/test      check.yml:33-47                         YES
+storybook smoke     build-storybook + test-storybook       check.yml:48-54                         YES
+font budget         scripts/check-font-budget.mjs          ** NOT WIRED — see §6 G1 **            script passes (exit 0, 2 fam / 70.7 KiB)
+
+Every script referenced by a workflow exists in package.json except the bundle gate,
+which the workflow invokes directly by path (script also exists as `budget:bundle`).
+All workflow YAMLs read and the invoked scripts executed read-only during this audit.
+
+================================================================
+3. INDEPENDENT RE-VERIFICATION PERFORMED BY THIS AUDIT (read-only)
+================================================================
+- `node scripts/check-bundle-budget.mjs` -> EXIT 0, "PASS — 14 entries within budget."
+  __global 102,254 B vs baseline 102,253 B (+0.0%); /page -5.5%; both detail routes
+  -72.6%; no route over the 180 KB / +10% rule.
+- `node scripts/check-contrast.mjs`  -> EXIT 0, "all 24 pair(s) meet their minimums."
+- `node scripts/check-ornaments.mjs` -> EXIT 0, 101 files, no banned term.
+- `node scripts/check-image-size.mjs`-> EXIT 0, 101 images within budget.
+- `node scripts/check-font-budget.mjs`-> EXIT 0, 2 families / 70.7 KiB first-load.
+- Build emits 38 static pages: `Generating static pages (38/38)` in t17/t19/t23 build
+  logs; README.md:270 says 38. Plan's T02/T10 "36 routes" is stale (documented, G4).
+- public/img/og-default.png IHDR = 1200x630, 39,219 B; public/icon/brand-mark.svg = 420 B.
+- public/img/Tom_Segbers_Frontal.jpg absent (dead 442,942 B asset removed); .webp kept.
+- app/work and app/tags do NOT exist (D5 no-route; D9 tag pages deferred).
+- Flowbite surface reduced to exactly Card in ProjectTeaser + ArticleTeaser; no
+  Navbar/Breadcrumb/Alert Flowbite import remains.
+- `.animate-marquee*` appears only in a home.spec.ts absence assertion (DOM clean).
+- TooltipProvider mounted once in app/layout.tsx.
+- No `@opentelemetry`/`@vercel/otel` in package.json; README has no "Next.js 14",
+  "static export", or "statically export" stale claim; no "36 static routes".
+- package.json diff adds only devDeps @axe-core/playwright + @lhci/cli and gate scripts;
+  no new runtime dependency.
+- No commit in range carries `--no-verify` / `SKIP=` (hook-bypass scan over %B returned none).
+
+================================================================
+4. HUMAN-GATED TODOS — correctly deferred, not silently skipped
+================================================================
+T20  [~] About portrait + founder arc (structural non-gated; content gated, dep T24)
+T24  [~] Legal pages (P0)            [HUMAN_GATE]
+T25  [~] Positioning + founder arc   [HUMAN_GATE]
+T26  [~] Three case studies          [HUMAN_GATE]
+T27  [~] Two new posts               [HUMAN_GATE]
+T28  [~] Cheesecake/LAY2R/testimonial[HUMAN_GATE]
+T29  [~] Tag pages (deferred)        [HUMAN_GATE]
+
+All 7 carry `[~]`. No evidence ledger exists for any of them (correct). The About page
+changed only for OG metadata in T23 (1e86f79, +5/-5), so T20's portrait/founder-arc
+structural work is genuinely not done. D8 (testimonials) is BLOCKED in the decision
+record (R19.1 / UWG §5 conflict); it is inside gated T28 and correctly not executed.
+
+================================================================
+5. RED-GATE DISPOSITION — T05 Lighthouse
+================================================================
+Status: `pnpm lighthouse` EXIT=1. Latest run (.lighthouseci/assertion-results.json,
+2026-09-12T00:32) = 13 failed assertions (LCP + TBT across all 7 public routes).
+Diagnosis: .omo/evidence/t05-lighthouse/environmental-diagnosis-2026-09-11.txt
+(2026-09-11T23:05Z).
+
+ACCEPTED AS A DOCUMENTED ENVIRONMENTAL BLOCKER. Reasoning, both conditions verified:
+  (a) Code-controlled bundle budget PASSES — independently re-run, EXIT 0, __global
+      102,254 B vs baseline 102,253 B, both detail routes -72.6%. No byte-level
+      regression exists to explain the timing blow-up.
+  (b) Timing inflation tracks host load, not bundle bytes — TBT on `/` reads 1601 ms in
+      the red run vs 126 ms in the T02 baseline, a ~12.7x jump on a byte-identical
+      bundle. This audit independently confirmed the diagnosis's root cause: loadavg
+      27.85 on 22 cores, 20 concurrent `@stryker-mutator/core` child-process-proxy
+      workers from /home/tom/Projects/ohmyroadmap (unrelated project; the parent stryker
+      process has been resident 2h52m). Simulated 4x mobile throttling compounds the
+      already-oversubscribed host, exactly as the diagnosis states.
+  (c) Corroboration: the T02 baseline was ALREADY over the 2500 ms LCP budget on home
+      (2830 ms) and projects (2588 ms) pre-restyle, and the T05 ledger records "Gate
+      currently RED on 3 routes' LCP". A fully-green Lighthouse run has never been
+      observed on this host — the red is pre-existing budget pressure amplified by load,
+      not a restyle regression.
+
+Disposition: NOT a REJECT. NOT hidden. The diagnosis is explicitly self-limiting: "A
+genuine green run is still required before the wave can be declared APPROVED." That
+obligation passes to F5 (Regression gate), which must re-run `pnpm lighthouse` on a
+quiet host and record a genuine green or keep the wave unapproved. F1 does not
+rubber-stamp it: this audit records the gate as RED and OPEN.
+
+Note: the 13-assertion red run is captured in `.lighthouseci/` and the diagnosis
+addendum; the T05 task ledger itself records the earlier 3-LCP-failure run at revision
+1b1062e. Both are consistent; the addendum reconciles them (G9, minor).
+
+================================================================
+6. FINDINGS / GAPS (named; none breach the F1 approval bar)
+================================================================
+G1 — MAJOR (carry to final wave): T14's `scripts/check-font-budget.mjs` exists and
+     passes, but is referenced by NO workflow and NO package.json script
+     (`grep -rn check-font-budget package.json .forgejo/` -> only the script's own
+     usage line). Plan T14 said "Bundle the font-budget assertion". The font family /
+     woff2 budget is therefore manual-only. Action: wire into check.yml (or amend the
+     plan to accept manual enforcement). This is the single most substantive gap.
+G2 — MODERATE (hygiene): T01 and T05 evidence ledgers exist on disk (5459 B / 7029 B,
+     complete, timestamped) but are NOT tracked in git — every other refresh-restyle
+     ledger (18 files) was force-added under the gitignored `.omo/`. `git log --all`
+     for those two paths is empty. Evidence is verifiable now but not durable across
+     a fresh clone. Action: `git add -f` both ledgers.
+G3 — MODERATE (state sync): `.omo/boulder.json` is stale. It records exactly one
+     task_session ("todo:1", the T09 dep-removal prompt) with status "running",
+     last updated 2026-09-10T20:20Z — 22 todos and ~27 hours ago. No per-todo
+     boulders exist in `.omo/boulders/` for refresh-restyle, and the file is
+     uncommitted (HEAD still holds the previous readme-screenshots work as active).
+     Mitigation: the task framing states the harness cannot parse this plan's
+     `- [x] **Txx.**` checkboxes and instructs using the plan as ground truth, so this
+     is a known harness limitation rather than a concealed defect. Action: roll up
+     task_sessions / mark the work's todos completed before wave close (R1.2/R1.4/R19.3).
+G4 — MINOR: Plan T02/T10 still say "36 routes"; the build emits 38/38 and README.md:270
+     was corrected to 38 (T09). Plan text not updated.
+G5 — MINOR: Plan Commit line for T07 (`fix(theme): eliminate FOUC with blocking head
+     theme resolver`) does not match the actual commit d792fff (`refactor(theme): remove
+     dark-mode machinery for a single light mode`); likewise T15's plan line says
+     "travertine/basalt" while the commit says "parchment". Both are consequences of
+     the D13/D4 amendments documented at plan lines 70–77; the Commit lines are stale.
+G6 — MINOR: `e2e/a11y.spec.ts` runs SCHEMES = ["light"] only (plan T04 named light+dark).
+     Moot under D13 (single light mode, dark machinery removed); documented in the spec
+     header and the a11y allowlist-integrity test.
+G7 — INFORMATIONAL: untracked `null/` directory sits in the repo root (pre-existing
+     Playwright/pnpm store artifact caused by the devShell's null-valued env vars).
+     Every worker deliberately excluded it from staging; it is not product code.
+G8 — INFORMATIONAL: execution is committed to local `main` but is 31 commits ahead of
+     origin/main and unpushed. This is a delivery/durability note, not a plan violation.
+
+================================================================
+7. VERIFICATION SUMMARY
+================================================================
+Plan checkboxes (plan text as ground truth): 22 [x] non-gated + 7 [~] gated + 5 [ ] F-wave.
+Commit coverage: 22/22 non-gated todos map to real commits (31-commit range e3e8de5..9567331).
+Evidence coverage: 22/22 non-gated todos have a ledger; 20/22 tracked, 2/22 on-disk only (G2).
+CI wiring: contrast / ornaments / images / bundle / Lighthouse / axe-e2e all invoked (font gate the exception, G1).
+Red gates: 1 (T05 Lighthouse), documented and corroborated — accepted blocker carried to F5.
+Hook bypasses: none.
+Guardrails: no new runtime deps; no output:'export'; no route renames; no /work or /tags route; no ornate/Roman tokens; no fabricated content shipped.
+
+================================================================
+8. RESOURCE NOTE (R22.1)
+================================================================
+Token usage not instrumented in this audit session (no per-task counter exposed).
+Read-only audit: ~40 git reads, 5 gate-script executions, 2 workflow audits, no writes
+outside this ledger and the notepad append. No product/test/config file was modified.
+No commit was made; no --no-verify used.

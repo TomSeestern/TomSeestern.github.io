@@ -1,0 +1,539 @@
+{
+  "base": "http://127.0.0.1:3050",
+  "generatedAt": "2026-09-12T00:56:43.584Z",
+  "checks": [
+    {
+      "name": "home h1 present",
+      "ok": true,
+      "detail": "h1=\"TOM SEGBERS — SENIOR DEVELOPER\""
+    },
+    {
+      "name": "home featured set count=4",
+      "ok": true,
+      "detail": "count=4"
+    },
+    {
+      "name": "home marquee retired (0 .animate-marquee)",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "home og:image = /img/og-default.png",
+      "ok": false,
+      "detail": "og:image=\"https://tom.segbers.de/img/og-default.png\""
+    },
+    {
+      "name": "brand mark /icon/brand-mark.svg 200",
+      "ok": true,
+      "detail": "status=200 type=image/svg+xml"
+    },
+    {
+      "name": "brand mark accessible name \"Tom Segbers Logo\"",
+      "ok": true,
+      "detail": "alt=\"Tom Segbers Logo\""
+    },
+    {
+      "name": "featured click navigates to project detail",
+      "ok": true,
+      "detail": "/projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers -> /projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers"
+    },
+    {
+      "name": "legacy project: no case-study-hero",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "legacy project: no case-study-meta",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "legacy project article non-empty",
+      "ok": true,
+      "detail": "len=1736"
+    },
+    {
+      "name": "legacy project has h1",
+      "ok": true,
+      "detail": "h1=\"SOUDEST BACKEND - A MULTIMODAL TRAVEL PLANNER BACKEND WITH NODEJS\""
+    },
+    {
+      "name": "project detail og:image = /img/og-default.png",
+      "ok": false,
+      "detail": "og:image=\"https://tom.segbers.de/img/og-default.png\""
+    },
+    {
+      "name": "project detail breadcrumb present",
+      "ok": true,
+      "detail": "count=1"
+    },
+    {
+      "name": "blog listing h1 = Blog",
+      "ok": false,
+      "detail": "h1=\"BLOG\""
+    },
+    {
+      "name": "blog listing has cards",
+      "ok": true,
+      "detail": "links=6"
+    },
+    {
+      "name": "blog post article non-empty",
+      "ok": true,
+      "detail": "len=1734"
+    },
+    {
+      "name": "blog post breadcrumb present",
+      "ok": true,
+      "detail": "count=1"
+    },
+    {
+      "name": "contact form fields present",
+      "ok": true,
+      "detail": "name/email/message"
+    },
+    {
+      "name": "contact email blur validation sets aria-invalid + error",
+      "ok": true,
+      "detail": "aria-invalid=true errNodes=1"
+    },
+    {
+      "name": "contact submit has visible focus treatment",
+      "ok": true,
+      "detail": "{\"outline\":\"none 3px\",\"boxShadow\":\"none\"}"
+    },
+    {
+      "name": "contact valid submit shows role=status success",
+      "ok": true,
+      "detail": "nodes=1 text=\"Success! Email sent successfully.\""
+    },
+    {
+      "name": "overflow mobile-375 /",
+      "ok": true,
+      "detail": "scrollWidth=375 clientWidth=375"
+    },
+    {
+      "name": "overflow mobile-375 /projects",
+      "ok": true,
+      "detail": "scrollWidth=375 clientWidth=375"
+    },
+    {
+      "name": "overflow mobile-375 /projects/entry/2020-soudest-backend-nodejs",
+      "ok": true,
+      "detail": "scrollWidth=375 clientWidth=375"
+    },
+    {
+      "name": "overflow mobile-375 /blog",
+      "ok": true,
+      "detail": "scrollWidth=375 clientWidth=375"
+    },
+    {
+      "name": "overflow mobile-375 /blog/entry/2019-ebeltoft-cheesecake-recipe",
+      "ok": true,
+      "detail": "scrollWidth=375 clientWidth=375"
+    },
+    {
+      "name": "overflow mobile-375 /contact",
+      "ok": true,
+      "detail": "scrollWidth=375 clientWidth=375"
+    },
+    {
+      "name": "overflow tablet-768 /",
+      "ok": true,
+      "detail": "scrollWidth=768 clientWidth=768"
+    },
+    {
+      "name": "overflow tablet-768 /projects",
+      "ok": true,
+      "detail": "scrollWidth=768 clientWidth=768"
+    },
+    {
+      "name": "overflow tablet-768 /projects/entry/2020-soudest-backend-nodejs",
+      "ok": true,
+      "detail": "scrollWidth=768 clientWidth=768"
+    },
+    {
+      "name": "overflow tablet-768 /blog",
+      "ok": true,
+      "detail": "scrollWidth=768 clientWidth=768"
+    },
+    {
+      "name": "overflow tablet-768 /blog/entry/2019-ebeltoft-cheesecake-recipe",
+      "ok": true,
+      "detail": "scrollWidth=768 clientWidth=768"
+    },
+    {
+      "name": "overflow tablet-768 /contact",
+      "ok": true,
+      "detail": "scrollWidth=768 clientWidth=768"
+    },
+    {
+      "name": "overflow desktop-1280 /",
+      "ok": true,
+      "detail": "scrollWidth=1280 clientWidth=1280"
+    },
+    {
+      "name": "overflow desktop-1280 /projects",
+      "ok": true,
+      "detail": "scrollWidth=1280 clientWidth=1280"
+    },
+    {
+      "name": "overflow desktop-1280 /projects/entry/2020-soudest-backend-nodejs",
+      "ok": true,
+      "detail": "scrollWidth=1280 clientWidth=1280"
+    },
+    {
+      "name": "overflow desktop-1280 /blog",
+      "ok": true,
+      "detail": "scrollWidth=1280 clientWidth=1280"
+    },
+    {
+      "name": "overflow desktop-1280 /blog/entry/2019-ebeltoft-cheesecake-recipe",
+      "ok": true,
+      "detail": "scrollWidth=1280 clientWidth=1280"
+    },
+    {
+      "name": "overflow desktop-1280 /contact",
+      "ok": true,
+      "detail": "scrollWidth=1280 clientWidth=1280"
+    },
+    {
+      "name": "keyboard: first Tab lands on skip link (visible)",
+      "ok": true,
+      "detail": "visible=true focused=true"
+    },
+    {
+      "name": "keyboard: Enter on skip link moves focus to #main-content",
+      "ok": true,
+      "detail": "activeElement=main-content"
+    },
+    {
+      "name": "keyboard: mobile nav toggle Enter flips aria-expanded + reveals nav",
+      "ok": true,
+      "detail": "initial=false afterEnter=true navVisible=true"
+    },
+    {
+      "name": "keyboard: mobile nav toggle Space closes (aria-expanded=false)",
+      "ok": true,
+      "detail": "afterSpace=false"
+    },
+    {
+      "name": "keyboard: contact fields + submit reachable via Tab",
+      "ok": true,
+      "detail": "name=true email=true message=true submit=true"
+    },
+    {
+      "name": "keyboard: submit focus-ring visible",
+      "ok": true,
+      "detail": "{\"boxShadow\":\"rgb(255, 255, 255) 0px 0px 0px 0px, rgb(222, 164, 140) 0px 0px 0px 4px, rgba(0, 0, 0, 0) 0px 0px 0px 0px\",\"outline\":\"solid 2px\"}"
+    },
+    {
+      "name": "reduced-motion /: 0 marquee",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "reduced-motion /: no animation >1ms running",
+      "ok": true,
+      "detail": "running=0"
+    },
+    {
+      "name": "reduced-motion /projects: 0 marquee",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "reduced-motion /projects: no animation >1ms running",
+      "ok": true,
+      "detail": "running=0"
+    },
+    {
+      "name": "reduced-motion /projects/entry/2020-soudest-backend-nodejs: 0 marquee",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "reduced-motion /projects/entry/2020-soudest-backend-nodejs: no animation >1ms running",
+      "ok": true,
+      "detail": "running=0"
+    },
+    {
+      "name": "reduced-motion /blog: 0 marquee",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "reduced-motion /blog: no animation >1ms running",
+      "ok": true,
+      "detail": "running=0"
+    },
+    {
+      "name": "reduced-motion /blog/entry/2019-ebeltoft-cheesecake-recipe: 0 marquee",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "reduced-motion /blog/entry/2019-ebeltoft-cheesecake-recipe: no animation >1ms running",
+      "ok": true,
+      "detail": "running=0"
+    },
+    {
+      "name": "reduced-motion /contact: 0 marquee",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "reduced-motion /contact: no animation >1ms running",
+      "ok": true,
+      "detail": "running=0"
+    }
+  ],
+  "failures": [
+    {
+      "name": "home og:image = /img/og-default.png",
+      "ok": false,
+      "detail": "og:image=\"https://tom.segbers.de/img/og-default.png\""
+    },
+    {
+      "name": "project detail og:image = /img/og-default.png",
+      "ok": false,
+      "detail": "og:image=\"https://tom.segbers.de/img/og-default.png\""
+    },
+    {
+      "name": "blog listing h1 = Blog",
+      "ok": false,
+      "detail": "h1=\"BLOG\""
+    }
+  ],
+  "consoleEntries": [],
+  "overflows": [
+    {
+      "route": "/",
+      "width": 375,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "ok": true
+    },
+    {
+      "route": "/projects",
+      "width": 375,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "ok": true
+    },
+    {
+      "route": "/projects/entry/2020-soudest-backend-nodejs",
+      "width": 375,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "ok": true
+    },
+    {
+      "route": "/blog",
+      "width": 375,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "ok": true
+    },
+    {
+      "route": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+      "width": 375,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "ok": true
+    },
+    {
+      "route": "/contact",
+      "width": 375,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "ok": true
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "ok": true
+    },
+    {
+      "route": "/projects",
+      "width": 768,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "ok": true
+    },
+    {
+      "route": "/projects/entry/2020-soudest-backend-nodejs",
+      "width": 768,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "ok": true
+    },
+    {
+      "route": "/blog",
+      "width": 768,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "ok": true
+    },
+    {
+      "route": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+      "width": 768,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "ok": true
+    },
+    {
+      "route": "/contact",
+      "width": 768,
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "ok": true
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "ok": true
+    },
+    {
+      "route": "/projects",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "ok": true
+    },
+    {
+      "route": "/projects/entry/2020-soudest-backend-nodejs",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "ok": true
+    },
+    {
+      "route": "/blog",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "ok": true
+    },
+    {
+      "route": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "ok": true
+    },
+    {
+      "route": "/contact",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "clientWidth": 1280,
+      "ok": true
+    }
+  ],
+  "screenshots": [
+    {
+      "route": "/",
+      "viewport": "desktop-home",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-home__root.png"
+    },
+    {
+      "route": "/",
+      "viewport": "desktop-featured-section",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-featured-section__root.png"
+    },
+    {
+      "route": "/projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers",
+      "viewport": "desktop-project-detail-from-featured",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-project-detail-from-featured__projects_entry_2021_paymenow_leveraging_tech_to_secure_payments_for_ebay_sellers.png"
+    },
+    {
+      "route": "/projects/entry/2020-soudest-backend-nodejs",
+      "viewport": "desktop-project-detail-legacy",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-project-detail-legacy__projects_entry_2020_soudest_backend_nodejs.png"
+    },
+    {
+      "route": "/blog",
+      "viewport": "desktop-blog-listing",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-blog-listing__blog.png"
+    },
+    {
+      "route": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+      "viewport": "desktop-blog-post",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-blog-post__blog_entry_2019_ebeltoft_cheesecake_recipe.png"
+    },
+    {
+      "route": "/contact",
+      "viewport": "desktop-contact",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-contact__contact.png"
+    },
+    {
+      "route": "/contact",
+      "viewport": "desktop-contact-validation",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-contact-validation__contact.png"
+    },
+    {
+      "route": "/contact",
+      "viewport": "desktop-contact-success",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/desktop-contact-success__contact.png"
+    },
+    {
+      "route": "/",
+      "viewport": "mobile-375",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/mobile-375__root.png"
+    },
+    {
+      "route": "/projects/entry/2020-soudest-backend-nodejs",
+      "viewport": "mobile-375",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/mobile-375__projects_entry_2020_soudest_backend_nodejs.png"
+    },
+    {
+      "route": "/blog",
+      "viewport": "mobile-375",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/mobile-375__blog.png"
+    },
+    {
+      "route": "/contact",
+      "viewport": "mobile-375",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/mobile-375__contact.png"
+    },
+    {
+      "route": "/",
+      "viewport": "tablet-768",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/tablet-768__root.png"
+    },
+    {
+      "route": "/projects/entry/2020-soudest-backend-nodejs",
+      "viewport": "tablet-768",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/tablet-768__projects_entry_2020_soudest_backend_nodejs.png"
+    },
+    {
+      "route": "/blog",
+      "viewport": "tablet-768",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/tablet-768__blog.png"
+    },
+    {
+      "route": "/contact",
+      "viewport": "tablet-768",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/tablet-768__contact.png"
+    },
+    {
+      "route": "/",
+      "viewport": "keyboard-skip-link",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/keyboard-skip-link__root.png"
+    },
+    {
+      "route": "/",
+      "viewport": "keyboard-mobile-nav-open",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/keyboard-mobile-nav-open__root.png"
+    },
+    {
+      "route": "/",
+      "viewport": "reduced-motion-home",
+      "path": "/home/tom/Projects/tomsegbers-de/.omo/evidence/f3/shots/reduced-motion-home__root.png"
+    }
+  ]
+}

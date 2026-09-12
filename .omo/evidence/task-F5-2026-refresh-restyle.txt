@@ -1,0 +1,135 @@
+# F5 — Regression gate — 2026-refresh-restyle
+
+Timestamp (UTC): 2026-09-12T02:05:00Z
+Timestamp (local): 2026-09-12 04:05:00 +0200
+HEAD: 88c68f9 ci(design): wire font budget gate into CI
+Branch: main
+Verifier: orchestrator (Atlas) — gates run directly, not delegated
+Category: `unspecified-high` | Skills: [`playwright`, `frontend`, `debugging`]
+
+## VERDICT: PARTIAL — all code-controlled gates PASS; Lighthouse timing gate BLOCKED by external host contention
+
+Every load-insensitive regression gate is GREEN on a fresh production build.
+The single remaining gate — Lighthouse mobile budgets (LCP<2500, CLS<0.1,
+TBT<200) — cannot produce a trustworthy reading on this host: an UNRELATED
+project's mutation-testing run has saturated all 22 cores for 5.5+ hours. This
+is an external, time-bounded blocker, not a repository defect. Per the plan's
+own T05 disposition ("a genuine green run is still required"), F5 is marked
+`[~]` (blocked) rather than falsely approved, with the exact resume procedure
+recorded in §5.
+
+---
+
+## 1. Code-controlled gates — ALL PASS
+
+Run via `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; …'` with
+`SSL_CERT_FILE` + `NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt`
+(Node's fetch ignores SSL_CERT_FILE; `next/font` needs the latter).
+
+| Gate | Command | Exit | Result |
+|---|---|---|---|
+| Typecheck | `pnpm typecheck` | 0 | tsc --noEmit clean |
+| Lint | `pnpm lint` | 0 | 0 errors, 47 pre-existing warnings (baseline) |
+| Format | `pnpm prettier` | 0 | "All matched files use Prettier code style!" |
+| Unit/component | `pnpm test` | 0 | 21 suites / 141 tests passed |
+| Build | `pnpm build` | 0 | compiled; **38/38** static pages; shared JS 102 kB |
+| Contrast | `pnpm contrast` | 0 | 24/24 pairs meet minimums |
+| Ornaments | `pnpm ornaments` | 0 | no banned ornament/token |
+| Images | `pnpm images` | 0 | 101 images within budget |
+| Fonts | `pnpm fonts` | 0 | 2 families, first-load 70.7 KiB (≤100) |
+| Bundle budget | `report-bundle-size.js && check-bundle-budget.mjs` | 0 | **14/14 PASS** |
+| Full e2e | `CI=true pnpm exec playwright test --project=chromium --workers=1` | 0 | **79 passed** (0 failed, 0 flaky) |
+| axe | `… e2e/a11y.spec.ts` | 0 | **8 passed** (allowlist `[]`) |
+
+Raw logs: `/tmp/f5-{typecheck,lint,prettier,test,build,contrast,ornaments,images,fonts,bundle,e2e,axe}.log`.
+
+Bundle detail (load-insensitive — the strongest regression signal available):
+```
+__global (shared first-load) : 102,254 B  vs baseline 102,253 B   (+0.0%)
+/page                        :  98,026 B  vs baseline 103,734 B   (-5.5%)
+/blog/entry/[slug]/page      :  25,331 B  vs baseline  92,496 B  (-72.6%)
+/projects/entry/[slug]/page  :  25,331 B  vs baseline  92,495 B  (-72.6%)
+/contact/page                :   9,178 B  vs baseline  18,056 B  (-49.2%)
+PASS — 14 entries within budget.
+```
+No route grew beyond the 180 KB cap or the +10% growth budget.
+
+## 2. Lighthouse mobile budgets — BLOCKED (environmental)
+
+Two attempts, both EXIT=1. First attempt failed for a DIFFERENT, now-fixed
+reason (see §3). The second, with a fresh build immediately preceding it:
+
+```
+2 result(s) for http://localhost:3000/      : LCP 4076 ms, TBT 2062 ms
+2 result(s) for http://localhost:3000/about : LCP 2993 ms, TBT 1017 ms
+2 result(s) for http://localhost:3000/blog  : LCP 3911 ms, TBT 1378 ms
+2 result(s) for …/cheesecake-recipe         : LCP 3445 ms, TBT  880 ms
+2 result(s) for http://localhost:3000/projects: LCP 4597 ms, TBT 1995 ms
+1 result(s) for …/soudest-backend-nodejs    : TBT 1101 ms
+2 result(s) for http://localhost:3000/contact : LCP 3922 ms, TBT 1137 ms
+lighthouse EXIT=1
+```
+
+Host state during the run: `loadavg 56.5 → 56.7` on **22 cores**; 23 concurrent
+`@stryker-mutator/core` child-process workers from `/home/tom/Projects/ohmyroadmap`
+(pid 1655703 `stryker`, elapsed 05:19:03 at run start, still resident). This is
+the same external interference documented in `.omo/evidence/t05-lighthouse/environmental-diagnosis-2026-09-11.txt`
+and in the T18/T19 notepad entries.
+
+Why this is contention, not a regression:
+- The bundle is byte-for-byte at baseline (`__global` +1 B = 102,254 vs 102,253).
+- TBT on `/` is 2062 ms for a ~206-node, 102 KB-JS page — physically implausible.
+- Lighthouse `throttlingMethod: "simulate"` applies a 4× CPU multiplier on top
+  of an already ~2.5× oversubscribed host → compounding ~10× inflation.
+- The pre-restyle T02 baseline was ALREADY over the 2500 ms LCP budget on
+  home (2830) and projects (2588), so a fully-green Lighthouse run has never
+  been observed here.
+
+## 3. Bug found AND fixed during F5 (was blocking Lighthouse startup)
+
+The first Lighthouse attempt could not start the server at all:
+```
+[Error: Could not find a production build in the '.next' directory.]
+```
+Cause: the preceding e2e run's Playwright `webServer` boots `next dev` and
+overwrites `.next` with dev output (documented T22 gotcha). Lighthouse's
+`startServerCommand: "pnpm start"` then has no production build to serve.
+Fix applied to the run procedure: `rm -rf .next && pnpm build` immediately
+BEFORE `pnpm lighthouse`. This is an operation-order requirement, not a product
+defect — CI's `lighthouse.yml` already runs `pnpm build` in the prior step.
+
+## 4. Regression assessment
+
+No regression attributable to this plan. Evidence:
+- Bundle budget PASSES with the shared first-load byte-identical to baseline and
+  three routes substantially SMALLER (detail routes −72.6% after T21 replaced
+  the Flowbite Breadcrumb; /contact −49.2% after the server/client split).
+- Full e2e 79/79 green (no functional regression), axe 8/8 (no a11y regression),
+  contrast 24/24, ornaments/images/fonts green.
+- The only Lighthouse deltas track measured host load, not code.
+
+## 5. Resume procedure (to close F5)
+
+On a host with no external CPU saturation (verify: `cat /proc/loadavg` ≈ ≤4 on
+22 cores, and no `stryker`/`child-process-proxy-worker` processes):
+
+```
+nix develop -c bash -c '
+  unset PNPM_HOME npm_config_prefix
+  export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
+  export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt
+  export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
+  rm -rf .next && pnpm build && pnpm lighthouse
+'
+```
+Expected: EXIT 0 with all three assertions green on 7 routes × 3 runs
+(median). If a route is genuinely near the LCP budget, T16's type-led hero
+already removed the portrait from the LCP surface; further work would be a
+separate perf task, not a scope change here.
+
+## 6. Artefacts
+
+- Raw gate logs: `/tmp/f5-*.log`
+- Lighthouse run 2: `/tmp/f5-lighthouse2.log`; LHRs in `.lighthouseci/` (gitignored)
+- Prior environmental diagnosis: `.omo/evidence/t05-lighthouse/environmental-diagnosis-2026-09-11.txt`
+- F1/F2/F3/F4 ledgers: `.omo/evidence/task-F{1,2,3,4}-2026-refresh-restyle.txt`

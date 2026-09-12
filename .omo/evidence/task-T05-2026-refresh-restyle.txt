@@ -1,0 +1,127 @@
+T05 — Lighthouse CI mobile performance budgets
+============================================
+
+Task:  T05 (2026-refresh-restyle) — add Lighthouse CI with lab performance budgets
+Date:  2026-09-10T19:31Z
+Revision measured: 1b1062e (working tree: package.json modified; new .lighthouserc.js + .forgejo/workflows/lighthouse.yml untracked)
+Location: /home/tom/Projects/tomsegbers-de
+
+------------------------------------------------------------
+1. Deliverables
+------------------------------------------------------------
+- .lighthouserc.js                  — LHCI autorun config (7 routes, mobile, 4x CPU/network simulated, 3 runs, 3 numeric budgets)
+- .forgejo/workflows/lighthouse.yml — CI: nix devShell -> deps -> playwright chromium -> build -> lhci autorun -> artifact
+- package.json                      — scripts "lighthouse" and "budget:lighthouse" = "lhci autorun"
+
+------------------------------------------------------------
+2. Budgets (lab, mobile, simulated throttling)
+------------------------------------------------------------
+- largest-contentful-paint  <= 2500 ms   (maxNumericValue, aggregationMethod: median)
+- cumulative-layout-shift   <= 0.1       (maxNumericValue, aggregationMethod: median)
+- total-blocking-time       <= 200 ms    (maxNumericValue, aggregationMethod: median)
+
+TBT is the lab proxy for INP. These are NOT field p75 numbers.
+
+Routes (7, matches the 7 public static routes in the `next build` route manifest):
+  /, /about, /blog, /blog/entry/2019-ebeltoft-cheesecake-recipe,
+  /projects, /projects/entry/2020-soudest-backend-nodejs, /contact
+
+------------------------------------------------------------
+3. Exact acceptance command + exit code
+------------------------------------------------------------
+Command:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build && npx -y @lhci/cli autorun'
+Exit code: 1  (LCP budget failures; see section 5)
+Log:       .omo/evidence/t05-lighthouse/autorun.log
+Exit file: .omo/evidence/t05-lighthouse/autorun-exit.txt
+
+Proof the run actually launched Chrome (not a no-op):
+  ✅ .lighthouseci/ directory writable
+  ✅ Configuration file found
+  ✅ Chrome installation found
+  Healthcheck passed!
+  Started a web server with "pnpm start"...
+  (21 runs logged: 3 runs x 7 URLs, each "Run #N...done.")
+  Chrome resolved via `command -v chromium` -> /etc/profiles/per-user/tom/bin/chromium
+  (resolver order: $CHROME_PATH -> PATH binaries -> $PLAYWRIGHT_BROWSERS_PATH / $HOME/.cache/ms-playwright chromium-*/chrome-linux64/chrome)
+
+Per-run throttle actually applied (read from lhr-*.json configSettings):
+  {"formFactor":"mobile","throttlingMethod":"simulate",
+   "throttling":{"rttMs":150,"throughputKbps":1638.4,"requestLatencyMs":562.5,
+                 "downloadThroughputKbps":1474.56,"uploadThroughputKbps":675,
+                 "cpuSlowdownMultiplier":4}}
+
+------------------------------------------------------------
+4. Measured results — median of 3 runs per route
+------------------------------------------------------------
+Run A (19:21–19:25Z)            Run B (19:26–19:30Z, authoritative re-run)
+route          LCP   CLS    TBT | LCP   CLS    TBT
+/              2589  0.0000  96 | 2589  0.0000  82   LCP FAIL
+/about         2372  0.0000  31 | 2362  0.0000  29
+/blog          2254  0.0000  61 | 2105  0.0000  47
+/blog/entry/2019-ebeltoft-cheesecake-recipe
+               3645  0.0375  76 | 3690  0.0375  75   LCP FAIL
+/projects      2586  0.0000  55 | 2632  0.0000  54   LCP FAIL
+/projects/entry/2020-soudest-backend-nodejs
+               2179  0.0000  65 | 2104  0.0000  56
+/contact       2254  0.0000  68 | 2255  0.0000  62
+
+Raw assertion values (run B, from .lighthouseci/assertion-results.json):
+  /                      LCP values 2589.35, 2587.90, 2811.82  -> median 2589.35  (FAIL)
+  /projects              LCP values 2808.54, 2580.55, 2631.61  -> median 2631.61  (FAIL)
+  /blog/entry/...recipe  LCP values 3706.33, 3689.52, 3663.13  -> median 3689.52  (FAIL)
+
+CLS: all 7 routes <= 0.0375 (blog detail only non-zero) -> PASS
+TBT: all 7 routes 29–82 ms -> PASS
+Only the LCP assertion fails, on 3 of 7 routes.
+
+------------------------------------------------------------
+5. Findings / risks (NOT silently relaxed)
+------------------------------------------------------------
+F1. / LCP ~2589 ms > 2500 budget. Consistent across both runs (2589/2589) and
+    both runs' individual samples (2587–2812). This is a real, low-variance
+    overage, not host noise. T02 single-run baseline was 2830 ms — already
+    above 2500 before the restyle. LCP element is hero teaser <p> text.
+F2. /projects LCP ~2586–2632 ms > 2500. Same profile; LCP element is the <h1>
+    heading text. Pre-existing (T02 baseline 2588 ms).
+F3. /blog/entry/2019-ebeltoft-cheesecake-recipe LCP ~3645–3690 ms > 2500.
+    Anticipated in the task: only remote image in the corpus
+    (plantoeat.s3.amazonaws.com) is the LCP element; fixed in T22. T02 baseline
+    3562 ms. Real finding, tracked as follow-up, budget unchanged.
+F4. Because of F1–F3 the T05 gate is intentionally RED at this revision. The
+    budgets (2500/0.1/200) were NOT weakened. This gate is expected to go green
+    once the restyle (D-series) + T22 remote-image fix land. CLS/TBT already
+    pass on every route, confirming the assertions are wired and discriminating.
+F5. Local `.lighthouseci/` is created by LHCI (saved-reports dir is hardcoded).
+    It is intentionally left untracked and not committed; CI uploads it as an
+    artifact. No .gitignore change was made (out of the T05 commit scope).
+
+------------------------------------------------------------
+6. Other verification
+------------------------------------------------------------
+Format check:
+  nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm prettier'
+  -> exit 0, "All matched files use Prettier code style!"
+
+Workflow YAML parse (devShell has no python3; used store js-yaml):
+  node -e 'require("<pnpm-store>/js-yaml").load(fs.readFileSync(".forgejo/workflows/lighthouse.yml","utf8"))'
+  -> parsed; job name "Lighthouse mobile budgets"; 7 steps.
+
+Config load proof:
+  node -e 'require("./.lighthouserc.js")'
+  -> chromePath=/etc/profiles/per-user/tom/bin/chromium; routes=7;
+     3 numeric assertions present with aggregationMethod=median.
+
+Action pins reused unchanged (no unrelated bumps):
+  actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+  actions/upload-artifact@c6a366c94c3e0affe28c06c8df20a878f24da3cf # v3.2.2
+
+------------------------------------------------------------
+7. Artifacts
+------------------------------------------------------------
+- .omo/evidence/task-T05-2026-refresh-restyle.txt   (this file)
+- .omo/evidence/t05-lighthouse/autorun.log          (full autorun stdout/stderr)
+- .omo/evidence/t05-lighthouse/autorun-exit.txt     ("1")
+- .omo/evidence/t05-lighthouse/assertion-results.json
+- .omo/evidence/t05-lighthouse/parse-medians.mjs    (median parser)
+Commit message: test(ci): add Lighthouse mobile budgets (LCP/CLS/TBT)

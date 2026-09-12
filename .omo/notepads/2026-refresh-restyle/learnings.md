@@ -577,3 +577,153 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 - Final: build 38/38; full chromium e2e 79 passed (71 prior + 8 metadata) 0
   failed/0 flaky; axe-only 8 passed; contrast 24/24; ornaments/images green;
   lint 0 errors/47 warnings; jest 21/141; typecheck/prettier clean.
+
+## F4 — Scope fidelity audit (2026-09-12)
+
+**Verdict: APPROVE.** Range `e3e8de5~1..HEAD` (31 commits, 74689e8..9567331).
+Full table in `.omo/evidence/task-F4-2026-refresh-restyle.txt`.
+
+- Every binding decision D1–D13 provably honored. D12 void (per D13); D9/T29
+  and D10/Wave 5 correctly withheld (human-gated) — absence is plan-consistent.
+- D13: no toggle, no inline theme script (layout's only `<script>` is JSON-LD),
+  no `.dark` class application; `dark:` token count 170 → 123 (net removed).
+- D4: all 10 legacy blue hexes gone; warm terracotta `#A63D28` +
+  oxblood `#5E2130`; brand-mark and OG warm.
+- D11: exactly 2 `flowbite-react` imports remain, both `Card`.
+- D5/route audit: 38 static pages; no new route dir; `/impressum`,
+  `/datenschutz`, `/work`, `/tags` all absent.
+- Forbidden: no `output:'export'`, no route/slug change, no migrations,
+  no runtime deps added (@axe/lhci are devDeps; runtime only dropped OTel).
+- Fabrication: `content/projects/` unchanged; only content change is the
+  cheesecake image swap; no testimonial/metric/role/outcome/heroImage authored.
+- Out-of-scope product files: none. `.omo/boulder.json` dirty only in working
+  tree, never committed in range.
+
+**Learning — dormant `dark:` is a judgment call, not an automatic D13 fail.**
+D13 benchmarks are about *active* theming: toggle, resolver script, applied
+`.dark` class. With `darkMode:"class"` and nothing ever adding the class, a
+`dark:` string cannot activate. F4 therefore treats the one net-new dormant
+token (`ArticleTeaser.tsx:78`, a date span added beside its dormant siblings)
+as an observation, not drift. The 13 `dark:*` on the new ContactForm are a
+verbatim relocation of the 13 on the old contact page (net 0).
+
+## F1 — Plan compliance audit (2026-09-12)
+
+**Verdict: APPROVE.** Range `e3e8de5..9567331` (31 commits). 22/22 non-gated todos
+(T01–T23, minus gated T20) each carry a real commit sha + a real evidence ledger in
+`.omo/evidence/task-<ID>-2026-refresh-restyle.txt`. 7/7 human-gated todos (T20,
+T24–T29) are `[~]` with no evidence, correctly deferred. Commit messages match the
+plan's Commit lines for every task except T07/T15, where the plan's own D13/D4
+amendments (plan L70–77) superseded the original lines.
+
+**CI wiring is real, not just written.** Read all four workflow YAMLs and confirmed
+each gate is invoked: contrast (check.yml:41), ornaments (check.yml:43), images
+(check.yml:45), bundle budget (nextjs_bundle_analysis.yml "Check bundle budget"),
+Lighthouse (lighthouse.yml:41 `lhci autorun`), axe/e2e (playwright.yml:38). Re-ran
+the four fast gates read-only: contrast 24/24, ornaments 101 files, images 101,
+bundle 14 entries — all exit 0.
+
+**Learning — the red Lighthouse gate is environmental, and the diagnosis is sound.**
+Independently corroborated: byte-identical bundle (bundle budget PASSES, `__global`
+102,254 B vs 102,253 B baseline) yet TBT on `/` jumped 126 ms -> 1601 ms (~12.7x).
+Root cause reproduced live: loadavg 27.85 on 22 cores with 20 unrelated
+`@stryker-mutator` child workers from ohmyroadmap resident 2h52m. Simulated 4x
+throttling compounds the oversubscription. The T02 baseline was ALREADY over LCP
+budget on home/projects pre-restyle, so no restyle regression exists. Accepted as a
+documented blocker carried to F5, which must produce a genuine green on a quiet host.
+
+**Learning — three named non-blocking gaps carried to the final wave.**
+(1) `scripts/check-font-budget.mjs` passes but is wired into NO workflow or package
+script (plan T14 said "bundle the assertion") — the only gate that is manual-only.
+(2) T01/T05 evidence ledgers exist on disk but were never force-added under the
+gitignored `.omo/` (the other 18 were) — verifiable now, not durable across clone.
+(3) `.omo/boulder.json` is stale (one "running" task_session from 2026-09-10T20:20Z,
+never updated through T23) — a known harness limitation since it cannot parse this
+plan's checkbox format, per the task framing.
+
+## F2 — Code quality review (2026-09-12)
+
+Verdict: **APPROVE**. Evidence: `.omo/evidence/task-F2-2026-refresh-restyle.txt`.
+
+Gate baseline at HEAD `9567331` (clean product tree): typecheck 0; lint 0 errors / 47
+pre-existing warnings (zero new); prettier clean; jest 21/21 suites, 141/141 tests;
+contrast 24/24; ornaments 101 files; images 101 within budget.
+
+**R4.14:** no module exceeds 250 logic LOC. Largest *product* module is
+`app/contact/ContactForm.tsx` (≈136 logic / 180 upper-bound incl. JSX). Files >200 logic
+are tests/e2e and zero-dep CLI checker scripts (SIZE_OK class). New T21/T19/T16
+primitives are 16–66 logic LOC.
+
+**Type safety:** no `as any` / `@ts-ignore` / `@ts-expect-error` / `eslint-disable` in
+product code. The only new `as unknown as` is a test fixture
+(`app/projects/entry/[slug]/page.test.tsx:25`). Boundaries parse via Zod
+(`parseFrontmatter(data: unknown)`; contact form `safeParse`).
+
+**Error handling:** no empty catch, no swallowed errors, no `console.*` in product code;
+`lib/sendEmail.tsx` keeps await-to-js + discriminated `SendEmailResult` (unchanged).
+
+**AI slop:** clean across the 10 categories. No TODO/FIXME/HACK, no `.skip(`/`.only(`.
+Three documented nits: (1) DESIGN.md §5 / README still list Navbar+Breadcrumb as Flowbite
+primitives after T21 replaced them (doc drift only); (2) pre-existing unused `imageUrl`
+prop on `ProjectTeaser.tsx`; (3) two inert dormant `dark:*` carry-overs.
+
+**D13 single light mode:** no theme toggle / resolver / `localStorage` anywhere; new
+primitives carry zero `dark:`. `ContactForm.tsx`'s 13 dormant `dark:*` are a verbatim
+relocation of the old page's 13 (net delta 0); `ArticleTeaser` gained one dormant
+`dark:text-muted`. Both inert under `darkMode:"class"` and explicitly permitted by
+DESIGN.md §2. Net: the plan removed more dormant `dark:*` than it added.
+
+Carried forward (not F2 code scope): G1 — font-budget gate still not wired into CI
+(re-confirmed). No product code was modified by this review.
+
+## F2/F1 follow-up — font budget gate wiring (2026-09-12T01:50:36+02:00)
+
+Closed the F1 plan-compliance MAJOR gap: T14 required bundling the font-budget
+assertion, but `scripts/check-font-budget.mjs` was wired into no package script
+and no CI workflow.
+
+Changes (wiring only — no script logic touched):
+- `package.json`: added `"fonts": "node scripts/check-font-budget.mjs"` after `"images"`.
+- `.forgejo/workflows/check.yml`: added `Font budget gate` step (`nix develop -c pnpm fonts`)
+  immediately after `Image size gate` (line 46), which is after `Build` (line 34) so
+  the gate can read `.next`.
+
+Evidence:
+- `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm fonts'` → EXIT 0,
+  `FONT BUDGET GATE PASSED — 2 families, first-load 70.7 KiB.` (Inter 47.3 + Newsreader 23.4).
+- `check.yml` parses as valid YAML via `js-yaml@4.3.0`.
+- `pnpm prettier` → clean (All matched files use Prettier code style!).
+- (The `Refusing to run pnpm@10.15.1 … registry signature` line is the known benign
+  devShell shellHook probe noted in README; pnpm still runs.)
+
+Commit: `ci(design): wire font budget gate into CI`.
+
+## F3 — Real manual QA (2026-09-12)
+
+Verdict: **APPROVE**. Evidence: `.omo/evidence/task-F3-2026-refresh-restyle.txt`,
+screenshots under `.omo/evidence/f3/shots/` (23 PNGs).
+
+Journey home → featured → project detail → blog listing → blog post → contact on a
+clean PRODUCTION build (38/38 pages): 57 checks, 0 console errors, 0 warnings,
+18/18 overflow checks pass (375/768/1280), all keyboard + reduced-motion assertions
+pass, axe `e2e/a11y.spec.ts` 8 passed against the empty allowlist. Legacy case-study
+degrade verified (0 hero/0 meta); enriched path verified with a temporary fixture
+then deleted. OG asset 1200×630 wired absolute on all routes; brand mark 200 + alt.
+
+**Env trap (important for future QA):** running the axe suite starts Playwright's
+own `next dev --port 3030`, which OVERWRITES the production `.next` and removes
+`BUILD_ID`. Probes run against the still-listening prod server afterwards silently
+serve CSS-less dev output (`#site-nav` display:block at 375, 21px inputs). Always
+rebuild + restart prod after any `playwright test` run before trusting responsive
+readings. No product code changed to work around it.
+
+**One real visual defect, PRE-EXISTING (not a refresh regression):** the contact
+success toast (`fixed inset-x-1/3 top-8 z-50`) overlaps the header nav links by 6px
+= 35% of their 17px glyph height at ≥768px scrollY=0. Provenance: original commit
+`e606a99` (Flowbite Alert) carried verbatim through T21 (`272bb2b`/`fe98d41`).
+Recorded in issues.md; do NOT fix in F3 (scope: no product changes).
+
+**By-design, do not re-flag:** FounderArc `Background` shows 4 labels with no copy —
+T16 scaffold, T25 copy is `[~]` human-gated; 3-post blog grid leaves one cell empty
+(content count); legacy project detail has no hero/meta (intended degrade);
+blog H1 is DOM "Blog" rendered uppercase via CSS.

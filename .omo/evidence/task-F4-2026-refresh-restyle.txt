@@ -1,0 +1,313 @@
+F4 — SCOPE FIDELITY AUDIT (Final Verification Wave gate)
+Plan: .omo/plans/2026-refresh-restyle.md
+Range audited: e3e8de5~1..HEAD  (74689e8..9567331, 31 commits)
+Auditor: F4 adversarial scope auditor (read-only; no product code touched)
+Timestamp: 2026-09-12 (see git HEAD 9567331)
+Method: git-master history inspection + review-work diff audit. No delegation.
+
+────────────────────────────────────────────────────────────────────────────
+F4 VERDICT: APPROVE
+────────────────────────────────────────────────────────────────────────────
+
+Rationale: every binding decision D1–D13 is provably honored by the diff;
+no forbidden dependency, route, migration, export mode, or fabricated content
+entered the tree. Wave 5 (human-gated) was correctly NOT authored. One (1)
+net-new dormant `dark:` class string exists (ArticleTeaser.tsx:78) — inert
+(darkMode:"class", no code ever adds `.dark`), documented as intentional in
+DESIGN.md §2 and T07 evidence, and therefore not a D13 violation. See
+"Observations" below; it does not rise to REJECT.
+
+Command baseline:
+  BASE = git rev-parse e3e8de5~1 = 74689e85a5c11d51f6b2eb86531f08c08064d626
+  HEAD = 9567331797a87fac8cf2fb183b273ad59247253f
+  $ git rev-list --count e3e8de5~1..HEAD  -> 31
+
+════════════════════════════════════════════════════════════════════════════
+1. DECISION-BY-DECISION COMPLIANCE (D1–D13)
+════════════════════════════════════════════════════════════════════════════
+
+D1  Full scope (all waves incl. Wave 5)                          HONORED
+    Waves 0,1,2,3,4 + Wave 6 evidence present; Wave 5 (T24–T29)
+    correctly not authored (human gate). D1 grants scope, gates stay.
+
+D2  Marquee survives/featured count = UX-designer's call          HONORED
+    Marquee REMOVED: app/page.tsx has no marquee; tailwind keyframes
+    `marquee` remain unused-but-present; grep `animate-marquee` in
+    app/components/styles -> 0 hits. e2e/home.spec.ts:32 asserts
+    `.animate-marquee, .animate-marquee2` count 0.
+    Replacement: components/FeaturedSet/FeaturedSet.tsx (4 "monuments").
+    evidence: app/page.tsx:53, components/FeaturedSet/FeaturedSet.tsx
+
+D3  Two fonts: Inter + self-hosted Newsreader                      HONORED
+    app/layout.tsx:7  `import { Inter, Newsreader } from "next/font/google"`
+    app/layout.tsx:9  Inter({subsets:["latin"], display:"swap"})
+    app/layout.tsx:15 Newsreader({subsets:["latin"], weight:"700",
+                                  display:"swap", variable:"--font-newsreader"})
+    tailwind.config.js: funtFamily keys = body, sans, display, serif, mono,
+    heading(?) — only 2 real families (Inter/Newsreader); display+serif
+    both map to var(--font-newsreader). No third family.
+    Budget: first-load woff2 70.7 KiB / 100 KiB; Newsreader 23.4 / 60 KiB
+      (evidence/t14-fonts/t14-font-budget.txt)
+    No fonts.googleapis/fonts.gstatic in .next tree
+      (evidence/t14-fonts/no-third-party-fonts.txt)
+    public/fonts does not exist — next/font self-hosts, as required.
+
+D4  Two warm accents, NO BLUE                                     HONORED
+    tailwind.config.js: primary ramp replaced blue->terracotta
+      600:#a63d28, 500:#b45036; accent DEFAULT #A63D28;
+      accent.secondary #5E2130 (oxblood), secondary-hover #471824.
+    grep for all 10 legacy blue hexes + `blue-[0-9]` + `colors.blue`
+      across app/components/styles/tailwind.config.js/lib/public ->
+      0 hits (exit 1).
+    brand-mark.svg fill = #A63D28 + #F5EFE1 (warm).
+    OG asset documented terracotta/cream (task-T23 evidence lines 22,30).
+    tailwindcss/colors require retained but only semantic token mapping used.
+
+D5  Featured flag inside /projects; NO /work route                 HONORED
+    lib/projects.tsx selectFeaturedProjects() reads frontmatter
+      `project.featured` with deterministic recent fallback.
+    app/work does not exist (ls -> No such file or directory).
+    app/projects/page.tsx archive layout + featured flag (commit 55bb78b).
+
+D6  LAYZR case study — needs cleared metrics + consent              HONORED
+    content/projects/ unmodified in range (git diff --name-only
+    e3e8de5~1..HEAD -- content/projects/ -> empty). No metrics authored.
+    app/about/page.tsx LAYZR entry unchanged (metadata-only diff).
+
+D7  Cheesecake post KEEP as part of blog (no archive/delete)       HONORED
+    content/blog/2019-ebeltoft-cheesecake-recipe.md still present;
+    3 blog posts remain. Only change: hero image URL swapped to
+    self-hosted /img/cheesecake-ebeltoft.webp (T22). No archive/delete.
+
+D8  Testimonials BLOCKED (R19.1 conflict) — none authored           HONORED
+    grep -rniE 'testimonial|endorsement|client quote' app components
+      content lib -> 0 hits (exit 1).
+    FounderArc renders neutral non-factual beat labels only:
+      components/FounderArc/FounderArc.tsx FOUNDER_ARC_BEATS = Origin /
+      Turning Point / Practice / Direction, with explicit comment
+      "no biography, metrics, clients, or outcomes (R19.1)".
+
+D9  Tag pages /tags/[tag]                                          HONORED (gated)
+    app/tags does not exist. Plan T29 marks tag pages "[HUMAN_GATE]",
+    "deferred", "Optional ... Non-blocking; defer unless approved",
+    Depends On T10,T24. Wave 5 not authored -> absence is plan-consistent,
+    not drift.
+
+D10 Content authoring (full)                                      HONORED (gated)
+    No Wave 5 agent authoring. content/blog changed only by T22 image
+    swap; content/projects unchanged. No `featured:`/`metrics:`/`role:`/
+    `outcome:`/`heroImage:` values authored
+    (grep -rl -> 0 files for each).
+
+D11 Targeted Flowbite replacement; KEEP Card                      HONORED
+    grep -rn 'from "flowbite-react"' app components -> exactly 2:
+      components/ArticleTeaser/ArticleTeaser.tsx:2  { Card }
+      components/ProjectTeaser/ProjectTeaser.tsx:1  { Card }
+    Navbar/Breadcrumb/Alert replaced in-tree
+      (components/Header, components/Breadcrumb, components/Alert).
+
+D12 Theme storage key keep `flowbite-theme-mode`                   VOID (per D13)
+    grep -rn 'flowbite-theme-mode|DarkThemeToggle|theme-mode'
+      app components lib styles tailwind.config.js -> 0 hits.
+    d792fff removed the machinery; D13 supersedes D12.
+
+D13 One mode only — no toggle/script; dark: not added             HONORED
+    No toggle: 0 hits for DarkThemeToggle/data-testid dark-theme-toggle.
+    No inline theme script: app/layout.tsx only inline <script> is
+      type="application/ld+json" (JSON-LD, layout.tsx:53-59).
+      No `prefers-color-scheme`, no `localStorage` in shipped HTML;
+      e2e/dark-mode.spec.ts asserts both absent + localStorage.length 0.
+    No `.dark` class application: grep classList in app/components/lib
+      -> 0 hits.
+    darkMode stays "class" (tailwind.config.js:29) but nothing ever adds
+      the class -> all `dark:*` are provably inert (single light surface).
+    dark: token NER net-reduced:
+      BASE (app+components+styles+tailwind.config.js): 170 tokens
+      HEAD:                                            123 tokens
+    e2e/dark-mode.spec.ts renders every public route and asserts
+      `<html>` never has class `dark` and body bg = rgb(245,239,225).
+
+════════════════════════════════════════════════════════════════════════════
+2. FORBIDDEN ITEMS (plan Success Criteria #8)
+════════════════════════════════════════════════════════════════════════════
+
+output: 'export'          ABSENT — grep `output` next.config.mjs -> none.
+                          README documents SSG on Node/Vercel runtime.
+Blog route structure/     UNCHANGED — app/blog/entry/[slug]/page.tsx and
+slug change (R15.13)      app/blog/page.tsx have identical route shape;
+                          3 slugs unchanged; sitemap.ts structure unchanged.
+New runtime deps          NONE added. Runtime `dependencies` only REMOVED
+                          (@vercel/otel). @axe-core/playwright + @lhci/cli
+                          are devDependencies (dev-only, T04/T05).
+Migrations/schema         NONE — no files matching migration|prisma|.sql|
+                          drizzle in range (exit 1).
+Fabricated content        NONE — see §5.
+Banned ornaments          scripts/check-ornaments.mjs gate added (T15);
+                          no laurel/bust/spqr/gold/colosseum authored.
+Marquee                    REMOVED (see D2).
+Logo.png kept              CONFIRMED — 24 content files reference logo.png
+                          as authorImgSrc (task said 25; actual 24, immaterial).
+Dead hero jpg              DELETED — public/img/Tom_Segbers_Frontal.jpg
+                          Bin 442942 -> 0 bytes; no live references
+                          (only a next.config.mjs explanatory comment).
+
+════════════════════════════════════════════════════════════════════════════
+3. DEPENDENCY-DIFF CHECK  (git diff e3e8de5~1..HEAD -- package.json pnpm-lock.yaml)
+════════════════════════════════════════════════════════════════════════════
+
+package.json:
+  devDependencies ADDED (2, both expected):
+    + "@axe-core/playwright": "^4.13.0"    (T04 axe harness)
+    + "@lhci/cli": "^0.15.1"               (T05 Lighthouse budgets)
+  dependencies REMOVED (1):
+    - "@vercel/otel": "^0.3.0"             (T09 dead-dep cleanup)
+  devDependencies REMOVED (8):
+    - @opentelemetry/{api,resources,sdk-node,sdk-trace-node,
+      semantic-conventions}                (T09 dead OTel)
+    - "eslint-config-react-app"            (T01 duplicate react-hooks fix)
+    - "npm-only-allow", "postinstall-postinstall" (T09 dead devDeps)
+  scripts ADDED: contrast, ornaments, images, budget:bundle, lighthouse,
+                 budget:lighthouse                    (T03/T05/T13/T15/T22)
+  lockfile: only entries implied by the above add/remove set. No unexplained
+  package tree. axe/lhci confirmed dev-only (node assertion: runtime has
+  axe? false lhci? false; dev has both true).
+
+  VERDICT: dependency diff fully explained by T01/T04/T05/T09. No drift.
+
+════════════════════════════════════════════════════════════════════════════
+4. ROUTE-COUNT / ROUTE-AUDIT CHECK
+════════════════════════════════════════════════════════════════════════════
+
+Build (T23 evidence, HEAD build): "✓ Generating static pages (38/38)".
+38 routes confirmed in .omo/evidence/t23-verify/build.log:110 and
+.omo/evidence/t21-verify/21c-build.log:110.
+
+app/ route inventory (page.tsx / route.ts):
+  /                       app/page.tsx
+  /_not-found             (Next implicit)
+  /about                  app/about/page.tsx
+  /api/health             app/api/health/route.ts
+  /blog                   app/blog/page.tsx
+  /blog/entry/[slug]      app/blog/entry/[slug]/page.tsx
+  /contact                app/contact/page.tsx
+  /icon.png /apple-icon.png /robots.txt /sitemap.xml  (metadata routes)
+  /projects               app/projects/page.tsx
+  /projects/entry/[slug]  app/projects/entry/[slug]/page.tsx
+
+NEW app/ files in range (git diff --name-status -- app/):
+  A app/contact/ContactForm.tsx, app/contact/ContactForm.test.tsx,
+    app/contact/page.test.tsx, app/projects/entry/[slug]/page.test.tsx
+  -> all files inside existing route dirs; NO new route directory.
+
+NEGATIVE CHECKS:
+  app/impressum      -> does NOT exist (human-gated T24)
+  app/datenschutz    -> does NOT exist (human-gated T24)
+  app/work           -> does NOT exist (D5: featured flag instead)
+  app/tags           -> does NOT exist (T29 deferred/human-gated)
+
+  VERDICT: 38 routes; no new route structure; gated routes absent.
+
+════════════════════════════════════════════════════════════════════════════
+5. FABRICATION CHECK (R19.1 / D8 / Wave 5)
+════════════════════════════════════════════════════════════════════════════
+
+- content/ changed by exactly ONE file in range (T22):
+    content/blog/2019-ebeltoft-cheesecake-recipe.md — single line:
+    src URL plantoeat.s3.amazonaws.com/...jpg -> /img/cheesecake-ebeltoft.webp
+  No prose, no claims, no proof altered.
+- content/projects/ : 0 files changed (21 files, unchanged).
+- No authored frontmatter proof fields:
+    grep -rl '^featured:' content/projects -> 0
+    grep -rl '^metrics:'  content/projects -> 0
+    grep -rn '^role:|^outcome:|^heroImage:' content/projects -> none
+- No testimonial/endorsement/client-quote strings in app/components/content/lib.
+- FounderArc + CaseStudyMeta render structure only; CaseStudyMeta returns
+  null when role/outcome/metrics are empty (no invented defaults shown).
+- New component copy is neutral UI microcopy (e.g. "Selected Work"),
+  not factual claims.
+- T23 OG metadata: all 8 metadata blocks use /img/og-default.png;
+  no invented credentials/metrics/clients.
+
+  VERDICT: zero fabricated proof. Wave 5 correctly held.
+
+════════════════════════════════════════════════════════════════════════════
+6. FILES TOUCHED OUTSIDE DECLARED PLAN FILE SCOPE
+════════════════════════════════════════════════════════════════════════════
+
+Every non-.omo product file changed maps to a plan task "Files:" list:
+  app/*, components/*, lib/*               -> T07–T21 tasks (declared)
+  content/blog/2019-...md                  -> T22/T28 (declared, T22 swap)
+  DESIGN.md                                -> T13, T15 (declared)
+  README.md                                -> T09 (declared)
+  next.config.mjs, public/img/*, scripts/check-image-size.mjs -> T22
+  public/icon/brand-mark.svg, public/img/og-default.png      -> T23
+  package.json, pnpm-lock.yaml             -> T01/T04/T05/T09 (declared)
+  .forgejo/workflows/{check,lighthouse,nextjs_bundle_analysis,playwright}.yml
+                                           -> T03/T04/T05/T15 (declared)
+  .gitignore (.lighthouseci/)              -> T05 (declared)
+  .lighthouserc.js                         -> T05 (declared)
+  scripts/check-{bundle-budget,contrast,font-budget,ornaments}.mjs -> T03/T13/T14/T15
+  tests/budgets/{bundle-baseline,contrast}.json -> T02/T03/T13
+  e2e/* specs/fixtures                     -> T04/T06/T07/T11/T12/T16/T17/T18/T19/T21/T23
+
+UNEXPLAINED OUT-OF-SCOPE PRODUCT FILES: none.
+
+.omo/ files: commits include .omo/evidence/** and .omo/notepads/** (expected,
+tracked). `.omo/boulder.json` is dirty in the working tree but was NOT
+committed in range:
+  git log --oneline e3e8de5~1..HEAD -- .omo/boulder.json -> 0 commits.
+  (Pre-existing working-tree modification, not part of the audited commits.)
+
+════════════════════════════════════════════════════════════════════════════
+7. OBSERVATIONS (non-blocking; recorded for transparency)
+════════════════════════════════════════════════════════════════════════════
+
+O1. One (1) net-new dormant `dark:` class string:
+      components/ArticleTeaser/ArticleTeaser.tsx:78
+      <span className="ml-auto text-caption uppercase tracking-wide
+             text-muted dark:text-muted-dark">
+    ArticleTeaser had 8 `dark:` at base, 9 at HEAD (net +1). The new date
+    span mirrors the dormant pattern of its sibling markup. INERT: no `.dark`
+    class is ever applied; e2e asserts a single light surface on all routes.
+    DESIGN.md §2 documents "no code adds the dark class"; T07 evidence
+    documents dormant `dark:*` intentionally retained. This does not violate
+    D13 (which governs toggle/script/active mode), so it does not block.
+    Marker for a future cleanup if the team prefers zero dormant tokens.
+
+O2. app/contact/ContactForm.tsx (new file) carries 13 `dark:*` strings.
+    These are a verbatim relocation of the 13 `dark:*` previously on the
+    form in app/contact/page.tsx (base page.tsx had exactly 13; HEAD
+    page.tsx has 0). Net contact-area delta = 0; no new dark behavior.
+
+O3. tailwind.config.js retains marquee/calm keyframes; only the marquee
+    ANIMATIONS remain unused (no `animate-marquee` usage). Dead tokens, not
+    forbidden; T08/T15 scope. No action required by F4.
+
+O4. Plan T13 text still names accent `#2563eb`; the binding D4/D13 override
+    (decisions.md) replaced it with terracotta/oxblood. Delivered code
+    follows the override. No blue anywhere -> correct.
+
+O5. yaml-lockfile contains ~290 new transitive package entries, all implied
+    by @lhci/cli (lighthouse/chrome-launcher/puppeteer-* chain) and
+    @axe-core/playwright. No unexpected direct dependency.
+
+════════════════════════════════════════════════════════════════════════════
+8. EVIDENCE COMMANDS (reproducible)
+════════════════════════════════════════════════════════════════════════════
+  git log --oneline e3e8de5~1..HEAD
+  git diff --name-only e3e8de5~1..HEAD
+  git diff e3e8de5~1..HEAD -- package.json pnpm-lock.yaml
+  git diff e3e8de5~1..HEAD -- app/
+  git diff e3e8de5~1..HEAD --name-status -- app/ components/
+  grep -rn 'from "flowbite-react"' app components
+  grep -rniE '#2563eb|blue-[0-9]|colors\.blue' app components styles \
+       tailwind.config.js lib public
+  git grep -c 'dark:' e3e8de5~1 -- app components styles tailwind.config.js
+  grep -rho 'dark:[a-zA-Z0-9:_.-]*' app components styles tailwind.config.js
+  grep -rniE 'DarkThemeToggle|flowbite-theme-mode|classList.*dark' \
+       app components lib styles tailwind.config.js
+  grep -E 'Generating static pages' .omo/evidence/t23-verify/build.log
+  ls app/impressum app/datenschutz app/work app/tags
+
+Token usage: F4 audit ≈ context-only, no sub-agent delegation. No product
+code, content, tests, or configs modified; no commits made.

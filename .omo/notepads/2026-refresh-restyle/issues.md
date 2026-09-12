@@ -452,3 +452,40 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
   before (orchestrator-owned / env artifact).
 - Scope: no route/slug/canonical change; build 38/38; no runtime dep; no new
   `dark:`; no `--no-verify`/`SKIP=`/`.skip()`.
+
+## F1 — plan compliance audit gaps (2026-09-12) — APPROVE with named gaps
+
+Audit verdict is APPROVE (see task-F1-2026-refresh-restyle.txt). Three non-blocking
+items are carried to the final wave:
+
+- **G1 MAJOR — font-budget gate not wired into CI.** `scripts/check-font-budget.mjs`
+  exists and passes (exit 0, 2 families / 70.7 KiB), but `grep -rn check-font-budget
+  package.json .forgejo/` finds nothing outside the script itself. Plan T14 said
+  "Bundle the font-budget assertion". Fix: add a `pnpm font:budget`/check.yml step,
+  or amend the plan to accept manual enforcement.
+- **G2 MODERATE — T01/T05 evidence ledgers untracked.** Both files exist on disk
+  (5459 B / 7029 B, complete and timestamped) but `git log --all` for their paths is
+  empty; the other 18 refresh-restyle ledgers were `git add -f`-ed. Fix: force-add both.
+- **G3 MODERATE — boulder state stale.** `.omo/boulder.json` still lists only the T09
+  dep-removal prompt as a "running" task_session (updated 2026-09-10T20:20Z) and is
+  uncommitted. Known harness limitation (cannot parse this plan's checkboxes); the plan
+  file is the ground truth. Roll up before the wave closes (R1.2/R1.4/R19.3).
+
+Minor: plan T02/T10 still say "36 routes" (build emits 38); plan Commit lines for
+T07/T15 predate their D13/D4 amendments; a11y spec runs light-only (moot under D13).
+
+### F3 — visual defect found during manual QA (2026-09-12)
+
+- **V1 MINOR (pre-existing, non-blocking for this plan) — contact success toast
+  overlaps header nav.** At viewport ≥768 and scrollY=0, the success alert
+  (`fixed inset-x-1/3 top-8 z-50`, rect 427..853 × 32..86) covers the bottom 6px
+  of the nav link glyphs (17px tall, 35%), hiding descenders of About/Projects/
+  Blog/Contact. Repro: 1280×900 → `/contact` → fill + submit with
+  `E2E_CONTACT_FORM_SUCCESS=true`. Provenance: introduced in the ORIGINAL contact
+  page commit `e606a99` (Flowbite `<Alert className="fixed inset-x-1/3 top-8 z-50">`),
+  carried verbatim through T21's in-tree Alert (`272bb2b` added the same className,
+  `fe98d41` swapped the component). Not introduced by the refresh restyle; T21's
+  scope was Flowbite removal, not toast placement. Proof:
+  `.omo/evidence/f3/shots/contact-success-{topcrop,navzoom,glyphzoom}.png`.
+  Fix (backlog, NOT applied): move below header (`top-20`) or render inline.
+  F3 verdict remains APPROVE (pre-existing, outside plan scope).
