@@ -671,3 +671,28 @@ The claim is doubly stale (file gone AND "minimal" is no longer true).
 Pre-existing (R24.1 text predates the plan; the plan added most of those specs).
 Owner: T41 / whatever refreshes AGENTS.md. Fix: point R24.1 at the real spec
 directory and drop the "minimal" characterisation.
+
+## 2026-09-12 — FLAGGED (orphaned handoff, low value): dead marquee animation tokens
+
+T16's evidence says explicitly: "`animation.marquee` tokens left in
+`tailwind.config.js` (T15 owns config motion)." T15 is marked `[x]`, but the tokens
+were never removed. `tailwind.config.js` still defines:
+
+- `animation.marquee` / `animation.marquee2` (lines ~212–213)
+- `keyframes.marquee` / `keyframes.marquee2` (lines ~218–225)
+
+They are **fully dead**:
+- No product code uses `.animate-marquee*`: `git grep animate-marquee -- app
+  components lib styles` → none (only e2e `home.spec.ts` asserts the DOM count is 0,
+  and comments elsewhere).
+- Not emitted in the build: `grep -rl "animate-marquee" .next/` → nothing;
+  `grep -rl "@keyframes marquee" .next/static/` → nothing. Tailwind tree-shakes them.
+
+**Disposition: NOT removed now.** Reasons: (a) it is cosmetic — the tokens produce
+zero output; (b) it is outside any *open* task (T15 is `[x]`); (c) editing
+`tailwind.config.js` would change the "zero product change since the F5 code-gate
+run" invariant and require re-running build/fonts/bundle gates, which the host
+cannot support right now (99.9 % CPU). Whoever picks up T15 follow-ups or the
+Wave-5 pass should delete both `animation.marquee*` and `keyframes.marquee*` and
+re-run `pnpm build && node scripts/check-bundle-budget.mjs` (expected: bytes
+unchanged, since tree-shaken).
