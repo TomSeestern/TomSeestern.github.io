@@ -91,10 +91,10 @@ test("ships no theme toggle and resolves a single mode regardless of system pref
 const CONTRAST_SCHEMES = ["light"] as const satisfies readonly A11yScheme[]
 
 /**
- * Routes with no known contrast debt. The full allowlist (with its current
- * debt route `/about` light) is owned by `e2e/a11y.spec.ts` — this spec only
- * adds a contrast-only gate on the clean routes so a theme regression is caught
- * without duplicating the allowlist machinery.
+ * Routes with no known contrast debt. The full public-route scan and the
+ * (currently empty) allowlist are owned by `e2e/a11y.spec.ts`; this spec
+ * only adds a contrast-only gate on these clean routes so a theme
+ * regression is caught without duplicating the allowlist machinery.
  */
 const CONTRAST_ROUTES = [
   "/contact",
