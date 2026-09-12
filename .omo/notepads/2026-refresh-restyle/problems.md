@@ -14,11 +14,22 @@ _Auto-scaffolded by /start-work. Append new entries below - never overwrite._
 3 runs, 7 routes) fails LCP — and under heavy load also TBT — on a byte-identical
 bundle. `autorun-exit.txt` = 1.
 
-**Root cause (proven):** an UNRELATED project (`/home/tom/Projects/ohmyroadmap`)
-runs `stryker` mutation testing, holding 23 `child-process-proxy-worker` processes
-at ~95–100 % CPU across all 22 logical cores. Observed continuously for 7h+.
-Lighthouse's 4× CPU multiplier compounds the ~10× oversubscription. Evidence:
-`.omo/evidence/t05-lighthouse/environmental-diagnosis-2026-09-11.txt`.
+**Root cause — TWO independent factors (both proven):**
+
+1. **External host contention.** An UNRELATED project
+   (`/home/tom/Projects/ohmyroadmap`) runs `stryker` mutation testing, holding
+   ~20–24 runner processes at ~95–100 % CPU across all 22 logical cores, observed
+   continuously for 12h+. Lighthouse's 4× CPU multiplier compounds the ~10×
+   oversubscription. Evidence:
+   `.omo/evidence/t05-lighthouse/environmental-diagnosis-2026-09-11.txt`.
+2. **Methodology confound in the comparison itself (found 2026-09-12, F5 §15).**
+   The T02 baseline was measured with **Lighthouse 13.4.1** (`npx -y lighthouse`,
+   T02 ledger L60/L70) while the gate runs **Lighthouse 12.6.1** via
+   `@lhci/cli@0.15.1`. Every "restyle vs baseline" delta in F5 §11–§12 therefore
+   crosses a major tool version — and the LCP **element** differs too (baseline h1
+   → restyle intro paragraph, which grew). In the *real* trace the restyle is
+   FASTER (observed LCP 190 ms vs baseline 303 ms). §11's "font-swap bound"
+   conclusion is retracted; see F5 ledger §15.
 
 **Why the red is NOT a code regression:**
 - Load-insensitive gates all green on a fresh build: bundle budget 14/14
@@ -49,6 +60,27 @@ rm -rf .next && nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm 
 ```
 Requires `rm -rf .next && pnpm build` first because Playwright's `webServer`
 boots `next dev` and clobbers the production `.next` (documented T22 gotcha).
+
+**DECISIVE EXPERIMENT (run this before spending any code effort) — version parity
++ element A/B, `/projects` only, one quiet window:**
+
+1. **Arm A — parity:** measure the CURRENT build with the baseline's own tool
+   (`npx -y lighthouse@13.4.1`) on `http://127.0.0.1:3000/projects` (the exact T02
+   method: `--output=json`, fresh Chrome profile, mobile 4× simulate). Compare to
+   the stored baseline **2588 ms**.
+   - ≈2588 → the restyle↔baseline delta is **tooling**, not code.
+   - ≈2920 → the overage is real product code.
+2. **Arm B — element switch:** under the gate's LH12.6.1 (lhci), A/B the `/projects`
+   intro paragraph `text-body-lg font-light` → `text-base font-normal` (mobile).
+   Read `largest-contentful-paint`, the LCP **element** identity, and
+   `lcp-phases-insight` (TTFB + element render delay) plus
+   `metrics.observedLargestContentfulPaint`.
+   - LCP drops <2500 and element returns to `h1` → paragraph attribution confirmed.
+   - LCP stays ≈2900 with `p` still the element → main-thread/DOM cost is the lever.
+3. Always record the **lighthouseVersion** of every LHR used in a comparison.
+
+**Do NOT cite §11's "same Lighthouse version/method" premise** — it is false
+(retracted in F5 ledger §15).
 
 **Disposition rules:** do NOT weaken the 2500 ms budget to force green. If home or
 projects still exceed it on a quiet host, that is a genuine finding needing a real
