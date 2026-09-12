@@ -781,10 +781,22 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
     quiet host; CLS < 0.1; axe zero serious/critical; `pnpm build` 0; e2e green.
   - MUST NOT: weaken the budget; change blog routes; add runtime deps; break
     keyboard/focus behavior or scroll anchoring.
-  - **Blocked because:** the fix cannot be verified (R6.1/R8.1) while the external
-    `ohmyroadmap` Stryker job saturates the host (22 cores, ~21 runners at ~100 %).
-    A production change with no executable verification is forbidden. Unblocks when
-    the host is quiet enough to read `/projects` LCP under LH 12.6.1.
+  - **Blocked because — and possibly UNNECESSARY (see below):** the fix cannot be
+    verified (R6.1/R8.1) while the external `ohmyroadmap` Stryker job saturates the
+    host (22 cores, ~21 runners at ~100 %). A production change with no executable
+    verification is forbidden. Unblocks when the host is quiet enough to read
+    `/projects` LCP under the gate's tool.
+  - **Do NOT start this task before re-reading F5 ledger §19–§22.** Later evidence
+    may make it moot: every post-restyle `/projects` reading was taken on a host
+    SLOWER than the baseline (`benchmarkIndex` 598–2416 vs baseline 2511–3064), and
+    the host-speed model (§21) estimates `/projects` at **≈2414 ms** when corrected
+    to the baseline's `bi` 2762 — i.e. **likely already passing**. The real,
+    pre-restyle reading (T02) was 2588 ms at `bi` 2762. So the correct sequence is:
+    **first** obtain one `/projects` LHR at `benchmarkIndex ≥ 2510` (Arm A command,
+    F5 ledger §18); **only if** it reads > 2500 ms does T30 become a real fix.
+    A `content-visibility` change is not justified by the current (host-confounded)
+    numbers, and the earlier "revert is provably insufficient" claim was withdrawn
+    (§20).
 - [~] **T31. Lighthouse version parity for CI** `[BLOCKED: Tom process decision]`
   - Depends: — | Category: `unspecified-high`
   - Skills: [`frontend`, `programming`]
