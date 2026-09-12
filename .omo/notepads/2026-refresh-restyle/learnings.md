@@ -978,3 +978,26 @@ mobile-budget collection.
   180 s tool timeout because the host is at loadavg ~54 (external Stryker, 23
   workers). This is environmental, not a code signal — and the edit is
   comment-only, so no lint rule can be affected. Re-run when the host is quiet.
+
+## 2026-09-12 — Lighthouse harness preflight (de-risks blocked F5)
+
+Ran `.lighthouserc.js` load + Chrome resolution **without** a build, to separate
+"harness misconfigured" from "host too slow" before the eventual F5 run:
+
+```
+collect.url count : 7
+numberOfRuns      : 3
+startServerCommand: pnpm start
+chromePath        : /etc/profiles/per-user/tom/bin/chromium  (exists: true)
+assertions        : LCP ≤2500 ms, CLS ≤0.1, TBT ≤200 ms (all median, error)
+```
+
+Conclusion: the Lighthouse config is valid, resolves a real Chrome binary from the
+devShell PATH, and its budgets are the intended ones. When the host clears, F5 can
+fail **only** on measured performance — never on setup. Resume command remains:
+`rm -rf .next && pnpm build && pnpm lighthouse` (with `SSL_CERT_FILE` +
+`NODE_EXTRA_CA_CERTS` + `PLAYWRIGHT_BROWSERS_PATH`, and a quiet host).
+
+Note: locally the devShell exposes `/etc/profiles/per-user/tom/bin/chromium`, so
+`resolveChromePath()` takes the PATH branch and never needs the Playwright cache —
+but CI has no browser on PATH, hence the cache fallback in `.lighthouserc.js`.
