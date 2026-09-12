@@ -1434,3 +1434,29 @@ with bursty external build jobs AND this agent session.** The harness
 Server stopped at 22:39Z; port 3000 confirmed closed; no stray `next-server`.
 Artifact retained: `armA5-projects-lh13.json` (VOID, for the record).
 F5 disposition unchanged: `[~]` **UNJUDGED, not failed**.
+
+════════════════════════════════════════════════════════════════════════════
+§30 — Why F5 cannot be judged in-session: session-owned CPU footprint quantified
+════════════════════════════════════════════════════════════════════════════
+Probe 2026-09-12T20:43:33Z (loadavg 25.54/25.67/24.02 on 22 cores):
+
+  $ ps -eo args | grep -c '[o]h-my-opencode/packages/lsp-daemon'   → 14
+  $ ps -eo args | grep -c '[.]omo/codegraph/node'                  → 26
+  $ ps -eo pcpu,comm --sort=-pcpu | grep opencode                  → 98.6% .opencode-wrapp
+
+The **agent session itself** owns ~40 long-lived node processes (14 LSP daemons +
+26 codegraph workers) plus the harness process pinned near a full core. This is the
+structural reason attempt #5 (#29) landed at `bi` 1900 even when the *external*
+`cc1plus` burst was briefly absent: the measurement environment is never idle while
+the orchestrator session that issues the command is running.
+
+**Consequence for F5's disposition.** This is not a sixth failure of the gate — it
+is a constraint on *where* the gate can be judged. A valid reading (`bi ≥ 2510`)
+requires the measurement to run with **neither** the external Forgejo/Stryker/cc1
+jobs **nor** an active agent session on this host. The plan's §28/§29/plan-F5 note
+already say "run OUTSIDE this agent session"; §30 is the quantitative proof of why.
+
+No further in-session Lighthouse attempts are warranted: each would consume ~2 min
+of CPU, produce another VOID reading, and add no information. F5 stays `[~]`
+**UNJUDGED, not failed**. The resume action is unchanged (§18 Arm A command, on an
+idle host, outside this session).
