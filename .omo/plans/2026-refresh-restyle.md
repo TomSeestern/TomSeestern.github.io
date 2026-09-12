@@ -51,7 +51,7 @@ Full scope confirmed; content workstream (Wave 5) is included.
 | D5 | `/work` route vs featured flag | **Featured flag inside `/projects`** (no new route) | T17 |
 | D6 | LAYZR case study + cleared metrics | **Included** — requires cleared metrics + consent | T26 |
 | D7 | Cheesecake archive vs delete | **Keep as part of the blog** (no archive/delete) | T28 |
-| D8 | Testimonial at launch vs deferred slot | **BLOCKED — R19.1 conflict.** User requested unlabelled placeholder quotes; shipping fake endorsements is not permitted. Awaiting explicit confirmation or switch to labelled examples / deferral. | T28 |
+| D8 | Testimonial at launch vs deferred slot | **RESOLVED — labelled examples only (2026-09-12).** Tom approved alternative (a): the section may ship with placeholder quotes explicitly labelled as illustrative examples in the visible UI, naming no real company or person. Satisfies R19.1 and UWG §5. | T28 |
 | D9 | Tag pages `/tags/[tag]` vs query filter | **Include** — server-rendered tag pages | T29 |
 | D10 | Content authoring commitment + timeline | **Included** (full) | Wave 5 |
 | D11 | Flowbite targeted vs full removal | **Targeted** (keep Card) | T21 |
@@ -60,10 +60,11 @@ Full scope confirmed; content workstream (Wave 5) is included.
 
 ### Outstanding clarifications
 
-- **D8 (BLOCKED)** — user selected unlabelled placeholder quotes. This violates AGENTS R19.1 and
-  German UWG §5 (misleading commercial practices). Not implemented pending explicit confirmation.
-  Alternatives: (a) visibly labelled example quotes, (b) defer the section until real consented
-  quotes exist. See `.omo/decisions/2026-09-10-refresh-scope-decisions.md`.
+- **D8 (RESOLVED 2026-09-12)** — originally blocked: user selected unlabelled placeholder quotes,
+  which violates AGENTS R19.1 and German UWG §5 (misleading commercial practices). Tom approved
+  alternative (a): **visibly labelled example quotes** that name no real company or person. T28
+  implements this; the visible label is mandatory, not decorative. See
+  `.omo/decisions/2026-09-10-refresh-scope-decisions.md` (Round 3).
 
 ### Design-direction amendments from D13/D4
 
