@@ -609,3 +609,24 @@ the HUMAN-GATED T20/T25 — agents must not alter it unowned (R1.3), and a bug f
 would also require a regression test (R6.3). Flagged as debt for whoever executes
 T20/T25 (or a follow-up): change the URL to `https://placehold.co/512x512.png?text=Various`
 (or self-host a neutral placeholder, as T22 did for the cheesecake image).
+
+## 2026-09-12 — FLAGGED (pre-existing, out of scope): AGENTS.md dangling `docs/` references
+
+AGENTS.md points at a `docs/` tree that does not exist — not in the working tree
+and not in git history (`git ls-files docs/` → 0; `git log --all -- docs/` → empty):
+
+- L306 (R5.5): "Architecture Decision Records live in `docs/adr/`."
+- L322 (R5.8 justification): "Mermaid `docs/architecture.md` diagrams mirror code…"
+- L1577 (Superseded-rules table): link `[ADR-0007](docs/adr/0007-public-access-refactor.md)` —
+  the target file does not exist anywhere in the repo.
+
+Provenance: introduced in `9c6dc6f docs: rewrite content, README, and AGENTS.md`
+(pre-plan). This restyle plan never owned `docs/` or AGENTS.md prose (its only
+`docs/` mention is a test-strategy line).
+
+Disposition: NOT edited — same class and owner as the L66/L88 `no scripts/` and
+R5.3 ToC flags above. AGENTS.md's own Superseded-rules section defers AGENTS.md doc
+updates to T40/T41. Two valid fixes for that task: (a) create `docs/adr/0007-…`
+(and any real ADRs) plus `docs/architecture.md`, or (b) reword R5.5/R5.8 to reflect
+that no ADR/diagram tree exists yet. Either way the stale link at L1577 must resolve
+(R2.6: body prose cross-references must be valid).
