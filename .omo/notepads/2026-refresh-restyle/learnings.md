@@ -1192,3 +1192,15 @@ Code-gate sweep at HEAD so far (all fresh, not carried forward):
 contrast 24/24 · ornaments · images 101 · fonts 70.7 KiB · typecheck · prettier ·
 lint 0 err/47 warn · jest 21/141. Remaining: build + bundle budget, e2e (79),
 axe (8), and the host-blocked Lighthouse timing gate.
+
+## 2026-09-12 — build + bundle budget green at HEAD
+
+- `node_modules/.bin/next build` (with SSL_CERT_FILE + NODE_EXTRA_CA_CERTS) → exit 0;
+  38 static/SSG routes per Next's table; shared First Load JS 102 kB.
+- `node report-bundle-size.js` → exit 0; `node scripts/check-bundle-budget.mjs`
+  → **PASS — 14 entries within budget**. Detail routes still −72.6% vs baseline
+  (`/projects/entry/[slug]/page` 25,331 B vs 92,495 B), `/page` −5.5%,
+  `/projects/page` +3.3%; `__global` at baseline.
+
+Code-gate sweep now complete except e2e/axe (running) and the host-blocked
+Lighthouse timing gate.
