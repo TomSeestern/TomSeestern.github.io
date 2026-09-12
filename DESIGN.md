@@ -87,13 +87,16 @@ wrappers and never use viewport-width translation utilities.
 
 ## 5. Components
 
-### Flowbite primitives
+### Component primitives
 
-- **Structure:** Navbar, Card, Breadcrumb, and form patterns from Flowbite React.
+- **Structure:** the header/nav, breadcrumb, alert, and shared tooltip provider
+  are in-tree components under `components/`; Flowbite React is retained only
+  for the `Card` primitive used by the article and project teasers.
 - **Color:** the full `primary-*` scale maps to the warm terracotta ramp for
   Flowbite compatibility.
-- **States:** Flowbite default, hover, and focus states remain; dark-mode states
-  are dormant (single light mode).
+- **States:** the in-tree primitives define their own default, hover, and focus
+  states, as does the retained `Card`; dark-mode states are dormant (single
+  light mode).
 
 ### Custom teasers and links
 
@@ -109,8 +112,9 @@ wrappers and never use viewport-width translation utilities.
 - **Focus:** custom focusable controls use
   `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft`;
   the `accent-soft` ring is contrast-gated against parchment so it clears the
-  WCAG 1.4.11 3:1 non-text minimum. Primary Flowbite-pattern CTAs retain their
-  compatible `primary-*` focus rings.
+  WCAG 1.4.11 3:1 non-text minimum. Solid CTAs use the darker
+  `accent-soft-foreground-dark` ring variant so the halo clears contrast against
+  their filled terracotta background.
 - **Accessibility:** every text and interactive pair is enforced by the contrast
   gate below, not by eyeballing.
 

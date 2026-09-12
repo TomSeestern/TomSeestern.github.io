@@ -45,8 +45,8 @@ static site generation (SSG) on the Node/Vercel runtime.
 - **[Tailwind CSS](https://tailwindcss.com/)** with
   [`@tailwindcss/typography`](https://tailwindcss.com/docs/typography-plugin)
   for Markdown body text
-- **[Flowbite React](https://flowbite-react.com/)** for UI primitives
-  (navbar, footer, buttons, alerts, tooltips)
+- **[Flowbite React](https://flowbite-react.com/)** for the `Card` primitive
+  only; the header, breadcrumb, and alert are in-tree components
 - **[Nix flake](https://nixos.org/)** + **[direnv](https://direnv.net/)** for a
   reproducible dev shell (Node 22, pnpm, git, Playwright Chromium libs)
 - **[pnpm](https://pnpm.io/)** as the package manager
@@ -160,12 +160,18 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── projects/page.tsx      # Projects listing
 │   └── projects/entry/[slug]/page.tsx  # Project detail, generateStaticParams
 ├── components/
+│   ├── Alert/                 # In-tree status/error alert
 │   ├── ArticleTeaser/         # Blog post card
+│   ├── Breadcrumb/            # Detail-route breadcrumb
 │   ├── Button/
+│   ├── CaseStudyMeta/         # Case-study hero, role/outcome/metrics
+│   ├── FeaturedSet/           # "Selected Work" featured grid
 │   ├── Footer/
-│   ├── Header/                # Flowbite Navbar
+│   ├── FounderArc/            # "Background" founder-arc beats
+│   ├── Header/                # In-tree semantic header and nav
 │   ├── PersonTeaser/
 │   ├── ProjectTeaser/         # Project card with technology icons
+│   ├── Providers/             # Single root Tooltip provider
 │   ├── TimelineEntry/
 │   └── Tooltip/
 ├── lib/
