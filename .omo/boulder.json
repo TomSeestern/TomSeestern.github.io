@@ -85,7 +85,7 @@
       "plan_name": "2026-refresh-restyle",
       "status": "blocked",
       "started_at": "2026-09-10T18:26:19.216Z",
-      "updated_at": "2026-09-12T06:39:47.974Z",
+      "updated_at": "2026-09-12T08:00:00.000Z",
       "session_ids": [
         "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
       ],
@@ -106,13 +106,13 @@
           "updated_at": "2026-09-12T02:08:54.674Z"
         }
       },
-      "blocked_reason": "All executable tasks T01-T23 + F1-F4 complete and committed. F5 CODE gates RE-OBSERVED green at HEAD (typecheck, prettier, lint 0err/47warn, jest 21/141, build 38 routes, contrast 24/24, ornaments, images 101, fonts 70.7KiB, bundle 14/14, e2e 79, axe 8). F5 LIGHTHOUSE ran twice on 2026-09-12 (07:40, 08:15) but BOTH readings are contaminated by an unrelated external Stryker run (ohmyroadmap) holding 20-30 workers at 99-100% CPU on 22 cores for 8h+. Best-case /projects LCP 2874ms (render-bound: LoadDelay/LoadTime=0, RenderDelay~2400ms => font-swap on text LCP); second run 14/14 failures physically impossible on a baseline-byte bundle, voided. Budgets NOT weakened (2500/0.1/200). Resume F5 ONLY on a quiet host (3+ consecutive 15s samples CPU busy <=30%, no stryker worker): see .omo/notepads/2026-refresh-restyle/problems.md BLOCKER 1. Wave 5 content T20/T24-T29 human-gated (R19.1 - agents may not author content as fact)."
+      "blocked_reason": "All executable tasks T01-T23 + F1-F4 complete and committed. F5 CODE gates re-observed green at HEAD (typecheck, prettier, lint 0err/47warn, jest 21/141, build 38 routes, contrast 24/24, ornaments, images 101, fonts 70.7KiB, bundle 14/14, e2e 79, axe 8). F5 LIGHTHOUSE: 5 attempts on 2026-09-12, ALL contaminated by an unrelated external Stryker run (ohmyroadmap, 20-30 workers at 90-100% CPU on 22 cores). Run 5 (07:45Z) launched into a verified quiet window but Stryker restarted ~1s after launch and ramped 3->24 workers mid-sweep; run 5 collected cleanly (21/21 LHRs, 0 runtime errors, TTFB 4-7ms) yet shows residual LCP jitter. 4 assertion failures: LCP /projects (best 2898), LCP cheesecake (best 2781), TBT /blog (best 209), TBT /contact (best 178). IMPORTANT: vs the host-independent T02 pre-restyle baseline, LCP improved on 5/7 routes (home -542, about -278, blog -118, cheesecake -645, soudest -54); cheesecake was ALREADY over budget at baseline (3562). /projects is the ONLY genuine LCP regression (baseline 2588 -> 2898 best; FCP identical, 0B loaded, Render Delay ~2445ms on text LCP = D3 font swap). TBT bumps track the Stryker ramp, not a product change. Budgets NOT weakened (LCP 2500/CLS 0.1/TBT 200). Resume F5 ONLY when the host is genuinely idle for the full ~6min sweep (cat /proc/loadavg <=4, no stryker worker): see .omo/notepads/2026-refresh-restyle/problems.md BLOCKER 1; full data in F5 ledger section 12. /projects needs Tom D3 font-strategy decision; TBT straddle needs one clean-host re-read before any code action. Wave 5 content T20/T24-T29 human-gated (R19.1 - agents may not author content as fact)."
     }
   },
   "active_plan": "/home/tom/Projects/tomsegbers-de/.omo/plans/2026-refresh-restyle.md",
   "started_at": "2026-09-10T18:26:19.216Z",
   "status": "blocked",
-  "updated_at": "2026-09-12T06:39:47.974Z",
+  "updated_at": "2026-09-12T08:00:00.000Z",
   "session_ids": [
     "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
   ],
@@ -129,8 +129,8 @@
       "agent": "Sisyphus-Junior",
       "category": "quick",
       "started_at": "2026-09-10T18:46:51.190Z",
-      "status": "running",
-      "updated_at": "2026-09-10T20:20:33.812Z"
+      "status": "completed",
+      "updated_at": "2026-09-12T02:08:54.674Z"
     }
   },
   "agent": "atlas"

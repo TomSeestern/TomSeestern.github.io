@@ -44,6 +44,26 @@ projects still exceed it on a quiet host, that is a genuine finding needing a re
 fix (font/LCP-path work) and must be escalated to Tom. Blog-detail is expected to
 pass now that its remote image is self-hosted.
 
+**UPDATE 2026-09-12 07:45Z — run 5 (quiet-window attempt).** Verified quiet at
+launch (CPU 23.8/26.0/24.3 %, workers=3, loadavg 10.67). But the external Stryker
+job restarted at 07:45:25Z — **~1 s after launch** — and ramped 3→24 workers during
+the 6-min sweep. Run 5 collected cleanly (21/21 LHRs, 0 runtime errors, TTFB 4–7 ms,
+FCP matching baseline) but has within-route LCP jitter from the ramp. Result: 4
+assertion failures (LCP `/projects` 2898 best, LCP cheesecake 2781 best, TBT `/blog`
+209 best, TBT `/contact` 178 best — the TBT minima straddle the 200 ms line).
+
+Against the host-independent T02 baseline, **LCP improved on 5/7 routes**:
+`/` −542, `/about` −278, `/blog` −118, cheesecake −645, soudest −54. `cheesecake`
+was *already* over budget at baseline (3562) and improved. **`/projects` is the only
+genuine LCP regression** (baseline 2588 → 2898 best; FCP identical 1054→1055, 0 B
+loaded, Render Delay ~2445 ms on a text LCP = font swap). The TBT bumps on `/blog`
+and `/contact` track the Stryker ramp, not a product change. Full data: F5 ledger §12.
+
+**No further runs until the host is genuinely idle for the full sweep** (the windows
+are too short to catch — an external job can resume mid-run). Do NOT re-run in a loop.
+`/projects` needs Tom's D3 font-strategy call; the TBT straddle needs one clean-host
+re-read before any code action.
+
 ---
 
 ## BLOCKER 2 — Wave 5 content `[~]` (human gate, R19.1)

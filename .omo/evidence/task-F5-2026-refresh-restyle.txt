@@ -420,3 +420,79 @@ latter two load-inflated), but a like-for-like verdict needs a quiet-host run.
 - It is a **font-strategy consequence of D3**. Options (all need Tom, since D3 mandates
   the carved serif): `display: optional` for the display face, preload tuning, or
   limiting the swap-sensitive face. **Weakening the 2500 ms budget is NOT an option.**
+
+---
+
+## §12. F5 Lighthouse run 5 — quiet-window attempt, 2026-09-12 07:45Z
+
+**Launch conditions (verified quiet):** 3×15s samples CPU busy 23.8 / 26.0 / 24.3 %,
+`workers=3`, loadavg 10.67. Command: `rm -rf .lighthouseci && pnpm build && pnpm lighthouse`
+inside `nix develop`, cert vars + `PLAYWRIGHT_BROWSERS_PATH` exported.
+
+**Contamination proof (decisive):** unrelated Stryker run (`ohmyroadmap`,
+PID 3442257) started at **local 09:45:25 = 07:45:25Z** — run 5 launched at
+**07:45:24Z**, i.e. the external job resumed ~1 s after launch and ramped
+3 → 24 workers across the sweep (post-run: workers=24, CPU 29–41 %, loadavg 21.5).
+The quiet window was real but closed at launch. **Run 5 is contaminated too — but
+the *least* contaminated of the five attempts.**
+
+**Collection integrity:** 21/21 LHRs, **0 runtime errors**, first LHR 07:46:34Z,
+last 07:50:52Z (~6 min sweep).
+
+**Server health during sweep** (TTFB, min..max ms vs T02 baseline single-run):
+| route | baseline TTFB/FCP | run5 TTFB (min..max) / FCP |
+|---|---:|---|
+| `/` | 16 / 1057 | 6..72 / 907..925 |
+| `/about` | 7 / 908 | 4..7 / 906..909 |
+| `/projects` | 14 / 1054 | 7..18 / 1055..1056 |
+| `/blog` | 7 / 906 | 6..8 / 909..916 |
+| `/contact` | 4 / 906 | 5..11 / 910..913 |
+| `/blog/entry/…cheesecake` | 3 / 906 | 4..6 / 907..910 |
+| `/projects/entry/…soudest` | 3 / 905 | 4..6 / 905..906 |
+
+TTFB 4–7 ms and FCP locked to baseline ⇒ the server was **not** starved; the
+Lighthouse runs themselves were mostly sound. High within-route LCP jitter
+(`/projects` 2898/3957/3978; `/blog` 2307/2371/3423) is the residual contention
+signature (blocking-JS stretching on the shared CPU).
+
+**Per-route medians vs budget:**
+| route | LCP med (min) | LCP | TBT med (min) | TBT |
+|---|---:|---|---:|---|
+| `/` | 2288 (2173) | PASS | 169 (129) | PASS |
+| `/about` | 2106 (2038) | PASS | 48 (46) | PASS |
+| `/blog` | 2371 (2307) | PASS | **214 (209)** | **FAIL** |
+| `/blog/entry/…cheesecake` | **2917 (2781)** | **FAIL** | 78 (74) | PASS |
+| `/projects` | **3957 (2898)** | **FAIL** | 105 (92) | PASS |
+| `/projects/entry/…soudest` | 2073 (2043) | PASS | 78 (78) | PASS |
+| `/contact` | 2339 (2337) | PASS | **213 (178)** | **FAIL** |
+
+→ 4 assertion failures: LCP cheesecake, LCP /projects, TBT /blog, TBT /contact.
+
+**Against the pre-restyle baseline (T02, host-independent):**
+| route | base LCP | run5 LCP med | Δ | base TBT | run5 TBT med |
+|---|---:|---:|---:|---:|---:|
+| `/` | 2830 | 2288 | **−542** | 126 | 169 |
+| `/about` | 2384 | 2106 | **−278** | 38 | 48 |
+| `/blog` | 2489 | 2371 | **−118** | 86 | **214** |
+| `/blog/entry/…cheesecake` | 3562 | 2917 | **−645** | 113 | 78 |
+| `/projects` | 2588 | 3957 | **+1369** | 85 | 105 |
+| `/projects/entry/…soudest` | 2127 | 2073 | **−54** | 124 | 78 |
+| `/contact` | 2256 | 2339 | +83 | 115 | 213 |
+
+**Findings:**
+1. **LCP improved on 5/7 routes** vs baseline; the two "failures" split:
+   - `cheesecake` was **already over budget at baseline (3562)** and improved −645 ms;
+     its earlier best reading was 2033 (PASS) — it is contention-flaky, not a regression.
+   - `/projects` is the **only genuine LCP regression** (baseline 2588 → 2898 best),
+     font-swap bound (FCP identical 1055 vs 1054; load 0 B; Render Delay ~2445 ms on a
+     text LCP), previously diagnosed §11.
+2. **TBT regressions on `/blog` (86→214) and `/contact` (115→213)** track the Stryker
+   ramp (24 workers) exactly — the metric most sensitive to a shared CPU. Their minima
+   (209, 178) straddle the 200 ms line. Not yet attributable to a product change; needs
+   a clean-host re-read before any code action.
+3. **Budgets NOT weakened** (LCP 2500 / CLS 0.1 / TBT 200 unchanged).
+
+**Verdict: run 5 is NOT a clean F5 pass and NOT a basis for a code change**
+(TBT minima straddle the line; `/projects` LCP is font-bound and needs a D3 decision).
+The remaining blocker is *environmental* (external Stryker job), and `/projects`
+needs Tom's D3 call. No further runs until the host is genuinely idle for the full sweep.
