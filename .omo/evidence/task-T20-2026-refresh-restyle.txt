@@ -1,0 +1,107 @@
+# T20 — About portrait (structural half)
+
+**Status:** COMPLETE (structural); copy remains with T25
+**Commit:** `db4aa96` — `feat(about): place portrait in a fixed 4:5 box below the fold`
+**Collected:** 2026-09-12T16:42:54Z (UTC)
+**Host note:** all commands below are CPU-insensitive; host speed is irrelevant to them.
+
+## Scope decision — stale design language flagged before implementation
+
+T20's description says "render duotone travertine/basalt". That is **stale Rome-concept
+wording, superseded by D13**: the site ships ONE light "parchment" mode, so "basalt"
+(a dark ground) no longer exists as a design element, and `scripts/check-ornaments.mjs`
+bans `gold`/`marble` as whole words. Following the wording literally would have produced an
+off-system, dark-filtered portrait.
+
+**Decision:** implement a **plain, untreated** portrait. No duotone, no filter, no new
+design token, no banned word. Re-read T20-era prose against the current decisions file
+before applying any "art direction" wording (recorded in notepad).
+
+## Deliverable
+
+`app/about/page.tsx` — **+13 lines, 1 insertion, no other file touched**:
+
+```tsx
+<div className="relative mx-auto aspect-[4/5] w-full max-w-xs overflow-hidden rounded-lg bg-surface-muted">
+  <Image
+    src="/img/Tom_Segbers_Frontal.webp"
+    alt="Portrait of Tom Segbers"
+    fill
+    loading="lazy"
+    sizes="(min-width: 640px) 320px, calc(100vw - 2rem)"
+    className="object-cover"
+  />
+</div>
+```
+
+Placement: closing element of the `#timeline` column, after the fourth `TimelineEntry`
+and before `<Testimonials />` (left intact). Rationale: on a 375×812 viewport the page
+header and `Formal Positions:` heading already fill the first viewport, so any
+"after header" position would land **above** the fold. The portrait is therefore placed
+after all timeline entries — the only position that satisfies "below the fold … within
+the timeline area".
+
+## Reproduction — exact commands and results
+
+All commands run as `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; <cmd>'`;
+build additionally needs `SSL_CERT_FILE` and `NODE_EXTRA_CA_CERTS`; e2e needs
+`PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright`.
+
+| # | command | result |
+|---|---|---|
+| 1 | `pnpm typecheck` | exit 0, no output |
+| 2 | `pnpm prettier` | `All matched files use Prettier code style!` |
+| 3 | `pnpm lint` | `✖ 47 problems (0 errors, 47 warnings)` — pre-existing only |
+| 4 | `pnpm images` | `IMAGE SIZE GATE PASSED — 101 image(s) within budget` (`Tom_Segbers_Frontal.webp` = 30.6 KB) |
+| 5 | `pnpm build` | exit 0, `✓ Generating static pages (127/127)`, `○ /about` present |
+| 6 | `playwright test e2e/responsive.spec.ts --project=chromium --workers=1` | `26 passed` |
+| 7 | `playwright test e2e/a11y.spec.ts --project=chromium --workers=1` | `12 passed` |
+
+## Hands-on QA — measured in real Chromium against the production build
+
+Method: `pnpm build` then `pnpm start` on :3000; measured with the project's own
+Playwright at viewport 375×812, after `networkidle` + 1.5 s settle, with a
+`PerformanceObserver` on `layout-shift`.
+
+```json
+{
+  "found": true,
+  "alt": "Portrait of Tom Segbers",
+  "loading": "lazy",
+  "decoding": "async",
+  "renderedW": 320,
+  "renderedH": 400,
+  "ratio": "0.800",
+  "boxRatio": "0.800",
+  "top": 1519,
+  "viewportH": 812,
+  "belowFold": true,
+  "cls": 0
+}
+```
+
+Also confirmed in the served HTML: exactly **1** `_next/image` URL (optimized, not raw),
+`alt`/`loading`/`decoding`/`sizes` all present, and the `aspect-[4/5]` container rendered.
+
+- **Ratio 0.800** = exact 4:5.
+- **top 1519 px vs viewport 812 px** = below the fold.
+- **CLS 0** = no layout shift.
+- **alt** meaningful (not decorative).
+
+## Not changed (deliberately)
+
+- `components/PersonTeaser/PersonTeaser.tsx` — **untouched**. T20 lists the file, but it is a
+  *company* teaser used inside the timeline entries; repurposing it into a portrait component
+  would have broken that existing usage.
+- No copy, caption, biography, metric, or claim was added (R19.1). T25 owns copy.
+- No unrelated cleanups (R39.5). A prior agent's `h-4 w-4` → `size-4` refactor was reverted.
+
+## Open design question (raised, not decided)
+`components/FounderArc/FounderArc.tsx` renders on the **home** page only. T20's
+"founder-arc reuse" was treated as structural, so the arc was **not** duplicated into About.
+Whether About should also host the founder arc is a design call for Tom.
+
+## Notepad
+Findings appended to `.omo/notepads/2026-refresh-restyle/learnings.md` (stale-Rome-language
+catch, the portrait measurements, and the "Playwright wipes `.next/`, so rebuild before
+`next start`" operational note).

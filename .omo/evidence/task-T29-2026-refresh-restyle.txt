@@ -1,0 +1,103 @@
+# T29 — Server-rendered tag pages (D9)
+
+**Status:** COMPLETE
+**Commit:** `ddc18da` — `feat(tags): server-rendered tag index and archive`
+**Collected:** 2026-09-12T16:42:54Z (UTC)
+**Host note:** collected on a CPU-contended host; every command below is CPU-insensitive,
+so host speed does not affect these results. (Lighthouse is the only affected gate and is
+not part of T29.)
+
+## Deliverables
+
+| file | lines | purpose |
+|---|---:|---|
+| `lib/tags.ts` | 161 | Pure aggregation: `normalizeTagKey`, `tagSlug`, `buildTagIndex`, `getAllTags`, `getTagBySlug` |
+| `lib/tags.test.ts` | 229 | 17 unit tests (house Given/When/Then style) |
+| `app/tags/page.tsx` | 80 | `/tags` index — 86 canonical tags with counts |
+| `app/tags/[tag]/page.tsx` | 133 | Archive: `generateStaticParams`, `Promise` params, `notFound()`, `Breadcrumb`, reuses `ArticleTeaser`/`ProjectTeaser` |
+| `app/sitemap.ts` | +17 | `/tags` static route + all 86 `/tags/<slug>` |
+| `components/Footer/Footer.tsx` | +13/-7 | One `/tags` link + the wrap/shrink-0 fix (below) |
+| `e2e/a11y.spec.ts` | +2 | `/tags` and `/tags/c-plus-plus` added to `A11Y_ROUTES`; **no allowlist entries** |
+
+No `content/` file, `lib/markdown.ts`, `lib/blog.tsx`, or `lib/projects.tsx` was modified.
+
+## Normalization design
+
+- **Key** = raw tag trimmed, `_`/`-` runs folded to a single space, whitespace collapsed, lowercased.
+- **Label** = most frequent original raw form; ties broken case-insensitively then by code-unit for order independence.
+- **Slug** = lowercase, `+` → `-plus`, every run outside `[a-z0-9]` → single `-`, trimmed.
+  `C++` → `c-plus-plus`, `Arma 3` → `arma-3`, `AWS-Amplify` → `aws-amplify`, `NodeJS` → `nodejs`.
+- **Collision assertion** = two distinct keys slugging to the same value THROWS naming both keys (build fails loudly rather than silently merging).
+
+### Measured tag data (parsed with the app's own gray-matter, not grep)
+- `tags` field: **105 occurrences, 87 unique** raw forms. Distribution: 73×1, 11×2, 2×3, 1×4.
+- `technologies` field: 91 occurrences, 60 unique.
+- **Correction:** the earlier figure "140 unique tags / 109 singletons" was the *union* of
+  `tags` + `technologies`, not `tags` alone. T29 scopes to `tags`, so the shipped index has
+  **86 canonical tags** (87 raw → 86 after one merge).
+- **Real data bug found:** `content/projects/2018-data-analytics-municipal-administration.md`
+  uses `Digital-Transformation` while two other files use `Digital Transformation`. Without
+  folding `_`/`-`, these are two keys that both slug to `digital-transformation` → collision →
+  build failure. Because content is read-only for this task, the key folds separator runs to
+  spaces (documented deviation) so all three merge. **Owner should still normalize that
+  frontmatter line.**
+- Near-duplicates deliberately left **distinct** (style variants, not casing):
+  `ArtificialIntelligence` vs `Artificial Intelligence`, `NodeJS`, `ServerTech`,
+  `MachineLearning`, `DataScience`, `AssemblyLanguage`, `ITeducation`.
+- **No case collisions exist in the `tags` field** (verified) — the earlier `LabVIEW`/`labview`
+  example does not occur.
+
+## Reproduction — exact commands and results
+
+All commands run as `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; <cmd>'`.
+Build and Playwright additionally need
+`SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt` and `NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt`;
+e2e also needs `PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright`.
+
+| # | command | result |
+|---|---|---|
+| 1 | `pnpm typecheck` | exit 0, no output |
+| 2 | `pnpm prettier` | `All matched files use Prettier code style!` |
+| 3 | `pnpm lint` | `✖ 47 problems (0 errors, 47 warnings)` — warnings pre-existing |
+| 4 | `pnpm test` | `Test Suites: 23 passed`, `Tests: 162 passed` (was 145 before T29's 17) |
+| 5 | `pnpm build` | exit 0, `✓ Generating static pages (127/127)`, routes include `○ /tags` and `● /tags/[tag]` |
+| 6 | `playwright test e2e/a11y.spec.ts --project=chromium --workers=1` | `12 passed` |
+| 7 | `playwright test --project=chromium --workers=1` | `83 passed` (was 79) |
+
+Benign, expected noise filtered from output: `paths[0] … Received null`, pnpm
+registry-signature lines, Next.js `amp`/`Runtime config` deprecations, the `placehold.co`
+SVG warning, and "Cross origin request detected".
+
+## Hands-on QA (production build, `pnpm start` on :3000)
+
+| request | status |
+|---|---|
+| `GET /tags` | 200 |
+| `GET /tags/c-plus-plus` | 200 |
+| `GET /tags/arma-3` | 200 |
+| `GET /tags/digital-transformation` | 200 |
+| `GET /tags/definitely-not-a-tag` | **404** (unknown slug → `notFound()`) |
+
+- `/tags` renders `<h1>Tags</h1>` with **86** distinct `/tags/<slug>` links.
+- `/tags/c-plus-plus` `<h1>` is the canonical label **`C++`** and lists **2** entries
+  (2012 C++ desktop app, 2016 time-tracking app).
+- `/tags/digital-transformation` lists **3** entries (2018, 2019, 2020) — the merge works.
+
+## Regression found and fixed in the same commit
+
+Adding the 7th footer link (`/tags`) to the non-wrapping
+`flex items-center justify-center space-x-1` row overflowed it at the 375 px viewport; with
+no `shrink-0`, flexbox crushed the four social/email icon anchors from 32×32 to **16×32**,
+below the WCAG 2.2 24 px floor, failing `e2e/responsive.spec.ts` touch-target tests on
+`/`, `/blog`, `/contact`.
+
+**Proven causal:** stashing only the 6-line Tags addition made the 3 tests pass
+(`3 passed (26.5s)`); restoring it made them fail. **Fix:**
+`flex flex-wrap items-center justify-center gap-1` + `shrink-0` on all 7 anchors.
+No test was weakened, no `MIN_WCAG_TARGET_SIZE_PX` change, no budget change.
+Post-fix: focused touch-target run `3 passed`; full suite `83 passed`.
+
+## Notepad
+Appended to `.omo/notepads/2026-refresh-restyle/learnings.md` (tag-data correction,
+normalization design, the footer regression and its causal proof, and the
+disk/ENOSPC lesson).

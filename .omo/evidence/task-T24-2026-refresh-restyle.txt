@@ -1,0 +1,77 @@
+# T24 — Legal pages (Impressum + Datenschutz) — PARTIAL (scaffold)
+
+**Status:** BLOCKED on Tom's facts (R19.1). Scaffold COMPLETE and committed.
+**Commit:** `5ae1601` — `feat(legal): scaffold Impressum and Datenschutz routes`
+**Collected:** 2026-09-12T16:42:54Z (UTC)
+**Host note:** all commands below are CPU-insensitive.
+
+## Why this is still `[~]` and not `[x]`
+
+T24's acceptance criterion is "**Tom approves text**". The routes exist and render, but every
+owner-specific legal fact is an unfilled placeholder, so the criterion is not met. An agent
+may not invent a name, address, contact, VAT id, or data-processing agreement (R19.1).
+
+## What is committed
+
+| file | lines | purpose |
+|---|---:|---|
+| `app/impressum/page.tsx` | 119 | Angaben gemäß § 5 DDG, Verantwortlich nach § 18 Abs. 2 MStV |
+| `app/datenschutz/page.tsx` | 193 | Verantwortlicher, Hosting, Kontaktformular/Resend, Cookies/Tracking, Betroffenenrechte, Beschwerderecht |
+| `components/Footer/Footer.tsx` | +14 | `/impressum` + `/datenschutz` text links |
+| `app/sitemap.ts` | +12 | Both routes in `staticRoutes` (priority 0.3, yearly) |
+| `e2e/a11y.spec.ts` | +2 | Both routes added to `A11Y_ROUTES`; no allowlist entries |
+
+## Placeholder tokens emitted (these are what Tom must replace)
+
+Every unknown value renders as visible, greppable
+`TODO(Tom): …` in accent mono — no plausible-looking fake anywhere.
+
+**Impressum:** `Name der natürlichen oder juristischen Person`,
+`Anschrift (Straße, Hausnummer, PLZ, Ort, Land)`, `E-Mail-Adresse`, `Telefonnummer`,
+`Vertretungsberechtigte/r (falls zutreffend)`,
+`USt-IdNr. gemäß § 27 a UStG (falls vorhanden)`,
+`Name der inhaltlich verantwortlichen Person`,
+`Anschrift der inhaltlich verantwortlichen Person`.
+
+**Datenschutz:** `Name des Verantwortlichen`, `Anschrift des Verantwortlichen`,
+`E-Mail-Adresse des Verantwortlichen`, `Telefonnummer des Verantwortlichen`,
+`Datenschutzbeauftragte/r (falls vorhanden)`,
+`Auftragsverarbeitungsvertrag mit Vercel und Angaben zur Drittlandübermittlung`,
+`Auftragsverarbeitung und Drittlandgarantien für Resend`,
+`Speicherdauer der Kontaktanfragen und E-Mails`.
+
+A closing note states the `TODO(Tom)` markers must be replaced before publication.
+
+## Factual content that IS present (and verified true)
+
+- **Resend processor flow disclosed** (the explicit T24 requirement): form data
+  (Name, E-Mail, Nachricht) is transmitted to **Resend, Inc.**, a US provider, and
+  processed on their infrastructure, with an express note that a transfer to the USA can
+  occur. Legal bases cited: Art. 6 Abs. 1 lit. b and lit. f DSGVO.
+- **Vercel hosting** described generically (server log data: IP, timestamp, resource,
+  User-Agent) with Art. 6 Abs. 1 lit. f DSGVO; the AVV/Drittland question is left as a
+  placeholder rather than asserted.
+- **"No cookies, no analytics, no tracking"** — verified before writing by reading
+  `app/layout.tsx` (only JSON-LD, no analytics script), `next.config.mjs`, and the
+  dependency set (no analytics/gtag packages). The claim is true of this site.
+- Rights list Art. 15–18, 20, 21 + Art. 77 complaint right.
+- Legal structure uses the legally-prescribed headings (structure, not invented claims).
+
+## Reproduction — exact commands and results
+
+`nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; <cmd>'`; build needs
+`SSL_CERT_FILE`/`NODE_EXTRA_CA_CERTS`; e2e needs `PLAYWRIGHT_BROWSERS_PATH`.
+
+| # | command | result |
+|---|---|---|
+| 1 | `pnpm typecheck` | exit 0 |
+| 2 | `pnpm prettier` | all files use Prettier style |
+| 3 | `pnpm lint` | 0 errors, 47 warnings (pre-existing) |
+| 4 | `pnpm test` | 22 suites / 145 tests passed (at the time of this commit) |
+| 5 | `pnpm build` | exit 0, 40 static pages, `○ /impressum` and `○ /datenschutz` present |
+| 6 | `playwright test e2e/a11y.spec.ts --project=chromium --workers=1` | `10 passed` (7 original + 2 new + integrity) |
+| 7 | `playwright test --project=chromium --workers=1` | `79 passed` |
+
+## Remaining work owned by Tom
+Supply the real legal fields listed above, then T24's "Tom approves text" criterion can be
+satisfied and the row flipped to `[x]`.

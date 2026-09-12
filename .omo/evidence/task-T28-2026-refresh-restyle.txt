@@ -1,0 +1,66 @@
+# T28 — Cheesecake / LAYZR / testimonial — PARTIAL (D8 delivered)
+
+**Status:** BLOCKED on Tom (D6 LAYZR metrics + consent). D8 testimonial COMPLETE and committed.
+D7 cheesecake disposition resolved: **keep** (no action).
+**Commit:** `fefcf7d` — `feat(content): add labelled-example testimonial section`
+**Collected:** 2026-09-12T16:42:54Z (UTC)
+**Host note:** all commands below are CPU-insensitive.
+
+## Three parts of T28, and where each stands
+
+| part | decision | status |
+|---|---|---|
+| **D8 testimonial** | Labelled examples only (Tom, 2026-09-12) | **DONE** — commit `fefcf7d` |
+| **D7 cheesecake** | Keep as part of the blog (no archive/delete) | **NO ACTION NEEDED** — nothing to implement |
+| **D6 LAYZR case study** | Included, needs Tom's cleared metrics + consent | **BLOCKED** on Tom (R19.1) |
+
+## D8 resolution — why "labelled examples only"
+
+The original choice was *unlabelled* placeholder quotes, which violates AGENTS **R19.1**
+(no claim presented as fact) and German **UWG §5** (misleading commercial practice).
+Tom approved the documented alternative: placeholder quotes are permitted **only when
+explicitly labelled as illustrative in the visible UI**. The decision record was updated
+from BLOCKED to resolved (`Round 3`, `.omo/decisions/2026-09-10-refresh-scope-decisions.md`).
+
+## What is committed
+
+| file | lines | purpose |
+|---|---:|---|
+| `components/Testimonials/Testimonials.tsx` | 67 | The section |
+| `components/Testimonials/Testimonials.test.tsx` | 46 | 4 tests locking the labelling |
+| `app/about/page.tsx` | +6/-4 | Renders `<Testimonials />`; reverts an unrelated `size-*` refactor |
+
+**The unmissable visible labelling** (this is what makes the section permissible):
+- a visible badge reading **`Example`**,
+- a visible sentence: **`Illustrative examples — not real client testimonials.`**
+- section heading: `Illustrative feedback`.
+None of these is `sr-only`; all render in the UI adjacent to the quotes.
+
+**Attributions are generic roles only** — `Example — Product Lead`,
+`Example — Engineering Manager`, `Example — Startup Founder`. **No real person, company,
+logo, or trademark is named anywhere in the section.**
+
+## Reproduction — exact commands and results
+
+`nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; <cmd>'`; build needs
+`SSL_CERT_FILE`/`NODE_EXTRA_CA_CERTS`; e2e needs `PLAYWRIGHT_BROWSERS_PATH`.
+
+| # | command | result |
+|---|---|---|
+| 1 | `pnpm typecheck` | exit 0 |
+| 2 | `pnpm prettier` | all files use Prettier style |
+| 3 | `pnpm lint` | 0 errors, 47 warnings (pre-existing) |
+| 4 | `pnpm test` | 23 suites / **162 tests** passed — includes the 4 new Testimonials tests |
+| 5 | `pnpm build` | exit 0, 127 static pages |
+| 6 | `playwright test --project=chromium --workers=1` | `83 passed` |
+
+The 4 unit tests assert: the visible `Example` label and the disclaimer both render and are
+visible; all three examples are `blockquote` + `figcaption cite`; each attribution is a
+generic role string; and the section uses exactly one `h2` without skipping the outline.
+A regression test is the point — it fails if someone removes the labelling.
+
+## Remaining work owned by Tom
+- **D6 LAYZR case study** — provide metrics cleared for publication and consent. Real-company
+  metrics require explicit clearance; an agent may not invent them.
+- Optionally, replace the labelled examples with real consented quotes; only then may the
+  labelling be removed.
