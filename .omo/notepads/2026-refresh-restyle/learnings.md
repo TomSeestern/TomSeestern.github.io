@@ -1501,3 +1501,62 @@ the Next dev server mid-axe-run and produced spurious failures on ALL routes. Af
 cleaning `test-results/`, `playwright-report/`, `.next/` the clean re-run passed
 10/10. **Lesson: check `df -h /` before long e2e runs; ENOSPC manifests as
 whole-suite a11y failures, not an obvious disk error.** `~/.npm/_npx` holds 3.5G.
+
+**T29 tag pages — delivered (2026-09-12):**
+
+The earlier "140 unique tags / 109 singletons" note at line 1488 is *misleading*:
+that figure is the **union of `tags` + `technologies` frontmatter fields**, not the
+`tags` field alone. Measured with the app's own gray-matter parser:
+- `tags`: 105 occurrences, **87 unique** raw forms. Distribution 73×1, 11×2, 2×3, 1×4.
+- `technologies`: 91 occurrences, 60 unique -> union with tags is exactly 140 unique
+  with the 109×1/20×2/4×3/3×4/1×5/3×6 shape quoted in the plan. So `technologies`
+  contributed 53 of those 140 "tags".
+- T29 explicitly scopes aggregation to the `tags` field (task MUST NOT change
+  schema/collections), so the shipped index has **86 canonical tags** (87 raw -> 86
+  after the `Digital-Transformation` / `Digital Transformation` merge below).
+
+`lib/tags.ts` normalizes: key = trimmed, `_`/`-` folded to spaces, whitespace
+collapsed, lowercased; label = most frequent raw form (count desc, case-insensitive
+tie-break, code-unit final tie-break); slug = lowercased, `+`->`-plus`, non-alnum
+runs -> `-`, trimmed (`C++` -> `c-plus-plus`). A slug collision throws at module
+load naming both keys.
+
+**Real data bug found:** `content/projects/2018-data-analytics-municipal-administration.md`
+uses `Digital-Transformation` while the two other files use `Digital Transformation`.
+Under a pure whitespace-collapse key these are two keys that both slug to
+`digital-transformation` -> collision -> build failure. Because content is read-only
+for this task, the key folds `_`/`-` to regular spaces (documented deviation) so the
+three occurrences merge into one canonical `Digital Transformation` tag. Owner should
+still normalize the frontmatter later.
+
+**Other genuine near-duplicates (NOT merged — kept as distinct tags):**
+`ArtificialIntelligence` vs `Artificial Intelligence` (each 2), and the concatenated
+forms `NodeJS`/`ServerTech`/`MachineLearning`/`DataScience`/`Robotics` etc. These are
+style variants, not casing variants, so the deterministic rules leave them separate.
+`C++` (2 occurrences) is the only special-char tag; it routes as `/tags/c-plus-plus`.
+
+**Verified:** typecheck clean, prettier clean, lint 0 errors (47 pre-existing
+warnings), Jest 162/162, `pnpm build` 127 static pages incl. `/tags` + 86
+`/tags/[tag]`, axe 12/12 (routes `/tags`, `/tags/c-plus-plus` added to the matrix,
+no allowlist entries). No `content/` file modified.
+
+**T29 verification caught a real footer regression (2026-09-12) — fix in same commit:**
+Adding the 7th link (`/tags`) to the footer's single non-wrapping row
+(`flex items-center justify-center space-x-1`) overflowed the row at the 375px
+mobile viewport. Because the anchors had no `shrink-0`, flexbox compressed the
+four social/email icon links from 32×32 to **16×32** — below the WCAG 2.2 24px
+floor — failing `e2e/responsive.spec.ts` touch-target tests on `/`, `/blog`,
+`/contact`. **Proven causal** by stashing only the 6-line Tags addition: at HEAD
+the 3 tests passed; with the addition they failed. Fix: `flex flex-wrap items-center
+justify-center gap-1` + `shrink-0` on all 7 anchors. No test weakened, no
+`MIN_WCAG_TARGET_SIZE_PX` change. Full suite 83 passed after.
+
+**Lesson (repeat-offender pattern):** a footer/header link count increase is a
+*global* layout change. Check touch-target and responsive e2e specs after ANY
+footer/header edit — not just the pages you touched. The failing assertions were
+on routes the tag work never opened.
+
+**Lesson:** do not trust the earlier "140 tags" figure without parsing: it was
+`tags` ∪ `technologies`. Always measure with the app's own parser rather than
+`grep -A`, which bleeds into adjacent frontmatter fields (my first grep produced
+196 tag "occurrences" — wrong).
