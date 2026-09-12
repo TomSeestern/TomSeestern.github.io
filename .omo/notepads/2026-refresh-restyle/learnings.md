@@ -1182,3 +1182,13 @@ inferences. Only the Lighthouse timing gate remains host-blocked.
   the project deliberately excludes. Always run `pnpm lint` (or the exact
   `--ext .ts,.tsx`) before concluding anything about lint health. The 47 warnings
   are the known pre-existing baseline; no new errors exist.
+
+## 2026-09-12 — jest green at HEAD (21 suites / 141 tests)
+
+`node_modules/.bin/jest --silent` → 21 passed / 21 suites, 141 passed / 141 tests,
+0 snapshots, 9.5 s. Fresh observation at HEAD, matching F5's recorded 21/141.
+
+Code-gate sweep at HEAD so far (all fresh, not carried forward):
+contrast 24/24 · ornaments · images 101 · fonts 70.7 KiB · typecheck · prettier ·
+lint 0 err/47 warn · jest 21/141. Remaining: build + bundle budget, e2e (79),
+axe (8), and the host-blocked Lighthouse timing gate.
