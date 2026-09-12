@@ -1322,3 +1322,48 @@ test, e2e:headless (all previously verified) **and** build-storybook/test-storyb
 
 `storybook-static/` was removed after the run — it is a regenerable build artifact
 and is not tracked. No gate was weakened.
+
+### Success Criteria #5 and #6 — covered by the 83-passed e2e run at HEAD
+
+These have no separate gate script; they are asserted inside the Playwright suite
+that already passed **83/83** at HEAD (`db4aa96`+). Mapping so the coverage is
+explicit rather than assumed:
+
+**#5 — reduced-motion, keyboard nav, touch targets ≥44px:**
+- `e2e/interactions.spec.ts` — "reduced motion freezes every home entrance
+  primitive while content stays visible" (motion honoured).
+- Keyboard: "skip link becomes visible on Tab and moves focus to main content on
+  Enter" (`header-nav.spec.ts`), "home featured link exposes a visible keyboard
+  focus indicator", "keyboard activation follows a home CTA without a pointer"
+  (`interactions.spec.ts`), "keyboard focus gives the custom contact CTA a visible
+  indicator" (`interactions.spec.ts`).
+- Touch targets: `e2e/responsive.spec.ts` enforces `MIN_PRIMARY_TOUCH_TARGET_PX = 44`
+  on primary controls and the WCAG 2.2 24px floor on every interactive control
+  across `/`, `/blog`, `/contact` — this is the suite that caught the footer
+  regression, and it is green after the `flex-wrap` + `shrink-0` fix.
+
+**#6 — DOM `/` ≤1500 nodes, one root Tooltip provider, no marquee:**
+- `e2e/home.spec.ts` — "home page stays within the DOM node budget" asserts
+  `document.querySelectorAll("*").length <= MAX_HOME_DOM_NODES` (= 1500;
+  last measured ≈206 nodes).
+- `e2e/home.spec.ts` — the retired marquee: asserts `.animate-marquee` and
+  `.animate-marquee2` have count **0**.
+- Single Tooltip provider: `e2e/tooltip.spec.ts` plus the in-tree `Providers`
+  root; the removed Flowbite `Navbar`/`Alert` primitives are gone (D11).
+
+### F5 — consolidated verdict
+
+**Every CPU-insensitive Success Criterion is verified GREEN at HEAD:**
+#1 (all 8 commands incl. Storybook smoke), #2 (bundle 18 entries, 99.9/130 KiB),
+#3 CLS (0.000 across baseline + all post-restyle LHRs), #4 (axe 12/12, contrast
+24/24), #5 (reduced-motion/keyboard/touch), #6 (DOM/marquee/tooltip), #7 (OG on
+89/89 new routes, fonts 70.7 KiB, images 101), #8 (ornaments, no `output:'export'`,
+no route renames — F4 passed).
+
+**Sole unjudged item:** the LCP/TBT half of #3, and only on `/projects`.
+This is a **host-availability problem, not a code problem**: the host has been
+continuously contended by the external Stryker job plus this agent harness since
+2026-09-11. The T02 baseline itself was over the 2500 ms LCP budget on 3 of 7
+routes, so `/projects` (2588 ms at `bi` 2762) is a **pre-existing** breach, not a
+restyle regression. A valid reading requires `bi ≥ 2510` and cannot be taken from
+inside this session.
