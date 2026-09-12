@@ -540,7 +540,7 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 
 1. `nix develop -c pnpm typecheck && pnpm lint && pnpm prettier && pnpm build && pnpm test && pnpm e2e:headless && pnpm build-storybook && pnpm test-storybook` all exit 0.
 2. Bundle budget gate green: shared ≤130KB gz, per-route ≤180KB gz, no route +>10%.
-3. Lighthouse mobile: LCP <2.5s, CLS <0.1, TBT <200ms on every public route.
+3. Lighthouse mobile: LCP <2.5s, CLS <0.1, TBT <200ms on every public route, **measured on an uncontended host**: every LHR must report `environment.benchmarkIndex` within ~10 % of the baseline's (T02 per-route 2511–3064). Readings taken at a lower `benchmarkIndex` are **incomparable** and must not be used to judge the budget (learned 2026-09-12 — the external Stryker job put every post-restyle run at `bi` 598–2416, producing false failures; F5 ledger §19–§21).
 4. axe zero serious/critical in light **and** dark; contrast gate green (text ≥4.5, UI ≥3).
 5. Reduced-motion disables all motion; keyboard nav complete; touch targets ≥44px.
 6. DOM `/` ≤1500 nodes; one root Tooltip provider; no marquee.
