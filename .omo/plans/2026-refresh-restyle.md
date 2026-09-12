@@ -734,10 +734,42 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
   - **SCAFFOLD COMPLETE (2026-09-12), awaiting Tom's facts.** `app/impressum/page.tsx` + `app/datenschutz/page.tsx` shipped with visible `TODO(Tom)` placeholders; footer links, sitemap entries, and axe matrix extended (10/10 pass). Commit `5ae1601`. Remaining: Tom supplies the real legal fields (name, address, contact, USt-IdNr, DPA/Drittland notes) — the acceptance clause "Tom approves text" is not yet met, so this stays `[~]`.
   - Depends: D10 | Category: `writing` | Skills: [`writing`, `programming`, `frontend`]
 - [~] **T25. Positioning + founder arc** `[HUMAN_GATE]`
+  - **Blocked because — Tom's copy, untransferable (R19.1).** Needs (a) the one-line
+    positioning statement and (b) the four founder-arc beats as real biography. An
+    agent may not author either as fact. Structural scaffolding already exists:
+    `components/FounderArc/FounderArc.tsx` renders four neutral, non-factual beat
+    labels (`Origin`, `Turning Point`, `Practice`, `Direction`), and the home hero
+    carries the current tagline "Building reliable systems and solving hard
+    problems." Tom replaces the labels + adds the narrative; T25 then updates the
+    `e2e/fixtures/expectations.ts` copy fixtures in the same PR.
+  - Blocked also on **T24** via the declared dependency (both are Wave 5 human gates).
   - Depends: T24 | Category: `writing` | Skills: [`writing`, `frontend`]
 - [~] **T26. Three case studies** `[HUMAN_GATE]`
+  - **Blocked because — Tom's cleared facts, untransferable (R19.1/R10.4).** Each
+    upgrade needs `role`, `outcome`, and `metrics[]` values that Tom has verified as
+    publishable, plus a `heroImage`. Metrics about real employers/clients require
+    explicit clearance before publication, and an agent cannot invent them. The
+    schema already supports every field (`lib/markdown.ts`: `role`, `outcome`,
+    `heroImage`, `metrics` all have safe defaults), so this is content-only — no
+    code work is outstanding. Empty slots may ship; fabricated proof may not.
+  - Blocked also on **T24** and on **T17/T19/T22** via the declared dependencies.
   - Depends: T17,T19,T22,T24 | Category: `writing` | Skills: [`writing`, `frontend`]
 - [~] **T27. Two new posts** `[HUMAN_GATE]`
+  - **Blocked because — Tom's authorship, untransferable (R19.1).** Two
+    human-authored posts tied to the case studies. Only Tom can write these as
+    first-person narrative. Structural requirements are already satisfied: the Zod
+    frontmatter schema in `lib/markdown.ts` gives every field a `.default()` /
+    `.catch()` fallback, so malformed frontmatter degrades safely rather than
+    breaking the build. When the posts land, **`BLOG_POST_COUNT` in
+    `e2e/fixtures/expectations.ts:42` (currently `3`) must be bumped in the same
+    PR** — it is asserted by `e2e/dynamic-content.spec.ts`, so the suite would fail
+    otherwise.
+  - Note: `scripts/check-project-frontmatter.js` hardcodes
+    `EXPECTED_PROJECT_COUNT = 21` but is **not wired into any pre-commit hook, CI
+    workflow, or package script** (verified 2026-09-12), so it is not a live gate
+    and should not be relied on. Recorded for visibility, not fixed here (out of
+    T27 scope).
+  - Blocked also on **T24** via the declared dependency.
   - Depends: T24 | Category: `writing` | Skills: [`writing`]
 - [~] **T28. Cheesecake/LAY2R/testimonial** `[HUMAN_GATE]`
   - **D8 (testimonial) COMPLETE (2026-09-12).** Labelled-example section shipped: `components/Testimonials/` with an unmissable visible "Example" badge + disclaimer, generic-role attributions only, locked by 4 unit tests. Commit `fefcf7d`. Remaining: D7 cheesecake disposition (Tom chose "keep as part of the blog" per D7, so no archive/delete work) and D6 LAYZR case study (needs Tom's cleared metrics + consent).
