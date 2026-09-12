@@ -1016,3 +1016,34 @@ Fixed: `.gitignore` now carries, adjacent to the `# OhMyOpenCode state` section:
 Verified: `git check-ignore -v null/store/v11/index.db` → `.gitignore:52:/null/`
 (exit 0); tree stays clean while the artifact exists; commit `97b4ef4` touched
 only `.gitignore`. The manual `rm -rf null/` pre-commit step is no longer required.
+
+## 2026-09-12 — F5/Lighthouse: T05's red predates the fixes (do NOT pre-weaken)
+
+Decisive host-independent finding for the blocked F5 Lighthouse item:
+
+T05 captured the red Lighthouse numbers at revision **`1b1062e`** — which is an
+**ancestor of every fix that targets those exact LCP regressions**:
+
+- `/blog/entry/2019-ebeltoft-cheesecake-recipe` LCP 3689 ms (T05 F3): the LCP
+  element was the *only remote image* (`plantoeat.s3.amazonaws.com`). **T22
+  (`7ed6b29`) self-hosted it** — `content/blog/2019-…md` now references
+  `/img/cheesecake-ebeltoft.webp` (93,924 B) and `grep` finds **no remote image
+  in any content file**. This route's structural cause is gone at HEAD.
+- `/` LCP 2589 ms and `/projects` LCP 2632 ms (T05 F1/F2): both pages were
+  **rebuilt after T05** — `app/page.tsx` by T16 (`b0e6635`, type-led hero,
+  marquee retired) and `app/projects/page.tsx` by T17 (`55bb78b`). The T05
+  numbers describe pre-rebuild DOM.
+
+So the last *known-clean-bundle* Lighthouse reading is **stale by construction**:
+it measures a tree that no longer exists. Two consequences for the F5 resume:
+
+1. Do **not** pre-emptively weaken the 2500 ms budget — the measured overages were
+   on routes later fixed, plus (for home/projects) host-inflated.
+2. The blog-detail route has the strongest case to now pass; home/projects are the
+   uncertain ones and must be read on a quiet host.
+
+Baseline caveat (already in F5): T02's *pre-restyle* baseline was itself over 2500
+on home (2830) and projects (2588), so a fully-green run has never been recorded
+for those two routes. If, on a quiet host, they still exceed 2500, that is a
+genuine finding requiring a real fix (e.g. font/LCP-path work) — **not** a budget
+edit. Escalate to Tom rather than relax the gate.
