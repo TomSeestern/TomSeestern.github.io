@@ -1405,3 +1405,40 @@ distinguish host contention from a real regression.
   noise envelope or every red becomes unfalsifiable triage. The gate stays
   meaningful only on an uncontended host; documenting the band does not weaken
   the budget (R19.1 — all numbers cited from the run, none invented).
+
+## 2026-09-12 — Why the BOULDER CONTINUATION nudge loops: plan row format
+
+The harness emits `BOULDER CONTINUATION` with `[Status: 0/0 completed, 0 remaining]`
+on every turn. Root cause: **this plan's task rows are not in the format the plan
+parser expects, so it recognizes zero tasks.** The parser wants rows like:
+
+```
+## TODOs
+1. Task title
+F1. Final gate title
+```
+
+…whereas `.omo/plans/2026-refresh-restyle.md` uses ID-prefixed rows under `### Wave N`:
+
+```
+- [x] **T01. Fix red pnpm lint**
+- [~] **F5. Regression gate** — Depends: all | ...
+```
+
+Every edit to the plan re-emits: "Plan has recognized task sections but no valid
+task rows. Those sections will contribute no tasks to `/start-work` progress."
+
+**Consequence:** the nudge's `0/0` is a parser artifact, NOT real remaining work.
+Ground truth must be read from the file itself:
+`grep -cE '^\s*- \[ \]' .omo/plans/2026-refresh-restyle.md` etc.
+
+**Why this was NOT auto-fixed.** Converting `T01.`→`1.` / `F5.`→`F5.`-style rows
+would orphan every `T01`–`T31` cross-reference in the plan body (`Depends: T14,T15`),
+the per-task evidence filenames (`task-T05-…txt`), notepads, and decisions — 36
+edits with real breakage risk and zero content gain. Correct disposition: record the
+limitation (this entry) and let the plan be migrated deliberately, if ever, by the
+plan's owner. Do not bulk-rewrite task IDs to silence a cosmetic warning.
+
+**Lesson:** when a continuation hook reports `0/0` but the file has dozens of
+checkboxes, suspect a format mismatch before suspecting missing work. Verify with the
+file, and do not perform risky normalisations just to make a counter move.
