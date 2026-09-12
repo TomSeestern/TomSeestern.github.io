@@ -522,3 +522,34 @@ T07/T15 predate their D13/D4 amendments; a11y spec runs light-only (moot under D
   (whose Playwright `webServer` boots `next dev`) ran afterwards and clobbered
   `.next`. Always `rm -rf .next && pnpm build` immediately before
   `pnpm lighthouse`. (CI is unaffected — `lighthouse.yml` builds first.)
+
+## 2026-09-12 — FLAGGED (pre-existing, out of plan scope): AGENTS.md `no scripts/` claims
+
+AGENTS.md carries two now-false blanket claims:
+
+- L66 (R1.7 justification): `no \`scripts/\` directory exists in this project`
+- L88 (R2.3 rationale prose): `no \`scripts/\` infrastructure exists`
+
+Reality: `scripts/` holds 7 files (`check-bundle-budget.mjs`,
+`check-contrast.mjs`, `check-font-budget.mjs`, `check-image-size.mjs`,
+`check-ornaments.mjs`, `check-project-frontmatter.js`,
+`update-readme-screenshots.ts`), and `.forgejo/workflows/check.yml` runs five of
+them as required gates.
+
+**Provenance (why this is NOT this plan's debt):**
+- `git merge-base --is-ancestor 14b2ac8 74689e8` → true: `scripts/` (first file
+  `check-project-frontmatter.js`) existed at the plan's baseline commit `74689e8`.
+- The claim text was committed `9c6dc6f` on 2026-07-20; the first script landed
+  2026-07-19 — the claim was already false when written, a month before this plan.
+- This plan did add 5 gate scripts (03c8d6c, 1b1062e, ed20097, 7e6e254, 7ed6b29),
+  making the claim *more* false, but did not originate it.
+
+**Disposition:** NOT fixed here. AGENTS.md is rule metadata (`[manual]`
+justification comments), and the doc's own Superseded-rules section defers
+AGENTS.md doc updates to a later docs task (T40/T41 per ADR-0007 notes). Editing
+rule justifications without an owning task would be unowned scope creep (R1.3).
+Owner of the fix = whatever task executes the AGENTS.md refresh (T41).
+
+**Action for that owner:** replace both blanket claims with a pointer to the real
+`scripts/` gates, and re-evaluate whether any `[manual]` rule can now be promoted
+to `[auto:]` given the scripts + CI steps that exist (R2.3).
