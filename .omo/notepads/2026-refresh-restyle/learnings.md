@@ -1001,3 +1001,18 @@ fail **only** on measured performance — never on setup. Resume command remains
 Note: locally the devShell exposes `/etc/profiles/per-user/tom/bin/chromium`, so
 `resolveChromePath()` takes the PATH branch and never needs the Playwright cache —
 but CI has no browser on PATH, hence the cache fallback in `.lighthouserc.js`.
+
+## 2026-09-12 — Repo hygiene: /null/ codegraph artifact now gitignored
+
+The recurring root-level `null/` directory (CodeGraph MCP relative-path SQLite
+index, `null/store/v11/index.db`) was untracked but NOT ignored — a `git add -A`
+footgun the F5 evidence manually worked around with `rm -rf null/` every commit.
+
+Fixed: `.gitignore` now carries, adjacent to the `# OhMyOpenCode state` section:
+```
+# CodeGraph tooling artifact (MCP server writes a relative-path SQLite index here)
+/null/
+```
+Verified: `git check-ignore -v null/store/v11/index.db` → `.gitignore:52:/null/`
+(exit 0); tree stays clean while the artifact exists; commit `97b4ef4` touched
+only `.gitignore`. The manual `rm -rf null/` pre-commit step is no longer required.
