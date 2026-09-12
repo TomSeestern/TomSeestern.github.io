@@ -800,6 +800,15 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 
 ### Wave 6 (Final Verification — all must approve)
 
+> **Re-run 2026-09-12 (R19.4 amendment).** F1–F4 first approved at commit `962b6a2`.
+> Because 1,108 insertions across 13 product files (T20/T24/T28/T29 + footer/sitemap/axe)
+> landed **after** that verdict, a wave approval no longer covered HEAD. F1's re-audit
+> correctly REJECTED on the stale-ledger defect; the remedy re-ran **F1–F4 against the
+> exact `962b6a2..HEAD` delta**, each writing a fresh ledger citing its HEAD SHA. All four
+> returned **APPROVE** (`55b54f9`, `0307954`, `42f56f9`). The `[x]` marks below denote the
+> post-delta re-approvals, not the superseded `962b6a2` verdicts. Product code was never
+> wrong — only the evidence trail was stale.
+
 - [x] **F1. Plan compliance audit** — Depends: all | Category: `deep` | Skills: [`review-work`]
 - [x] **F2. Code quality review** — Depends: all | Category: `unspecified-high` | Skills: [`remove-ai-slops`, `programming`, `refactor`]
 - [x] **F3. Real manual QA** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `visual-qa`, `frontend`]
