@@ -864,3 +864,19 @@ Cross-refs verified:
   explicit, so an LH upgrade cannot silently move the baseline.
 
 **Conclusion:** no unwired or mis-ordered gate remains. All CI references resolve.
+
+## 2026-09-12 — Secret hygiene audit (R18.1) — clean
+
+- No `.env*` file other than `.envrc` (`use flake`) is tracked; no `.env`/`.env.local`
+  ever appears in history (`git log --all --diff-filter=A -- .env*` empty).
+- `.gitignore` covers `.env`, `.env.local`, and all three `.local` variants.
+- High-signal secret scan over all tracked files (excluding `pnpm-lock.yaml`) for
+  Resend (`re_`), OpenAI (`sk-`), AWS (`AKIA`), GitHub (`ghp_`), and PEM private-key
+  headers → **zero matches**.
+- `RESEND_API_KEY` is read only via `env.mjs` (`z.string().optional()`), consumed in
+  `lib/sendEmail.tsx`; the only literal is the obviously-fake `"test-resend-key"` in
+  the Jest mock. No product code embeds a key.
+- Note: an empty push to `.env*` history is expected because `RESEND_API_KEY` was
+  always CI/Vercel-injected.
+
+**Conclusion:** no secret is committed. R18.1 holds.
