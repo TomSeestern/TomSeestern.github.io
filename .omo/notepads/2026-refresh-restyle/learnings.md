@@ -1113,3 +1113,14 @@ h2 sections (`## Project rules`, `## Superseded rules`).
 Distinct from the flagged L66/L88 rule-*content* drift (owned by T41) — these carried
 no rule, tag, or justification, so deleting them changed no rule's meaning.
 Note: `.md` is outside `pnpm lint`/`pnpm prettier`, so only explicit greps catch this.
+
+## 2026-09-12 — R26.2 skipped/focused-test audit — clean
+
+`grep -rnwE "(it|test|describe)\.(skip|only)\b"` across `e2e/ app/ components/ lib/`
+→ **no matches**. No `xit/xtest/xdescribe/fit/fdescribe` either (the lone `w-fit`
+hit was a CSS class false positive). No config-level `testIgnore`/`grepInvert` hiding
+specs. So every test in the harness actually runs — no gate is silently inert via a
+skipped assertion (R26.2, R16.9).
+
+Noted because the plan leans on e2e (79) + axe (8) + jest (141) as its behavior
+gate; a skipped test would make those counts cosmetic.
