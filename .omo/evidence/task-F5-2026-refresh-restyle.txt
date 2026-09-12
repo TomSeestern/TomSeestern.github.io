@@ -1305,3 +1305,20 @@ set including the 1200×630 declarations.
 is the LCP/TBT half of #3, and the sole implicated route is `/projects`, which the
 T02 baseline **already** measured over budget (2588 ms at `bi` 2762) — i.e. a
 pre-existing breach the restyle did not create (F5 §20).
+
+### Success Criterion #1 — Storybook smoke at HEAD: **PASS**
+Criterion #1 requires `pnpm build-storybook && pnpm test-storybook` to exit 0.
+This had not been re-verified since T24/T29/T20 altered components and the Footer.
+Ran the canonical CI path (`.forgejo/workflows/check.yml` jobs 52–56):
+
+- `pnpm build-storybook --quiet` → exit 0, wrote `storybook-static`.
+  (The `entrypoint size limit` notice is Storybook's own pre-existing advisory,
+  not a failure — CI treats it as non-fatal and so did this run.)
+- `http-server storybook-static` + `pnpm test-storybook` → exit 0,
+  **Test Suites: 3 passed, Tests: 6 passed**
+
+That completes every clause of Criterion #1: typecheck, lint, prettier, build,
+test, e2e:headless (all previously verified) **and** build-storybook/test-storybook.
+
+`storybook-static/` was removed after the run — it is a regenerable build artifact
+and is not tracked. No gate was weakened.
