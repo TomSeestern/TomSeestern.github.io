@@ -91,6 +91,14 @@ Do NOT re-run in a loop. If `/projects` still exceeds 2500 ms on a clean host, e
 to Tom with a real LCP-path fix (and the D3 font decision); if it reads ≤2500, the
 restyle improved 6/7 routes and only the pre-existing baseline failure remains.
 
+**Auto-run watcher is NOT a viable unattended strategy (learned 2026-09-12).** An
+in-session monitor cannot outlive the **30-minute monitor platform cap**, while the
+external job has held the box for 10 h+ (loadavg 25–64 observed). A watcher armed at
+08:10Z was guaranteed to die at ~08:40Z, long before any quiet window. Do not arm
+another in-session watcher unless the host is *already* quiet and only needs a short
+confirmation streak. The correct trigger is a human/operator signal that the
+`ohmyroadmap` Stryker run has finished — then run F5 once, immediately.
+
 ---
 
 ## BLOCKER 2 — Wave 5 content `[~]` (human gate, R19.1)
