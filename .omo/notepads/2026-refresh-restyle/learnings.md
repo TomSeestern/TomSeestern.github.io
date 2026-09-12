@@ -1065,3 +1065,19 @@ Acceptance tests" step. Result — clean:
 
 **Conclusion:** the Storybook smoke gate is intact; T21 introduced no dangling story
 reference. No change required.
+
+## 2026-09-12 — F5 auto-resume monitor launched (breaks host-polling loop)
+
+The host stayed saturated for 7.5h+ (external `ohmyroadmap` Stryker run, 23
+workers, loadavg ~28–56 on 22 cores). Polling repeatedly violates R19.2, so the
+wait is now delegated to a background monitor (`wait-for-quiet-host-then-F5-lighthouse`):
+
+- Polls every 60 s; triggers after **3 consecutive** samples with 1-min loadavg
+  ≤4 AND ≤1 `child-process-proxy-worker`. Cap 480 min.
+- On trigger: `rm -rf .next` → `pnpm build && pnpm lighthouse` with the three
+  required env vars (`PLAYWRIGHT_BROWSERS_PATH`, `SSL_CERT_FILE`,
+  `NODE_EXTRA_CA_CERTS`); full output to `/tmp/f5-monitor.log`.
+- Emits `F5_HOST_QUIET`, `F5_WAITING` (every 30 min), and a final
+  `F5_LIGHTHOUSE_GREEN` / `F5_LIGHTHOUSE_RED` / `F5_HOST_STILL_BUSY` marker.
+- Budgets untouched (2500/0.1/200). If RED on a quiet host, it is a real finding
+  requiring a real fix — escalate to Tom, do not edit the budget.
