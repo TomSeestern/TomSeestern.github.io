@@ -399,3 +399,92 @@ Every MUST-DO rule passes: all four gates green, no escape hatches, no cycles,
 dependency direction downward, all modules under the R4.14 ceiling, no dead logic /
 commented-out code / swallowed errors, tests assert real behavior. The findings are
 all MINOR/INFO with no correctness impact. LCP/CLS/Lighthouse is F5's lane.
+
+## 13. F2 re-review — first-party persistence by this verifier session (corrects the §12 transcription)
+
+The preceding §12 is the orchestrator's transcription of verifier session
+`ses_f69286b03ffe0zCLNuhY68BsoR`. This §13 is the first-party record written by the
+verifier session that actually ran the review and the gates. §13 confirms the same
+APPROVE verdict and the same findings as §12, with the exact HEAD, UTC timestamp,
+raw gate exits, and the typecheck artifact-race triage captured by the runner.
+§13 supersedes §§1–11 scope (which bound itself to HEAD `9567331` / range
+`e3e8de5~1..HEAD`) and supersedes the §12 transcription as the authoritative record.
+
+Re-audit scope: `git diff --stat 962b6a2 HEAD -- app/ components/ lib/ e2e/`
+→ 13 files, 1108 insertions / 14 deletions.
+
+HEAD at audit: 0723b754dfb17f6d90a371079976568be9071d0c (0723b75)
+Timestamp (UTC): 2026-09-12T18:59:12Z
+Delta files covered: app/about/page.tsx, app/datenschutz/page.tsx,
+app/impressum/page.tsx, app/sitemap.ts, app/tags/page.tsx,
+app/tags/[tag]/page.tsx, components/Footer/Footer.tsx,
+components/Testimonials/{Testimonials.tsx,Testimonials.test.tsx},
+e2e/{a11y,dark-mode}.spec.ts, lib/{tags.ts,tags.test.ts}
+
+Gates re-run at this HEAD (actual command wrapper + observed exit):
+Wrapper for every gate: `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm <gate>'`
+(the benign `[ERROR] Refusing to run pnpm@10.15.1: ... registry signature` banner
+preceded each run; the local pnpm fallback still executed the script):
+
+- `pnpm typecheck` (tsc --noEmit) → no diagnostics, EXIT 0
+- `pnpm lint` (eslint . --ext .ts,.tsx) → `✖ 47 problems (0 errors, 47 warnings)`, EXIT 0
+- `pnpm prettier` (prettier --check) → `All matched files use Prettier code style!`, EXIT 0
+- `pnpm test` (cross-env jest) → `Test Suites: 23 passed, 23 total` / `Tests: 162 passed, 162 total`, EXIT 0
+
+Transient artifact race (triage note, NOT a product defect): the first typecheck
+run of this session emitted `error TS6053: File '.next/types/app/**/page.ts' not
+found` — a concurrent `next build` was rewriting `.next/types/` mid-run
+(timestamps 21:01–21:05). After the generated route types settled, `pnpm typecheck`
+returned no diagnostics and EXIT 0 (reproduced twice). Classification: environmental
+misconfig/stale-generated-artifact, per R20.2 triage branch, not a regression.
+
+Findings (all MINOR/INFO, non-blocking):
+- MINOR app/tags/[tag]/page.tsx:111 — defensive `layoutMetadata.metadataBase ||
+  "https://tom.segbers.de"`; metadataBase is unconditionally set in app/layout.tsx:18,
+  so the fallback branch has no reachable failure mode (R29 over-defence).
+- MINOR lib/tags.ts:145 — `getAllTags()` is unmemoized and re-reads all blog+project
+  markdown on every call (generateStaticParams, page component, generateMetadata,
+  sitemap). Build-time only; behavior-preserving module-level cache is safe to defer.
+- MINOR datenschutz/page.tsx:29-32 + impressum/page.tsx:29-32 — byte-identical
+  `Placeholder` helper and repeated legal metadata blocks (R37.2 duplication).
+- MINOR app/about/page.tsx:4 — dead `import path from "path"`; deadness is
+  pre-existing (at 962b6a2 only the SVG `<path>` element matched), carried forward
+  by the import reorder rather than cleaned (R39.2).
+- INFO app/tags/[tag]/page.tsx:22 — `imageUrl={entry.fullArticleLink}`; `ProjectTeaser`
+  declares `imageUrl` but never reads it, so tag-archive project cards render without
+  an image. Mirrors the already-approved app/projects/page.tsx pattern; no breakage.
+- INFO datenschutz/impressum/Footer — inert `dark:` variants added although D13 ships
+  single-light-mode and `darkMode: "class"` is never applied to `<html>`.
+- INFO Testimonials.test.tsx:21 — `getAllByTestId("illustrative-example")` could use
+  the implicit ARIA `figure` role instead of a test hook.
+
+Rule checks: R4.14 all delta modules well under 250 pure-LOC (largest datenschutz
+page.tsx ~184 incl. markup, tags.test.ts ~154, tags.ts ~143); R3.4 no `as any` /
+`@ts-ignore` / `@ts-expect-error` / non-null `!`; R4.15/R4.16 dependency direction
+downward (tags → blog/projects/markdown) with no back-import cycle; R30/R37 no dead
+logic or commented-out code; test suites assert real behavior (order-independent
+tie-breaking, cross-collection aggregation, collision throw, rendered Example labels)
+with no tautologies.
+
+**F2 VERDICT: APPROVE**
+No blocking defect at HEAD 0723b754dfb17f6d90a371079976568be9071d0c. All four required
+gates green. Findings are MINOR/INFO only and non-blocking. No product file was
+modified by this review.
+
+### 13.1 HEAD-drift addendum (recorded after the append)
+
+The audit in §13 ran with `git rev-parse HEAD` = `0723b754dfb17f6d90a371079976568be9071d0c`.
+While this ledger append was being written, HEAD advanced through two further
+docs-only commits to `6628d3e` (`git log`: `55b54f9 docs(evidence): persist F2/F4
+fresh re-review verdicts at HEAD`, `6628d3e docs(evidence): record F1 fresh REJECT
++ remedy for stale-wave blocker`).
+
+Scope is unaffected: `git diff --stat 0723b75 6628d3e -- app/ components/ lib/ e2e/`
+is empty, and `git diff --stat 962b6a2 HEAD -- app/ components/ lib/ e2e/` at
+`6628d3e` is still **13 files, 1108 insertions / 14 deletions** — byte-identical
+product-path delta to what §13 audited. The F2 verdict therefore holds for the
+current HEAD `6628d3e` as well. Ledger line count after this addendum: 472+.
+
+(Incidental: `.omo/boulder.json` was already dirty in the working tree at the time
+of this append; this verifier session did not modify it. No product file, test,
+config, or plan was touched — only this evidence file was appended.)

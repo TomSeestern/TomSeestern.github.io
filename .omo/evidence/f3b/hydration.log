@@ -1,0 +1,76 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+FAIL  /tags h1  h1="TAGS"
+PASS  /tags link count  count=86
+PASS  /tags link resolves  clicked /tags/robotics -> http://127.0.0.1:3000/tags/robotics
+PASS  /tags/c-plus-plus h1  h1="C++"
+PASS  /tags/c-plus-plus entries  projects=2 articles=0
+PASS  /tags/c-plus-plus breadcrumb  tags-breadcrumb-links=2
+FAIL  /tags/digital-transformation h1  h1="DIGITAL TRANSFORMATION"
+PASS  /tags/<bogus> 404  status=404
+FAIL  /impressum h1  h1="IMPRESSUM"
+PASS  /impressum TODO visible  TODO nodes=9
+PASS  /impressum h2  h2 count=2
+FAIL  /datenschutz h1  h1="DATENSCHUTZERKLÄRUNG"
+PASS  /datenschutz TODO visible  TODO nodes=8
+PASS  /datenschutz h2  h2 count=6
+PASS  /about Example badge  badge nodes=1
+PASS  /about disclaimer  disclaimer nodes=1
+PASS  /about illustrative examples  testid count=3
+PASS  /about portrait present  portrait imgs=1
+PASS  /about portrait below fold  portrait y=1237.390625
+PASS  / no marquee  marquee count=0
+FAIL  / h1  h1="TOM SEGBERS — SENIOR DEVELOPER"
+INFO  / radix tooltip provider nodes=0
+PASS  /projects hydration (h1)  h1 count=1
+PASS  /blog hydration (h1)  h1 count=1
+PASS  /blog/entry/2019-ebeltoft-cheesecake-recipe hydration (article)  article count=1
+PASS  /contact hydration (form)  form count=1
+FAIL  375 footer icons ≥24px  min icon dim=16 sizes=[{"w":16,"h":16},{"w":16,"h":16},{"w":16,"h":16},{"w":16,"h":16}]
+PASS  375 footer icons not crushed  link widths=[32,32,32,32]
+PASS  375 footer row wraps  distinct rows=3
+PASS  375 no overflow home  scrollWidth=375 clientWidth=375
+PASS  keyboard reaches /tags  seen=["#main-content","/","/contact","/about","/projects","/blog","/projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers","/projects/entry/2021-ai-drone-based-change-detection","/projects/entry/2021-skinshark-nft-minecraft-skin-trading","/projects/entry/2020-digitizing-train-ticket-refunds-2020","/blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation","/blog/entry/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition","/blog/entry/2019-ebeltoft-cheesecake-recipe","https://tomsegbers.de/","https://linkedin.com/in/tomsegbers/","https://twitter.com/TomSegbers","https://www.github.com/TomSegbers/","/tags","/impressum","/datenschutz"]
+PASS  keyboard reaches /impressum  
+PASS  keyboard reaches /datenschutz  
+PASS  reduced-motion: no marquee  marquee=0
+PASS  reduced-motion: no long animations  animations>1ms=0
+
+SUMMARY: 28/34 passed, 6 failed
+FAILURES: [
+  {
+    "name": "/tags h1",
+    "pass": false,
+    "detail": "h1=\"TAGS\""
+  },
+  {
+    "name": "/tags/digital-transformation h1",
+    "pass": false,
+    "detail": "h1=\"DIGITAL TRANSFORMATION\""
+  },
+  {
+    "name": "/impressum h1",
+    "pass": false,
+    "detail": "h1=\"IMPRESSUM\""
+  },
+  {
+    "name": "/datenschutz h1",
+    "pass": false,
+    "detail": "h1=\"DATENSCHUTZERKLÄRUNG\""
+  },
+  {
+    "name": "/ h1",
+    "pass": false,
+    "detail": "h1=\"TOM SEGBERS — SENIOR DEVELOPER\""
+  },
+  {
+    "name": "375 footer icons ≥24px",
+    "pass": false,
+    "detail": "min icon dim=16 sizes=[{\"w\":16,\"h\":16},{\"w\":16,\"h\":16},{\"w\":16,\"h\":16},{\"w\":16,\"h\":16}]"
+  }
+]

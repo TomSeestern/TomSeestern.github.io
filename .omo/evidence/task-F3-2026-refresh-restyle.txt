@@ -233,3 +233,129 @@ unbalanced/empty cards beyond the intended 3-post count, no generic/AI-slop UI.
 ## 8. Resource note (R22.1)
 Task consumed roughly ~180–220k tokens across build, 6 Playwright probe scripts,
 23 screenshots, and vision captioning. Model: default (9router/default).
+
+---
+
+# F3 FRESH RE-RUN — product-delta F3 audit (append-only) — 2026-09-12
+
+Ledger header — current HEAD SHAs:
+- `git rev-parse HEAD` at run start: **0723b754dfb17f6d90a371079976568be9071d0c**
+- `git rev-parse HEAD` at run end:  **6628d3eba7cad3ed020703e72dd6b3caf3e64827**
+- Concurrent move (NOT mine): `0723b754` → `6628d3eb` mid-run. `git merge-base --is-ancestor 0723b754 6628d3eb` = YES. `git diff --stat 0723b754 6628d3eb` touches ONLY 5 `.omo/` doc files (F1/F2/F4 ledgers + notepad archive); `git diff --name-only 0723b754 6628d3eb -- app/ components/ lib/ e2e/` = EMPTY. Product tree is byte-identical between both SHAs, so the QA below applies to `6628d3eb` as well.
+
+Scope: product-code delta `git diff --stat 962b6a2 HEAD -- app/ components/ lib/ e2e/`
+→ `13 files changed, 1108 insertions(+), 14 deletions(-)` (matches brief exactly).
+Reason for re-run: prior F3 approval was bound to `962b6a2`/`9567331` and predates this 1,108-insertion delta.
+
+Host: 22 cores; loadavg 5.27 at run start (Stryker job had ended), rising to ~25 by e2e completion. Disk `/` 94–97% used (28–58 G free). Ports 3000/3030/3050 were free at start.
+
+## F3 VERDICT: APPROVE
+
+## 0. `git status --porcelain` (run start)
+```
+ M .omo/boulder.json
+```
+Only the orchestrator-owned boulder file (pre-existing, not mine). No product file modified by this run.
+Run-end status shows additionally `M .omo/evidence/task-F2-2026-refresh-restyle.txt` — that is the concurrent F2 agent's write, NOT mine. My only write is this ledger.
+
+## 1. Gate results (every claim = command + observed output)
+
+### 1.1 axe accessibility — PASS (12 passed, allowlist EMPTY)
+Command: `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright; CI=true pnpm exec playwright test e2e/a11y.spec.ts --project=chromium --workers=1'`
+Observed: `12 passed (2.9m)`, `AXE_EXIT=0`.
+A11Y_ROUTES = 11 routes (`/`, `/about`, `/blog`, one blog detail, `/projects`, one project detail, `/tags`, `/tags/c-plus-plus`, `/contact`, `/impressum`, `/datenschutz`) + 1 allowlist-integrity test = 12. Allowlist still empty (`e2e/fixtures/a11y-known-violations.ts` → `KNOWN_VIOLATIONS = []`). The delta added `/tags`, `/tags/c-plus-plus`, `/impressum`, `/datenschutz` to the scan; all pass with no new allowlist entry.
+Log: `.omo/evidence/f3b/axe.log`.
+
+### 1.2 Full chromium e2e — PASS (82 passed, 1 flaky, 0 failed)
+Command: `nix develop -c bash -c '... CI=true pnpm exec playwright test --project=chromium --workers=1'`
+Observed: `82 passed (11.4m)`, `1 flaky`, `E2E_EXIT=0`.
+Flaky = `e2e/dark-mode.spec.ts:40:5 › public routes render a single light semantic surface` — passed on retry. This is the pre-existing, external-load-driven flake documented in notepads (T19/T21/F5); it is NOT caused by the delta (the delta's only change to that spec was a comment in `CONTRAST_SCHEMES`'s docstring; `dark-mode.spec.ts` line 40's assertions are unchanged).
+Note: the brief's "expect 83 passed" assumed 83 stable tests; the observed total is 83 (82 + 1 flaky→passed). No test failed.
+Log: `.omo/evidence/f3b/e2e-chromium.log`.
+
+### 1.3 Production build — PASS (127/127 static pages, 17 route patterns)
+Command: `nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; export SSL_CERT_FILE=... NODE_EXTRA_CA_CERTS=...; pnpm build'` (with `rm`-free clean-first state; e2e ran BEFORE build per mandated order).
+Observed: `✓ Generating static pages (127/127)`, `BUILD_EXIT=0`, 17 route patterns incl. `● /tags/[tag]` with `[+83 more paths]` (86 total tag paths) and new static `/tags`, `/impressum`, `/datenschutz`.
+This corrects the stale prior-ledger claim of 38/38 pages.
+Log: `.omo/evidence/f3b/build.log`.
+
+### 1.4 Serve + HTTP matrix (production `next start --port 3000`)
+Server: `next-server` pid 1159191 listening on :3000; `E2E_CONTACT_FORM_SUCCESS=true` confirmed via `/proc/1159191/environ`.
+All routes returned HTTP 200: `/`, `/about`, `/projects`, `/blog`, `/contact`, `/tags`, `/impressum`, `/datenschutz`, `/sitemap.xml`, `/robots.txt`, `/tags/c-plus-plus`, `/tags/digital-transformation`, `/tags/robotics`, `/blog/entry/2019-ebeltoft-cheesecake-recipe`, `/projects/entry/2020-soudest-backend-nodejs`.
+Bogus tag `/tags/definitely-not-a-real-tag-xyz` → **404** (notFound path works).
+
+### 1.5 `/tags` tag index — PASS
+- `grep -oE 'href="/tags/[^"]+"' | sort -u | wc -l` → **86** (brief expected 86).
+- Post-hydration Playwright: `a[href^="/tags/"]` count = **86**; clicking first link navigated `/tags/robotics`.
+- H1 textContent = `"Tags"` (render reads `TAGS` only via CSS `text-transform:uppercase`).
+
+### 1.6 `/tags/<slug>` archives — PASS
+- `/tags/c-plus-plus` (from `C++`): H1 textContent = `"C++"`; 2 project teasers (`data-testid="project-teaser"` count=2); tags breadcrumb links resolve; prose `"…filed under this tag, newest first."`.
+- `/tags/digital-transformation` (merged form): H1 textContent = `"Digital Transformation"`; `3 blog posts and projects filed under this tag` (the `Digital-Transformation` + `Digital Transformation` variants fold to one key, count=3).
+- No 404 on either; bogus slug 404s (above).
+
+### 1.7 `/impressum` + `/datenschutz` — PASS (R19.1 placeholders visible)
+- `/impressum`: H1 `"Impressum"`; h2 count=2 (`Angaben gemäß § 5 DDG`, `Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV`); source contains `TODO(Tom):` **10** occurrences; Playwright sees 9 visible TODO text nodes.
+- `/datenschutz`: H1 `"Datenschutzerklärung"`; h2 count=6; source `TODO(Tom):` **10** occurrences; Playwright sees 8 visible TODO nodes.
+- Legal facts are intentionally unfilled placeholders (never fabricated); each is visibly marked. This is correct for R19.1 and the D8 legal-scaffold decision.
+
+### 1.8 `/about` — Testimonials labelling — PASS (D8 satisfied)
+- `Example` badge: exactly 1 visible node with text `Example`.
+- Disclaimer `Illustrative examples — not real client testimonials.` visible (exact-match locator count=1; 2 source occurrences incl. comment).
+- 3 `data-testid="illustrative-example"` figures; every attribution is `Example — <generic role>` (Product Lead / Engineering Manager / Startup Founder) and quotes are explicitly "Placeholder"/"illustrative" — **no real person/company named** (R19.1 / UWG §5 satisfied).
+- Portrait `<img alt="Portrait of Tom Segbers">` present, rendered y≈1237 (below the 800px fold), `loading="lazy"`, fixed `aspect-[4/5]` box (added by this delta).
+
+### 1.9 Homepage invariants — PASS
+- `.animate-marquee`/`.animate-marquee2` count = **0** (no marquee). `git grep animate-marquee -- app components` = none.
+- Single root Tooltip provider: `grep -rn "Tooltip.Provider|TooltipProvider" components/ app/` → only `components/Providers/TooltipProvider.tsx:18` (one `<RadixTooltip.Provider>`) mounted once in `app/layout.tsx:64..78`; `components/Tooltip/Tooltip.tsx` mounts **NO** provider. Single provider confirmed.
+- H1 textContent `"Tom Segbers — Senior Developer"`; no overflow at 375.
+
+### 1.10 Core routes no-regression — PASS
+Post-hydration (`waitUntil:load` + `networkidle` + 2× rAF): `/projects` h1=1, `/blog` h1=1, `/blog/entry/2019-…` article=1, `/contact` form=1. All HTTP 200.
+
+### 1.11 `/sitemap.xml` — PASS
+118 `<loc>` total = 8 static + blog + project + **86 tag URLs**. New routes present exactly once each: `/tags`, `/tags/c-plus-plus`, `/tags/digital-transformation`, `/impressum`, `/datenschutz`, plus existing `/about`, `/contact`.
+
+### 1.12 Keyboard / touch / reduced-motion — PASS
+- Footer nav row = 7 links (`/contact`, `/tags`, `/impressum`, `/datenschutz` + LinkedIn/Twitter/GitHub); plus the copyright `https://tomsegbers.de/` anchor. Delta ADDED `shrink-0` to **7** links (grep count went 0→7 in `components/Footer/Footer.tsx`); icon sizing `h-4 w-4` unchanged (4 before, 4 after).
+- 375px footer: social link hit-boxes 32×32 (glyph 16×16 by design, unchanged by delta — NOT crushed; `shrink-0` prevents squeeze). Row wraps to **3** distinct rows. `scrollWidth=375 == clientWidth=375` (no overflow).
+  - Correction to brief wording: the brief's "icons must NOT be crushed below 24px" is satisfied by the 32×32 hit target; the 16px glyph is the unchanged `h-4 w-4` design token (pre-delta too). No regression.
+- Tab order reaches `/tags`, `/impressum`, `/datenschutz` (footer sweep observed all three among 20 focusable hrefs).
+- `prefers-reduced-motion: reduce`: marquee=0 and `document.getAnimations()` filtered to duration>1ms = **0** on home.
+
+### 1.13 Console hygiene — 11/12 routes CLEAN; 1 pre-existing `/about` resource 400
+- `/`, `/projects`, `/blog`, `/blog/entry/…`, `/contact`, `/tags`, `/tags/c-plus-plus`, `/tags/digital-transformation`, `/tags/robotics`, `/impressum`, `/datenschutz`: **0 console errors, 0 warnings, 0 pageerrors**.
+- `/about`: 1 console error `Failed to load resource: 400 (Bad Request)`. Root cause: `app/about/page.tsx:114` `companyLogoSrc="https://placehold.co/512x512?text=Various"` returns `image/svg+xml` and `dangerouslyAllowSVG` is disabled → `next/image` 400. Proven PRE-EXISTING: the line is byte-identical at `962b6a2` and at HEAD (delta to `app/about/page.tsx` only reorders imports, adds the portrait block, and adds `<Testimonials/>`). Already flagged in `issues.md` (2026-09-12 "FLAGGED (real defect, pre-existing, out of scope): /about placeholder image never loads"), owner T20/T25. Non-blocking for this plan.
+
+### 1.14 Contact interactivity on production — PASS
+`E2E_CONTACT_FORM_SUCCESS=true` server: valid submit → `role="status"` text `"Success! Email sent successfully."`, `Done` button present. Invalid email → `#email-error` `"Email address is missing an @ symbol"`. (Contact page is outside the delta; verified to prove no hydration regression.)
+
+## 2. Verdict rationale
+All load- and render-sensitive gates observed GREEN on a fresh production build at the current product tree:
+- axe **12 passed**, allowlist empty.
+- full chromium e2e **82 passed / 1 flaky (pre-existing, passed on retry) / 0 failed**, exit 0.
+- build **127/127**, 17 route patterns.
+- every new route `/tags` (86 links), `/tags/c-plus-plus`, `/tags/digital-transformation`, `/impressum`, `/datenschutz` renders post-hydration; sitemap carries them; bogus tag 404s.
+- `/about` Testimonials renders the visible `Example` badge + disclaimer with no real person named (D8 honoured).
+- footer wraps at 375 with uncrushed 32×32 hit targets; keyboard reaches the new links; `prefers-reduced-motion` respected.
+
+Two findings, both PRE-EXISTING and out of plan scope, neither a regression of this delta:
+1. V1 (carried from prior F3) — contact success toast overlaps header nav (original `e606a99`, not this plan).
+2. `/about` placehold.co SVG 400 (pre-existing since `9d951b4`/flagged in issues.md; owner T20/T25).
+
+No product file, test, config, or `.omo/` file was modified by this run (append-only to this ledger). No `git add`/`commit`/`stash`/`checkout`/`restore`. No `--no-verify`/`SKIP=`. No `.skip()`. Lighthouse not run (F5 owns it).
+
+## 3. Evidence index (this re-run)
+- Build: `.omo/evidence/f3b/build.log`
+- axe: `.omo/evidence/f3b/axe.log`
+- full e2e: `.omo/evidence/f3b/e2e-chromium.log`
+- hydration probe: `.omo/evidence/f3b/hydration.log`, `hydration-correct.log`
+- console sweep: `.omo/evidence/f3b/console.log`
+- contact: `.omo/evidence/f3b/contact.log`
+- server: `.omo/evidence/f3b/server.log`
+- throwaway probes (gitignored, not committed): `.omo/f3b-*.mjs`
+
+## 4. Resource note (R22.1)
+~90k tokens across axe (2.9m), full e2e (11.4m), build, and 4 Playwright probe scripts. Model: default (9router/default).
+
+F3 VERDICT: APPROVE

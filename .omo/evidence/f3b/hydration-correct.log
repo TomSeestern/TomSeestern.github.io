@@ -1,0 +1,87 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+H1 /: textContent="Tom Segbers — Senior Developer" transform=uppercase domEq=true visualEq=true
+H1 /tags: textContent="Tags" transform=uppercase domEq=true visualEq=true
+H1 /tags/digital-transformation: textContent="Digital Transformation" transform=uppercase domEq=true visualEq=true
+H1 /impressum: textContent="Impressum" transform=uppercase domEq=true visualEq=true
+H1 /datenschutz: textContent="Datenschutzerklärung" transform=uppercase domEq=true visualEq=true
+FOOTER AUDIT: [
+  {
+    "label": "TomSegbers.de",
+    "href": "https://tomsegbers.de/",
+    "linkW": 105,
+    "linkH": 17,
+    "imgW": null,
+    "imgH": null,
+    "shrink": "1"
+  },
+  {
+    "label": "LinkedIn",
+    "href": "https://linkedin.com/in/tomsegbers/",
+    "linkW": 32,
+    "linkH": 32,
+    "imgW": 16,
+    "imgH": 16,
+    "shrink": "0"
+  },
+  {
+    "label": "Twitter",
+    "href": "https://twitter.com/TomSegbers",
+    "linkW": 32,
+    "linkH": 32,
+    "imgW": 16,
+    "imgH": 16,
+    "shrink": "0"
+  },
+  {
+    "label": "GitHub",
+    "href": "https://www.github.com/TomSegbers/",
+    "linkW": 32,
+    "linkH": 32,
+    "imgW": 16,
+    "imgH": 16,
+    "shrink": "0"
+  },
+  {
+    "label": "Email",
+    "href": "/contact",
+    "linkW": 32,
+    "linkH": 32,
+    "imgW": 16,
+    "imgH": 16,
+    "shrink": "0"
+  },
+  {
+    "label": "Tags",
+    "href": "/tags",
+    "linkW": 52,
+    "linkH": 40,
+    "imgW": null,
+    "imgH": null,
+    "shrink": "0"
+  },
+  {
+    "label": "Impressum",
+    "href": "/impressum",
+    "linkW": 100,
+    "linkH": 40,
+    "imgW": null,
+    "imgH": null,
+    "shrink": "0"
+  },
+  {
+    "label": "Datenschutz",
+    "href": "/datenschutz",
+    "linkW": 111,
+    "linkH": 40,
+    "imgW": null,
+    "imgH": null,
+    "shrink": "0"
+  }
+]
+SOCIAL links: count=4 link minW=32 link minH=32

@@ -1,0 +1,3 @@
+CONTACT success: role=status text="Success! Email sent successfully."
+CONTACT Done button count=1
+CONTACT invalid-email error: "Email address is missing an @ symbol"

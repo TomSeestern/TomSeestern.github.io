@@ -1,0 +1,23 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+CLEAN / status=200 errors=0 warnings=0
+ERRORS /about status=200 errors=1 warnings=0
+   ERR: Failed to load resource: the server responded with a status of 400 (Bad Request)
+CLEAN /projects status=200 errors=0 warnings=0
+CLEAN /blog status=200 errors=0 warnings=0
+CLEAN /blog/entry/2019-ebeltoft-cheesecake-recipe status=200 errors=0 warnings=0
+CLEAN /contact status=200 errors=0 warnings=0
+CLEAN /tags status=200 errors=0 warnings=0
+CLEAN /tags/c-plus-plus status=200 errors=0 warnings=0
+CLEAN /tags/digital-transformation status=200 errors=0 warnings=0
+CLEAN /tags/robotics status=200 errors=0 warnings=0
+CLEAN /impressum status=200 errors=0 warnings=0
+CLEAN /datenschutz status=200 errors=0 warnings=0
+CONTACT submit: role=status count=0 text="(none)"
+
+TOTAL CONSOLE ERRORS ACROSS 12 ROUTES: 1
