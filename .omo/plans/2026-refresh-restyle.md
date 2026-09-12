@@ -4,7 +4,7 @@
 
 ## TL;DR (For humans)
 
-**What you get:** TomSegbers.de brought into 2026 as a peak-agency portfolio with an "engineered calm" identity — ancient Rome surviving only as structure and restraint (one 1px column-rule grid, disciplined type, a measured travertine/basalt palette), zero Roman props. The 42-card marquee becomes a curated featured set. Everything ships on the existing Next 15 + Tailwind v3 + Flowbite stack — no rewrites, no new runtime dependencies, no framework churn. A human-gated content workstream runs in parallel and gates launch, not the restyle.
+**What you get:** TomSegbers.de brought into 2026 as a peak-agency portfolio with an "engineered calm" identity — ancient Rome surviving only as structure and restraint (one 1px column-rule grid, disciplined type), zero Roman props. **Palette note:** the plan's original "travertine/basalt" pair was superseded before implementation by D13/D4 — the shipped identity is a single light **parchment** mode with terracotta + oxblood accents (no dark mode, no blue). The 42-card marquee becomes a curated featured set. Everything ships on the existing Next 15 + Tailwind v3 + Flowbite stack — no rewrites, no new runtime dependencies, no framework churn. A human-gated content workstream runs in parallel and gates launch, not the restyle.
 
 **Why this approach:** The repo is technically competent already. The gate is CI hygiene and measurement first (lint is currently red; there is no bundle-byte threshold, no axe, no Lighthouse budget). Then a zero-visual-change foundation, then the expressive layer, then page rebuild, imagery/SEO, and finally human-authored content. Sequence prevents the two classic failures: restyling on a red pipeline, and shipping "a beautiful empty temple."
 
@@ -278,7 +278,10 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 **Depends On:** T06
 **Acceptance Criteria/Verification:** New spec fails before fix, passes after; `pnpm build && pnpm e2e:headless` green; no-preference first paint remains dark; axe still clean.
 **Evidence:** `.omo/evidence/task-T07-2026-refresh-restyle.txt`
-**Commit:** `fix(theme): eliminate FOUC with blocking head theme resolver`
+**Commit:** `refactor(theme): remove dark-mode machinery for a single light mode`
+> **Note (G5, 2026-09-12):** the original plan line said `fix(theme): eliminate FOUC with
+> blocking head theme resolver`, but D13 (single light mode) superseded that task — the
+> FOUC fix became a *removal* of the theme machinery. Actual commit: `d792fff`.
 
 #### T08. Token drift + accidental token key cleanup
 **Description:** Replace raw utilities with semantic tokens where exactly equivalent (e.g. `app/page.tsx:44` raw `text-4xl…` → `text-h1` / `h1-sm`), and remove accidental/undefined tokens (`foreground.foreground-muted-dark` in `tailwind.config.js:47`, bogus `rounded-0.5md` / `font-open-sans` / `text-2xs` in Tooltip — coordinate with T11 which owns Tooltip.tsx). No visual change: snapshot/compare computed styles before/after.
@@ -306,7 +309,7 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 **Delegation Recommendation**: Category `quick` — small, well-bounded schema change with tests.
 **Skills Evaluation**: INCLUDED `programming` (Zod/strict TS), `git-master`. OMITTED `frontend`, `writing` (no prose/content).
 **Depends On:** None
-**Acceptance Criteria/Verification:** Failing test first (tags parsed; defaults applied to legacy files); `nix develop -c pnpm test` green; `pnpm build` produces same 36 routes; `scripts/check-project-frontmatter.js` passes.
+**Acceptance Criteria/Verification:** Failing test first (tags parsed; defaults applied to legacy files); `nix develop -c pnpm test` green; `pnpm build` produces no route-count change (was 38 at T10 time; the site now pre-renders 127 pages after T24/T29 added legal + tag routes); `scripts/check-project-frontmatter.js` passes.
 **Evidence:** `.omo/evidence/task-T10-2026-refresh-restyle.txt`
 **Commit:** `feat(content): re-add tags and additive case-study frontmatter fields`
 
@@ -334,6 +337,11 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 
 #### T13. Design tokens + measure system + contrast CI gate + DESIGN.md
 **Description:** Extend `tailwind.config.js` (keep `primary-*` aliases) with palette tokens: travertine `#F4F1EA`, basalt `#17181A`, ink `#1B1B1F`, accent `#2563eb` (keep), terracotta `#B4462F` (text-on-travertine only, gated D4), verdigris `#4E7A6B` + brass `#A8894F` (non-text only); drop Tyrian `#5B2A4A` and `#2F7BFF`. Add measure tokens as Tailwind **maxWidth** entries (not CSS vars): `measure-article: 66ch`, `measure-lead: 46ch`, `measure-card: 38ch`, `measure-display: 20ch`, `width-page: 78rem`. Add `scripts/check-contrast.mjs` (pure JS WCAG math, no deps) failing when text tokens <4.5:1 or UI tokens <3:1 in either scheme. Update `DESIGN.md` (R5.2/R15.8). TDD: write the contrast gate failing-first against a known-bad pair.
+> **HISTORICAL SPEC (2026-09-12):** this description predates the D13/D4 round-2 amendments.
+> The colours named here (travertine/basalt/blue `#2563eb`/verdigris/brass) were **superseded
+> before implementation** — the shipped palette is a single light **parchment** mode with
+> terracotta `#A63D28` + oxblood `#5E2130` and **no blue**. Do not implement from this text;
+> see the amendments at plan lines 68–77 and `.omo/decisions/2026-09-10-refresh-scope-decisions.md`.
 **Files:** `tailwind.config.js`, `scripts/check-contrast.mjs`, `DESIGN.md`, `tests/budgets/contrast.json`
 **Delegation Recommendation**: Category `visual-engineering` — design-system foundation.
 **Skills Evaluation**: INCLUDED `frontend` (palette/type/tokens), `programming` (WCAG script), `writing` (DESIGN.md). OMITTED `playwright` (no browser needed; pure math).
@@ -354,13 +362,20 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 
 #### T15. Palette application + motion primitives + column-rule motif
 **Description:** Apply travertine-light default (D13) and basalt/ink dark with accent `#2563eb`; terracotta only as text on travertine if D4 approves. Define motion primitives: opacity + `translateY` only, 200–320ms, `cubic-bezier(0.16,1,0.3,1)`, every instance behind `motion-safe:`. Add the single 1px vertical column-rule motif as pure CSS borders. Reject clip-path animation, 900ms, `backdrop-filter` (≤1 surface with opaque `@supports` fallback if any). Update contrast gate and DESIGN.md.
+> **HISTORICAL SPEC (2026-09-12):** superseded by D13/D4 round-2 before implementation. There is
+> **no dark mode** and **no blue**; the shipped palette is single light parchment + terracotta/
+> oxblood. The motion primitives and the 1px column-rule motif described here *did* ship as
+> specified. Actual commit `7e6e254`.
 **Files:** `tailwind.config.js`, `styles/tailwind.css`, `app/layout.tsx`, `DESIGN.md`, `scripts/check-contrast.mjs`
 **Delegation Recommendation**: Category `visual-engineering` — core identity application.
 **Skills Evaluation**: INCLUDED `frontend`, `visual-qa`, `playwright` (reduced-motion/contrast), `programming`. OMITTED `writing`.
 **Depends On:** T13, T07
 **Acceptance Criteria/Verification:** Contrast gate green both schemes; axe zero serious/critical; reduced-motion disables all transitions; no banned ornament grep hits (`laurel|bust|spqr|gold|colosseum`); `pnpm build` 0.
 **Evidence:** `.omo/evidence/task-T15-2026-refresh-restyle.txt`
-**Commit:** `feat(theme): travertine/basalt palette, motion primitives, column-rule motif`
+**Commit:** `feat(theme): parchment palette, motion primitives, column-rule motif`
+> **Note (G5, 2026-09-12):** the original plan line said `travertine/basalt`; D13/D4 replaced
+> that Roman palette with the light **parchment** one before implementation. Actual commit
+> `7e6e254` — the message says *parchment*.
 
 ### Wave 3 — Page rebuild (visual)
 
@@ -405,7 +420,7 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 **Commit:** `feat(projects): additive case-study template`
 
 #### T20. About — portrait duotone + founder-arc reuse
-**Description:** Move the portrait here (removed from hero), render duotone travertine/basalt, plain 4:5 rectangle, width/height set. Reuse founder-arc structure from T16. Structural work non-gated; portrait asset + copy are human-gated (T24/T25).
+**Description:** Move the portrait here (removed from hero), render as a plain 4:5 rectangle with explicit dimensions and `loading="lazy"`, reused founder-arc structure from T16. Structural work non-gated; portrait asset + copy are human-gated (T24/T25). **Note (2026-09-12):** the original wording said "duotone travertine/basalt" — that is stale Rome-concept language, superseded by D13 (single light parchment mode). Implemented **plain, untreated**; no duotone, no filter (see `.omo/evidence/task-T20-2026-refresh-restyle.txt`).
 **Files:** `app/about/page.tsx`, `components/PersonTeaser/PersonTeaser.tsx`, `public/img/`
 **Delegation Recommendation**: Category `visual-engineering`.
 **Skills Evaluation**: INCLUDED `frontend`, `visual-qa`, `playwright`. OMITTED `writing` (copy gated).
@@ -651,7 +666,7 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
   - What: re-add `tags`; add optional `role/outcome/metrics/heroImage/featured` with defaults; Jest tests.
   - Depends: None | Blocks: T19,T25
   - Category: `quick` | Skills: [`programming`, `git-master`]
-  - QA: `pnpm test` green; 36 routes unchanged; frontmatter validator passes.
+  - QA: `pnpm test` green; no route-count change (38 at the time; 127 now, after T24/T29); frontmatter validator passes.
 - [x] **T12. Contact a11y + metadata split**
   - What: split server page + client form; aria-describedby/aria-invalid; live region; blur validation.
   - Depends: T01,T04 | Blocks: T20
@@ -679,7 +694,7 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
   - Category: `visual-engineering` | Skills: [`frontend`, `programming`, `visual-qa`]
   - QA: font-budget assertion; LCP font preload only.
 - [x] **T15. Palette + motion + motif**
-  - What: travertine/basalt apply; motion-safe opacity/translateY 200–320ms; 1px column rule; no banned ornaments.
+  - What: parchment palette applies (D13/D4 superseded the Roman travertine/basalt pair); motion-safe opacity/translateY 200–320ms; 1px column rule; no banned ornaments.
   - Depends: T13,T07 | Blocks: T16–T21
   - Category: `visual-engineering` | Skills: [`frontend`, `visual-qa`, `playwright`]
   - QA: contrast+axe green; reduced-motion disables motion; ornament grep clean.
