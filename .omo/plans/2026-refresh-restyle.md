@@ -760,11 +760,19 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
   - **RESUME — exactly one action:** run the Arm A command (F5 ledger §18: offline
     cached Lighthouse 13.4.1 + `CHROME_PATH=/etc/profiles/per-user/tom/bin/chromium`,
     matched to the T02 baseline) on `/projects`, and read
-    `environment.benchmarkIndex`. Require `bi ≥ 2510` and CPU ≤ ~25 % with no burning
-    `tap-runner`; otherwise the reading is void — do not judge from it.
+    `environment.benchmarkIndex`. Require `bi ≥ 2510`; otherwise the reading is void —
+    do not judge from it.
     - `bi ≥ 2510` **and** LCP < 2500 ⇒ the gate's LCP criterion **passes with no code
       change** (§21 estimates ≈2414 ms at the baseline's `bi` 2762).
     - LCP > 2500 at valid speed ⇒ `/projects` genuinely fails ⇒ T30 is real.
+  - **PRECONDITION — the host CPU is frequency-clamped (F5 ledger §23).** In addition
+    to the external load, the package runs `governor=powersave` at ~1.4 GHz avg /
+    1.9 GHz max against a 4.5–4.8 GHz ceiling, with 172 k throttle events after 24 h
+    up. The observed `benchmarkIndex` ratios (~0.44) track that clock cap, so an idle
+    CPU alone may not lift `bi` to 2510. Before relying on a local run, confirm a busy
+    core ramps toward ~4.5 GHz; if it cannot, F5's Lighthouse budget is **not
+    measurable on this host** and must be judged in CI
+    (`.forgejo/workflows/lighthouse.yml`) or on another machine.
   - **Do NOT** run while the host is busy, **do NOT** arm in-session watchers (30-min
     monitor cap < the external job's runtime), and **do NOT** weaken the
     2500/0.1/200 budgets.
