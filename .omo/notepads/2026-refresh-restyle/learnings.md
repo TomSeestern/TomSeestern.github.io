@@ -1160,3 +1160,14 @@ All **4** load-insensitive budget gates (contrast 24/24, ornaments, images 101,
 fonts 70.7 KiB) are now observed green at the current HEAD, not merely carried
 forward. Lesson: for zero-dependency gate scripts, invoke the system `node`
 directly to sidestep a slow/contended `nix develop` shell startup.
+
+## 2026-09-12 — typecheck + prettier green at HEAD (direct bin runs)
+
+Invoked the binaries directly (skipping contended `nix develop` startup):
+- `node_modules/typescript/bin/tsc --noEmit` → exit 0 (clean).
+- `node_modules/.bin/prettier --check '**/*.{js,jsx,ts,tsx}'` → exit 0
+  ("All matched files use Prettier code style!").
+
+Combined with the 4 budget gates and (pending) lint + jest, this rebuilds F5's
+code-gate evidence as fresh observations at the current HEAD rather than
+inferences. Only the Lighthouse timing gate remains host-blocked.
