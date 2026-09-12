@@ -840,3 +840,27 @@ dormant `dark:*` utilities F2 noted can never activate:
 
 **Conclusion:** the carry-over `dark:*` classes are provably inert. D13 holds with
 defense in depth (config + no-writer + no-CSS-escape + e2e lock). No product change.
+
+## 2026-09-12 — CI workflow wiring audit (all 5 workflows, ordering verified)
+
+F1 proved the gates were wired; this audit proved the wiring is *correct in shape*:
+
+| Workflow | Invokes | Ordering check |
+| --- | --- | --- |
+| `check.yml` | typecheck, build, lint, prettier, contrast, ornaments, images, fonts, test, storybook smoke | `build` (L35) precedes `fonts` (L47) — required, the gate reads `.next` ✔ |
+| `nextjs_bundle_analysis.yml` | build → `node report-bundle-size.js` → `node scripts/check-bundle-budget.mjs` | analyze writes `.next/analyze/__bundle_analysis.json`, budget gate reads the same path ✔ |
+| `playwright.yml` | `pnpm exec playwright test --project=chromium` | browser installed before run ✔ |
+| `lighthouse.yml` | build → `pnpm exec lhci autorun` | build precedes serve; `.lighthouserc.js` `startServerCommand: pnpm start` needs `.next` ✔ |
+| `screenshots.yml` | build → `pnpm screenshots:update` → commit | path-triggered (`app|components|content|styles|public/**`), `[skip ci]` prevents a loop ✔ |
+
+Cross-refs verified:
+- Every `pnpm <script>` / `node scripts/*` named in a workflow exists in
+  `package.json` (or on disk for `report-bundle-size.js`). No dangling reference.
+- `report-bundle-size.js` (tracked, root) writes `.next/analyze/__bundle_analysis.json`
+  (L74-75) — exact path the budget gate reads. `@next/bundle-analyzer` is wired in
+  `next.config.mjs` with `enabled: env.ANALYZE`.
+- `.lighthouserc.js` (tracked) resolves Chrome from Playwright cache or PATH; the
+  mobile throttling profile and 2500 ms LCP / 0.1 CLS / 200 ms TBT budgets are
+  explicit, so an LH upgrade cannot silently move the baseline.
+
+**Conclusion:** no unwired or mis-ordered gate remains. All CI references resolve.
