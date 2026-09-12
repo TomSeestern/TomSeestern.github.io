@@ -1157,3 +1157,52 @@ orchestrator's own footprint is part of the load.
 F5 remains **UNJUDGED**. As `bi` climbs toward baseline with the load easing, the
 prediction is converging on a pass — but three incomparable readings do not substitute
 for one valid one. Resume per §18 when a run holds `bi ≥ 2510`.
+
+---
+
+## §26. Arm A4 (2026-09-12 11:20Z, bi 1643) + five-point regression — still inconclusive
+
+Fourth Arm A attempt; launched at the highest clock seen all session (2.37 GHz, loadavg
+5.46). Result: `benchmarkIndex` **1643** = 0.595 × baseline 2762 → still incomparable.
+
+| metric | baseline (bi 2762) | Arm A4 (bi 1643) | Δ |
+|---|---:|---:|---:|
+| LCP | 2588 | 2780 | +192 |
+| FCP | 1054 | 1076 | +21 |
+| TBT | 85 | 298 | +213 |
+| CLS | 0 | 0 | 0 |
+
+### Five-point model for `/projects` (all LH 13.4.1, same Chrome, same route)
+
+| benchmarkIndex | LCP |
+|---:|---:|
+| 1213 | 4027 |
+| 1343 | 4219 |
+| 1550 | 2954 |
+| 1643 | 2780 |
+| **2762** (baseline) | **2588** |
+
+OLS on `LCP ~ ln(bi)`: **LCP = −1862·ln(bi) + 17081**, **R² = 0.619** (weak, n=5).
+
+- Prediction at baseline `bi` 2762 → **2330 ms (PASS)**
+- Prediction at minimum valid `bi` 2510 → **2508 ms (FAIL — exactly on the boundary)**
+
+**The model cannot decide the question.** R² 0.619 is weak, and the prediction crosses
+the 2500 ms budget *within the valid-speed window* (2510–3064). Both "pass" and "fail"
+are consistent with this data. Treat §21's earlier ≈2414 ms estimate as **superseded** by
+this larger-sample and less favourable fit.
+
+### New working observation: the orchestrator's own harness is part of the load
+At Arm A4 launch, `ps` showed the top CPU consumer was
+`/etc/profiles/per-user/tom/bin/opencode serve` (~99 % of a core) — i.e. **this agent
+session itself**. Combined with a `ClosedLoopOS` jest run (~80 %) and a Playwright
+headless shell (~56 %), the contention is **multi-source and partly self-inflicted**.
+A genuinely valid `bi ≥ 2510` run may be impossible *while this session is active*;
+the measurement may need to run outside the agent (a plain shell, or CI on an idle
+runner). This is a practical, actionable conclusion for the next session.
+
+### Status after four attempts
+F5 Lighthouse remains **UNJUDGED**. The four post-restyle `/projects` readings span
+`bi` 1213–1643; none is comparable to the baseline. The evidence now points to a
+**borderline** result rather than a clear pass or fail, which strengthens the case for
+resolving it in a controlled measurement rather than guessing.

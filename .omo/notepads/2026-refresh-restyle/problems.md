@@ -311,3 +311,21 @@ not only queueing.
 and the local pytest stop, this host should return to `bi ≈ 2510+` and Arm A will yield a
 valid reading. This is a host/power *symptom* of the external load, not a code issue —
 do not weaken the budget and do not "fix" the site for it.
+
+### Arm A4 + five-point model: F5 is BORDERLINE, and the agent harness is part of the load
+
+Fourth Arm A attempt reached `bi` 1643 (0.595× baseline; best yet) with `/projects`
+LCP 2780. Fitting all five same-tool `/projects` points (bi 1213/1343/1550/1643/2762)
+to `LCP ~ ln(bi)` gives **R² = 0.619** and predicts **2330 ms at bi 2762 (pass)** but
+**2508 ms at bi 2510 (fail — exactly on the boundary)**. The model **cannot decide** the
+question; §21's earlier ≈2414 ms estimate is superseded.
+
+**Key practical finding:** at Arm A4 launch the top CPU consumer was
+`opencode serve` — **this agent session itself** (~99 % of a core), alongside another
+project's jest run and a Playwright shell. The load is multi-source and partly
+self-inflicted, so a valid `bi ≥ 2510` run may be **impossible while the agent session
+is active**. Resolve F5 with a measurement run **outside** the agent session (plain
+shell / idle CI runner), not by repeated in-session attempts.
+
+**Stop condition reminder:** do not keep firing Arm A in-session — four attempts gave
+`bi` 1213–1643, none valid. One clean out-of-session run is worth more than more of these.
