@@ -311,3 +311,190 @@ O5. yaml-lockfile contains ~290 new transitive package entries, all implied
 
 Token usage: F4 audit ≈ context-only, no sub-agent delegation. No product
 code, content, tests, or configs modified; no commits made.
+
+
+════════════════════════════════════════════════════════════════════════════
+F4 — SCOPE FIDELITY — FRESH RE-AUDIT (supersedes the stale 962b6a2-bound ledger)
+════════════════════════════════════════════════════════════════════════════
+HEAD SHA (git rev-parse HEAD): 0723b754dfb17f6d90a371079976568be9071d0c
+HEAD subject/date: 0723b75 "docs(boulder): record F1-F4 re-review sessions" 2026-09-12 20:26:44 +0200
+Audited delta:  git diff --stat 962b6a2 HEAD -- app/ components/ lib/ e2e/
+  13 files, +1108/-14  (matches the brief exactly; app/blog diff EMPTY)
+git status --porcelain:  " M .omo/boulder.json"  → only the gitignored bookkeeping
+  file is dirty; NO product/test/config file is modified. Working product tree clean.
+Verifier: read-only audit; no product file, test, config, or .omo file changed
+  except this append. No git state changes.
+
+WHY THIS IS A FRESH LEDGER: the prior F4 ledger bound itself to 962b6a2. Three of
+its claims are FALSE at HEAD (tag route, testimonials, page count). All 14 checks
+below were re-run against the 0723b75 tree; no claim is inherited.
+
+────────────────────────────────────────────────────────────────────────────
+1. D13 — SINGLE LIGHT MODE (parchment, no blue, no toggle) ──────────────── PASS
+  Blue: `grep -rniE "blue|#2563eb|#2f7bff|#3b82f6|#1d4ed8" app components lib
+  styles e2e tailwind.config.js next.config.mjs public/icon` → zero product hits.
+  Only hits are e2e/dark-mode.spec.ts:82 (`not.toContain("prefers-color-scheme")`)
+  and :74 (`[data-testid="dark-theme-toggle"]` count 0) — i.e. assertions of absence.
+  Toggle: no `DarkThemeToggle`/`dark-theme-toggle` component anywhere; no inline
+  resolver script, no `localStorage` theme write, no `flowbite-theme-mode` key
+  (grep across app/components/lib/styles returned nothing).
+  No dark class is applied: `grep -rnE 'className=.*\bdark\b|classList.*\bdark\b'`
+  app components lib → no live `dark` class application (only `dark:` variants).
+  e2e/dark-mode.spec.ts is CONSISTENT with D13: lines 31–38 assert `html` never
+  has class `dark` and body bg is rgb(245,239,225); :40–66 light surface on all
+  routes; :68–85 "ships no theme toggle and resolves a single mode regardless of
+  system preference"; :91 `CONTRAST_SCHEMES = ["light"]`. The modification reason
+  is documented in the spec header (:7–15). D13 verified.
+  Obs (non-blocking, carried from prior ledger O1): ~180 dormant `dark:` utility
+  strings remain in app/components. They are INERT — no `.dark` class is ever set —
+  and D13 governs the toggle/script/active mode, not dead variant strings. Does not
+  block. Marker for future cleanup.
+
+2. D4 — PALETTE terracotta #A63D28 + oxblood #5E2130, NO hardcoded hexes ── PASS
+  Tokens: tailwind.config.js:57-58 `accent.DEFAULT/light = "#A63D28"`,
+  :68 `accent.secondary = "#5E2130"`, ramp :17 `600: "#a63d28"`.
+  DESIGN.md:28,33 documents both as the semantic accent pair.
+  Hardcoded hexes in the delta: `grep -rnE '#[0-9a-fA-F]{6}'` over
+  app/about app/tags app/impressum app/datenschutz app/sitemap.ts
+  components/Testimonials components/Footer lib/tags.ts → ZERO. The delta uses
+  semantic tokens (`bg-surface`, `text-accent`, `bg-accent-soft`, `bg-accent-secondary`).
+  R15.8 satisfied.
+
+3. D5 — featured flag in /projects intact (no regression) ──────────────── PASS
+  app/projects/page.tsx:34 `selectFeaturedProjects(...)`, :84 `featured=...`;
+  components/ProjectTeaser/ProjectTeaser.tsx:42 `data-featured`, :55
+  `data-testid="featured-badge"`; lib/projects.tsx:15-37 selection logic;
+  lib/markdown.ts:17 `featured: z.boolean().default(false).catch(false)`.
+  Delta touched app/about, NOT app/projects → no regression surface.
+
+4. D11 — Flowbite `Card` retained; no new UI dependency ────────────────── PASS
+  Only Flowbite imports at HEAD: components/ProjectTeaser/ProjectTeaser.tsx:1
+  and components/ArticleTeaser/ArticleTeaser.tsx:2 — both `{ Card }`. Tag pages
+  and Testimonials reuse those teasers (app/tags/[tag]/page.tsx:5,7) and add no
+  bespoke card and no Flowbite replacement.
+  `git diff 962b6a2 HEAD -- package.json` → EMPTY: no new runtime OR dev dependency.
+  D11 (keep Card) satisfied.
+
+5. D8 — labelled examples only ─────────────────────────────────────────── PASS
+  components/Testimonials/Testimonials.tsx:
+   - :34 `EXAMPLE_BADGE_LABEL = "Example"`; :41-43 renders a visible badge with it.
+   - :35/:47 renders visible disclaimer `Illustrative examples — not real client
+     testimonials.`
+   - :19,25,30 attributions are generic roles ONLY: "Example — Product Lead",
+     "Example — Engineering Manager", "Example — Startup Founder".
+   - :14-32 quotes are self-describing placeholders ("Placeholder quote…",
+     "Another illustrative quote…", "A third example quote…").
+   - No real person/company named; no logo; no metric. Section heading is
+     "Illustrative feedback" (:44-46). Locked by 4 unit tests
+     (components/Testimonials/Testimonials.test.tsx) incl. the visibility assertion.
+  Rendered on /about (app/about/page.tsx:6 import, :151 `<Testimonials />`).
+  R19.1 satisfied.
+
+6. T24 — legal scaffold, NO invented legal text ────────────────────────── PASS
+  app/impressum/page.tsx: every owner fact is a visible `TODO(Tom): …` placeholder
+  rendered by the `Placeholder` component (:29-32) — Name (:54), Anschrift (:60),
+  E-Mail (:67), Telefon (:70), Vertretungsberechtigte/r (:77), USt-IdNr (:85);
+  plus MStV name/address (:99,:105) and a closing notice (:111-114).
+  app/datenschutz/page.tsx: Name (:61), Anschrift (:67), E-Mail (:74), Telefon (:77),
+  DSB (:86), Vercel DPA/Drittland (:107), Resend DPA/Drittland (:133), Speicherdauer (:141).
+  Fabrication scan `grep -niE 'HRB|Amtsgericht|Steuernummer|USt-IdNr[.:]? *[0-9]|DE[0-9]{9}'`
+  → ZERO. No invented entity, address, VAT ID, or register number.
+  Privacy facts are architecturally true: Resend flow (lib/sendEmail.tsx:4 import,
+  :114 `new Resend(...)`, :123 send) and Vercel hosting. "no cookies/analytics/
+  tracking" is TRUE of the codebase: no analytics/telemetry/cookie lib in
+  package.json or app/components/lib (only false positives are the German heading
+  text datenschutz:147-151 and the CSS `tracking-*` Tailwind classes).
+  Footer links: components/Footer/Footer.tsx:60-65 `/impressum`, :66-71
+  `/datenschutz` as VISIBLE TEXT links (no legal icon; comment :52-53 explains why).
+  Acceptance caveat: T24 remains `[~]`; "Tom approves text" is not yet met and the
+  plan row says so (correct honesty). The audit failure mode (fabricated facts) is
+  absent.
+
+7. R15.13 — blog routes/slugs unchanged; sitemap additive ──────────────── PASS
+  `git diff 962b6a2 HEAD -- app/blog` → EMPTY. No slug renamed.
+  app/sitemap.ts diff is purely additive: +`/tags` (:36-41), +`/impressum` (:48-53),
+  +`/datenschutz` (:54-59), +tagRoutes (:92-98, appended to the return :100).
+  No existing entry removed or mutated.
+
+8. output: 'export' forbidden ─────────────────────────────────────────── PASS
+  `grep -rniE "output\s*:\s*['\"]export"` next.config.mjs app lib components
+  package.json → no match (exit 1). next.config.mjs has no `output` key.
+
+9. Budgets NOT weakened (2500 / 0.1 / 200) ────────────────────────────── PASS
+  .lighthouserc.js:111 `largest-contentful-paint ["error",{maxNumericValue:2500}]`,
+  :112 `cumulative-layout-shift [.. 0.1]`, :113 `total-blocking-time [.. 200]` —
+  unchanged. `.lighthouserc.js` delta vs 962b6a2 is comment-only (documented
+  shared-runner tolerance); no numeric value changed. Plan Success-Criterion #3
+  (:559) and F5 note (:846) still state 2500/0.1/200 and explicitly forbid weakening.
+
+10. T29 tag-data integrity ────────────────────────────────────────────── PASS
+  YAML-parsed content (24 files): 105 tag occurrences → **87 unique raw forms** →
+  **86 canonical keys** (one punctuation merge), ZERO slug collisions.
+  lib/tags.ts:45-47 `normalizeTagKey` folds `_`/`-` runs; :58-64 `tagSlug` maps `+`
+  to `-plus` (`C++` → `c-plus-plus`); :116-128 `slugOwner` throws on distinct-key
+  slug collision; :89-91 JSDoc documents the throw.
+  Real-data merge documented: :34-41 comment names `Digital-Transformation` once vs
+  `Digital Transformation` twice and explains the fold prevents a build-breaking
+  collision. This is the R19.1 deviation disclosure.
+  lib/tags.test.ts covers folding (:35-38), C++ slug (:42-44), throw+names both keys
+  (:196-209), and real-data slug uniqueness (:220-227).
+  (My first parse undercounted because `tags:` blocks were mis-scanned; the YAML
+  block scan reproduces the ledger's 87/86 exactly.)
+
+11. R4.15 module direction + R4.14 size ceiling ───────────────────────── PASS
+  Reverse imports: `grep -rnE 'from "@/?app/|from "\.\./\.\./app/'` components/ lib/
+  → none. New app/tags/[tag]/page.tsx:2 imports `@/app/layout` — app→app, same
+  layer, allowed (R4.15 forbids components/lib importing app, not app importing app).
+  Size (logic lines; all ≤250): lib/tags.ts 161 total/83 logic; app/tags/page.tsx
+  80/75; app/tags/[tag]/page.tsx 133/121; app/impressum/page.tsx 119/112;
+  app/datenschutz/page.tsx 193/183; components/Testimonials/Testimonials.tsx 67/58.
+
+12. R26.1 / R26.2 — no bypass/skip/only ───────────────────────────────── PASS
+  `grep -rnE '\.skip\(|\.only\(|--no-verify|SKIP='` across app/components/lib/e2e/
+  scripts (and *.yml/*.yaml, excluding node_modules/.next/.omo) → no hits (exit 1).
+
+13. Wave-5 honesty ([~] rows carry concrete blockers) ─────────────────── PASS
+  Plan TODO list: T24 `[~]` — scaffold complete, "Tom approves text" not yet met,
+  explicitly states it stays `[~]`; T25 `[~]` — blocked "Tom's copy, untransferable
+  (R19.1)" + dependency on T24; T26 `[~]` — blocked "Tom's cleared facts" + deps;
+  T27 `[~]` — blocked "Tom's authorship" + deps; T28 `[~]` — D8 test partial complete
+  (labelled examples shipped, commit fefcf7d) with D7/D6 remainder named; F5 `[~]`
+  — UNJUDGED not failed, host-confounded benchmarkIndex, exact resume action given.
+  None claims completion it lacks. T29 and T20 are `[x]` with delivered evidence
+  (commits ddc18da / db4aa96), consistent with HEAD.
+  T29 row claims 87 raw → 86 canonical → independently reproduced (check 10).
+
+────────────────────────────────────────────────────────────────────────────
+STALE-CLAIM CORRECTIONS (the prior ledger's falsehoods)
+────────────────────────────────────────────────────────────────────────────
+- "app/tags does NOT exist (T29 deferred)" → FALSE. app/tags/page.tsx (80 L) and
+  app/tags/[tag]/page.tsx (133 L) exist, T29 `[x]`, commit ddc18da. Ledger check 10.
+- "No testimonial/endorsement/client-quote strings" → FALSE.
+  components/Testimonials/Testimonials.tsx exists (67 L), rendered on /about,
+  and is visible LABELLED examples only (D8). Ledger check 5.
+- "38/38 pages built" → superseded. T29 evidence: build `✓ Generating static pages
+  (127/127)` including `○ /tags` and `● /tags/[tag]`; README documents 127 static
+  pages / 17 route patterns. The plan already annotates the historical 38 count.
+
+────────────────────────────────────────────────────────────────────────────
+OBSERVATIONS (non-blocking)
+────────────────────────────────────────────────────────────────────────────
+O1. ~180 dormant `dark:` utility strings remain app-wide; inert because no `.dark`
+    class is ever applied. D13 governs mode/toggle, not variant removal. Prior
+    ledger O1 carried; future cleanup, not an F4 block.
+O2. T24 is scaffold-only by design and stays `[~]`; the placeholder mechanism is a
+    correct no-fabrication implementation, not a completeness claim.
+O3. `.omo/boulder.json` is modified in the working tree (`git diff --stat`:
+    +14/-6). It is gitignored bookkeeping — not a product/test/config file, so it
+    does not affect scope fidelity. No action taken (read-only audit).
+
+────────────────────────────────────────────────────────────────────────────
+VERDICT
+────────────────────────────────────────────────────────────────────────────
+All 14 scope-fidelity constraints PASS at HEAD 0723b75. No debunked claim re-entered
+into product code; no forbidden dependency, migration, route rename, `output:'export'`,
+or fabricated content. The delta is additive (tags, legal scaffold, labelled examples,
+about portrait, footer/sitemap/a11y wiring) and within every guardrail. Three stale
+prior-ledger claims are corrected above.
+
+F4 VERDICT: APPROVE

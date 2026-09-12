@@ -334,3 +334,68 @@ No blocking code-quality defect. All required gates green; no module over the R4
 ceiling; no escape hatches or swallowed errors in product code; AI-slop sweep clean
 apart from three documented, non-blocking nits (§8) — two of which are pre-existing and
 one of which is DESIGN.md-sanctioned. No product code was modified by this review.
+
+## 12. F2 re-review at post-962b6a2 HEAD (SUPERSEDES §§1–11 scope)
+
+_Transcribed by the orchestrator from verifier session `ses_f69286b03ffe0zCLNuhY68BsoR`
+(category `deep`), which completed the full re-audit and returned APPROVE but failed
+to persist this section (its write follow-up was lost to a provider-level failure).
+The verdict, gate runs, and findings below are the verifier's own; the orchestrator
+only recorded them. Raw output: `tool_096f40ffd001LlyfCpASqPfoN5`._
+
+Scope: `git diff --stat 962b6a2 HEAD -- app/ components/ lib/ e2e/` → 13 files,
+1,108 insertions / 14 deletions. This explicitly supersedes the §§1–11 scope, which
+bound itself to HEAD `9567331` and range `e3e8de5~1..HEAD`.
+
+HEAD at re-audit: `0723b754dfb17f6d90a371079976568be9071d0c` (`0723b75`).
+Timestamp (UTC): 2026-09-12T16:55Z (transcription).
+
+Delta files covered: `app/about/page.tsx`, `app/datenschutz/page.tsx`,
+`app/impressum/page.tsx`, `app/sitemap.ts`, `app/tags/page.tsx`,
+`app/tags/[tag]/page.tsx`, `components/Footer/Footer.tsx`,
+`components/Testimonials/{Testimonials.tsx,Testimonials.test.tsx}`,
+`e2e/{a11y,dark-mode}.spec.ts`, `lib/{tags.ts,tags.test.ts}`.
+
+Gates re-run by the verifier (wrapper `nix develop -c bash -c 'unset PNPM_HOME
+npm_config_prefix; <cmd>'`):
+
+| Gate | Command | Result |
+|---|---|---|
+| typecheck | `pnpm typecheck` | `TYPECHECK_EXIT=0` |
+| lint | `pnpm lint` | 0 errors / 47 pre-existing warnings, `LINT_EXIT=0` |
+| prettier | `pnpm prettier` | "All matched files use Prettier code style!" |
+| tests | `pnpm test` | 23 suites passed, 162/162 tests passed |
+
+`[ERROR] Refusing to run pnpm@10.15.1: npm registry signature could not be verified`
+appeared before each run (benign — falls back to local pnpm; every script exited 0).
+
+R4.14 module ceiling (pure LOC, blanks+comments excluded): `app/datenschutz/page.tsx`
+184, `lib/tags.test.ts` 154, `lib/tags.ts` 143, `app/tags/[tag]/page.tsx` 121,
+`app/impressum/page.tsx` 113, others ≤93 — all ≤250. No R4.14 breach.
+
+R3.4 type safety: zero `as any`, `@ts-ignore`, `@ts-expect-error`, `eslint-disable`,
+non-null `!`. R4.15/R4.16: `lib/tags.ts` → `./blog`,`./projects`,`./markdown`; no
+back-edge, no cycle. Tags/collections tests assert genuine behavior (order-independent
+tie-break, cross-collection aggregation, slug-collision throw naming both keys) — no
+tautologies.
+
+Findings (all MINOR/INFO, non-blocking):
+- MINOR `app/tags/[tag]/page.tsx:111` — defensive `metadataBase || "https://…"`;
+  fallback unreachable (`app/layout.tsx:18` always exports it).
+- MINOR `lib/tags.ts:145` — unmemoized `getAllTags()` re-reads all markdown per call;
+  build-time only, behavior-preserving cache suggested, safe to defer.
+- MINOR duplicated `Placeholder` + legal metadata boilerplate in the two legal pages
+  (R37.2); 2 call sites, non-blocking.
+- MINOR `app/about/page.tsx:4` dead `import path` — pre-existing deadness, carried
+  forward by the delta's import reorder.
+- INFO `imageUrl={entry.fullArticleLink}` on project cards mirrors the approved
+  `/projects` pattern (`ProjectTeaser` declares but never reads `imageUrl`).
+- INFO inert `dark:` variants in new legal/footer markup (D13 single light mode).
+- INFO test uses `getAllByTestId("illustrative-example")` where `getAllByRole("figure")`
+  would assert behavior.
+
+**F2 VERDICT: APPROVE**
+Every MUST-DO rule passes: all four gates green, no escape hatches, no cycles,
+dependency direction downward, all modules under the R4.14 ceiling, no dead logic /
+commented-out code / swallowed errors, tests assert real behavior. The findings are
+all MINOR/INFO with no correctness impact. LCP/CLS/Lighthouse is F5's lane.
