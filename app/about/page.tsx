@@ -133,6 +133,19 @@ export default function About() {
                 </div>
               </TimelineEntry>
             </div>
+            {/* Fixed 4:5 box reserves the portrait's layout so the lazy image
+                never shifts the page below it (CLS). Kept below the fold so it
+                does not compete with the type-led page header for LCP. */}
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-xs overflow-hidden rounded-lg bg-surface-muted">
+              <Image
+                src="/img/Tom_Segbers_Frontal.webp"
+                alt="Portrait of Tom Segbers"
+                fill
+                loading="lazy"
+                sizes="(min-width: 640px) 320px, calc(100vw - 2rem)"
+                className="object-cover"
+              />
+            </div>
           </div>
         </div>
         <Testimonials />
