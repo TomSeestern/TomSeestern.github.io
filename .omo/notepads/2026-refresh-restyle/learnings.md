@@ -955,3 +955,16 @@ The spec edit cannot change runtime test behavior, so every F5 code-gate result
 bundle, e2e, axe) still carries forward unchanged. No product code touched since
 the green run. The sole outstanding F5 item remains the host-blocked Lighthouse
 mobile-budget collection.
+
+## 2026-09-12 — Commit & artifact hygiene audit (R3.3) — pass
+
+- All **51** commits ahead of `origin/main` match Conventional Commits
+  (`feat|fix|docs|chore|refactor|test|perf|ci|style|build|revert`). Zero
+  non-conventional subjects; zero merge commits (linear history).
+- The pre-commit `commit-msg` hook (R3.3, `.pre-commit-config.yaml`) therefore
+  passed on every commit — no commit bypassed it (no `--no-verify` anywhere).
+- No build/tool artifacts tracked: `git ls-files` shows nothing under `.next/`,
+  `.lighthouseci/`, `null/`, `playwright-report/`, `storybook-static/`, `coverage/`.
+  The recurring `null/` codegraph artifact is confirmed untracked.
+
+**Conclusion:** release hygiene holds. Nothing to fix.
