@@ -49,6 +49,20 @@ export function Footer({ ...props }: FooterProps) {
           <Image className={"h-4 w-4 dark:invert"} src={"/icon/mail.svg"} alt="" width={32} height={32}></Image>
           <span className="sr-only">Email</span>
         </a>
+        {/* No legal/privacy icon exists in public/icon/, so these reuse the
+            icon-link base class string as visible text links. */}
+        <a
+          href="/impressum"
+          className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+        >
+          Impressum
+        </a>
+        <a
+          href="/datenschutz"
+          className="inline-flex cursor-pointer justify-center rounded-lg p-2 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:text-muted-dark dark:hover:bg-muted-surface-dark dark:hover:text-foreground-dark dark:focus-visible:ring-accent-soft-dark"
+        >
+          Datenschutz
+        </a>
       </div>
     </footer>
   )

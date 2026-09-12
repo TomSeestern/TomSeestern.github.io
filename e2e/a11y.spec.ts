@@ -23,6 +23,8 @@ export const A11Y_ROUTES = [
   "/projects",
   "/projects/entry/2020-soudest-backend-nodejs",
   "/contact",
+  "/impressum",
+  "/datenschutz",
 ] as const
 
 type Scheme = (typeof SCHEMES)[number]
