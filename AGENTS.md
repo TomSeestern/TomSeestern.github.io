@@ -299,12 +299,6 @@ AGENTS.md and README.md each have a table of contents. When sections are added, 
 
 **N/A.** This project does not currently maintain a CHANGELOG.md. For a personal portfolio site, significant changes are tracked via git history and conventional commits. If a CHANGELOG is introduced, it should follow [Keep a Changelog](https://keepachangelog.com/) conventions.
 
-## Unreleased
-
-### Added
-
-### Fixed
-
 #### R5.5) ADRs record material architectural decisions `[manual]`
 
 <!-- manual: no `scripts/check-adr.mjs` exists; ADR creation is manual -->
@@ -1046,8 +1040,6 @@ Before creating a new boulder or plan, agents must check `.omo/boulders/` and `.
 <!-- manual: no `scripts/check-token-report.mjs` exists; token reporting is done in evidence files -->
 
 Each evidence file in `.omo/evidence/` should include a token usage summary for the task that produced it. This enables trend analysis across sessions. Manual tracking — no automated pipeline.
-
-## Resource usage
 
 #### R22.2) Model selection is documented `[manual]`
 
