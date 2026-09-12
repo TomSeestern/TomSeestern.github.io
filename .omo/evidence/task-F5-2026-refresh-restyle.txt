@@ -1113,3 +1113,47 @@ stops, this host should return to `bi ≈ 2510+` and Arm A will yield a valid re
 Both are environmental. **Nothing here implicates the product code.** The gate is
 unjudged solely because a valid-speed measurement has not been possible since the
 restyle landed.
+
+---
+
+## §25. Arm A3 (2026-09-12 11:15Z) — bi 1550 (0.56×); trend continues toward validity
+
+Third Arm A attempt, correct toolchain (LH 13.4.1 + nix Chromium 149.0.7827.200).
+Launched at CPU 18 %, loadavg 4.68, freq recovering to 1.83 GHz — but during the ~90 s
+run the host re-loaded (post-run loadavg 8.11), and `benchmarkIndex` landed at **1550**
+= 0.561 × baseline 2762 → **still incomparable** under the §19 rule.
+
+| metric | baseline (bi 2762) | Arm A3 (bi 1550) | Δ |
+|---|---:|---:|---:|
+| LCP | 2588 | 2954 | +365 |
+| FCP | 1054 | 1062 | +8 |
+| TBT | 85 | 351 | +266 |
+| CLS | 0 | 0 | 0 |
+
+### The host-speed series (all `/projects`, all post-restyle, all LH 13.4.1)
+
+| attempt | benchmarkIndex | ratio | LCP |
+|---|---:|---:|---:|
+| Arm A | 1213 | 0.44 | 4027 |
+| Arm A2 | 1343 | 0.49 | 4219 |
+| Arm A3 | 1550 | 0.56 | 2954 |
+| **baseline** | **2762** | 1.00 | **2588** |
+
+LCP falls sharply as `bi` rises — consistent with §21's model (≈ −1257 ms per e-fold of
+`bi`). Extrapolating `bi` 1550 → 2762 (`ln` ratio 0.578): 2954 − 1257×0.578 ≈ **2227 ms**
+→ likely **PASS** at baseline speed. Still an extrapolation, not a measurement.
+
+### Note on what is actually consuming CPU now
+`ps` at launch showed the largest consumers were **not** only the external Stryker job:
+- `/etc/profiles/per-user/tom/bin/opencode serve` (this orchestrator harness) ~99 % of one core,
+- a `ClosedLoopOS` jest run ~80 %,
+- a Playwright `chrome-headless-shell` ~56 %.
+
+So the contention is a **mix of several projects plus my own agent harness**, not a single
+external job. This matters: a "quiet host" requires all of them to be idle, and the
+orchestrator's own footprint is part of the load.
+
+### Status
+F5 remains **UNJUDGED**. As `bi` climbs toward baseline with the load easing, the
+prediction is converging on a pass — but three incomparable readings do not substitute
+for one valid one. Resume per §18 when a run holds `bi ≥ 2510`.
