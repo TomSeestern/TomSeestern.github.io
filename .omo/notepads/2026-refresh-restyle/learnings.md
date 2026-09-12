@@ -1171,3 +1171,14 @@ Invoked the binaries directly (skipping contended `nix develop` startup):
 Combined with the 4 budget gates and (pending) lint + jest, this rebuilds F5's
 code-gate evidence as fresh observations at the current HEAD rather than
 inferences. Only the Lighthouse timing gate remains host-blocked.
+
+## 2026-09-12 — lint green at HEAD; canonical scope gotcha
+
+- Canonical command (`eslint . --ext .ts,.tsx`) → **0 errors, 47 warnings**, exit 0 —
+  exactly F5's recorded baseline. Observed fresh at HEAD via the direct binary.
+- **Gotcha / false alarm:** an ad-hoc `eslint . --ext .js,.jsx,.ts,.tsx` reported
+  "64 errors, 1712 warnings". That is NOT the project's lint scope — it pulls in
+  untracked-rule `.js` files (e.g. `tailwind.config.js`, `report-bundle-size.js`)
+  the project deliberately excludes. Always run `pnpm lint` (or the exact
+  `--ext .ts,.tsx`) before concluding anything about lint health. The 47 warnings
+  are the known pre-existing baseline; no new errors exist.
