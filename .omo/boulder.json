@@ -83,9 +83,9 @@
       "work_id": "2026-refresh-restyle-36d71cc0",
       "active_plan": "/home/tom/Projects/tomsegbers-de/.omo/plans/2026-refresh-restyle.md",
       "plan_name": "2026-refresh-restyle",
-      "status": "active",
+      "status": "blocked",
       "started_at": "2026-09-10T18:26:19.216Z",
-      "updated_at": "2026-09-10T20:20:33.812Z",
+      "updated_at": "2026-09-12T02:08:54.674Z",
       "session_ids": [
         "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
       ],
@@ -102,16 +102,17 @@
           "agent": "Sisyphus-Junior",
           "category": "quick",
           "started_at": "2026-09-10T18:46:51.190Z",
-          "status": "running",
-          "updated_at": "2026-09-10T20:20:33.812Z"
+          "status": "completed",
+          "updated_at": "2026-09-12T02:08:54.674Z"
         }
-      }
+      },
+      "blocked_reason": "All executable tasks T01-T23 + F1-F4 complete and committed. Blocked on: (1) F5 Lighthouse mobile budgets require a host with no external CPU saturation (unrelated Stryker run pinned all 22 cores); (2) Wave 5 content T20/T24-T29 are human-gated (R19.1 - agents may not author content as fact)."
     }
   },
   "active_plan": "/home/tom/Projects/tomsegbers-de/.omo/plans/2026-refresh-restyle.md",
   "started_at": "2026-09-10T18:26:19.216Z",
-  "status": "active",
-  "updated_at": "2026-09-10T20:20:33.812Z",
+  "status": "blocked",
+  "updated_at": "2026-09-12T02:08:54.674Z",
   "session_ids": [
     "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
   ],
