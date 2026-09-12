@@ -772,3 +772,23 @@ Second doc-drift item from F2: the README "Available Scripts" table claims
 - Lesson: when a plan adds a `package.json` script, the README scripts table is a
   same-commit update target (R5.2). Neither `pnpm lint` nor `pnpm prettier` covers
   `.md`, so markdown drift is invisible to the code gates.
+
+## F2 follow-up — README structure tree + Flowbite wiring corrected (2026-09-12)
+
+Third and fourth doc-drift items from F2 (after the scripts-table fix):
+
+- Structure tree was stale: listed 3 of 5 workflows, 3 of 13 e2e specs, omitted
+  `app/api/health/route.ts`, `lib/projects.test.ts`, `tests/budgets/`, and all
+  but one `scripts/*`. Synced in `7a87fa7 docs: sync project structure tree with
+  repository` — compact summaries used where lists would re-drift.
+- `styles/tailwind.css` comment falsely claimed it "imports Flowbite". Flowbite
+  is wired in `tailwind.config.js` (content glob + `plugins: require("flowbite/plugin")`).
+  Corrected in `bfaae25 docs: correct Flowbite wiring reference in README tree`,
+  which also commented `tailwind.config.js`.
+- **Root cause of all four drift items:** the plan touched `package.json` scripts,
+  CI workflows, e2e specs, and components, but no task owned README/AGENTS prose.
+  R5.2 is `[manual]`, so nothing flagged it — the code gates (`lint`, `prettier`)
+  do not cover `.md`.
+- **Lesson:** a "restyle" plan that adds gates/scripts/specs must include a
+  same-plan README/AGENTS truthfulness task, or complete it in the orchestrator's
+  close-out. The `.md` files are invisible to every automated gate.
