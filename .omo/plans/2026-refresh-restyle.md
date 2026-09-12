@@ -753,6 +753,52 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 - [x] **F4. Scope fidelity** — Depends: all | Category: `deep` | Skills: [`review-work`, `git-master`]
 - [~] **F5. Regression gate** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `frontend`, `debugging`]
 
+### Wave 7 (F5-UNBLOCK — added 2026-09-12, R19.4 plan amendment)
+
+> **Why this wave exists.** F5 revealed the plan's Success-Criterion #3 and T05's
+> expectation ("expected to go green once the restyle + T22 land") are **false for
+> `/projects`**. Same-tool (Lighthouse 12.6.1) evidence: pre-restyle `/projects`
+> with the `h1` as LCP element measured **2632 ms** (T05, rev `1b1062e`); post-restyle
+> with the intro `p` as LCP element measured 2923 ms (run 6). Reverting the paragraph
+> restores the *already-failing* 2632 ms condition, so the one-line revert is
+> **provably insufficient**. `/projects` has never passed the 2500 ms LCP budget at
+> any measured revision under any tool. No prior task owned this fix. Full analysis:
+> `.omo/evidence/task-F5-2026-refresh-restyle.txt` §14–§16 and
+> `.omo/decisions/2026-09-12-f5-lighthouse-methodology.md`.
+>
+> Budgets are unchanged (2500 / 0.1 / 200). This wave is the real fix, not a
+> measurement re-read.
+
+- [~] **T30. `/projects` LCP fix — reduce critical document/DOM render cost** `[BLOCKED: needs quiet-host verification]`
+  - Depends: F5 diagnosis (done) | Category: `visual-engineering` (perf-shaped)
+  - Skills: [`frontend`, `programming`, `playwright`]
+  - Description: Reduce `/projects`' main-thread render delay. Lead candidate:
+    `content-visibility: auto` + `contain-intrinsic-size` on the project-card
+    containers (21 cards; 212 KB HTML vs `/blog`'s 41 KB at near-equal JS). Verify
+    the choice with the quiet-host experiment in
+    `.omo/notepads/2026-refresh-restyle/problems.md` BLOCKER 1 before committing.
+  - Acceptance: under the gate's LH 12.6.1, `/projects` LCP median < 2500 ms on a
+    quiet host; CLS < 0.1; axe zero serious/critical; `pnpm build` 0; e2e green.
+  - MUST NOT: weaken the budget; change blog routes; add runtime deps; break
+    keyboard/focus behavior or scroll anchoring.
+  - **Blocked because:** the fix cannot be verified (R6.1/R8.1) while the external
+    `ohmyroadmap` Stryker job saturates the host (22 cores, ~21 runners at ~100 %).
+    A production change with no executable verification is forbidden. Unblocks when
+    the host is quiet enough to read `/projects` LCP under LH 12.6.1.
+- [~] **T31. Lighthouse version parity for CI** `[BLOCKED: Tom process decision]`
+  - Depends: — | Category: `unspecified-high`
+  - Skills: [`frontend`, `programming`]
+  - Description: Align the gate's Lighthouse major with the baseline's (T02 used
+    13.4.1; `@lhci/cli@0.15.1` bundles 12.6.1). Tool bias measured at −384…+128 ms
+    across routes (median −22). Choose one: pin/upgrade `@lhci/cli` (or invoke a
+    pinned `lighthouse`), then re-capture the baseline with the SAME version and
+    record `lighthouseVersion` in every comparison.
+  - Acceptance: gate and baseline LHRs report the same `lighthouseVersion`; a
+    comparison note in `.omo/evidence/task-T05…` states it.
+  - **Blocked because:** changing the measuring instrument can read as moving the
+    goalposts and must be a deliberate, documented choice by Tom — not an agent
+    call (`.omo/decisions/2026-09-12-f5-lighthouse-methodology.md`, "Non-decisions").
+
 ## Execution Instructions
 
 1. **Wave 0.1** — fire in parallel:
