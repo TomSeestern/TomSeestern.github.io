@@ -101,6 +101,7 @@ From `package.json`:
 | `pnpm start`           | Run the production build locally                        |
 | `pnpm lint`            | Run ESLint over `*.ts` and `*.tsx`                      |
 | `pnpm lint:fix`        | Auto-fix lint errors                                    |
+| `pnpm typecheck`       | Type-check with `tsc --noEmit`                          |
 | `pnpm prettier`        | Check formatting                                        |
 | `pnpm prettier:fix`    | Apply Prettier fixes                                    |
 | `pnpm test`            | Run Jest unit and component tests                       |
@@ -112,6 +113,10 @@ From `package.json`:
 | `pnpm analyze`         | Build with `@next/bundle-analyzer` enabled              |
 | `pnpm lighthouse`      | Run Lighthouse CI budgets (LCP/CLS/TBT)                 |
 | `pnpm budget:bundle`   | Check bundle bytes against the committed baseline       |
+| `pnpm contrast`        | Check token pairs against WCAG contrast ratios          |
+| `pnpm ornaments`       | Gate banned ornaments and off-token decorations         |
+| `pnpm images`          | Enforce image byte budget (`≤200 KB`, hero `≤50 KB`)    |
+| `pnpm fonts`           | Enforce font budget (`≤2 families`, `≤100 KiB`)         |
 | `pnpm coupling-graph`  | Render module dependency graph to `graph.svg` via Madge |
 | `pnpm format`          | Apply Prettier to `*.ts`, `*.tsx`, `*.md`               |
 
