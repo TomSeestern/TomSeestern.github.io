@@ -941,3 +941,17 @@ on the same quiet host before F5 can be marked green.
   F5 host contention was triaged as environmental with a documented resume path.
 
 No change required; recorded for completeness so the next session does not re-audit.
+
+## 2026-09-12 — F5 carry-forward, exact file list at HEAD
+
+`git diff --name-only 88c68f9..HEAD -- . ':(exclude).omo'` now returns exactly:
+- `DESIGN.md`
+- `README.md`
+- `e2e/dark-mode.spec.ts`  ← comment-only (verified: the changed lines are all
+  inside a `/** … */` JSDoc block; no executable/assertion line moved)
+
+The spec edit cannot change runtime test behavior, so every F5 code-gate result
+(typecheck, lint, prettier, jest, build, contrast, ornaments, images, fonts,
+bundle, e2e, axe) still carries forward unchanged. No product code touched since
+the green run. The sole outstanding F5 item remains the host-blocked Lighthouse
+mobile-budget collection.
