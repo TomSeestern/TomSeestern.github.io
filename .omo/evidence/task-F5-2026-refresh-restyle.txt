@@ -265,3 +265,36 @@ render delay: the fix is a font/LCP strategy change (e.g. `display: optional`,
 preload tuning, or shipping the display face only above the fold) — a design-perf
 tradeoff that D3 (carved serif) makes non-trivial and that requires Tom's sign-off.
 It is NOT a bundle-size or asset problem: bundle is at baseline and LCP loads 0 bytes.
+
+## 6. ADDENDUM 2026-09-12 08:15 — second F5 attempt: CONTAMINATED, DISCARD
+
+After the partially-contaminated 07:40 run, a quiet-window search polled host CPU for
+**40 × 15 s = 10 min** before starting. **No quiet window appeared** — every sample
+read **99–100 % CPU** with 20–30 Stryker workers (the original saturating process
+`2902322` plus a second run). The F5 command was nonetheless launched and returned
+EXIT 1 with **14/14 assertion failures**:
+
+```
+/            LCP 3857  TBT 1399      /projects    LCP 4430  TBT 1827
+/about       LCP 3397  TBT  785      /projects/entry/… LCP 3076 TBT 574
+/blog        LCP 3856  TBT 1352      /contact     LCP 3850  TBT  951
+/blog/entry/cheesecake LCP 3222 TBT 463
+```
+
+**These numbers are GARBAGE and must not be interpreted as a regression.** Evidence:
+- TBT 1399 ms on `/` and 1827 ms on `/projects` — on a byte-identical bundle whose
+  shared JS is at baseline (102 kB) and whose detail routes are −72.6 %. Under the
+  4× Lighthouse CPU multiplier on an already-100 %-saturated host, the multiplier
+  compounds; there is no code path that could add ~1.2 s of blocking time.
+- The same routes scored LCP 2292/2874 and TBT 205/257 only 35 min earlier in the
+  07:40 run, when the host briefly dipped to 16 % CPU. A 2× swing in every metric is
+  the saturating Stryker load, not the site.
+
+**Process note / self-correction:** launching F5 when no quiet sample was ever seen
+was a mistake — it burned a build+lighthouse cycle and produced misleading artifacts.
+The correct gate is: do NOT run F5 unless ≥3 consecutive 15 s samples show CPU busy
+≤ ~30 % AND worker count low. This attempt failed that gate and its output is void.
+
+**Net state:** the only *partially* trustworthy F5 data is the 07:40 run (§5), which
+still showed a best-case `/projects` LCP of 2874 ms (render-bound, font-swap-shaped).
+A verdict still requires a genuinely quiet host. Budgets remain 2500/0.1/200.
