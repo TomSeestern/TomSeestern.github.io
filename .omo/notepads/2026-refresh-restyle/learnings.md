@@ -1467,3 +1467,37 @@ envelope heuristic.
 baseline browser is `/etc/profiles/per-user/tom/bin/chromium` (Chromium 149.0.7827.200),
 NOT the Playwright Chromium (different build; fails with `libglib-2.0.so.0` outside
 `nix develop`).
+
+## [2026-09-12] Wave 5 partial execution — T24 scaffold + D8 testimonial + tag data
+
+**D8 resolved (Tom, 2026-09-12):** labelled examples only. Tom approved the
+permitted alternative from the decisions file. `components/Testimonials/` ships
+with a visible "Example" badge + the disclaimer "Illustrative examples — not real
+client testimonials." and generic-role attributions only (`Example — Product Lead`).
+Four unit tests lock the labelling so it cannot be silently removed. This satisfies
+R19.1 and UWG §5. Decision record updated to Round 3.
+
+**T24 scaffolded:** `app/impressum/page.tsx` (119 lines) + `app/datenschutz/page.tsx`
+(193 lines). All owner facts are `TODO(Tom): …` placeholders rendered in accent
+mono — no invented legal text. Datenschutz discloses the Resend processor flow
+(incl. US transfer caveat) and Vercel hosting, and truthfully states no
+cookies/analytics/tracking (verified: no analytics deps, no gtag, layout has only
+JSON-LD). Footer links added as text links (no legal/privacy icon exists in
+`public/icon/`). Sitemap + axe matrix extended. Awaiting Tom's real facts.
+
+**Tag data quality (for T29) — important findings:**
+- **140 unique tags** across content (21/21 projects + 3/3 blog files have tags).
+- **109 of 140 appear exactly once** — a full index would be mostly single-item
+  pages. Distribution: 109×1, 20×2, 4×3, 3×4, 1×5, 3×6.
+- **Case collisions exist:** `LabVIEW` vs `labview` (and near-dupes like
+  `ArtificialIntelligence` vs `Artificial Intelligence`, `AWS` vs `AWS-Amplify`).
+- **Special chars:** `C++` is a tag — URL-encoding matters.
+- Top tags: React/Python/C++ (6 each), SQL (5), SQF/Robotics/Arma 3 (4 each).
+- `tags` is already in the Zod schema (`lib/markdown.ts:16`) and populated in
+  `MarkdownEntry` (`tags: string[]`), so no schema change is needed.
+
+**Tooling incident:** a subagent hit `ENOSPC` (disk 99%, 13G free) which corrupted
+the Next dev server mid-axe-run and produced spurious failures on ALL routes. After
+cleaning `test-results/`, `playwright-report/`, `.next/` the clean re-run passed
+10/10. **Lesson: check `df -h /` before long e2e runs; ENOSPC manifests as
+whole-suite a11y failures, not an obvious disk error.** `~/.npm/_npx` holds 3.5G.

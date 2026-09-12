@@ -731,6 +731,7 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 ### Wave 5 (HUMAN-GATED — do not start without Tom)
 
 - [~] **T24. Legal pages (P0)** `[HUMAN_GATE]`
+  - **SCAFFOLD COMPLETE (2026-09-12), awaiting Tom's facts.** `app/impressum/page.tsx` + `app/datenschutz/page.tsx` shipped with visible `TODO(Tom)` placeholders; footer links, sitemap entries, and axe matrix extended (10/10 pass). Commit `5ae1601`. Remaining: Tom supplies the real legal fields (name, address, contact, USt-IdNr, DPA/Drittland notes) — the acceptance clause "Tom approves text" is not yet met, so this stays `[~]`.
   - Depends: D10 | Category: `writing` | Skills: [`writing`, `programming`, `frontend`]
 - [~] **T25. Positioning + founder arc** `[HUMAN_GATE]`
   - Depends: T24 | Category: `writing` | Skills: [`writing`, `frontend`]
@@ -739,6 +740,7 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 - [~] **T27. Two new posts** `[HUMAN_GATE]`
   - Depends: T24 | Category: `writing` | Skills: [`writing`]
 - [~] **T28. Cheesecake/LAY2R/testimonial** `[HUMAN_GATE]`
+  - **D8 (testimonial) COMPLETE (2026-09-12).** Labelled-example section shipped: `components/Testimonials/` with an unmissable visible "Example" badge + disclaimer, generic-role attributions only, locked by 4 unit tests. Commit `fefcf7d`. Remaining: D7 cheesecake disposition (Tom chose "keep as part of the blog" per D7, so no archive/delete work) and D6 LAYZR case study (needs Tom's cleared metrics + consent).
   - Depends: T19,T22,T24 | Category: `writing` | Skills: [`writing`, `frontend`]
 - [~] **T29. Tag pages (deferred)** `[HUMAN_GATE]`
   - Depends: T10,T24 | Category: `quick` | Skills: [`programming`, `frontend`]
