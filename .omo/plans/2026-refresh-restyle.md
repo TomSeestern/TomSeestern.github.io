@@ -742,7 +742,8 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 - [~] **T28. Cheesecake/LAY2R/testimonial** `[HUMAN_GATE]`
   - **D8 (testimonial) COMPLETE (2026-09-12).** Labelled-example section shipped: `components/Testimonials/` with an unmissable visible "Example" badge + disclaimer, generic-role attributions only, locked by 4 unit tests. Commit `fefcf7d`. Remaining: D7 cheesecake disposition (Tom chose "keep as part of the blog" per D7, so no archive/delete work) and D6 LAYZR case study (needs Tom's cleared metrics + consent).
   - Depends: T19,T22,T24 | Category: `writing` | Skills: [`writing`, `frontend`]
-- [~] **T29. Tag pages (deferred)** `[HUMAN_GATE]`
+- [x] **T29. Tag pages** (D9 approved 2026-09-12)
+  - **DELIVERED (2026-09-12).** `/tags` index + `/tags/[tag]` archive; `lib/tags.ts` normalizes 87 raw tag forms to 86 canonical keys with deterministic URL-safe slugs (`C++` → `c-plus-plus`), throwing on slug collisions. Entries reuse `ArticleTeaser`/`ProjectTeaser`. Sitemap + axe matrix (12/12) extended, footer link added. Verified: typecheck, prettier, lint 0 errors, Jest 162/162, build 127 static pages, full e2e 83 passed. Commit `ddc18da`. Found and fixed a footer touch-target regression in the same commit (see below).
   - Depends: T10,T24 | Category: `quick` | Skills: [`programming`, `frontend`]
 - [~] **T20. About portrait + founder arc** (structural non-gated; content gated)
   - Depends: T14,T15,T24 | Category: `visual-engineering` | Skills: [`frontend`, `visual-qa`, `playwright`]
