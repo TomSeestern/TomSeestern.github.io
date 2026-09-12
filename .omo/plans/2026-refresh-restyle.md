@@ -795,9 +795,17 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
     record `lighthouseVersion` in every comparison.
   - Acceptance: gate and baseline LHRs report the same `lighthouseVersion`; a
     comparison note in `.omo/evidence/task-T05…` states it.
-  - **Blocked because:** changing the measuring instrument can read as moving the
-    goalposts and must be a deliberate, documented choice by Tom — not an agent
-    call (`.omo/decisions/2026-09-12-f5-lighthouse-methodology.md`, "Non-decisions").
+  - **Blocked because (two reasons):**
+    1. **Tom process decision** — changing the measuring instrument can read as
+       moving the goalposts and must be a deliberate, documented choice by Tom, not
+       an agent call (`.omo/decisions/2026-09-12-f5-lighthouse-methodology.md`,
+       "Non-decisions").
+    2. **No registry access in this environment (verified 2026-09-12)** — pinning or
+       upgrading `@lhci/cli`/`lighthouse` needs the npm registry, which is
+       unreachable here (`curl https://registry.npmjs.org/lighthouse` → HTTP 000,
+       timeout). Only the installed versions exist locally:
+       `node_modules/.pnpm/lighthouse@12.6.1`, `node_modules/.pnpm/@lhci+cli@0.15.1`.
+       Any version change therefore needs a networked machine.
 
 ## Execution Instructions
 
