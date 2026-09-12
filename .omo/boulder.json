@@ -85,7 +85,7 @@
       "plan_name": "2026-refresh-restyle",
       "status": "blocked",
       "started_at": "2026-09-10T18:26:19.216Z",
-      "updated_at": "2026-09-12T08:05:00.000Z",
+      "updated_at": "2026-09-12T09:20:00.000Z",
       "session_ids": [
         "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
       ],
@@ -106,13 +106,13 @@
           "updated_at": "2026-09-12T02:08:54.674Z"
         }
       },
-      "blocked_reason": "All executable tasks T01-T23 + F1-F4 complete and committed. F5 CODE gates re-observed green at HEAD (typecheck, prettier, lint 0err/47warn, jest 21/141, build 38 routes, contrast 24/24, ornaments, images 101, fonts 70.7KiB, bundle 14/14, e2e 79, axe 8). F5 LIGHTHOUSE: 5 attempts on 2026-09-12, ALL contaminated by an unrelated external Stryker run (ohmyroadmap, 20-30 workers at 90-100% CPU on 22 cores). Run 5 (07:45Z) launched into a verified quiet window but Stryker restarted ~1s after launch and ramped 3->24 workers mid-sweep; run 5 collected cleanly (21/21 LHRs, 0 runtime errors) yet shows residual LCP jitter. vs the host-independent T02 pre-restyle baseline, LCP improved on 5/7 routes (home -542, about -278, blog -118, cheesecake -645, soudest -54); cheesecake was ALREADY over budget at baseline (3562). CORRECTION: /projects is an UNRESOLVED MEASUREMENT, not a proven regression (earlier font-swap framing retracted, see F5 ledger section 13): its LCP element is the INTRO PARAGRAPH which uses Inter, not the Newsreader H1, and the phase-table TTFB=453ms is a simulated-throttling constant, not real server delay (real server-response-time 7-18ms). All variance is Render Delay (2445-3525ms), main-thread-bound. /projects was ALREADY over budget at baseline (2588>2500), so it has never passed. No code change justified without one clean-host re-read. Budgets NOT weakened (LCP 2500/CLS 0.1/TBT 200). Resume F5 ONLY when the host is genuinely idle for the full ~6min sweep (loadavg <=4, no stryker worker): see .omo/notepads/2026-refresh-restyle/problems.md BLOCKER 1; full data in F5 ledger sections 12-13. Wave 5 content T20/T24-T29 human-gated (R19.1 - agents may not author content as fact)."
+      "blocked_reason": "All executable tasks T01-T23 + F1-F4 complete and committed. F5 CODE gates re-observed green at HEAD (typecheck, prettier, lint 0err/47warn, jest 21/141, build 38 routes, contrast 24/24, ornaments, images 101, fonts 70.7KiB, bundle 14/14, e2e 79, axe 8). F5 LIGHTHOUSE: 6 attempts on 2026-09-11/12. Run 6 captured the FIRST genuinely clean-host subset (corrected CPU-delta detector: 0 stryker CPU-s over 20s). 6/7 routes PASS clean: / 2258, /about 2062, /blog 2364, cheesecake 2286 (was 3562 baseline - T22 fix confirmed), soudest 2067. /projects LCP 2923 on its one clean run. ROOT CAUSE (two factors): (1) external ohmyroadmap Stryker job holds ~20-24 runners at ~100% CPU on 22 cores; (2) a Lighthouse MAJOR-VERSION confound in the baseline comparison: T02 baseline = LH 13.4.1 (npx -y lighthouse), gate = LH 12.6.1 (@lhci/cli@0.15.1). QUANTIFIED (decision .omo/decisions/2026-09-12-f5-lighthouse-methodology.md addendum): T02 (74689e8) and T05 (1b1062e) measured IDENTICAL product code (only e2e/CI/scripts changed between), so T05-T02 estimates tool bias directly: -384..+128ms across routes (median -22). On /projects the bias is only +44ms, so the version confound does NOT explain the overage. Pre-restyle under the gate own LH12, /projects was ALREADY red (T05 median-of-3 = 2632). The LCP element switched h1->p (a product change: intro paragraph text-base font-normal -> text-body-lg font-light), seen under the SAME LH12. CORRECTED VERDICT: /projects is a pre-existing overage, plausibly worsened by the paragraph change (~+291ms suggestive but from a single post-resaturation run - NOT proven). F5 sec11 font-swap claim and same-version premise both RETRACTED (ledger sec15). Budgets NOT weakened (2500/0.1/200). NEXT ACTION (not code): quiet-host A/B per BLOCKER 1 - Arm A: current build under lighthouse@13.4.1 on /projects vs the 2588 baseline; Arm B: paragraph-revert A/B under the gate LH12.6.1. If Arm B returns LCP <2500 under LH12, the fix is real and cheap (revert paragraph scale). Do NOT run while host saturated; do not arm an in-session watcher (30-min monitor cap < 12h+ job). Wave 5 content T20/T24-T29 remain human-gated (R19.1 - agents may not author content as fact)."
     }
   },
   "active_plan": "/home/tom/Projects/tomsegbers-de/.omo/plans/2026-refresh-restyle.md",
   "started_at": "2026-09-10T18:26:19.216Z",
   "status": "blocked",
-  "updated_at": "2026-09-12T08:05:00.000Z",
+  "updated_at": "2026-09-12T09:20:00.000Z",
   "session_ids": [
     "opencode:ses_f736deb17ffe5Xv9Cb53A4bfDP"
   ],
