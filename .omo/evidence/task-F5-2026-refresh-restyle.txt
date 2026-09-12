@@ -133,3 +133,35 @@ separate perf task, not a scope change here.
 - Lighthouse run 2: `/tmp/f5-lighthouse2.log`; LHRs in `.lighthouseci/` (gitignored)
 - Prior environmental diagnosis: `.omo/evidence/t05-lighthouse/environmental-diagnosis-2026-09-11.txt`
 - F1/F2/F3/F4 ledgers: `.omo/evidence/task-F{1,2,3,4}-2026-refresh-restyle.txt`
+
+## 4. ADDENDUM 2026-09-12 — code gates RE-OBSERVED at later HEAD (not carried forward)
+
+F5's original code-gate run was at HEAD `88c68f9`. Between then and now only
+`DESIGN.md`, `README.md`, `AGENTS.md`, `.gitignore`, and one comment-only line in
+`e2e/dark-mode.spec.ts` changed — zero product code. To remove any doubt, every
+code-controlled gate was **re-run fresh** at HEAD and independently observed:
+
+| Gate | Command (direct bin / devShell) | Result | Time |
+| --- | --- | --- | --- |
+| Typecheck | `node_modules/typescript/bin/tsc --noEmit` | exit 0 | — |
+| Prettier | `node_modules/.bin/prettier --check '**/*.{js,jsx,ts,tsx}'` | "All matched files use Prettier code style!" | — |
+| Lint | `eslint . --ext .ts,.tsx` (canonical scope) | **0 errors, 47 warnings** (baseline) | — |
+| Jest | `node_modules/.bin/jest --silent` | **21 suites / 141 tests passed** | 9.5 s |
+| Build | `next build` (certs exported) | exit 0; **38** static/SSG routes; shared JS 102 kB | — |
+| Bundle budget | `report-bundle-size.js && check-bundle-budget.mjs` | **PASS — 14/14**; detail routes −72.6% | — |
+| Contrast | `pnpm contrast` | **PASS 24/24** | — |
+| Ornaments | `pnpm ornaments` | PASS (101 files) | — |
+| Images | `pnpm images` | PASS (101 images) | — |
+| Fonts | `node scripts/check-font-budget.mjs` | PASS (2 families, first-load 70.7 KiB) | — |
+| e2e | `pnpm exec playwright test --project=chromium --workers=1` | **79 passed** | 7.5 min |
+| Axe a11y | `pnpm exec playwright test e2e/a11y.spec.ts …` | **8 passed** (empty allowlist) | 1.9 min |
+
+The single outstanding F5 item remains the **Lighthouse mobile timing gate**, still
+blocked by the unrelated external Stryker run (23 workers, loadavg ~30–56 on 22 cores,
+7h+). Resume procedure unchanged (see §5). Budgets untouched (2500 ms / 0.1 / 200 ms).
+
+Repro gotchas recorded this session:
+- Lint scope: use `--ext .ts,.tsx`; the wider `.js,.jsx` set lints files the project
+  excludes (spurious "64 errors").
+- Playwright: run inside `nix develop` AND export the cert vars **inside** that shell,
+  else `next dev`'s font fetch fails with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`.
