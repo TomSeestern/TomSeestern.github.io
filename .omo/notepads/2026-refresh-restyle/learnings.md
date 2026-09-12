@@ -819,3 +819,24 @@ so a sandboxed copy exercises the real logic). Tree clean afterwards.
 **Lesson:** when a plan's completion depends on budget gates, verify them in
 *both* directions — wired AND falsifiable. A gate that cannot fail is a
 documented green light on a red road.
+
+## 2026-09-12 — D13 (single light mode) confirmed at source level
+
+F4 asserted D13 from behavior; orchestrator added the source-level proof that the
+dormant `dark:*` utilities F2 noted can never activate:
+
+- `tailwind.config.js` sets `darkMode: "class"` (NOT the v3 default `"media"`).
+  Under `"class"`, a `dark:*` utility only applies when an ancestor has `.dark`.
+- No code path ever adds it: grep across `app/`, `components/`, `lib/`, `styles/`
+  finds zero `classList.add('dark')`, `toggle('dark')`, `setAttribute(... 'dark')`,
+  `documentElement...dark`, or `localStorage` theme writes.
+- No raw `@media (prefers-color-scheme: dark)` CSS exists anywhere, so nothing
+  bypasses the class strategy at the CSS layer.
+- `e2e/dark-mode.spec.ts` (retained filename) locks this: asserts no `.dark` class,
+  light `body` bg `rgb(245,239,225)`, no `data-testid="dark-theme-toggle"`, no
+  `prefers-color-scheme` in served HTML, empty `localStorage`, and single-scheme
+  (`["light"]`) axe contrast scans. It explicitly emulates OS dark and requires
+  the app to ignore it.
+
+**Conclusion:** the carry-over `dark:*` classes are provably inert. D13 holds with
+defense in depth (config + no-writer + no-CSS-escape + e2e lock). No product change.
