@@ -159,15 +159,19 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── page.tsx               # Home: hero, featured work, founder arc, blog teasers
 │   ├── not-found.tsx
 │   ├── robots.ts              # Metadata route: allow all, points to sitemap
-│   ├── sitemap.ts             # Metadata route: static + blog/project URLs
+│   ├── sitemap.ts             # Metadata route: static + blog/project/tag URLs
 │   ├── icon.png / apple-icon.png / favicon.ico  # Next file-convention icons
 │   ├── about/page.tsx
 │   ├── api/health/route.ts    # Health-check endpoint (returns {status:"ok"})
 │   ├── contact/page.tsx       # Contact form ("use client")
+│   ├── datenschutz/page.tsx   # Legal: privacy policy (Datenschutz)
+│   ├── impressum/page.tsx     # Legal: imprint (Impressum)
 │   ├── blog/page.tsx          # Blog listing
 │   ├── blog/entry/[slug]/page.tsx   # Blog detail, generateStaticParams
 │   ├── projects/page.tsx      # Projects listing
-│   └── projects/entry/[slug]/page.tsx  # Project detail, generateStaticParams
+│   ├── projects/entry/[slug]/page.tsx  # Project detail, generateStaticParams
+│   ├── tags/page.tsx          # Tag index: every canonical frontmatter tag
+│   └── tags/[tag]/page.tsx    # Tag archive, generateStaticParams
 ├── components/
 │   ├── Alert/                 # In-tree status/error alert
 │   ├── ArticleTeaser/         # Blog post card
@@ -181,6 +185,7 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── PersonTeaser/
 │   ├── ProjectTeaser/         # Project card with technology icons
 │   ├── Providers/             # Single root Tooltip provider
+│   ├── Testimonials/          # Labelled placeholders for future client quotes
 │   ├── TimelineEntry/
 │   └── Tooltip/
 ├── lib/
@@ -189,8 +194,10 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   ├── projects.tsx           # getAllProjects(): wraps markdown reader
 │   ├── icon-map.ts            # Maps technology strings to icon paths
 │   ├── sendEmail.tsx          # Server action, Resend contact form
+│   ├── tags.ts                # Canonical tag index across blog and projects
 │   ├── markdown.test.ts
 │   ├── projects.test.ts
+│   ├── tags.test.ts
 │   └── sendEmail.test.tsx
 ├── content/
 │   ├── blog/*.md              # Blog posts
@@ -223,6 +230,11 @@ collections:
 
 The slug is the file name without the `.md` extension. `lib/blog.tsx` and
 `lib/projects.tsx` are thin wrappers around the shared reader.
+
+Frontmatter `tags` drive their own routes. `lib/tags.ts` builds a canonical
+index at build time (folding label variants such as casing, separators, and
+extra whitespace into one tag), which backs the `/tags` index and one
+`/tags/<slug>` archive per canonical tag.
 
 Each Markdown file requires this frontmatter:
 
@@ -282,8 +294,10 @@ GitHub triggered the production deploy via the GitHub integration; since the
 Forgejo migration the deploy is triggered manually (`vercel --prod`) or via a
 Forgejo Actions job. Rollbacks are performed through the Vercel dashboard.
 
-`pnpm build` runs `next build` and pre-renders all pages with SSG; the build
-currently emits 38 static routes. The site is served on the Node/Vercel runtime;
+`pnpm build` runs `next build` and pre-renders all pages with SSG. The page
+count grows with content: as of 2026-09-12 the build pre-renders 127 static
+pages across 17 route patterns, one page per blog post, project, and canonical
+tag on top of the fixed routes. The site is served on the Node/Vercel runtime;
 `output: 'export'` is deliberately not set. The only server-side runtime code is the
 contact form server action, which calls the Resend API. The site has no
 middleware, no instrumentation hook, no OpenTelemetry, and no custom API
