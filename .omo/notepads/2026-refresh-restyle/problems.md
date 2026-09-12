@@ -144,24 +144,37 @@ cleanly (FCP at the ~906 ms baseline envelope). Results:
 - **`/contact`** has no fully clean run (lowest LCP 2380 inside budget but
   TBT-contaminated); one more clean sweep would close it.
 
-> **SUPERSEDED by F5 ledger §15 — this is NOT a proven code regression.** The
-> "REAL CODE FINDING / genuinely FAILS" framing above was premature. Oracle's
-> independent diagnosis (verified against the raw LHRs) found the comparison is
-> **confounded**: the T02 baseline was measured with **Lighthouse 13.4.1**
-> (`npx -y lighthouse`) while the gate runs **12.6.1** (`@lhci/cli@0.15.1`), and the
-> LCP **element switched h1→p** because the intro paragraph grew. In the *real*
-> trace the restyle paints LCP **190 ms vs baseline 303 ms — faster**. The 2923 ms
-> is Lantern model output (simulated TTFB constant 453.7 + modeled render delay
-> 2469), not measured paint cost. §11's "font-swap bound" is retracted.
+> **CORRECTED (F5 ledger §15 + decision addendum 2026-09-12).** The run-6
+> "REAL CODE FINDING / genuinely FAILS" framing was premature — but so was the
+> follow-up "probably a methodology artifact" framing. The measured truth:
 >
-> **Disposition:** `/projects` may be a methodology artifact, not a regression.
-> Decisive test = re-measure the current build with Lighthouse 13.4.1 on `/projects`
-> and compare to the 2588 baseline, plus a paragraph-revert A/B under the gate's
-> LH12.6.1. Needs a quiet host. Budgets stay 2500/0.1/200. See F5 ledger §15.
+> - T02 baseline = **Lighthouse 13.4.1**; the gate = **12.6.1**. The tool bias can be
+>   estimated directly because T02 (`74689e8`) and T05 (`1b1062e`) measured
+>   **identical product code** (no `app/`, `components/`, `lib/`, `styles/` change
+>   between them). T05−T02 ranges **−384 … +128 ms** across routes (median −22) —
+>   real and route-dependent, so always record `lighthouseVersion`.
+> - **On `/projects` the tool bias is only +44 ms** (2588 → 2632). It does **not**
+>   explain the overage.
+> - **Pre-restyle, under the gate's own LH12, `/projects` was ALREADY red**:
+>   T05 median-of-3 = **2632 ms**. It has never passed.
+> - The LCP **element** switched `h1`→`p` — T02 *and* T05 both saw the `h1`, so this
+>   is a **product** change (the intro paragraph grew `text-base font-normal` →
+>   `text-body-lg font-light`), not tooling.
+> - The real trace is faster (observed LCP 190 ms vs 303 ms) but those are different
+>   tools, so it is not like-for-like either.
+>
+> **Disposition:** `/projects` is a **pre-existing overage, plausibly worsened by the
+> paragraph change**. The version confound does not rescue it. Required next step is
+> still the quiet-host A/B (BLOCKER 1 above): Arm A = current build under
+> `lighthouse@13.4.1` vs the 2588 baseline; Arm B = paragraph-revert A/B under the
+> gate's LH12.6.1. If Arm B returns LCP <2500 under LH12, the fix is real and cheap.
+> Budgets stay 2500/0.1/200. See F5 ledger §15 and
+> `.omo/decisions/2026-09-12-f5-lighthouse-methodology.md`.
 
 **Consequence:** F5's "all budgets met on every public route" is not satisfiable by
-measurement as-is — but the blocker is now **methodology + host**, not a confirmed
-code defect. Do not spend code effort until the version-parity experiment runs.
+measurement as-is. `/projects` is a genuine pre-existing overage that the restyle
+plausibly worsened; it needs the version-controlled A/B on a quiet host before any
+code change. Do not spend code effort until that experiment runs.
 See F5 ledger §14–§15 and run-6 artifacts under `.omo/evidence/f5-lighthouse/run6/`.
 
 ---
