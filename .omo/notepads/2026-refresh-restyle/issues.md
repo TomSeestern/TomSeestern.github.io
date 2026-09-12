@@ -489,3 +489,36 @@ T07/T15 predate their D13/D4 amendments; a11y spec runs light-only (moot under D
   `.omo/evidence/f3/shots/contact-success-{topcrop,navzoom,glyphzoom}.png`.
   Fix (backlog, NOT applied): move below header (`top-20`) or render inline.
   F3 verdict remains APPROVE (pre-existing, outside plan scope).
+
+## F5 — Lighthouse gate blocked by external host contention (2026-09-12)
+
+- **Status: `[~]` blocked, not failed.** All load-insensitive regression gates
+  PASS on a fresh production build (typecheck/lint/prettier/test 21×141;
+  build 38/38; contrast 24/24; ornaments; images 101; fonts 70.7 KiB; bundle
+  **14/14** with `__global` 102,254 B vs baseline 102,253 B; full chromium e2e
+  **79 passed** 0 flaky; axe **8 passed**). Only the Lighthouse mobile
+  LCP/TBT budgets are red.
+- **Root cause is the host, not the code.** An unrelated project's
+  `@stryker-mutator` run held **23 workers at ~93–102 % CPU across all 22 cores
+  for 5h43m** (loadavg 46–58; `cat /proc/loadavg`). Lighthouse's
+  `throttlingMethod:"simulate"` multiplies 4× CPU on top of an already ~2.5×
+  oversubscribed host → ~10× compounding.
+- **Falsifier that rules out a code regression:** every current LCP element is
+  server-rendered *text* (an `<h1>`/`<p>`) or an already-in-DOM small image, and
+  observed unthrottled FCP is 5–14× the T02 baseline on a byte-identical bundle
+  (e.g. home 180 ms → 2326 ms). Text that is already in the SSR HTML cannot
+  genuinely take 3–4 s.
+- **Pre-existing:** the T02 baseline (captured BEFORE T13/T14 palette+font and
+  all page rebuilds) was already over the 2500 ms LCP budget on home (2830) and
+  projects (2588). A fully-green Lighthouse run has never been observed on this
+  host, so F5's red is not introduced by this plan.
+- **Resume:** on a quiet host (loadavg ≤4, no `stryker`/`child-process-proxy-worker`):
+  `rm -rf .next && pnpm build && pnpm lighthouse` with
+  `SSL_CERT_FILE` + `NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt` and
+  `PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright`. Full procedure in
+  `.omo/evidence/task-F5-2026-refresh-restyle.txt` §5.
+- **Operational gotcha worth keeping:** Lighthouse's `startServerCommand: pnpm
+  start` fails with "Could not find a production build in '.next'" if an e2e run
+  (whose Playwright `webServer` boots `next dev`) ran afterwards and clobbered
+  `.next`. Always `rm -rf .next && pnpm build` immediately before
+  `pnpm lighthouse`. (CI is unaffected — `lighthouse.yml` builds first.)
