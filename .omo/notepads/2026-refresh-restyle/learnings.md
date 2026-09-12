@@ -1236,3 +1236,29 @@ at HEAD, matching F5's 8.
 typecheck ✓ · prettier ✓ · lint 0 err/47 warn ✓ · jest 21/141 ✓ · build 38 routes ✓ ·
 contrast 24/24 ✓ · ornaments ✓ · images 101 ✓ · fonts 70.7 KiB ✓ · bundle 14/14 ✓ ·
 e2e 79 ✓ · axe 8 ✓. Sole outstanding F5 item: the host-blocked Lighthouse timing gate.
+
+## 2026-09-12 — Verified the F5 resume command's env placement is correct
+
+Earlier this session a Playwright run failed with
+`UNABLE_TO_GET_ISSUER_CERT_LOCALLY` because the `next dev` font fetch could not
+verify TLS. The fix was exporting the cert vars **inside** the `nix develop` shell.
+Question: does the documented resume command (cert vars exported in the OUTER shell,
+then `nix develop -c bash -c '...'`) actually work, or must they be inner?
+
+Verified empirically:
+```
+export TESTVAR_PROPAGATION=hello_outer
+nix develop -c bash -c 'echo "inner sees: ${TESTVAR_PROPAGATION:-<EMPTY>}"'
+  → inner sees: hello_outer
+```
+Outer exports propagate through `nix develop -c bash -c` (the inner `unset
+PNPM_HOME npm_config_prefix` does not touch them). So the resume command in
+`problems.md` BLOCKER 1 is structurally correct as written:
+```
+export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
+export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
+export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-bundle.crt
+rm -rf .next && nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm build && pnpm lighthouse'
+```
+(For Playwright's `webServer`, both placements work; for belt-and-braces the inner
+exports used in the successful e2e run are equally valid.)
