@@ -248,3 +248,11 @@ offline — `node ~/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse/cli/index
 network.** Resume command is in F5 ledger §17. This finally enables a like-for-like
 `/projects` comparison against the 2588 ms baseline — the measurement no F5 run has
 yet achieved.
+
+### CORRECTION to the Arm A resume command: use the nix Chromium
+
+Arm A must use **`CHROME_PATH=/etc/profiles/per-user/tom/bin/chromium`**
+(Chromium 149.0.7827.200 — the exact T02 baseline browser) inside `nix develop`, NOT
+the Playwright Chromium in `~/.cache/ms-playwright` — that one is a different build
+and fails with `libglib-2.0.so.0: cannot open shared object file` outside the dev
+shell. Full corrected command in F5 ledger §18.
