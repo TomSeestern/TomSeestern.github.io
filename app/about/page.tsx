@@ -1,9 +1,10 @@
-import path from "path"
-import TimelineEntry from "../../components/TimelineEntry/TimelineEntry"
-import PersonTeaser from "../../components/PersonTeaser/PersonTeaser"
+import { Metadata } from "next"
 import Image from "next/image"
 import React from "react"
-import { Metadata } from "next"
+import path from "path"
+import PersonTeaser from "../../components/PersonTeaser/PersonTeaser"
+import Testimonials from "../../components/Testimonials/Testimonials"
+import TimelineEntry from "../../components/TimelineEntry/TimelineEntry"
 
 export const metadata: Metadata = {
   title: "About me",
@@ -134,6 +135,7 @@ export default function About() {
             </div>
           </div>
         </div>
+        <Testimonials />
       </div>
     </section>
   )
