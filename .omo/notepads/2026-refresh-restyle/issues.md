@@ -578,3 +578,34 @@ Contrast: the orphaned `## Unreleased` / `## Resource usage` headings (commit
 `6c23756`) WERE fixed because they carried no rule, tag, or prose — deleting them
 changed no rule's meaning. Rule-content drift is left to T41; structural dead
 headings are safe to reap.
+
+## 2026-09-12 — FLAGGED (real defect, pre-existing, out of scope): /about placeholder image never loads
+
+`app/about/page.tsx:113` renders `PersonTeaser` with
+`companyLogoSrc="https://placehold.co/512x512?text=Various"` — **no file
+extension**. Verified empirically:
+
+```
+curl -sS --cacert /etc/ssl/certs/ca-bundle.crt -o /dev/null -w "%{content_type}" "https://placehold.co/512x512?text=Various"
+  → image/svg+xml          (SVG)
+"https://placehold.co/512x512.png?text=Various"
+  → image/png              (PNG)
+```
+
+`next.config.mjs` does NOT set `dangerouslyAllowSVG` (default false), so
+`next/image`'s optimizer refuses the SVG and the request fails — confirmed in the
+e2e WebServer log: `⨯ The requested resource "https://placehold.co/512x512?text=Various"
+has type "image/svg+xml" but dangerouslyAllowSVG is disabled.`
+
+**Severity: low but real.** `PersonTeaser` renders it `alt=""` at 48×48, so the
+failure is a silently empty circle rather than a broken-image glyph. The story
+fixtures already use the correct `.png` form (`placehold.co/400x400.png`), so the
+fix pattern exists.
+
+**Provenance / why NOT fixed here:** pre-existing since `9d951b4 Add first
+iteration of About Page` (2023-12-16); this plan never edited that line (its only
+`app/about/page.tsx` commit, `1e86f79`, was T23 metadata). `/about` is owned by
+the HUMAN-GATED T20/T25 — agents must not alter it unowned (R1.3), and a bug fix
+would also require a regression test (R6.3). Flagged as debt for whoever executes
+T20/T25 (or a follow-up): change the URL to `https://placehold.co/512x512.png?text=Various`
+(or self-host a neutral placeholder, as T22 did for the cheesecake image).
