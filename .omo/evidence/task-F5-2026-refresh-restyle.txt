@@ -1270,3 +1270,38 @@ a fast host). So F5's LCP criterion was never fully green pre-restyle either;
 `/projects` is a **pre-existing** breach, not one the restyle introduced. CLS was
 0.000 on all 7 baseline routes and on **every** post-restyle LHR (Arm A–A4, run 6),
 so the CLS half of Criterion #3 is satisfied on evidence robust to host speed.
+
+### Success Criterion #7 — OG metadata on the 89 NEW routes: **PASS**
+T23 verified "1200×630 og:image + twitter card on all routes" when the site had
+38 routes. T24/T29 then added **89 more** (impressum, datenschutz, tags, and 86
+`/tags/[tag]`), which T23 could not have covered. Re-verified against the built
+HTML at HEAD:
+
+| route | og:image | dims | twitter:card |
+|---|---|---|---|
+| /impressum | ✅ `og-default.png` | 1200×630 | `summary_large_image` |
+| /datenschutz | ✅ `og-default.png` | 1200×630 | `summary_large_image` |
+| /tags | ✅ `og-default.png` | 1200×630 | `summary_large_image` |
+| /tags/<slug> (all) | ✅ **86/86** | 1200×630 | `summary_large_image` |
+
+Method: parsed `.next/server/app/**/*.html` for `property="og:image"`,
+`og:image:width/height`, and `name="twitter:card"`. The `generateMetadata` in
+`app/tags/[tag]/page.tsx` is what supplies the tag routes, and it emits the full
+set including the 1200×630 declarations.
+
+### F5 gate-status summary at HEAD (2026-09-12)
+
+| criterion | status | CPU-sensitive? |
+|---|---|---|
+| #1 lint/prettier/build/test/e2e | **PASS** (verified this session) | no |
+| #2 bundle budget | **PASS** — 18 entries, `__global` 99.9 KiB / 130 KiB | no |
+| #3 Lighthouse LCP/TBT | **UNJUDGED** — host contended | **yes** |
+| #3 Lighthouse CLS | **PASS** — 0.000 on all baseline + all post-restyle LHRs | no |
+| #4 axe + contrast | **PASS** — axe 12/12, contrast 24/24 | no |
+| #6 DOM ≤1500 | **PASS** (home spec) | no |
+| #7 OG + fonts + images | **PASS** — 89/89 new routes, fonts 70.7 KiB, images 101 | no |
+
+**Net:** every CPU-insensitive criterion is green at HEAD. The only unjudged item
+is the LCP/TBT half of #3, and the sole implicated route is `/projects`, which the
+T02 baseline **already** measured over budget (2588 ms at `bi` 2762) — i.e. a
+pre-existing breach the restyle did not create (F5 §20).
