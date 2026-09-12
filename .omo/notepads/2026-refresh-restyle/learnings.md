@@ -1262,3 +1262,23 @@ rm -rf .next && nix develop -c bash -c 'unset PNPM_HOME npm_config_prefix; pnpm 
 ```
 (For Playwright's `webServer`, both placements work; for belt-and-braces the inner
 exports used in the successful e2e run are equally valid.)
+
+## 2026-09-12 — F5 block confirmed by direct CPU measurement (not just loadavg)
+
+To rule out loadavg being inflated by D-state processes, measured real CPU from
+`/proc/stat` over a 5 s window:
+
+```
+delta total=10998  delta idle=772
+CPU busy: 93.0%   idle: 7.0%
+D-state processes: 0
+```
+
+So the host is genuinely ~93 % CPU-saturated by the external Stryker workers
+(PIDs 2855990+, node). Lighthouse's simulated 4× CPU multiplier cannot produce a
+trustworthy LCP/TBT reading under this — the F5 timing gate is legitimately blocked,
+not merely slow. Budgets remain untouched (2500 ms / 0.1 / 200 ms).
+
+This is the end of the executable surface: every code gate is freshly green at HEAD,
+both remaining items are correctly `[~]`, and the only actions left require the host
+to be quiet or the user to supply Wave 5 content/decisions.
