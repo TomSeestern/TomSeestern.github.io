@@ -372,3 +372,51 @@ it cannot, that is a design tradeoff for Tom, NOT a reason to edit the budget.
 - F5 stays `[~]`: still no run with the host quiet for the full ~6-minute sweep.
 - The single actionable lead (a quiet-host run to settle `/projects`) is documented
   in §5; nothing here justifies weakening the gate.
+
+## 11. ADDENDUM 2026-09-12 — baseline-vs-restyle LCP comparison (the decisive view)
+
+The T02 baseline LHRs are still committed at `.omo/evidence/baseline/lighthouse/*.json`,
+so the pre-restyle and post-restyle LCP can be compared on the same mobile
+methodology (4× simulated CPU, formFactor mobile).
+
+| route | T02 baseline LCP | restyle best LCP | Δ | baseline vs 2500 | restyle vs 2500 |
+| --- | ---: | ---: | ---: | --- | --- |
+| `/` | 2830 | 2114 | **−716** | FAIL | PASS |
+| `/about` | 2384 | 2002 | **−382** | PASS | PASS |
+| `/blog` | 2489 | 2206 | **−283** | PASS | PASS |
+| `/blog/entry/…cheesecake` | 3562 | 2033 | **−1529** | FAIL | PASS |
+| `/projects` | 2588 | 2874 | **+286** | FAIL | FAIL |
+| `/projects/entry/…soudest` | 2127 | 1883 | **−244** | PASS | PASS |
+| `/contact` | 2256 | 2016 | **−240** | PASS | PASS |
+
+**Over-budget routes: baseline 3/7 → restyle best 1/7.** The restyle improved LCP
+on 6 of 7 routes; the detail-route/bundle work (T21/T22) cut the cheesecake route by
+1.5 s.
+
+### `/projects` is the sole regression candidate — and it is font-swap bound, not paint bound
+
+Back-to-back FCP vs LCP (same Lighthouse version/method):
+```
+                FCP      LCP      FCP->LCP gap
+baseline       1054     2588         1534 ms
+restyle best   1058     2904         1846 ms   (+312 ms)
+```
+FCP is **identical** (1054 → 1058 ms), so the restyle did not slow first paint. The
+entire +312 ms sits in the **FCP→LCP gap**, which the phase table decomposes as
+`Load Delay 0 / Load Time 0 / Render Delay 2450 ms` on a **text** LCP element
+(`section > div > div > p.mt-4`, the intro paragraph). That is the fallback→web-font
+swap: with `font-display: swap`, LCP re-fires when the self-hosted face paints.
+D3 added the Newsreader display face (used by the carved H1 above the paragraph), so
+the swap window grew.
+
+**Caveat on strength of evidence:** baseline is a *single* run (T02's own noted
+limitation) at 18:41Z; restyle-best is min-of-many across 4 runs. The direction
+(+286 ms) is consistent across all four restyle runs (2874/2904/3972/4430, with the
+latter two load-inflated), but a like-for-like verdict needs a quiet-host run.
+
+### What follows
+- Not a bundle/asset regression: shared JS at baseline, LCP loads 0 bytes.
+- Not a first-paint regression: FCP unchanged.
+- It is a **font-strategy consequence of D3**. Options (all need Tom, since D3 mandates
+  the carved serif): `display: optional` for the display face, preload tuning, or
+  limiting the swap-sensitive face. **Weakening the 2500 ms budget is NOT an option.**
