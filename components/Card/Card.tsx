@@ -15,7 +15,8 @@ import { twMerge } from "tailwind-merge"
  * `.omo/evidence/task-F5-2026-refresh-restyle-ci-analysis.txt`.
  */
 
-const CARD_ROOT_CLASSES = "flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col"
+const CARD_ROOT_CLASSES =
+  "flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col"
 const CARD_CHILDREN_CLASSES = "flex h-full flex-col justify-center gap-4 p-6"
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
