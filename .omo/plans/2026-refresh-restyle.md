@@ -851,6 +851,20 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
     CLS 0.000 and TBT 167.7 ms still PASS. Artifact `armA5-projects-lh13.json`.
     Confirm: **F5 cannot be judged from inside an active agent session on this shared
     host** — the harness itself held ~98% CPU.
+  - **Attempt #6 2026-09-13T11:28Z (F5 ledger §31): VOID again** (`bi` 1314) — the
+    external `ohmyroadmap` Stryker job was still running (PID 2024334, 6h34m, 11
+    `tap-runner` workers ≈ 1017% CPU). Consistent with #5: `bi` tracks host load.
+  - **Reframed 2026-09-13 — see
+    `.omo/decisions/2026-09-13-f5-pre-existing-lcp-debt.md`.** The valid T02 baseline
+    (proven above) already failed the **absolute** LCP budget on **3/7** routes
+    (`/` 2830, `/projects` 2588, cheesecake 3562) — so Success-Criterion #3's "LCP
+    <2.5 s on **every** public route" was **unsatisfiable at plan start** and cannot
+    be a restyle-regression gate. CLS/TBT were 0/7 failing at baseline and remain
+    green. Post-restyle run-6 medians show `/` (−572) and cheesecake (−1276) now
+    **under** 2500 despite a *slower* host ⇒ the restyle likely **fixed** those two.
+    Only `/projects` remains unmeasured post-restyle. **Automatic capture:**
+    `bash .omo/tools/f5-arm-a-runner.sh` (waits for a quiet window, measures once,
+    keeps the reading only if `bi ≥ 2510`, writes `f5-arm-a-verdict.txt`).
 
 ### Wave 7 (F5-UNBLOCK — added 2026-09-12, R19.4 plan amendment)
 
