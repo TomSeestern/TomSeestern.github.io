@@ -34,10 +34,6 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
-    // Only `Card` is imported from flowbite-react, so scope the scan to it
-    // instead of all 347 files / 8.3 MB. The full-tree scan bloated the
-    // stylesheet 2.2x (136 KB -> 61 KB) with classes no page uses.
-    "./node_modules/flowbite-react/dist/components/Card/*.{js,cjs}",
   ],
   theme: {
     extend: {

@@ -1,7 +1,7 @@
-import { Card } from "flowbite-react"
 import React from "react"
 import { Tooltip } from "../Tooltip/Tooltip"
 import { formatDistanceToNow } from "date-fns"
+import Card from "../Card/Card"
 import Image from "next/image"
 import Link from "next/link"
 import { getIconPath } from "../../lib/icon-map"
