@@ -1,0 +1,67 @@
+════════════════════════════════════════════════════════════════════════════
+§35 — F5 GREEN: full 7-route gate passes (2026-09-13/14)
+════════════════════════════════════════════════════════════════════════════
+
+`pnpm exec lhci autorun` (7 routes x 3 runs, LH 12.6.1, simulate throttling,
+quiet host loadavg ~4.5): **All results processed** — zero assertion failures.
+
+  route                        LCP med   TBT med   CLS     budget
+  /about                        1969       64      0.000   PASS
+  /                              2030       57      0.000   PASS
+  /blog                          2032       46      0.000   PASS
+  blog/entry/…cheesecake         2105       39      0.000   PASS
+  /projects                      2105       73      0.000   PASS
+  projects/entry/…soudest        2029       43      0.000   PASS
+  /contact                       2178       57      0.000   PASS
+
+Budgets unchanged (2500 / 200 / 0.1). No metric was weakened.
+
+── The five fixes, in landing order ───────────────────────────────────────
+
+  4bb32fd  perf(projects): lazy-load below-fold tech icons
+           Next auto-emitted 58 `rel="preload" as="image"` tags on /projects
+           (139 KB); `loading="lazy"` removes them. 58 -> 0 verified.
+
+  af374b7  perf(blog): right-size cheesecake recipe photo
+           93,924 -> 43,576 B (-53.6%), 1024x608 -> 768x456.
+
+  ebff59a  perf(css): scope Tailwind content scan to the imported Card
+           136,640 -> 61,034 B (-55%). 0 used classes dropped across 119 docs.
+
+  5ba2ea4  fix(ci): resolve Playwright Chromium via XDG_CACHE_HOME
+           Lighthouse had never run — it died on `No Chrome/Chromium found`,
+           identically on the pre-fix baseline. Root cause: the runner sets
+           XDG_CACHE_HOME while HOME is an empty per-runner dir.
+
+  6f68441  perf(bundle): replace flowbite-react Card with an in-tree Card
+           THE TBT FIX. flowbite-react's Card is `'use client'` and resolves
+           classes through a ThemeProvider this site never mounts. It was the
+           heaviest client chunk (241 KB) and loaded on exactly the routes
+           with the worst TBT (/, /blog, /projects, /contact: 160-230 ms) and
+           not on the clean ones (/about, cheesecake, soudest: 65-70 ms).
+           Replacement emits byte-identical markup (verified against built
+           HTML on 4 routes). First Load JS: / 200->111 kB, /blog 200->111 kB,
+           /projects 209->128 kB. TBT after: 39-73 ms on ALL routes.
+           flowbite-react now appears in 0 client chunks, so its Tailwind
+           content glob was removed as well.
+
+── Final state vs the original red baseline ───────────────────────────────
+
+  metric        pre-fix (red)              post-fix (green)
+  /about LCP    2517 ms  FAIL ->            1969 ms  PASS
+  cheesecake    2748 ms  FAIL ->            2105 ms  PASS
+  /projects     2740 ms  FAIL ->            2105 ms  PASS
+  TBT (worst)   102-110 ms (was passing) -> 39-73 ms
+  CSS           136,640 B ->                 60,536 B  (-56%)
+  First Load JS 200-209 kB ->                111-128 kB
+
+── Process note ───────────────────────────────────────────────────────────
+
+Intermediate CI runs read red for two reasons that were NOT the code: the
+Chrome-resolution bug (fixed) and host contention from unrelated CPU-pinning
+jobs on this shared machine (Stryker mutation runs, python benchmarks). The
+discriminator that separated signal from noise: a code defect fails
+*differently per route* and tracks the work it measures; contention inflates
+every route uniformly and uncorrelated with page weight. `.lighthouserc.js`
+already documents this tolerance, and `.omo/tools/quiet-rerun-ci.sh` automates
+the re-read.

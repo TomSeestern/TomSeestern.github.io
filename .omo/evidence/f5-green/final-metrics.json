@@ -1,0 +1,170 @@
+[
+  {
+    "url": "/about",
+    "bi": 2666.5,
+    "lcp": 1969.23,
+    "cls": 0,
+    "tbt": 63.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/about",
+    "bi": 2565.5,
+    "lcp": 1955.44,
+    "cls": 0,
+    "tbt": 51.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/about",
+    "bi": 2401.5,
+    "lcp": 2036.54,
+    "cls": 0,
+    "tbt": 83.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/",
+    "bi": 2936,
+    "lcp": 2030.53,
+    "cls": 0,
+    "tbt": 41.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/",
+    "bi": 2770,
+    "lcp": 2029.86,
+    "cls": 0,
+    "tbt": 79.21,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/",
+    "bi": 2570.5,
+    "lcp": 1979.77,
+    "cls": 0,
+    "tbt": 56.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog",
+    "bi": 2708.5,
+    "lcp": 2031.61,
+    "cls": 0,
+    "tbt": 44,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog",
+    "bi": 2345.5,
+    "lcp": 2032.1,
+    "cls": 0,
+    "tbt": 64,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog",
+    "bi": 2369,
+    "lcp": 2105.71,
+    "cls": 0,
+    "tbt": 46,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+    "bi": 2771.5,
+    "lcp": 2607.46,
+    "cls": 0,
+    "tbt": 39,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+    "bi": 2671,
+    "lcp": 2105.1,
+    "cls": 0,
+    "tbt": 52.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+    "bi": 2818.5,
+    "lcp": 2053.35,
+    "cls": 0,
+    "tbt": 35.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects",
+    "bi": 2681.5,
+    "lcp": 2105.32,
+    "cls": 0,
+    "tbt": 60,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects",
+    "bi": 2733,
+    "lcp": 2104.2,
+    "cls": 0,
+    "tbt": 79,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects",
+    "bi": 2291,
+    "lcp": 2254.78,
+    "cls": 0,
+    "tbt": 73,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects/entry/2020-soudest-backend-nodejs",
+    "bi": 2824.5,
+    "lcp": 2029.35,
+    "cls": 0,
+    "tbt": 42.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects/entry/2020-soudest-backend-nodejs",
+    "bi": 2929,
+    "lcp": 2029.24,
+    "cls": 0,
+    "tbt": 44.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects/entry/2020-soudest-backend-nodejs",
+    "bi": 2645.5,
+    "lcp": 1956.98,
+    "cls": 0,
+    "tbt": 38.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/contact",
+    "bi": 2822.5,
+    "lcp": 2181.15,
+    "cls": 0,
+    "tbt": 56.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/contact",
+    "bi": 2708,
+    "lcp": 2178.09,
+    "cls": 0,
+    "tbt": 41,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/contact",
+    "bi": 2861.5,
+    "lcp": 2127.83,
+    "cls": 0,
+    "tbt": 89.23,
+    "lh": "12.6.1"
+  }
+]

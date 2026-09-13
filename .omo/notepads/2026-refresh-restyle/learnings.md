@@ -1202,3 +1202,49 @@ was `browserType.launch: browser has been closed` — browser startup killed by
 resource exhaustion, NOT assertion failures. Triage test: if every
 error-context.md contains `browserType.launch`, it is the host, not the code.
 Likewise only LHRs with `benchmarkIndex >= 2510` are comparable to baseline.
+
+## A 'use client' UI library for one component was the whole TBT budget (2026-09-14)
+
+`flowbite-react`'s `Card` is `'use client'` and resolves its classes through a
+`ThemeProvider` context plus a prop-normalisation layer. This site never mounts
+a `ThemeProvider`, so none of it could affect output — but it shipped as the
+heaviest client chunk (241 KB) and dominated TBT. Replacing it with an in-tree
+`<div>` wrapper took First Load JS from 200-209 kB to 111-128 kB and TBT from
+160-230 ms to 39-73 ms.
+
+Diagnostic that found it: TBT was high on exactly the routes that loaded that
+chunk (`/`, `/blog`, `/projects`, `/contact`) and low on the routes that did
+not (`/about`, cheesecake, soudest). Cross-referencing one metric against
+which chunks each route pulls localised the cause in one step — worth doing
+before reading any per-audit breakdown.
+
+Always prove an in-tree replacement is byte-identical: diff the rendered
+opening tag (testid + merged classes) against the built HTML of every affected
+route. Here it was identical on all four.
+
+## FCP improvements can *widen* TBT — normalize by host speed before blaming code
+
+TBT is measured over `[FCP, TTI]`. Cutting the stylesheet 55 % moved FCP ~148 ms
+earlier on every route, so the same hydration tasks occupied a longer measured
+window and TBT rose — while real work was unchanged. Proof: dividing
+main-thread time by `benchmarkIndex` gave ~1.0 on all 7 routes (0.96-1.10).
+
+Rule: when TBT rises after a change that sped up first paint, compute
+`work_normalized = work_post / work_pre / (bi_pre / bi_post)` first. ~1.0 means
+host speed, not your code.
+
+## Lighthouse phase breakdown is the first thing to read, not the last
+
+`largest-contentful-paint-element` splits LCP into TTFB / Load Delay / Load
+Time / Render Delay. Two routes here were `Render Delay` 66-82 % with Load Time
+under 180 ms — so image-byte fixes could never have cleared them, and the real
+lever was client JS. Read the phases before optimizing anything.
+
+## CI reds need the actual job log, not the status
+
+Forgejo's run ids differ from run numbers, and the useful endpoint is
+`/repos/{owner}/{repo}/actions/jobs/{job_id}/logs`. Both Lighthouse "failures"
+this session were not metric failures at all: the first was
+`No Chrome/Chromium found` (the runner sets `XDG_CACHE_HOME`, not `HOME`, so
+Playwright's browser was invisible to `.lighthouserc.js`). Never trust a red
+gate's summary — download the log.

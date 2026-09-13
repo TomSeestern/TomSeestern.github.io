@@ -818,19 +818,27 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 - [x] **F2. Code quality review** — Depends: all | Category: `unspecified-high` | Skills: [`remove-ai-slops`, `programming`, `refactor`]
 - [x] **F3. Real manual QA** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `visual-qa`, `frontend`]
 - [x] **F4. Scope fidelity** — Depends: all | Category: `deep` | Skills: [`review-work`, `git-master`]
-- [~] **F5. Regression gate** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `frontend`, `debugging`]
-  - **Status: LCP failure RESOLVED 2026-09-13; final quiet-host re-read pending.**
-    The valid pre-fix Arm A reading (bi 2616) proved the `/projects` failure real
-    (LCP 2958). Three real-waste fixes landed (4bb32fd / af374b7 / 34fac22; see
-    T30 and ledger §33). Post-fix, every LCP budget passes even on a contended
-    host: `/about` 2061, cheesecake 2137 (was 2748), `/projects` 2410 (was 2740).
-    The only residual red is `/projects` TBT 262 ms at bi 1775-2018, which read
-    158-188 ms at the quieter bi 2327-2443 — per `.lighthouserc.js`, TBT
-    straddling 200 under contention is not a regression signal.
-  - **RESUME — one action:** on a quiet host (bi >= 2510), run the full
-    `pnpm exec lhci autorun` (7 routes x 3) and confirm all three budgets. No
-    further code change is expected for LCP.
-  - Ledger: `.omo/evidence/task-F5-2026-refresh-restyle-postfix.txt` §33.
+- [x] **F5. Regression gate** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `frontend`, `debugging`]
+  - **Status: GREEN (2026-09-14).** Full `pnpm exec lhci autorun` (7 routes x 3
+    runs, LH 12.6.1, quiet host) returned **All results processed** — zero
+    assertion failures. Every route passes all three budgets with margin:
+    LCP 1969-2178 ms, TBT 39-73 ms, CLS 0.000.
+  - Five fixes across this session. Four were real waste removed:
+    `4bb32fd` lazy tech icons (58 -> 0 preloads), `af374b7` cheesecake photo
+    right-sized (-53.6 %), `ebff59a` Tailwind scan scoped (-55 % CSS), and
+    `6f68441` — the TBT fix — replacing `flowbite-react`'s `'use client'` Card
+    with an in-tree Card whose markup is byte-identical (First Load JS
+    200-209 -> 111-128 kB; TBT 160-230 -> 39-73 ms).
+  - The fifth, `5ba2ea4`, is CI infrastructure: Lighthouse had never executed
+    on this repo — it died on `No Chrome/Chromium found` because the runner
+    sets `XDG_CACHE_HOME` while `HOME` is an empty per-runner dir.
+  - Ledger: `.omo/evidence/task-F5-green-final.txt` §35; raw metrics in
+    `.omo/evidence/f5-green/final-metrics.json`.
+  - **Remaining CI caveat (not a code issue):** the Lighthouse lab metrics are
+    still sensitive to host contention from unrelated CPU-pinning jobs on this
+    shared machine. A red CI reading at low `benchmarkIndex` must not be
+    treated as a regression; `.omo/tools/quiet-rerun-ci.sh` automates the
+    quiet-window re-read.
   - **PRECONDITION — the host clocks down under sustained load (F5 ledger §23–§24).**
     The package is an Intel Core Ultra 7 155H running `governor=powersave` / `epp=performance`
     (hw max 4.5–4.8 GHz, RAPL 40 W sustained). While the external Stryker job pins the
