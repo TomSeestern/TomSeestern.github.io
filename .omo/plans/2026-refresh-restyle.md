@@ -706,6 +706,11 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
   - Depends: T14,T15,T06 | Blocks: T21
   - Category: `visual-engineering` | Skills: [`frontend`, `visual-qa`, `playwright`]
   - QA: `/` ≤1500 nodes; no marquee; e2e+axe green.
+  - **Evidence gap (2026-09-13):** T16's acceptance criteria include "LCP budget met",
+    but `task-T16-…txt` contains no LCP measurement — only the DOM-node budget
+    (1592 → ~206). run-6's home median (2258 ms, contended host) is consistent with
+    the claim, but the criterion was never verified. Recorded per R19.1; no rework
+    implied (see `.omo/decisions/2026-09-13-f5-pre-existing-lcp-debt.md`).
 - [x] **T17. Projects archive + featured flag**
   - What: archive layout; featured flag filter; single-source counts.
   - Depends: T14,T15,T06 | Blocks: T19,T25
