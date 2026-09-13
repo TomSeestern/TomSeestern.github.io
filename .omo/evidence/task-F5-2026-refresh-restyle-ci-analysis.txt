@@ -1,0 +1,106 @@
+════════════════════════════════════════════════════════════════════════════
+§34 — CI gate analysis: two INFRA failures, zero code failures (2026-09-13/14)
+════════════════════════════════════════════════════════════════════════════
+
+Scope: after pushing the three LCP fixes, every CI workflow was traced to its
+actual failure cause by downloading the Forgejo job logs (the API exposes
+`/repos/{owner}/{repo}/actions/jobs/{job_id}/logs`; run ids differ from run
+numbers — use `/actions/runs` against `workflow_id`).
+
+── Failure 1: Lighthouse never ran (PRE-EXISTING, FIXED) ───────────────────
+
+Symptom, identical on my commit AND on the pre-fix baseline 052722c:
+
+    Error: No Chrome/Chromium found. Install one
+      (e.g. `pnpm exec playwright install chromium`) or set CHROME_PATH.
+        at resolveChromePath (.lighthouserc.js:85:9)
+
+Cause: `resolveChromePath()` probed only `PLAYWRIGHT_BROWSERS_PATH` and
+`$HOME/.cache/ms-playwright`. The self-hosted runner sets
+`XDG_CACHE_HOME=/var/lib/forgejo-runner-cache/xdg` while `HOME` points at an
+empty per-runner dir (`/var/lib/forgejo-runner-N`, no `.cache/ms-playwright`),
+so `playwright install chromium` wrote to
+`$XDG_CACHE_HOME/ms-playwright/chromium-1228/chrome-linux64/chrome` and the
+resolver never looked there. Confirmed on disk: the XDG path holds the binary;
+the HOME path does not exist.
+
+Fix (5ba2ea4): probe the same three locations Playwright itself resolves, in
+order. Verified in the failing CI environment shape — empty HOME,
+XDG_CACHE_HOME set, no chromium on PATH — the resolver now returns the
+installed binary instead of throwing.
+
+After the fix, Lighthouse runs all 21 audits (7 routes x 3). Chrome is found.
+
+── Failure 2: TBT inflation ~20x, uniform across routes (HOST CONTENTION) ──
+
+With Lighthouse finally executing, the failures are metric-shaped like a host
+artifact, not code:
+
+  context                    load    TBT range        LCP
+  T05 baseline (quiet)       ~4      29 - 82 ms  PASS  pass
+  CI run 2121 (all 7 LCP)    95      666 - 1654   fail  ALL 7 PASS
+  CI run 2124 (all 7 LCP)    29      448 - 1433   fail  ALL 7 PASS
+
+Discriminators:
+  - The inflation is INDEPENDENT of page weight: `/contact` (111 kB First Load
+    JS) failed HARDER (1248, 1433 ms) than `/projects` (209 kB, 1654/1347 ms).
+    Code cannot produce an ordering uncorrelated with the work it measures.
+  - `/contact` is a near-static page that measures 29-82 ms when idle. It
+    cannot genuinely block the main thread for 1.4 s.
+  - TBT tracks host load monotonically across every run.
+  - `/contact`, `/about`, `/datenschutz` and `/impressum` were not touched by
+    any of the three fixes, yet fail identically.
+
+Contention source (external, not this repo): 123 `stryker` processes from
+another project's mutation run (`/var/lib/forgejo-runner-2,3/.../tap-runner`),
+plus python benchmarks (`expN17_ver_frontend.py`, `t25-sweep6.py` under
+SongsOfTheOuterRim) and a ClosedLoopOS tsx job. Jobs in THIS repo run
+serialized on a single runner (verified via journalctl: one job per start time
+across all four runners), so the repo does not self-contend.
+
+── Failure 3: run 2126 — a DIFFERENT profile, still host-shaped ───────────
+
+Run 2126 (dispatched by the quiet-window runner while peers=0 but load 25)
+flipped: TBT passed and 4 routes failed LCP (2555-2706 ms), including
+`/` and `/contact` — routes with no relevant code change and no LCP regression
+in any other measurement. Simultaneously the local `.lighthouseci` medians for
+the same commit are `/about` 2018, cheesecake 2183, `/projects` 2297 (all PASS).
+
+A metric that fails on different routes in different runs, on a route whose
+local median passes with margin, is measurement noise. A code defect fails
+deterministically on the same route every time.
+
+── Playwright ─────────────────────────────────────────────────────────────
+
+Run 2128 PASSED (82/82 e2e, chromium) on commit 71a24a9. Earlier Playwright
+failures (2118, 2123) were single-test 30 s navigation timeouts
+(`page.goto ... timeout`, `ECONNRESET` from the dev server) under load; the
+other 82 tests passed in those same runs. The failing spec navigates 7 routes
+sequentially and the timeout lands on a different route each run.
+
+Independent confirmation that the CSS fix did not break the surface token:
+`.bg-surface{--tw-bg-opacity:1;background-color:rgb(245 239 225/...)}` is
+present in the built stylesheet with exactly the value the spec asserts, and
+the selector-set diff across all 119 pre-rendered docs found 0 used classes
+dropped.
+
+── Verdict ────────────────────────────────────────────────────────────────
+
+Code-controlled gates: GREEN. `check` (typecheck/lint/prettier/contrast/
+ornaments/images/fonts/tests/storybook) passes on every push. Playwright
+passes. All three original LCP failures are fixed and stay fixed.
+
+The Lighthouse gate's remaining reds are host-contention artifacts on a
+machine shared with unrelated CPU-pinning jobs. The gate reads green only in a
+quiet window; `.lighthouserc.js` already documents this ("on a contended host
+the median LCP can swing widely... a single-route red is therefore not proof
+of regression").
+
+Tooling left in place: `.omo/tools/quiet-rerun-ci.sh` waits for loadavg < 8
+with no CPU-pinning peer, then re-dispatches lighthouse.yml + playwright.yml.
+It does not touch product files and does not weaken any budget.
+
+Live correctness check, all three target routes, post-fix, bi recorded:
+  /about                       LCP median 2018 ms  PASS (was 2517 red)
+  blog/entry/…cheesecake       LCP median 2183 ms  PASS (was 2748 red)
+  /projects                    LCP median 2297 ms  PASS (was 2740 red)
