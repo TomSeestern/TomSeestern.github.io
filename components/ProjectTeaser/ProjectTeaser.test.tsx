@@ -109,6 +109,21 @@ describe("ProjectTeaser", () => {
     expect(screen.queryByRole("img", { name: "Tech Icon TypeScript" })).not.toBeInTheDocument()
   })
 
+  // Next auto-emits one `rel="preload" as="image"` per non-lazy <img>, so these
+  // below-fold icons shipped 58 preloads on /projects and blew the LCP budget.
+  it("defers below-fold technology icons with lazy loading and async decoding", () => {
+    // Given
+    mockGetIconPath.mockImplementation((technology) => (technology === "React" ? "/icon/react.svg" : null))
+
+    // When
+    const { container } = renderTeaser(baseProps)
+
+    // Then
+    const icon = container.querySelector('img[src="/icon/react.svg"]')
+    expect(icon).toHaveAttribute("loading", "lazy")
+    expect(icon).toHaveAttribute("decoding", "async")
+  })
+
   it("looks up every listed technology through icon map", () => {
     // Given
     mockGetIconPath.mockReturnValue(null)

@@ -74,8 +74,12 @@ const ProjectTeaser: React.FC<ProjectProps> = ({
             return (
               <div key={tech} className="rounded-lg p-1 hover:bg-surface-muted dark:hover:bg-muted-surface-dark">
                 <Tooltip explainer={tech}>
+                  {/* Below-fold tech icons: `loading="lazy"` keeps Next from
+                      emitting 58 `rel="preload" as="image"` tags for them, which
+                      otherwise flood the throttled critical path and delay the
+                      LCP paragraph (Oracle F5 /projects lever #1). */}
                   {iconPath ? (
-                    <img className="h-8 w-auto object-contain" src={iconPath} alt="" />
+                    <img className="h-8 w-auto object-contain" src={iconPath} alt="" loading="lazy" decoding="async" />
                   ) : (
                     <span className="text-small text-muted dark:text-muted-dark">{tech}</span>
                   )}
