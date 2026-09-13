@@ -152,27 +152,20 @@ for i in $(seq 1 "$MAX_ITERS"); do
     log "iter $i: no LHR produced"; sleep "$SLEEP"; continue
   fi
 
-  REPO="$REPO" CAND="$CAND" node -e '
-    const j = require(process.env.CAND);
-    const g = a => j.audits[a] ? j.audits[a].numericValue : NaN;
-    console.log([
-      Math.round(j.environment.benchmarkIndex),
-      Math.round(g("largest-contentful-paint")),
-      g("cumulative-layout-shift").toFixed(3),
-      Math.round(g("total-blocking-time")),
-      j.lighthouseVersion
-    ].join(" "));
-  ' > "$OUT/.armA-metrics.txt" 2>/dev/null
-  read -r BI LCP CLS TBT LHV < "$OUT/.armA-metrics.txt" 2>/dev/null || true
+  REPO="$REPO" CAND="$CAND" node "$REPO/.omo/tools/f5-arm-a-judge.cjs" --lhr "$CAND" --min-bi "$MIN_BI" > "$OUT/.armA-judge.txt" 2>&1
+  JUDGE_EXIT=$?
+  read -r BI LCP CLS TBT LHV < "$OUT/.armA-judge.txt" 2>/dev/null || true
 
-  if [ -z "${BI:-}" ]; then
-    log "iter $i: could not parse metrics"; rm -f "$CAND"; sleep "$SLEEP"; continue
+  if [ -z "${BI:-}" ] || [ "$JUDGE_EXIT" = "2" ]; then
+    log "iter $i: malformed/unparseable reading"
+    cat "$OUT/.armA-judge.txt" >> "$LOG" 2>/dev/null
+    rm -f "$CAND"; sleep "$SLEEP"; continue
   fi
-  log "iter $i: bi=$BI lcp=$LCP cls=$CLS tbt=$TBT (LH $LHV)"
+  log "iter $i: bi=$BI lcp=$LCP cls=$CLS tbt=$TBT (LH $LHV) [judge exit $JUDGE_EXIT]"
 
-  if [ "$BI" -ge "$MIN_BI" ]; then
+  if [ "$JUDGE_EXIT" = "0" ]; then
     mv "$CAND" "$VALID"
-    if [ "$LCP" -lt 2500 ]; then V="PASS — LCP ${LCP} ms < 2500 (budget met)"; else V="FAIL — LCP ${LCP} ms >= 2500 (T30 is real)"; fi
+    V="$(grep -m1 '^VERDICT: ' "$OUT/.armA-judge.txt" | sed 's/^VERDICT: //')"
     {
       echo "F5 Arm A — VALID reading"
       echo "timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
