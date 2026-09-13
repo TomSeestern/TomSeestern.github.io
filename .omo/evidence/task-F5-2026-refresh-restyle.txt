@@ -1460,3 +1460,47 @@ No further in-session Lighthouse attempts are warranted: each would consume ~2 m
 of CPU, produce another VOID reading, and add no information. F5 stays `[~]`
 **UNJUDGED, not failed**. The resume action is unchanged (§18 Arm A command, on an
 idle host, outside this session).
+
+════════════════════════════════════════════════════════════════════════════
+§31 — F5 Arm A attempt #6 (2026-09-13T11:28:23Z→11:30:02Z) — reading VOID
+════════════════════════════════════════════════════════════════════════════
+User reported "host is idle now". Direct measurement contradicted that, but the
+reading was attempted anyway because the **pre-registered validity gate is
+`benchmarkIndex`, not loadavg** — `bi` is the arbiter, so a reading is the only
+way to know for certain.
+
+Pre-run measured state (2026-09-13T11:25–11:28Z):
+  loadavg 11.46 → 11.93 on 22 cores (NOT idle)
+  An `ohmyroadmap` Stryker mutation job was RUNNING: PID 2024334,
+  `timeout 86400 ionice -c 2 -n 7 nice -n 10 node .../stryker.js run --concurrency 10`,
+  elapsed **06:34:17**, with **11 `tap-runner` workers totalling ~1017% CPU**
+  (~10 of 22 cores). Zero `cc1plus`/`cc1` (that burst had ended).
+  Everything else idle (next top consumer after stryker+harness: ~46% tmpfiles).
+
+Command: exactly the validated §18 Arm A command, output to
+`.omo/evidence/f5-lighthouse/armA6-projects-lh13.json` (`LIGHTHOUSE_EXIT=0`).
+Server: F3's 127/127 production build (`.next/BUILD_ID=zZkweZ6DZq7qMmMm88Bpr`);
+product delta unchanged (13 files / 1108 / 14 since 962b6a2 — no drift).
+
+Observed (`armA6-projects-lh13.json`):
+  lighthouseVersion: 13.4.1               ✓ matches T02 baseline tool
+  hostUserAgent: HeadlessChrome/149.0.0.0 ✓ matches T02 baseline browser
+  environment.benchmarkIndex: 1314        ✗ **VALIDITY GATE FAILED (< 2510)**
+  largest-contentful-paint: 4164 ms       (VOID — not comparable)
+  cumulative-layout-shift: 0.000          PASS
+  total-blocking-time: 487.5 ms           (VOID)
+  loadavg pre/post: 11.93 → 11.75
+
+**Disposition: VOID, NOT judged.** `bi` 1314 is even further below 2510 than
+attempt #5's 1900, consistent with a *higher* load (11.9 vs 5.4) from the Stryker
+job's 11 tap-runner workers. No claim is made about `/projects` passing/failing.
+The LCP 4164 ms / TBT 487.5 ms figures are void and must not be cited.
+
+**Reinforcement of §30.** Two consecutive attempts at the two quietest windows
+available (#5 bi 1900 at loadavg 5.4; #6 bi 1314 at loadavg 11.9) both failed the
+`bi ≥ 2510` gate. The gate needs a host with **no** Stryker job **and** no active
+agent session. Neither has yet occurred: the `ohmyroadmap` Stryker job has now run
+continuously for 6h39m and shows no sign of stopping.
+
+Server stopped; port 3000 confirmed closed. Artifact retained (VOID).
+F5 disposition unchanged: `[~]` **UNJUDGED, not failed**.
