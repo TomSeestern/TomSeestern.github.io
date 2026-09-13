@@ -1,0 +1,74 @@
+[
+  {
+    "url": "/about",
+    "bi": 1925.5,
+    "lcp": 2018.25,
+    "cls": 0,
+    "tbt": 72.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/about",
+    "bi": 1969,
+    "lcp": 2003.76,
+    "cls": 0,
+    "tbt": 74.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/about",
+    "bi": 2134.5,
+    "lcp": 2061.45,
+    "cls": 0,
+    "tbt": 61,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+    "bi": 1720.5,
+    "lcp": 2183.4,
+    "cls": 0,
+    "tbt": 77,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+    "bi": 2093,
+    "lcp": 2630.1,
+    "cls": 0,
+    "tbt": 72,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/blog/entry/2019-ebeltoft-cheesecake-recipe",
+    "bi": 2330.5,
+    "lcp": 2137.34,
+    "cls": 0,
+    "tbt": 74.5,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects",
+    "bi": 2018,
+    "lcp": 2410.24,
+    "cls": 0,
+    "tbt": 227,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects",
+    "bi": 1775.5,
+    "lcp": 2296.7,
+    "cls": 0,
+    "tbt": 341.45,
+    "lh": "12.6.1"
+  },
+  {
+    "url": "/projects",
+    "bi": 1884,
+    "lcp": 2257.55,
+    "cls": 0,
+    "tbt": 262,
+    "lh": "12.6.1"
+  }
+]

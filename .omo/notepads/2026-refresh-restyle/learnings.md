@@ -1166,3 +1166,39 @@ prior approvals are not treated as cover for the new code.
   changed identity (tap-runner workers → 21 `cc1` processes, loadavg 29.8) without
   a quiet window opening. The runner's load-based gate catches both, which is why
   it must test loadavg, not just named processes.
+
+## LCP phase breakdown beats intuition: render delay dominated, not transfer (2026-09-13)
+
+The valid pre-fix cheesecake LHR (bi 3010) split LCP into
+`TTFB 452 | Load Delay 289 | Load Time 177 | Render Delay 1822` ms. The LCP
+image needed only ~177 ms to load — the 1822 ms render delay (66 %) was the
+real cost. Lesson: read `largest-contentful-paint-element` phases BEFORE
+optimizing the image; a 2.7x-oversized source was worth fixing anyway
+(93.9 KB -> 43.6 KB) but it alone would never have cleared the budget.
+
+## The dominant /projects cost was 58 Next auto-preloads, not CSS or DOM
+
+Next App Router auto-emits one `rel="preload" as="image"` per non-lazy
+`<img>`. ProjectTeaser's 89 tech icons produced **58 preload tags (~140 KB)**
+on `/projects` and **0** on every other route — a perfect route-specific
+explanation for why only `/projects` failed. `loading="lazy"` makes Next skip
+the preload entirely. Verify preload counts with
+`grep -c 'rel="preload".*as="image"' .next/server/app/<route>.html`; it is a
+deterministic, contention-free signal that a Lighthouse run cannot give you.
+
+## Tailwind content globs into node_modules are a silent bloat trap
+
+`"./node_modules/flowbite-react/**/*"` scanned 347 files / 8.3 MB while only
+`Card` is imported, inflating the stylesheet to 136,640 B (92 % flagged
+unused). Scoping to the imported module cut it to 61,034 B (-55 %) with **0
+used classes dropped** — proven by diffing selector sets against every class
+token in all 119 pre-rendered HTML docs. Do this diff before trusting a
+content-glob narrowing: it is the only way to know a used class survived.
+
+## Host contention confounds Lighthouse AND Playwright
+
+Loadavg 3.5 -> 52 during this session. Every Playwright failure (51 of them)
+was `browserType.launch: browser has been closed` — browser startup killed by
+resource exhaustion, NOT assertion failures. Triage test: if every
+error-context.md contains `browserType.launch`, it is the host, not the code.
+Likewise only LHRs with `benchmarkIndex >= 2510` are comparable to baseline.

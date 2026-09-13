@@ -1,0 +1,88 @@
+════════════════════════════════════════════════════════════════════════════
+§33 — F5 LCP fix landed + post-fix measurement (2026-09-13, in-session)
+════════════════════════════════════════════════════════════════════════════
+
+Context: F5 stayed `[~] UNJUDGED` because all in-session readings were
+`bi < 2510`. The valid pre-fix Arm A reading (bi 2616, artifact
+`f5-lighthouse/armA-valid-projects.json`) proved `/projects` LCP 2958 ms —
+i.e. the failure was REAL, not host noise. Three real-waste fixes were then
+authored, each separately verified.
+
+Root-cause chain (valid readings only; see §31 VOID for why lower-bi runs
+are excluded):
+
+  Route render delay dominates. From the valid pre-fix cheesecake LHR
+  (bi 3010, `/tmp/opencode/lhci-red-baseline/…cheesecake…`):
+
+    TTFB 452 ms | Load Delay 289 ms | Load Time 177 ms | Render Delay 1822 ms
+
+  Render Delay is 66 % of LCP and 1822/2741 ms. Image transfer was NOT the
+  binding constraint — the LCP image loads in ~177 ms. The cheesecake image
+  was nonetheless 2.7x oversized (1024x608 served into a 380x226 slot).
+
+  Separately, `unused-css-rules` scored 0 with 92.2 % of the single
+  stylesheet unused, and `render-blocking-resources` wasted 302 ms on every
+  route. The stylesheet was 136,640 B because the Tailwind content glob
+  scanned all 347 files / 8.3 MB of `node_modules/flowbite-react` although
+  only `Card` is imported.
+
+Fixes (one commit each, R39.5):
+
+  4bb32fd  perf(projects): lazy-load below-fold tech icons
+           ProjectTeaser emitted 89 <img> with no `loading`, so Next
+           auto-injected one `rel="preload" as="image"` per icon — 58
+           preloads / ~140 KB on /projects, 0 on every other route.
+           Fix: `loading="lazy" decoding="async"`.
+           Deterministic proof: projects.html preload count 58 -> 0
+           (fresh production build, `.next/server/app/projects.html`).
+           Regression lock: ProjectTeaser.test.tsx added a test asserting
+           both attributes; verified it FAILS without the change and PASSES
+           with it (R16.6). Full suite 163/163 pass.
+
+  af374b7  perf(blog): right-size cheesecake recipe photo
+           93,924 B (1024x608) -> 43,576 B (768x456) WebP q78, -53.6 %.
+           768 px covers mobile 2x DPR (380 CSS -> 760 device) and desktop
+           1x (720 CSS). Aspect ratio preserved (1.684). PSNR 35.3 dB.
+           `pnpm images` PASS (limit 200 KB).
+
+  34fac22  perf(css): scope Tailwind content scan to the imported Card
+           Content glob `node_modules/flowbite-react/**/*` ->
+           `.../dist/components/Card/*.{js,cjs}`.
+           Stylesheet 136,640 B -> 61,034 B (-55 %).
+           Safety proof (the risk: dropping a used class):
+             - selector-set diff across all 119 pre-rendered HTML docs:
+               0 dropped selectors that appear in markup.
+             - every Card theme class retained, incl. escaped dark variants
+               (.dark\:bg-gray-800, .dark\:border-gray-700).
+           This shortens the critical path shared by EVERY route.
+
+Post-fix measurement — `.omo/tools/lhci-failing-only.js`, LH 12.6.1,
+median of 3, simulate throttling. Artifacts:
+`f5-lighthouse/post-fix-run/metrics.json` + `assertion-results.json`.
+
+  route        bi range     LCP (median)   verdict
+  /about       1925-2134    2061           PASS  (pre-fix 2517 red)
+  cheesecake   1720-2330    2137           PASS  (pre-fix 2748 red)
+  /projects    1775-2018    2410           LCP PASS; TBT 262 red
+
+  All three LCP failures are GONE. Cheesecake fell 2748 -> 2137. The only
+  remaining red is `/projects` TBT 262 ms (>200).
+
+  CAVEAT — TBT reading is not yet judgeable. The run's `bi` (1775-2018) is
+  below the §``bi >= 2510`` validity gate, and `.lighthouserc.js` itself
+  records that "TBT minima straddling 200 ms under contention are likewise
+  not a regression signal". In the EARLIER (quieter) post-fix pass at
+  bi 2327-2443, `/projects` measured TBT 158 / 159 / 188 ms — i.e. PASSING
+  with margin. A valid-host re-read is still required to close F5 formally.
+
+Host state during this run: loadavg rose 3.5 -> 47-52 (a concurrent Forgejo
+CI build). `bi` 1775-2330 reflects that contention, not the code.
+
+DISPOSITION: F5 remains `[~]` pending one quiet-host full-gate re-read, but
+the code-side levers are exhausted for LCP: every LCP budget now passes even
+on a contended host. The residual risk is `/projects` TBT on a slow host.
+
+Next action (out-of-session, quiet host): full `pnpm exec lhci autorun`
+(7 routes x 3) and confirm bi >= 2510 on every route. If `/projects` TBT
+still exceeds 200 at valid bi, the remaining lever is its 21-card DOM/JS
+weight (Oracle F5 step 6 escalation — a product decision).

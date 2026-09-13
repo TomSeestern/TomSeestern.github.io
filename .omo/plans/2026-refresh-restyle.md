@@ -819,19 +819,18 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 - [x] **F3. Real manual QA** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `visual-qa`, `frontend`]
 - [x] **F4. Scope fidelity** — Depends: all | Category: `deep` | Skills: [`review-work`, `git-master`]
 - [~] **F5. Regression gate** — Depends: all | Category: `unspecified-high` | Skills: [`playwright`, `frontend`, `debugging`]
-  - **Status: UNJUDGED, not failed (2026-09-12).** Code-controlled gates all green.
-    Lighthouse cannot be judged: an external `ohmyroadmap` Stryker job held this
-    22-core host ~15 h, and **every** post-restyle LHR came from a host slower than
-    the baseline (`benchmarkIndex` 598–2416 vs baseline 2511–3064) — incomparable.
-    F5 ledger §19–§22.
-  - **RESUME — exactly one action:** run the Arm A command (F5 ledger §18: offline
-    cached Lighthouse 13.4.1 + `CHROME_PATH=/etc/profiles/per-user/tom/bin/chromium`,
-    matched to the T02 baseline) on `/projects`, and read
-    `environment.benchmarkIndex`. Require `bi ≥ 2510`; otherwise the reading is void —
-    do not judge from it.
-    - `bi ≥ 2510` **and** LCP < 2500 ⇒ the gate's LCP criterion **passes with no code
-      change** (§21 estimates ≈2414 ms at the baseline's `bi` 2762).
-    - LCP > 2500 at valid speed ⇒ `/projects` genuinely fails ⇒ T30 is real.
+  - **Status: LCP failure RESOLVED 2026-09-13; final quiet-host re-read pending.**
+    The valid pre-fix Arm A reading (bi 2616) proved the `/projects` failure real
+    (LCP 2958). Three real-waste fixes landed (4bb32fd / af374b7 / 34fac22; see
+    T30 and ledger §33). Post-fix, every LCP budget passes even on a contended
+    host: `/about` 2061, cheesecake 2137 (was 2748), `/projects` 2410 (was 2740).
+    The only residual red is `/projects` TBT 262 ms at bi 1775-2018, which read
+    158-188 ms at the quieter bi 2327-2443 — per `.lighthouserc.js`, TBT
+    straddling 200 under contention is not a regression signal.
+  - **RESUME — one action:** on a quiet host (bi >= 2510), run the full
+    `pnpm exec lhci autorun` (7 routes x 3) and confirm all three budgets. No
+    further code change is expected for LCP.
+  - Ledger: `.omo/evidence/task-F5-2026-refresh-restyle-postfix.txt` §33.
   - **PRECONDITION — the host clocks down under sustained load (F5 ledger §23–§24).**
     The package is an Intel Core Ultra 7 155H running `governor=powersave` / `epp=performance`
     (hw max 4.5–4.8 GHz, RAPL 40 W sustained). While the external Stryker job pins the
@@ -887,7 +886,21 @@ Estimated parallel speedup: ~45% vs sequential (W0 3 phases, W1 2, W2 2, W3/W4 o
 > Budgets are unchanged (2500 / 0.1 / 200). This wave is the real fix, not a
 > measurement re-read.
 
-- [~] **T30. `/projects` LCP fix — reduce critical document/DOM render cost** `[BLOCKED: needs quiet-host verification]`
+- [x] **T30. `/projects` LCP fix — reduce critical document/DOM render cost** `[DONE 2026-09-13: LCP green; TBT re-read pending]`
+  - **Outcome (2026-09-13).** The valid pre-fix Arm A reading (bi 2616) proved the
+    failure real (LCP 2958). Three real-waste fixes landed, each separately
+    verified: `4bb32fd` lazy tech icons (58 -> 0 preloads; the actual dominant
+    critical-path cost, NOT `content-visibility`), `af374b7` cheesecake photo
+    right-sized, `34fac22` Tailwind scan scoped to the imported Card (CSS
+    -55 %). Post-fix, `/projects` LCP median fell to 2410 (from 2740) and
+    `/about` 2061, cheesecake 2137 — **all LCP budgets pass even at bi
+    1775-2330**, below the validity gate. Ledger:
+    `.omo/evidence/task-F5-2026-refresh-restyle-postfix.txt` §33.
+  - **Residual:** `/projects` TBT read 262 ms at bi 1775-2018, but 158-188 ms
+    at the quieter bi 2327-2443 — `.lighthouserc.js` states TBT straddling
+    200 under contention is not a regression signal. One quiet-host re-read
+    closes it. If it persists at valid bi, escalate to the 21-card DOM/JS
+    weight (Oracle F5 step 6, a product decision).
   - Depends: F5 diagnosis (done) | Category: `visual-engineering` (perf-shaped)
   - Skills: [`frontend`, `programming`, `playwright`]
   - Description: Reduce `/projects`' main-thread render delay. Lead candidate:
