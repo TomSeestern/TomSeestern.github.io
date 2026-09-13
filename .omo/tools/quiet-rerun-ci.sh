@@ -27,12 +27,15 @@ POLL=300
 log() { echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $*" | tee -a "$LOG"; }
 
 peer_load() {
-  # Count CPU-pinning peer jobs that are not this script or the agent session.
-  local n=0
-  pgrep -f 'stryker' >/dev/null 2>&1 && n=$((n+1))
-  pgrep -f 'expN17|t25-sweep|SongsOfTheOuter' >/dev/null 2>&1 && n=$((n+1))
-  pgrep -f 'tap-runner' >/dev/null 2>&1 && n=$((n+1))
-  echo "$n"
+  # A named peer allowlist proved too brittle (stryker, python benchmarks,
+  # t25-*, gcc bursts all rotate), so detect generic CPU pressure instead.
+  ps -eo pcpu=,args= --sort=-pcpu 2>/dev/null |
+    awk '
+      $1 < 40 { next }
+      /ps -eo|quiet-rerun-ci|opencode serve|[q]uiet-rerun/ { next }
+      { n++ }
+      END { print n + 0 }
+    '
 }
 
 load_int() { awk '{printf "%d", $1}' /proc/loadavg; }
