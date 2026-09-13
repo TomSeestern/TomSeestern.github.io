@@ -53,6 +53,38 @@ const MOBILE_THROTTLING = {
   uploadThroughputKbps: 675,
 }
 
+/**
+ * Candidate Playwright browser-cache directories, most specific first.
+ *
+ * Playwright resolves its cache as `PLAYWRIGHT_BROWSERS_PATH`, else
+ * `$XDG_CACHE_HOME/ms-playwright`, else `$HOME/.cache/ms-playwright`. The CI
+ * runner sets `XDG_CACHE_HOME` to a shared cache while `HOME` points at an empty
+ * per-runner dir, so probing `$HOME` alone misses the browser just installed.
+ * @returns {string[]} candidate directories
+ */
+function chromiumCacheDirs() {
+  const dirs = []
+  if (process.env.PLAYWRIGHT_BROWSERS_PATH) dirs.push(process.env.PLAYWRIGHT_BROWSERS_PATH)
+  if (process.env.XDG_CACHE_HOME) dirs.push(join(process.env.XDG_CACHE_HOME, "ms-playwright"))
+  dirs.push(join(homedir(), ".cache", "ms-playwright"))
+  return dirs
+}
+
+function findChromiumIn(cacheDir) {
+  if (!existsSync(cacheDir)) return null
+
+  const revisions = readdirSync(cacheDir)
+    .filter((name) => name.startsWith("chromium-"))
+    .sort((a, b) => Number(b.replace("chromium-", "")) - Number(a.replace("chromium-", "")))
+  for (const revision of revisions) {
+    for (const dir of ["chrome-linux64", "chrome-linux"]) {
+      const candidate = join(cacheDir, revision, dir, "chrome")
+      if (existsSync(candidate)) return candidate
+    }
+  }
+  return null
+}
+
 /** @returns {string} absolute path to a Chrome/Chromium executable */
 function resolveChromePath() {
   if (process.env.CHROME_PATH) return process.env.CHROME_PATH
@@ -68,18 +100,9 @@ function resolveChromePath() {
     }
   }
 
-  const cacheDir = process.env.PLAYWRIGHT_BROWSERS_PATH || join(homedir(), ".cache", "ms-playwright")
-  if (existsSync(cacheDir)) {
-    const revisions = readdirSync(cacheDir)
-      .filter((name) => name.startsWith("chromium-"))
-      .sort()
-      .reverse()
-    for (const revision of revisions) {
-      for (const dir of ["chrome-linux64", "chrome-linux"]) {
-        const candidate = join(cacheDir, revision, dir, "chrome")
-        if (existsSync(candidate)) return candidate
-      }
-    }
+  for (const cacheDir of chromiumCacheDirs()) {
+    const chromium = findChromiumIn(cacheDir)
+    if (chromium) return chromium
   }
 
   throw new Error(
