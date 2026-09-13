@@ -1,0 +1,16 @@
+[2026-09-13T11:56:17Z] chromium: Chromium 149.0.7827.200 
+[2026-09-13T11:56:18Z] LH: 13.4.1  min_bi=2510 max_iters=1 sleep=1s
+[2026-09-13T11:56:18Z] HEAD: 1ee311cad09deea4ec7f02734ae9f2b9f8d6fe6f
+[2026-09-13T11:56:18Z] repo: /home/tom/Projects/tomsegbers-de
+[2026-09-13T11:56:18Z] iter 1/1 — host quiet; measuring
+[2026-09-13T11:56:18Z] starting production server on :3000
+[2026-09-13T11:57:38Z] server ready after 80s
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+[2026-09-13T11:59:15Z] iter 1: bi=1134 lcp=4094 cls=0.000 tbt=496 (LH 13.4.1)
+[2026-09-13T11:59:15Z] iter 1: bi=1134 < 2510 → VOID, discarded
+[2026-09-13T11:59:16Z] exhausted 1 iterations without a valid (bi>=2510) reading

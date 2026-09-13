@@ -1,0 +1,8 @@
+[2026-09-13T11:52:32Z] chromium: Chromium 149.0.7827.200 
+[2026-09-13T11:52:34Z] LH: 13.4.1  min_bi=2510 max_iters=1 sleep=1s
+[2026-09-13T11:52:34Z] HEAD: 1ee311cad09deea4ec7f02734ae9f2b9f8d6fe6f
+[2026-09-13T11:52:34Z] repo: /home/tom/Projects/tomsegbers-de
+[2026-09-13T11:52:34Z] iter 1/1 — host quiet; measuring
+[2026-09-13T11:52:34Z] starting production server on :3000
+[2026-09-13T11:53:04Z] iter 1: server failed to start
+[2026-09-13T11:53:05Z] exhausted 1 iterations without a valid (bi>=2510) reading

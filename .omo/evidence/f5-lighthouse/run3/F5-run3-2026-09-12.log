@@ -1,0 +1,375 @@
+ TomSegbers.de dev shell
+  node:  v22.23.1
+ ERROR  The "paths[0]" argument must be of type string. Received null
+For help, run: pnpm help
+  pnpm:  
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 build /home/tom/Projects/tomsegbers-de
+> next build
+
+ ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+   ▲ Next.js 15.5.24
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 26.3s
+   Linting and checking validity of types ...
+
+./app/about/page.tsx
+1:8  Warning: 'path' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+3:1  Warning: `../../components/PersonTeaser/PersonTeaser` import should occur before import of `../../components/TimelineEntry/TimelineEntry`  import/order
+4:1  Warning: `next/image` import should occur before import of `path`  import/order
+5:1  Warning: `react` import should occur before import of `path`  import/order
+6:1  Warning: `next` import should occur before import of `path`  import/order
+45:15  Warning: Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+126:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/blog/entry/[slug]/page.tsx
+2:1  Warning: `@/app/layout` import should occur after import of `react-markdown`  import/order
+30:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+52:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/blog/page.test.tsx
+21:1  Warning: `./page` import should occur before import of `../../lib/blog`  import/order
+
+./app/blog/page.tsx
+3:1  Warning: `next` import should occur before import of `../../components/ArticleTeaser/ArticleTeaser`  import/order
+
+./app/layout.tsx
+6:1  Warning: `next` type import should occur before import of `react`  import/order
+7:1  Warning: `next/font/google` import should occur before import of `react`  import/order
+
+./app/page.tsx
+87:22  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/projects/entry/[slug]/page.tsx
+2:1  Warning: `@/app/layout` import should occur after import of `react-markdown`  import/order
+34:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+58:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/projects/page.test.tsx
+28:1  Warning: `./page` import should occur before import of `../../lib/markdown`  import/order
+
+./app/projects/page.tsx
+3:1  Warning: `next` import should occur before import of `next/image`  import/order
+57:22  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/sitemap.ts
+3:1  Warning: `gray-matter` import should occur before import of `fs`  import/order
+4:1  Warning: `next` import should occur before import of `fs`  import/order
+
+./components/ArticleTeaser/ArticleTeaser.tsx
+74:20  Warning: Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+97:13  Warning: Classnames 'h-7, w-7' could be replaced by the 'size-7' shorthand!  tailwindcss/enforces-shorthand
+110:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Footer/Footer.tsx
+2:1  Warning: `next/image` import should occur before import of `react`  import/order
+9:29  Warning: 'props' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+28:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+35:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+42:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+49:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Header/Header.tsx
+39:13  Warning: Classnames 'h-6, w-6' could be replaced by the 'size-6' shorthand!  tailwindcss/enforces-shorthand
+39:13  Warning: Classnames 'sm:h-9, sm:w-9' could be replaced by the 'sm:size-9' shorthand!  tailwindcss/enforces-shorthand
+
+./components/PersonTeaser/PersonTeaser.tsx
+23:9  Warning: Classnames 'h-12, w-12' could be replaced by the 'size-12' shorthand!  tailwindcss/enforces-shorthand
+
+./components/ProjectTeaser/ProjectTeaser.test.tsx
+3:1  Warning: `@testing-library/react` import should occur before import of `date-fns`  import/order
+10:1  Warning: `./ProjectTeaser` import should occur before import of `../../lib/icon-map`  import/order
+
+./components/ProjectTeaser/ProjectTeaser.tsx
+1:1  Warning: `flowbite-react` import should occur after import of `date-fns`  import/order
+2:1  Warning: `react` import should occur after import of `next/link`  import/order
+3:1  Warning: `../Tooltip/Tooltip` import should occur after import of `../../lib/icon-map`  import/order
+31:3  Warning: 'imageUrl' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+43:7  Warning: Classnames 'h-full, w-full' could be replaced by the 'size-full' shorthand!  tailwindcss/enforces-shorthand
+78:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+96:20  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./lib/markdown.ts
+3:1  Warning: `gray-matter` import should occur before import of `fs`  import/order
+4:1  Warning: `zod` import should occur before import of `fs`  import/order
+
+./lib/sendEmail.tsx
+3:1  Warning: `await-to-js` import should occur before import of `next/headers`  import/order
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/38) ...
+   Generating static pages (9/38) 
+   Generating static pages (18/38) 
+   Generating static pages (28/38) 
+ ✓ Generating static pages (38/38)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                                              Size  First Load JS
+┌ ○ /                                                                                   134 B         200 kB
+├ ○ /_not-found                                                                         133 B         102 kB
+├ ○ /about                                                                              160 B         108 kB
+├ ƒ /api/health                                                                         133 B         102 kB
+├ ○ /apple-icon.png                                                                       0 B            0 B
+├ ○ /blog                                                                               134 B         200 kB
+├ ● /blog/entry/[slug]                                                                1.65 kB         128 kB
+├   ├ /blog/entry/2019-ebeltoft-cheesecake-recipe
+├   ├ /blog/entry/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition
+├   └ /blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation
+├ ○ /contact                                                                          2.37 kB         111 kB
+├ ○ /icon.png                                                                             0 B            0 B
+├ ○ /projects                                                                           622 B         209 kB
+├ ● /projects/entry/[slug]                                                            1.65 kB         128 kB
+├   ├ /projects/entry/2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms
+├   ├ /projects/entry/2011-first-competition-with-wenzelbots-team
+├   ├ /projects/entry/2012-elevating-robot-competition-performance
+├   └ [+18 more paths]
+├ ○ /robots.txt                                                                         133 B         102 kB
+└ ○ /sitemap.xml                                                                        133 B         102 kB
++ First Load JS shared by all                                                          102 kB
+  ├ chunks/26-f9a8958c8fc95dc8.js                                                     46.2 kB
+  ├ chunks/3f9eb5ed-4ee7e796f67bc406.js                                               54.2 kB
+  └ other shared chunks (total)                                                       1.87 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+
+> tomsegbers-de@0.0.0 lighthouse /home/tom/Projects/tomsegbers-de
+> lhci autorun
+
+✅  .lighthouseci/ directory writable
+✅  Configuration file found
+✅  Chrome installation found
+Healthcheck passed!
+
+Started a web server with "pnpm start"...
+Running Lighthouse 3 time(s) on http://localhost:3000/
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3000/about
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3000/blog
+Run #1...done.
+Run #2...done.
+Run #3...failed!
+Error: Lighthouse failed with exit code 1
+    at ChildProcess.<anonymous> (/home/tom/Projects/tomsegbers-de/node_modules/.pnpm/@lhci+cli@0.15.1/node_modules/@lhci/cli/src/collect/node-runner.js:120:21)
+    at ChildProcess.emit (node:events:519:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
+{
+  "lighthouseVersion": "12.6.1",
+  "requestedUrl": "http://localhost:3000/blog",
+  "mainDocumentUrl": "chrome-error://chromewebdata/",
+  "finalDisplayedUrl": "chrome-error://chromewebdata/",
+  "finalUrl": "chrome-error://chromewebdata/",
+  "fetchTime": "2026-09-12T07:20:24.239Z",
+  "gatherMode": "navigation",
+  "runtimeError": {
+    "code": "CHROME_INTERSTITIAL_ERROR",
+    "message": "Chrome prevented page load with an interstitial. Make sure you are testing the correct URL and that the server is properly responding to all requests."
+  },
+  "runWarnings": [
+    "The page may not be loading as expected because your test URL (http://localhost:3000/blog) was redirected to chrome-error://chromewebdata/. Try testing the second URL directly.",
+    "Chrome prevented page load with an interstitial. Make sure you are testing the correct URL and that the server is properly responding to all requests."
+  ],
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/149.0.0.0 Safari/537.36",
+  "environment": {
+    "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/149.0.0.0 Safari/537.36",
+    "benchmarkIndex": 1945,
+    "credits": {}
+  },
+  "audits": {
+    "viewport": {
+      "id": "viewport",
+      "title": "Has a `<meta name=\"viewport\">` tag with `width` or `initial-scale`",
+      "description": "A `<meta name=\"viewport\">` not only optimizes your app for mobile screen sizes, but also prevents [a 300 millisecond delay to user input](https://developer.chrome.com/blog/300ms-tap-delay-gone-away/). [Learn more about using the viewport meta tag](https://developer.chrome.com/docs/lighthouse/pwa/viewport/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "Chrome prevented page load with an interstitial. Make sure you are testing the correct URL and that the server is properly responding to all requests.",
+      "errorStack": "LighthouseError: CHROME_INTERSTITIAL_ERROR\n    at getInterstitialError (file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/core/lib/navigation-error.js:97:10)\n    at getPageLoadError (file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/core/lib/navigation-error.js:163:29)\n    at _computeNavigationResult (file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/core/gather/navigation-runner.js:146:7)\n    at async gatherFn (file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/core/gather/navigation-runner.js:300:23)\n    at async Runner.gather (file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/core/runner.js:211:25)\n    at async navigationGather (file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/core/gather/navigation-runner.js:306:21)\n    at async navigation (file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/core/index.js:58:24)\n    at async runLighthouse (file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/cli/run.js:210:26)\n    at async file:///home/tom/Projects/tomsegbers-de/node_modules/.pnpm/lighthouse@12.6.1/node_modules/lighthouse/cli/index.js:10:1",
+      "guidanceLevel": 3
+    },
+    "first-contentful-paint": {
+      "id": "first-contentful-paint",
+      "title": "First Contentful Paint",
+      "description": "First Contentful Paint marks the time at which the first text or image is painted. [Learn more about the First Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/first-contentful-paint/).",
+      "score": null,
+      "scoreDisplayMode": "error",
+      "errorMessage": "Chrome prevented page load with an interstitial. Make sure you are testing the correct
+2026-09-12T07:20:21.830Z LH:ChromeLauncher Waiting for browser.
+2026-09-12T07:20:21.830Z LH:ChromeLauncher Waiting for browser...
+2026-09-12T07:20:22.335Z LH:ChromeLauncher Waiting for browser.....
+2026-09-12T07:20:22.338Z LH:ChromeLauncher Waiting for browser.....[32m✓[0m
+2026-09-12T07:20:23.210Z LH:status Connecting to browser
+2026-09-12T07:20:23.221Z LH:status Navigating to about:blank
+2026-09-12T07:20:23.229Z LH:status Benchmarking machine
+2026-09-12T07:20:24.239Z LH:status Preparing target for navigation mode
+2026-09-12T07:20:24.265Z LH:status Cleaning origin data
+2026-09-12T07:20:24.281Z LH:status Cleaning browser cache
+2026-09-12T07:20:24.287Z LH:status Preparing network conditions
+2026-09-12T07:20:24.324Z LH:status Navigating to http://localhost:3000/blog
+2026-09-12T07:20:27.720Z LH:Navigation:error Provided URL (http://localhost:3000/blog) did not match initial navigation URL (chrome-error://chromewebdata/)
+2026-09-12T07:20:27.854Z LH:NavigationRunner:error Chrome prevented page load with an interstitial. Make sure you are testing the correct URL and that the server is properly responding to all requests. http://localhost:3000/blog
+2026-09-12T07:20:27.876Z LH:status Analyzing and running audits...
+2026-09-12T07:20:27.877Z LH:status Auditing: Has a `<meta name="viewport">` tag with `width` or `initial-scale`
+2026-09-12T07:20:27.877Z LH:viewport:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.879Z LH:status Auditing: First Contentful Paint
+2026-09-12T07:20:27.879Z LH:first-contentful-paint:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.880Z LH:status Auditing: Largest Contentful Paint
+2026-09-12T07:20:27.880Z LH:largest-contentful-paint:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.881Z LH:status Auditing: First Meaningful Paint
+2026-09-12T07:20:27.881Z LH:first-meaningful-paint:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.882Z LH:status Auditing: Speed Index
+2026-09-12T07:20:27.882Z LH:speed-index:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.883Z LH:status Auditing: Screenshot Thumbnails
+2026-09-12T07:20:27.883Z LH:screenshot-thumbnails:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.883Z LH:status Auditing: Final Screenshot
+2026-09-12T07:20:27.883Z LH:final-screenshot:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.883Z LH:status Auditing: Total Blocking Time
+2026-09-12T07:20:27.883Z LH:total-blocking-time:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.884Z LH:status Auditing: Max Potential First Input Delay
+2026-09-12T07:20:27.884Z LH:max-potential-fid:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.886Z LH:status Auditing: Cumulative Layout Shift
+2026-09-12T07:20:27.886Z LH:cumulative-layout-shift:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.887Z LH:status Auditing: Initial server response time was short
+2026-09-12T07:20:27.887Z LH:server-response-time:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.888Z LH:status Auditing: Time to Interactive
+2026-09-12T07:20:27.888Z LH:interactive:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.889Z LH:status Auditing: User Timing marks and measures
+2026-09-12T07:20:27.889Z LH:user-timings:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.890Z LH:status Auditing: Avoid chaining critical requests
+2026-09-12T07:20:27.890Z LH:critical-request-chains:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.890Z LH:status Auditing: Avoid multiple page redirects
+2026-09-12T07:20:27.890Z LH:redirects:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.891Z LH:status Auditing: Minimizes main-thread work
+2026-09-12T07:20:27.891Z LH:mainthread-work-breakdown:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.892Z LH:status Auditing: JavaScript execution time
+2026-09-12T07:20:27.892Z LH:bootup-time:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.893Z LH:status Auditing: Preconnect to required origins
+2026-09-12T07:20:27.893Z LH:uses-rel-preconnect:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.894Z LH:status Auditing: All text remains visible during webfont loads
+2026-09-12T07:20:27.894Z LH:font-display:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.895Z LH:status Auditing: Diagnostics
+2026-09-12T07:20:27.895Z LH:diagnostics:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.895Z LH:status Auditing: Network Requests
+2026-09-12T07:20:27.895Z LH:network-requests:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.895Z LH:status Auditing: Network Round Trip Times
+2026-09-12T07:20:27.895Z LH:network-rtt:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.896Z LH:status Auditing: Server Backend Latencies
+2026-09-12T07:20:27.896Z LH:network-server-latency:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.896Z LH:status Auditing: Tasks
+2026-09-12T07:20:27.897Z LH:main-thread-tasks:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.897Z LH:status Auditing: Metrics
+2026-09-12T07:20:27.897Z LH:metrics:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.897Z LH:status Auditing: Resources Summary
+2026-09-12T07:20:27.897Z LH:resource-summary:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.897Z LH:status Auditing: Minimize third-party usage
+2026-09-12T07:20:27.897Z LH:third-party-summary:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.898Z LH:status Auditing: Lazy load third-party resources with facades
+2026-09-12T07:20:27.898Z LH:third-party-facades:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.899Z LH:status Auditing: Largest Contentful Paint element
+2026-09-12T07:20:27.899Z LH:largest-contentful-paint-element:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.900Z LH:status Auditing: Largest Contentful Paint image was not lazily loaded
+2026-09-12T07:20:27.900Z LH:lcp-lazy-loaded:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.901Z LH:status Auditing: Avoid large layout shifts
+2026-09-12T07:20:27.901Z LH:layout-shifts:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.902Z LH:status Auditing: Avoid long main-thread tasks
+2026-09-12T07:20:27.902Z LH:long-tasks:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.903Z LH:status Auditing: Avoid non-composited animations
+2026-09-12T07:20:27.903Z LH:non-composited-animations:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.904Z LH:status Auditing: Image elements have explicit `width` and `height`
+2026-09-12T07:20:27.904Z LH:unsized-images:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.905Z LH:status Auditing: Preload Largest Contentful Paint image
+2026-09-12T07:20:27.905Z LH:prioritize-lcp-image:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.905Z LH:status Auditing: Script Treemap Data
+2026-09-12T07:20:27.905Z LH:script-treemap-data:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.905Z LH:status Auditing: Uses efficient cache policy on static assets
+2026-09-12T07:20:27.906Z LH:uses-long-cache-ttl:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.906Z LH:status Auditing: Avoids enormous network payloads
+2026-09-12T07:20:27.907Z LH:total-byte-weight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.907Z LH:status Auditing: Defer offscreen images
+2026-09-12T07:20:27.907Z LH:offscreen-images:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.908Z LH:status Auditing: Eliminate render-blocking resources
+2026-09-12T07:20:27.908Z LH:render-blocking-resources:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.909Z LH:status Auditing: Minify CSS
+2026-09-12T07:20:27.909Z LH:unminified-css:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.910Z LH:status Auditing: Minify JavaScript
+2026-09-12T07:20:27.910Z LH:unminified-javascript:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.910Z LH:status Auditing: Reduce unused CSS
+2026-09-12T07:20:27.911Z LH:unused-css-rules:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.911Z LH:status Auditing: Reduce unused JavaScript
+2026-09-12T07:20:27.911Z LH:unused-javascript:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.912Z LH:status Auditing: Serve images in next-gen formats
+2026-09-12T07:20:27.912Z LH:modern-image-formats:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.913Z LH:status Auditing: Efficiently encode images
+2026-09-12T07:20:27.913Z LH:uses-optimized-images:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.914Z LH:status Auditing: Enable text compression
+2026-09-12T07:20:27.914Z LH:uses-text-compression:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.914Z LH:status Auditing: Properly size images
+2026-09-12T07:20:27.914Z LH:uses-responsive-images:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.915Z LH:status Auditing: Use video formats for animated content
+2026-09-12T07:20:27.915Z LH:efficient-animated-content:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.916Z LH:status Auditing: Remove duplicate modules in JavaScript bundles
+2026-09-12T07:20:27.916Z LH:duplicated-javascript:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.917Z LH:status Auditing: Avoid serving legacy JavaScript to modern browsers
+2026-09-12T07:20:27.917Z LH:legacy-javascript:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.917Z LH:status Auditing: Avoids an excessive DOM size
+2026-09-12T07:20:27.918Z LH:dom-size:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.924Z LH:status Auditing: Avoids `document.write()`
+2026-09-12T07:20:27.924Z LH:no-document-write:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.925Z LH:status Auditing: Use HTTP/2
+2026-09-12T07:20:27.925Z LH:uses-http2:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.926Z LH:status Auditing: Uses passive listeners to improve scrolling performance
+2026-09-12T07:20:27.926Z LH:uses-passive-event-listeners:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.927Z LH:status Auditing: Page didn't prevent back/forward cache restoration
+2026-09-12T07:20:27.928Z LH:bf-cache:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.928Z LH:status Auditing: Use efficient cache lifetimes
+2026-09-12T07:20:27.929Z LH:cache-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.929Z LH:status Auditing: Layout shift culprits
+2026-09-12T07:20:27.930Z LH:cls-culprits-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.930Z LH:status Auditing: Document request latency
+2026-09-12T07:20:27.931Z LH:document-latency-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.932Z LH:status Auditing: Optimize DOM size
+2026-09-12T07:20:27.932Z LH:dom-size-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.933Z LH:status Auditing: Duplicated JavaScript
+2026-09-12T07:20:27.933Z LH:duplicated-javascript-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.934Z LH:status Auditing: Font display
+2026-09-12T07:20:27.934Z LH:font-display-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.935Z LH:status Auditing: Forced reflow
+2026-09-12T07:20:27.935Z LH:forced-reflow-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.936Z LH:status Auditing: Improve image delivery
+2026-09-12T07:20:27.936Z LH:image-delivery-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.937Z LH:status Auditing: INP by phase
+2026-09-12T07:20:27.937Z LH:interaction-to-next-paint-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.938Z LH:status Auditing: LCP request discovery
+2026-09-12T07:20:27.938Z LH:lcp-discovery-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.939Z LH:status Auditing: LCP by phase
+2026-09-12T07:20:27.939Z LH:lcp-phases-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.940Z LH:status Auditing: Legacy JavaScript
+2026-09-12T07:20:27.940Z LH:legacy-javascript-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.941Z LH:status Auditing: Modern HTTP
+2026-09-12T07:20:27.941Z LH:modern-http-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.942Z LH:status Auditing: Network dependency tree
+2026-09-12T07:20:27.942Z LH:network-dependency-tree-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.943Z LH:status Auditing: Render blocking requests
+2026-09-12T07:20:27.943Z LH:render-blocking-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.944Z LH:status Auditing: 3rd parties
+2026-09-12T07:20:27.944Z LH:third-parties-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.945Z LH:status Auditing: Optimize viewport for mobile
+2026-09-12T07:20:27.945Z LH:viewport-insight:warn Caught exception: CHROME_INTERSTITIAL_ERROR
+2026-09-12T07:20:27.946Z LH:status Generating results...
+2026-09-12T07:20:28.015Z LH:ChromeLauncher Killing Chrome instance 3360297
+Runtime error encountered: Chrome prevented page load with an interstitial. Make sure you are testing the correct URL and that the server is properly responding to all requests.
+
+ ELIFECYCLE  Command failed with exit code 1.

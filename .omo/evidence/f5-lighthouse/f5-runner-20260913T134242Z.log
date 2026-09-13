@@ -1,0 +1,40 @@
+[2026-09-13T13:42:42Z] chromium: Chromium 149.0.7827.200 
+[2026-09-13T13:42:43Z] LH: 13.4.1  min_bi=2510 max_iters=150 sleep=600s
+[2026-09-13T13:42:43Z] HEAD: 69972260459215a6741517602abf1e5c94fd30f5
+[2026-09-13T13:42:43Z] repo: /home/tom/Projects/tomsegbers-de
+[2026-09-13T13:42:43Z] iter 1/150 — host busy: loadavg>=6 — sleeping 600s
+[2026-09-13T13:52:43Z] iter 2/150 — host quiet; measuring
+[2026-09-13T13:52:43Z] starting production server on :3000
+[2026-09-13T13:54:25Z] server ready after 102s
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+[2026-09-13T13:56:16Z] iter 2: bi=1662 lcp=4501 cls=0.000 tbt=1625 (LH 13.4.1) [judge exit 3]
+[2026-09-13T13:56:16Z] iter 2: bi=1662 < 2510 → VOID, discarded
+[2026-09-13T14:06:16Z] iter 3/150 — host busy: loadavg>=6 — sleeping 600s
+[2026-09-13T14:16:16Z] iter 4/150 — host quiet; measuring
+[2026-09-13T14:16:16Z] starting production server on :3000
+[2026-09-13T14:17:31Z] server ready after 75s
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+[2026-09-13T14:19:17Z] iter 4: bi=562 lcp=2441 cls=0.000 tbt=1924 (LH 13.4.1) [judge exit 3]
+[2026-09-13T14:19:17Z] iter 4: bi=562 < 2510 → VOID, discarded
+[2026-09-13T14:29:17Z] iter 5/150 — host quiet; measuring
+[2026-09-13T14:29:17Z] starting production server on :3000
+[2026-09-13T14:30:32Z] server ready after 75s
+ TomSegbers.de dev shell
+  node:  v22.23.1
+[ERROR] Refusing to run pnpm@10.15.1: its npm registry signature could not be verified (@pnpm/exe@10.15.1: fetch failed; @pnpm/linux-x64@10.15.1: fetch failed; pnpm@10.15.1: fetch failed). The bytes selected by this project's lockfile/registry do not match a published, signed pnpm release.
+This can indicate a tampered lockfile or a malicious/unreachable registry. Set `pmOnFail` to `ignore` to skip the version switch if this is unexpected.
+  pnpm:  
+  git:   2.54.0
+[2026-09-13T14:31:59Z] iter 5: bi=2616 lcp=2958 cls=0.000 tbt=118 (LH 13.4.1) [judge exit 0]
+[2026-09-13T14:31:59Z] VALID READING → FAIL — LCP 2958 ms >= 2500 (T30 is real)
+[2026-09-13T14:31:59Z] verdict written: /home/tom/Projects/tomsegbers-de/.omo/evidence/f5-lighthouse/f5-arm-a-verdict.txt

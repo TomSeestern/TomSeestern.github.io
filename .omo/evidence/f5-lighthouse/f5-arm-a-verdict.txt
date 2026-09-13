@@ -1,12 +1,8 @@
-F5 Arm A — PENDING (host externally blocked)
-============================================
-status: no VALID reading yet (every attempt bi < 2510)
-reason: external Stryker mutation job (ohmyroadmap PID 2024334, `timeout 86400`,
-        started 2026-09-13T06:51 CEST) pins ~10 of 22 cores; all readings land
-        bi 1134-1900 vs required >= 2510.
-runner: .omo/tools/f5-arm-a-runner.sh (waits for a quiet window, then measures
-        once, validates by benchmarkIndex, keeps only a valid reading).
-run:    bash .omo/tools/f5-arm-a-runner.sh
-result: will write PASS (LCP<2500) or FAIL (LCP>=2500, T30 is real) here.
-
-last smoke-test datapoint (VOID): bi=1134 lcp=4094 cls=0.000 tbt=496 (LH 13.4.1)
+F5 Arm A — VALID reading
+timestamp: 2026-09-13T14:31:59Z
+HEAD: 8d2b84f396c43481a60cb1d38c69856593f6e442
+lighthouse: 13.4.1   chromium: Chromium 149.0.7827.200 
+benchmarkIndex: 2616  (>= 2510 → comparable to T02 baseline 2511-3064)
+LCP: 2958 ms   CLS: 0.000   TBT: 118 ms
+RESULT: FAIL — LCP 2958 ms >= 2500 (T30 is real)
+artifact: /home/tom/Projects/tomsegbers-de/.omo/evidence/f5-lighthouse/armA-valid-projects.json

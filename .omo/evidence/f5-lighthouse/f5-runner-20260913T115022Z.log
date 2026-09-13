@@ -1,0 +1,6 @@
+[2026-09-13T11:50:22Z] chromium: Chromium 149.0.7827.200 
+[2026-09-13T11:50:23Z] LH: 13.4.1  min_bi=2510 max_iters=1 sleep=1s
+[2026-09-13T11:50:23Z] HEAD: 1ee311cad09deea4ec7f02734ae9f2b9f8d6fe6f
+[2026-09-13T11:50:23Z] repo: /home/tom/Projects/tomsegbers-de
+[2026-09-13T11:50:24Z] iter 1/1 — host busy: stryker — sleeping 1s
+[2026-09-13T11:50:25Z] exhausted 1 iterations without a valid (bi>=2510) reading
