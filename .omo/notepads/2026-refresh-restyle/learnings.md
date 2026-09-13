@@ -10,39 +10,6 @@ _Entries T01–T18 and the pre-re-review F-wave audits archived to
 `archive/2026-09-12/learnings.md` on 2026-09-12 to satisfy R1.7 (50-entry cap).
 Newest entries follow._
 
-## T19 — case-study template, additive render (2026-09-11)
-
-- Fourth provider-crash recovery (after T17/T18/T22). Working tree was the
-  finished T19 change set: `page.tsx` imports CaseStudyHero/Meta + parseFrontmatter
-  and renders hero before `<article>` / meta after the `<h1>`; `lib/markdown.ts`
-  exports `markdownFrontmatterSchema` + `MarkdownFrontmatter` + `parseFrontmatter`;
-  `lib/markdown.test.ts` adds a `parseFrontmatter` block. No rewrite — verify,
-  close the one gap, gate, evidence, commit.
-- Closing the enriched-render gap with Jest (a committed `content/projects/*.md`
-  would have added a 39th static route and broken the build-count invariant):
-  `app/projects/entry/[slug]/page.test.tsx` mocks ONLY the filesystem reader —
-  `jest.mock("@/lib/markdown", () => ({ ...jest.requireActual("@/lib/markdown"),
-  getMarkdownEntry: jest.fn() }))` — so the REAL `parseFrontmatter` Zod schema is
-  the integration under test. `react-markdown` is mocked exactly as the blog page
-  test does. This is the right seam: raw frontmatter in, rendered template out.
-- The page test typechecked clean only after casting the mocked reader result:
-  `{ data, content }` is not a full `matter.GrayMatterFile`, so
-  `as unknown as ReturnType<typeof getMarkdownEntry>` is required (a direct `as`
-  is rejected by TS). `pnpm typecheck` covers test files — ts-jest does not.
-- Test count moved 112 → 126 (16 → 19 suites): +3 parseFrontmatter, +9 CaseStudyMeta/Hero,
-  +2 new page test. Build stayed 38/38 because the test mocks the reader and adds
-  no content file.
-- Fresh 375px overflow proof: temp enriched `content/projects/zz-…md` + a
-  `next dev --port 3030` server + a `.omo/t19-overflow.mjs` chromium probe, then
-  DELETE the fixture. Result: `documentScrollWidth === documentClientWidth` at
-  375/768/1280; heroCount 1, metaCount 1, all role/outcome/metric strings present.
-- `PLAYWRIGHT_BROWSERS_PATH` MUST be exported for any standalone probe: the nix
-  devShell leaves it `null`, so Playwright resolves the browser path to
-  `<repo>/null/chromium_headless_shell-1228/...` and launch fails. The canonical
-  e2e command already exports `$HOME/.cache/ms-playwright`.
-- Full chromium e2e is 65 tests now (prior 64 + the new `e2e/case-study.spec.ts`);
-  it passed 65/65 with 0 flaky on run11 + run12 once host load fell from ~28 to ~11.
-
 ## T21 — de-Flowbite targeted replacement (2026-09-11)
 
 - **Port-before-swap that actually stays green:** for each Flowbite primitive,
@@ -1181,3 +1148,36 @@ prior approvals are not treated as cover for the new code.
   The 50-entry cap means every new entry after the cap needs a matching archive move.
 - `task(task_id=...)` on an expired session fails with `Task not found for session`;
   re-dispatch fresh rather than retrying the dead session id.
+
+## 2026-09-13 — When a measurement gate is host-blocked, mine the data you already have
+
+- **The situation:** F5's Lighthouse gate could not be re-measured (host shared with an
+  external Stryker job + this agent session; every attempt landed `bi` 1134–1900 vs the
+  required ≥2510). Six void readings produced **zero** new information.
+- **What worked instead:** analysing the *committed* T02 baseline artifacts answered the
+  real question ("did the restyle regress LCP?") without any new measurement. The
+  baseline (valid host, same tool) showed the absolute LCP budget was **already failing
+  on 3/7 routes before the restyle**. Therefore no possible post-restyle number could
+  make F5 a clean "did the restyle pass?" gate — the criterion was unsatisfiable at
+  plan start. This reframing is only visible by comparing against the *baseline*, not by
+  staring at post-restyle reds.
+- **Generalisable rule:** before repeating a blocked measurement, ask what the existing
+  artifacts already determine. A red metric is only a *regression* if the baseline was
+  green. Always check `baseline vs budget`, not just `current vs budget`.
+- **Void readings can still carry direction.** run-6 post-restyle medians were LOWER
+  than the valid baseline on 5/7 routes *despite a slower host* (2258 vs 2830 on `/`;
+  2286 vs 3562 on cheesecake). Host contention can only inflate latency, never deflate
+  it — so a slower host with lower numbers is directional evidence of real improvement,
+  even when the reading is formally void. Record the direction, not just the verdict.
+- **Turn a blocked manual gate into a self-validating runner.** Rather than babysitting
+  `uptime`, `scripts`-adjacent tooling under the gitignored `.omo/tools/` waits for a
+  quiet window, measures once, validates the reading by its own `benchmarkIndex`, keeps
+  it only if valid, and self-cleans. Placing it under `.omo/` avoids staling the F1–F4
+  wave (a change under `scripts/` would be in F2's review scope → re-run everything).
+- **Agent-session census matters for perf gates:** the session owns ~40 long-lived node
+  processes (14 lsp-daemon + 26 codegraph) plus the harness near a full core. Any
+  benchmark run in-session is therefore never on an idle host.
+- **T16 gap:** T16's acceptance included "LCP budget met" and it is `[x]`, but its ledger
+  has no LCP measurement. run-6 (2258 ms, contended) is consistent with the claim, so
+  the claim looks true — but it was unverified. Lesson: acceptance criteria that name a
+  metric need that metric in the ledger, or the `[x]` is unbacked.
