@@ -1504,3 +1504,34 @@ continuously for 6h39m and shows no sign of stopping.
 
 Server stopped; port 3000 confirmed closed. Artifact retained (VOID).
 F5 disposition unchanged: `[~]` **UNJUDGED, not failed**.
+
+════════════════════════════════════════════════════════════════════════════
+§32 — F5 Arm A now automated (detached runner), 2026-09-13T12:14:50Z
+════════════════════════════════════════════════════════════════════════════
+Manual attempts #5 (§29) and #6 (§31) both produced VOID readings, and the
+host blocker is a long-running external job:
+  ohmyroadmap Stryker (PID 2024334), `timeout 86400`, started 2026-09-13T06:51
+  CEST → may run until ~2026-09-13T…+24h; pins ~10 of 22 cores.
+Babysitting `uptime` in-session is wasteful and in-session measurement is
+self-contaminated (§30), so the gate is now automated:
+
+  .omo/tools/f5-arm-a-runner.sh
+    - waits cheaply (~0 CPU) for a window with no stryker/cc1/cc1plus and
+      loadavg < 6 (REQUIRE_NO_AGENT=1 for strict detachment)
+    - starts the production build, runs ONE Arm A reading (LH 13.4.1 + nix
+      Chromium 149.0.7827.200 — matched to T02)
+    - validates the reading by its own benchmarkIndex; keeps it ONLY if
+      bi >= 2510, else discards and retries
+    - bounds itself (default 150 iters x 600 s = 25 h), kills its own server,
+      never touches product files
+    - on success writes .omo/evidence/f5-lighthouse/armA-valid-projects.json
+      and f5-arm-a-verdict.txt (PASS if LCP<2500, FAIL if >=2500)
+
+Launched detached (setsid) at 12:14:50Z; alive and idle at 0.0% CPU.
+Log: .omo/evidence/f5-lighthouse/f5-runner-<stamp>.log
+
+Expected outcomes for /projects:
+  bi >= 2510 and LCP < 2500  => F5 LCP criterion PASSES, no code change
+  bi >= 2510 and LCP >= 2500 => T30 is real (pre-existing debt reduction)
+
+Stop with: pkill -f f5-arm-a-runner.sh
