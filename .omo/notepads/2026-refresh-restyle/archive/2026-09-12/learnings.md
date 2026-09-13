@@ -503,3 +503,52 @@ ordering preserved; newest 50 entries remain in `../learnings.md`._
 - Full chromium e2e is 65 tests now (prior 64 + the new `e2e/case-study.spec.ts`);
   it passed 65/65 with 0 flaky on run11 + run12 once host load fell from ~28 to ~11.
 
+
+## T21 — de-Flowbite targeted replacement (2026-09-11)
+
+- **Port-before-swap that actually stays green:** for each Flowbite primitive,
+  write the e2e/Jest assertion on the BEHAVIOR the old and new implementations
+  share (toggle open/close, Enter/Space, list semantics, last-crumb non-link,
+  `role="status"`), capture a green run on Flowbite, THEN swap, THEN add the
+  improved a11y assertion (`aria-expanded`/`aria-controls`, `aria-current`) in
+  the same commit. This avoids a red intermediate and proves preservation.
+- **Flowbite 0.12.17 a11y gaps (measured, not assumed):** `NavbarToggle` renders
+  a bare `<button data-testid="flowbite-navbar-toggle">` with an sr-only
+  "Open main menu" and **no** `aria-expanded`/`aria-controls`; `BreadcrumbItem`
+  never sets `aria-current` (the last item is just a `<span>`); `Alert` hardcodes
+  `role="alert"` before `...restProps` so `role="status"` wins only when passed
+  explicitly. The in-tree primitives close all three gaps.
+- **Flowbite theme classes were the source of the exact behavior to copy:**
+  `NavbarCollapse` = `w-full md:block md:w-auto` + `hidden` when closed (media
+  query beats `hidden` on desktop); `NavbarCollapse` renders a `<ul>`; the
+  toggle is `md:hidden`. Replicated the same `hidden`/`md:flex` disclosure.
+- **Header accessible names must persist for existing tests:** the brand link is
+  read as "Tom Segbers Logo Tom Segbers" (Image alt + span); `responsive.spec.ts`
+  queries `getByRole("link", { name: "Tom Segbers" })` (substring match) and
+  `getByRole("button", { name: /menu/i })` → keep "Open/Close main menu" sr-only.
+  The Contact CTA must stay the FIRST "Contact" link inside `<nav>` and keep
+  `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark`
+  (Tailwind `outline-none` = `outline: 2px solid transparent`, which is why
+  `interactions.spec.ts` asserts `outline-style: solid` + the #DEA48C ring).
+- **Breadcrumb truncation chain:** the current crumb needs `min-w-0` on the
+  `<li>` AND the `<span>` plus `truncate` on the span; the `<ol>` is the flex
+  container. Covered by the existing `responsive.spec.ts` detail-route 375px
+  `scrollWidth == clientWidth` assertion (28 passed in `08-breadcrumb-intree.log`).
+- **Inline SVG over a dependency:** the hamburger/chevron/X icons are inline
+  `<svg aria-hidden>` — no new package. Use Tailwind `size-*` (not `h-* w-*`) to
+  avoid the `tailwindcss/enforces-shorthand` warning.
+- **Header active-route Jest:** `jest.setup.js` already mocks `next/navigation`
+  with `usePathname: jest.fn(() => "/")`; override per-test via
+  `jest.mocked(usePathname).mockReturnValue("/about")` and reset in `beforeEach`.
+- **Console/DOM oracle for manual QA:** `next dev --port 3031` +
+  `{ chromium } from "@playwright/test"` probe captured the full contract
+  (aria-expanded false→true→false, aria-controls, nav hidden→visible,
+  `aria-current="page"` on the non-link crumb, `role="status"` + Dismiss).
+  Kill the listener by the PID from `ss -ltnp | grep :3031` (the nix wrapper
+  exits but `next-server` survives `kill $!`).
+- Final: 3 atomic commits; typecheck/lint (0 errors, 47 pre-existing warnings)/
+  prettier/test (21 suites / 141 tests) green; build 38/38; contrast 24/24;
+  ornaments green; images 99/99; full chromium e2e 71 passed (0 failed /
+  0 flaky); axe-only 8 passed; storybook smoke 3 suites / 6 tests.
+
+

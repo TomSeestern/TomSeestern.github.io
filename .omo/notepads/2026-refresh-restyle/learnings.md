@@ -10,54 +10,6 @@ _Entries T01–T18 and the pre-re-review F-wave audits archived to
 `archive/2026-09-12/learnings.md` on 2026-09-12 to satisfy R1.7 (50-entry cap).
 Newest entries follow._
 
-## T21 — de-Flowbite targeted replacement (2026-09-11)
-
-- **Port-before-swap that actually stays green:** for each Flowbite primitive,
-  write the e2e/Jest assertion on the BEHAVIOR the old and new implementations
-  share (toggle open/close, Enter/Space, list semantics, last-crumb non-link,
-  `role="status"`), capture a green run on Flowbite, THEN swap, THEN add the
-  improved a11y assertion (`aria-expanded`/`aria-controls`, `aria-current`) in
-  the same commit. This avoids a red intermediate and proves preservation.
-- **Flowbite 0.12.17 a11y gaps (measured, not assumed):** `NavbarToggle` renders
-  a bare `<button data-testid="flowbite-navbar-toggle">` with an sr-only
-  "Open main menu" and **no** `aria-expanded`/`aria-controls`; `BreadcrumbItem`
-  never sets `aria-current` (the last item is just a `<span>`); `Alert` hardcodes
-  `role="alert"` before `...restProps` so `role="status"` wins only when passed
-  explicitly. The in-tree primitives close all three gaps.
-- **Flowbite theme classes were the source of the exact behavior to copy:**
-  `NavbarCollapse` = `w-full md:block md:w-auto` + `hidden` when closed (media
-  query beats `hidden` on desktop); `NavbarCollapse` renders a `<ul>`; the
-  toggle is `md:hidden`. Replicated the same `hidden`/`md:flex` disclosure.
-- **Header accessible names must persist for existing tests:** the brand link is
-  read as "Tom Segbers Logo Tom Segbers" (Image alt + span); `responsive.spec.ts`
-  queries `getByRole("link", { name: "Tom Segbers" })` (substring match) and
-  `getByRole("button", { name: /menu/i })` → keep "Open/Close main menu" sr-only.
-  The Contact CTA must stay the FIRST "Contact" link inside `<nav>` and keep
-  `focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft-foreground-dark`
-  (Tailwind `outline-none` = `outline: 2px solid transparent`, which is why
-  `interactions.spec.ts` asserts `outline-style: solid` + the #DEA48C ring).
-- **Breadcrumb truncation chain:** the current crumb needs `min-w-0` on the
-  `<li>` AND the `<span>` plus `truncate` on the span; the `<ol>` is the flex
-  container. Covered by the existing `responsive.spec.ts` detail-route 375px
-  `scrollWidth == clientWidth` assertion (28 passed in `08-breadcrumb-intree.log`).
-- **Inline SVG over a dependency:** the hamburger/chevron/X icons are inline
-  `<svg aria-hidden>` — no new package. Use Tailwind `size-*` (not `h-* w-*`) to
-  avoid the `tailwindcss/enforces-shorthand` warning.
-- **Header active-route Jest:** `jest.setup.js` already mocks `next/navigation`
-  with `usePathname: jest.fn(() => "/")`; override per-test via
-  `jest.mocked(usePathname).mockReturnValue("/about")` and reset in `beforeEach`.
-- **Console/DOM oracle for manual QA:** `next dev --port 3031` +
-  `{ chromium } from "@playwright/test"` probe captured the full contract
-  (aria-expanded false→true→false, aria-controls, nav hidden→visible,
-  `aria-current="page"` on the non-link crumb, `role="status"` + Dismiss).
-  Kill the listener by the PID from `ss -ltnp | grep :3031` (the nix wrapper
-  exits but `next-server` survives `kill $!`).
-- Final: 3 atomic commits; typecheck/lint (0 errors, 47 pre-existing warnings)/
-  prettier/test (21 suites / 141 tests) green; build 38/38; contrast 24/24;
-  ornaments green; images 99/99; full chromium e2e 71 passed (0 failed /
-  0 flaky); axe-only 8 passed; storybook smoke 3 suites / 6 tests.
-
-
 ## T23 — purpose-built OG card + lightweight header mark (2026-09-11)
 
 - **`next/image` + local SVG: use `unoptimized`.** The image optimizer has
@@ -1181,3 +1133,36 @@ prior approvals are not treated as cover for the new code.
   has no LCP measurement. run-6 (2258 ms, contended) is consistent with the claim, so
   the claim looks true — but it was unverified. Lesson: acceptance criteria that name a
   metric need that metric in the ledger, or the `[x]` is unbacked.
+
+## 2026-09-13 — Test the branch that closes the gate, and diagnose before you fix
+
+- **Untested success paths are the dangerous ones.** The F5 runner existed to
+  produce a VALID reading, but only its *failure* branches had ever executed
+  (stryker-detected, void-discard, server-fail). The PASS/FAIL branch — the one
+  that actually closes F5 — was never exercised. Fix: extract the decision into a
+  pure function (`f5-arm-a-judge.cjs`) and test every path with synthetic LHRs:
+  PASS, FAIL, VOID, `bi == min` boundary, LCP 2499 vs 2500 boundary, both
+  malformed cases, CLI exits 0/2/3 — plus a test against the **real** baseline
+  artifact. 11 tests, no host dependency. **Rule: if a gate's outcome depends on
+  code you wrote, that code needs a test that produces the passing result.**
+- **Single-source the decision.** The runner had inline metric parsing that
+  duplicated the judge. Replacing it with a call to the judge (R37.2) removes the
+  risk of the two drifting apart — a real hazard when one is tested and one is not.
+- **`.mjs` + `require` fails under this Node.** `require is not defined in ES
+  module scope` — use `.cjs` for scripts that `require()`, or write ESM with
+  `import`. These tooling scripts are CJS to match the repo's other `scripts/`.
+- **Diagnose the bottleneck, don't guess it.** `/projects` LCP was consistently
+  the worst route. Measuring the prerendered HTML (215,750 B vs `/blog` 44,045 B)
+  and censusing its elements (116 `<img>`, 226 `<div>`) located the cause
+  concretely: 112 tech icons across 21 cards, each wrapped in a Tooltip. That is
+  a *pre-existing* structural cost, not a restyle artifact. The fix candidates
+  (content-visibility / icon cap / sprite / pagination) are now ranked by
+  impact-vs-risk in `.omo/drafts/t30-projects-render-cost-proposal.md`.
+- **Do not fix what you cannot yet measure.** Every candidate fix changes product
+  code, and the decision record forbids that until a valid Arm A reading exists.
+  A diagnosed bottleneck with a *proposal* is the correct stopping point — not a
+  speculative patch that would stale the F1–F4 verification wave.
+- **Stryker job ended; a compiler job immediately replaced it.** The blocker
+  changed identity (tap-runner workers → 21 `cc1` processes, loadavg 29.8) without
+  a quiet window opening. The runner's load-based gate catches both, which is why
+  it must test loadavg, not just named processes.
