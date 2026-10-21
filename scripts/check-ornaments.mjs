@@ -10,8 +10,11 @@
  * scope — this guards the shipped code and design tokens, not the English
  * language.
  *
- * Excluded: dependencies, build output, and agent state (`.omo/`). The gate
- * script itself is excluded because it must name the terms it bans.
+ * Excluded: dependencies, build output, agent state (`.omo/`), and vendored
+ * tooling (`.claude/` skills such as impeccable, plus its `.impeccable/`
+ * runtime cache) — third-party code carries its own vocabulary, and this gate
+ * guards what we ship. The gate script itself is excluded because it must name
+ * the terms it bans.
  *
  * Usage: node scripts/check-ornaments.mjs
  */
@@ -26,6 +29,9 @@ const EXCLUDED_DIRS = new Set([
   ".git",
   ".next",
   ".omo",
+  // Vendored design skill and its runtime cache: third-party vocabulary, not our tokens
+  ".claude",
+  ".impeccable",
   "node_modules",
   "storybook-static",
   "test-results",

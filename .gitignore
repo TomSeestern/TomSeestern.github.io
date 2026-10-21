@@ -51,3 +51,5 @@ storybook-static/
 # CodeGraph tooling artifact (MCP server writes a relative-path SQLite index here)
 /null/
 
+# impeccable design-skill runtime state (caches, crops, captures)
+.impeccable/

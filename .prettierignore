@@ -1,3 +1,6 @@
 .next
 node_modules
 storybook-static
+
+# Vendored third-party code keeps its upstream formatting (see .claude/skills/impeccable/VENDORING.md)
+.claude

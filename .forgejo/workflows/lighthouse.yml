@@ -38,6 +38,11 @@ jobs:
       - name: Build
         run: nix develop -c pnpm build
       - name: Run Lighthouse budgets
+        # The shared host runs an unrelated service on port 3000; without an
+        # explicit port Lighthouse sometimes measured that service (which serves
+        # `/` but 404s every app route). Keep the app and PUBLIC_ROUTES aligned.
+        env:
+          PORT: 3055
         run: nix develop -c pnpm exec lhci autorun
       - name: Upload Lighthouse results
         # v3, not v4: the v4 artifact client refuses Forgejo (GHES-style) servers.
