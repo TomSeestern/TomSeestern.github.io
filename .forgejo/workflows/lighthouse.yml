@@ -8,6 +8,14 @@ on:
   pull_request:
   workflow_dispatch:
 
+# One slot per ref: Lighthouse measures total-blocking-time on a shared host, and
+# auditing beside Check, Playwright and Bundle Analysis turned a 241 ms median
+# into 890 ms on 2026-10-21. Queue instead of race; never cancel a sibling —
+# a cancelled run leaves the ref half-verified.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   lighthouse:
     name: Lighthouse mobile budgets
