@@ -1,6 +1,6 @@
 ---
 id: journey-into-cpp-desktop-application-development
-title: Journey into C++ - Crafting Desktop Applications
+title: "C++ and Qt: Building Desktop Applications"
 articleDate: 2012-12-31
 articleContent: I taught myself C++ to move beyond browser code, building small desktop applications in Qt Creator and learning how memory, state, and program structure actually behave.
 authorName: Tom Segbers
@@ -18,14 +18,26 @@ technologies:
   - QT Creator
 ---
 
-In 2012, I moved from web technologies into C++ because I wanted to understand desktop applications. I was learning alone, working through small programs in C++ and later using Qt Creator. There was no product plan. The goal was to make things work and understand why they worked.
+C++ was the first language that made me responsible for the machine. There was no framework quietly handling memory, no browser hiding the details. If I got the lifetime of an object wrong, the program told me in the least helpful way possible.
 
-C++ was harder than visual LabVIEW. Memory management and object-oriented programming were not things I could solve by copying an example once. I kept building small exercises, breaking them, and returning to documentation and forums when I got stuck. Each mistake was specific: a pointer that outlived its object, a dialog that blocked the wrong thread, a build that failed because a header was included in the wrong order.
+## The problem
 
-Those early desktop applications were small, but they mattered. Each one forced me to go beyond browser code and think about program structure, state, and what happens outside the happy path. I learned to separate the UI from the logic, to test a function without the GUI, and to read a compiler error instead of guessing.
+In 2012, I moved from web technologies and visual programming into C++ because I wanted to understand desktop applications. I was learning alone, working through small programs and later using Qt Creator. There was no product plan. The goal was to make things work and understand why they worked.
 
-The projects were not polished products. They were deliberate practice. That distinction helped me later, when I had to work on systems where a wrong assumption had a real operational cost.
+The first obstacle was not syntax. It was ownership. A pointer could outlive the object it referred to. A dialog could block the wrong thread. A build could fail because a header was included in the wrong order. These were not abstract language features; they were failures I had to reproduce, read, and fix.
+
+## The build
+
+I kept building small exercises and then turning them into slightly larger applications. Each one added a new constraint: a window that had to update state, a form that had to validate input, a class that had to keep its data consistent. I learned to separate the UI from the logic so I could test a function without opening a window. I learned to read compiler errors instead of guessing at the first fix.
+
+The projects were not polished products. They were deliberate practice. That distinction helped. I was not trying to convince anyone that a small desktop app was a startup; I was trying to build the mental model that later systems work would require.
+
+Qt also introduced me to event-driven programming: signals, slots, and a UI that stayed responsive while work happened elsewhere. That was a different mental model from the straight-line exercises I had written before. I made mistakes with object ownership and learned to use the framework's parent-child model deliberately rather than hoping memory would sort itself out. The small apps were where those ideas became habits, and where I learned that a clean build is not the same as a correct program.
+
+## The result
+
+I built a series of small C++ desktop applications with Qt Creator and established the foundation for later desktop, robotics, and AI-related work. The visible output was modest. The durable output was confidence with a language that does not forgive hand-waving.
 
 ## What I took from it
 
-Looking back, this was the start of my longer C++ phase. Self-study gave me the confidence to take on bigger desktop, robotics, and AI-related work later, and it taught me that understanding a language means understanding its failure modes, not just its syntax.
+Looking back, this was the start of my longer C++ phase. Self-study gave me the confidence to take on bigger systems later, and it taught me that understanding a language means understanding its failure modes, not just its syntax. That lesson has remained useful in every language I have used since.

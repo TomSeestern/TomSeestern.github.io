@@ -32,6 +32,21 @@ describe("real project case files", () => {
     }
   })
 
+  it("keeps every case file on the shared narrative structure", () => {
+    // Given / When / Then
+    for (const project of projects) {
+      const source = readProjectSource(project.id)
+      const bodyMatch = /^---\r?\n[\s\S]*?\r?\n---\r?\n([\s\S]*)$/.exec(source)
+      expect(bodyMatch).not.toBeNull()
+      const body = bodyMatch?.[1] ?? ""
+
+      // The headings are the contract the project index and detail view rely on.
+      const headings = (body.match(/^## .+$/gm) ?? []).map((line) => line.replace(/^## /, ""))
+      expect(headings).toEqual(["The problem", "The build", "The result", "What I took from it"])
+      expect(body.trim().split(/\s+/).length).toBeGreaterThanOrEqual(450)
+    }
+  })
+
   it("publishes exactly the four intended featured case files with evidence", () => {
     // Given / When
     const featured = projects.filter((project) => project.featured)

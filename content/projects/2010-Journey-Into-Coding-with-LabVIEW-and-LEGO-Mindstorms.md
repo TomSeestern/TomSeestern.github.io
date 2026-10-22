@@ -1,6 +1,6 @@
 ---
 id: labview-lego-mindstorms-journey
-title: The Building Blocks of My Tech Journey - LabVIEW & LEGO Mindstorms
+title: "LEGO Mindstorms: My First Autonomous Robot"
 articleDate: 2010-12-15
 articleContent: I learned to program in an after-school LEGO Mindstorms course, building autonomous robots with LabVIEW and discovering how software makes hardware move.
 authorName: Tom Segbers
@@ -18,14 +18,26 @@ technologies:
   - LEGO Mindstorms NXT
 ---
 
-In late 2010, I joined an after-school program built around LEGO Mindstorms NXT 1.0/2.0 kits and LabVIEW. I had no real programming background. Loops, branches, and error handling were not ideas I understood yet; they were blocks on a screen that sometimes made a robot move and sometimes made it sit still.
+Before I had a mental model of a variable, I had a LEGO robot that either moved or refused to move. That binary feedback was enough to get me hooked.
 
-Each session followed the same pattern. We built something, wired its behaviour in LabVIEW, ran it, and then found out why it did not do what we expected. Working with classmates helped because we could compare approaches instead of staring at one broken program alone.
+## The problem
 
-The big moment was programming my first autonomous robot to navigate a maze. Watching a physical LEGO model follow instructions made programming feel much less abstract. It also taught me that I learn fastest when I can test an idea, see the result, and try again.
+In late 2010, I joined an after-school program built around LEGO Mindstorms NXT kits and LabVIEW. I had no programming background. My first programs were diagrams made of blocks: a motor starts, a sensor waits for a value, a branch decides what happens next. The abstraction was friendly, but the robot was unforgiving. A sensor reading taken at the wrong moment produced the same result as a badly designed mechanism.
 
-There is no repository or demo left from this project. What remains is the memory of LabVIEW and an NXT kit showing me that software could control something outside the screen.
+Our goal was an autonomous robot that could navigate a maze without a remote control. That sounds small until the robot has to make every decision itself: which way to turn, when to stop, how to recover after brushing a wall.
+
+## The build
+
+We built the chassis, attached the motors and sensors, and translated each behaviour into LabVIEW. At first I thought of a program as a fixed sequence of steps. The robot kept showing me why that was not enough: the same sequence could work once and fail on the next run when the lighting or starting position changed. That was my first lesson in edge cases: the program was not the robot, and the robot did not care about the happy path.
+
+I started breaking the route into smaller behaviours. Move forward until a sensor detects an obstacle. Back up. Turn. Check again. Add a timeout so a bad reading does not trap the robot forever. The blocks for loops, branching, and error handling stopped being syntax and became a way to make the physical behaviour predictable. Working with classmates helped because we could compare sensor readings and challenge each other's assumptions instead of staring at one broken program alone.
+
+## The result
+
+By the end of the course, I had an autonomous robot that could complete a maze run without intervention. There is no repository or demo left from this project, but the result was never really the program. It was the first time I had built something where software had consequences outside the screen.
+
+The robot also taught me how quickly a physical system can invalidate a clean plan. A loose cable, a flat battery, or a reflective surface could produce a failure that looked like a software bug.
 
 ## What I took from it
 
-This was where I first encountered the feedback loop that still drives my work: make a change, observe the system, and adjust. The tools were simple, but the habit was not. I learned to debug by isolating one behaviour at a time and to treat failure as information rather than a verdict.
+This was where I first encountered the feedback loop that still drives my work: make one change, observe the system, and adjust. I learned to isolate one behaviour at a time and to treat failure as information rather than a verdict. The tools were simple, but the habit was not. Everything I have done since, from robotics to cloud systems, depends on that same loop.

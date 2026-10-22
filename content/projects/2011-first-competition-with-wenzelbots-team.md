@@ -1,6 +1,6 @@
 ---
 id: first-competition-with-wenzelbots-team
-title: Venturing into Robotics - My Early Days with the 'Wenzelbots' Team
+title: "Wenzelbots: My First National Robotics Competition"
 articleDate: 2011-12-31
 articleContent: My first national robotics competition with the Wenzelbots taught me that building the robot is only half the work; testing, presentation, and planning decide the result.
 authorName: Tom Segbers
@@ -18,14 +18,26 @@ technologies:
   - LEGO Mindstorms NXT
 ---
 
-In 2011, I joined the Wenzelbots for my first national robotics competition. We built and programmed a LEGO Mindstorms NXT robot in LabVIEW, then had to make it complete several tasks in one run. That sounded manageable until we began testing.
+The first national robotics competition made the gap visible. We arrived with a robot that worked in our classroom and discovered how many assumptions that room had been hiding.
 
-We were younger and less experienced than many teams around us. The scores made that obvious. Our robot needed repeated adjustments, and every change in design or program meant another test. We were competing against pupils who were often years older, and some had already worked with robotics for much longer. That gap forced us to be honest about what we could control: preparation, organisation, and how quickly we learned from failed runs.
+## The problem
 
-The competition was not only about the robot. A meaningful part of the score came from presenting the research and design work behind it. We had to explain our decisions, show what we had tested, and answer questions from judges. That was my first experience of treating communication as part of the engineering work rather than something added at the end.
+In 2011, I joined the Wenzelbots for my first national robotics competition. We had to build and program a LEGO Mindstorms NXT robot in LabVIEW, then make it complete several tasks in one run. The competition also scored the research and design work behind the robot, which meant the team had to explain its decisions to judges.
 
-We did not finish near the top of the leaderboard, but the competition gave me my first real experience of planning work as a team. I learned that a working technical idea is not enough. Someone has to organise tests, explain the research, and keep the group moving when a run fails.
+We were younger and less experienced than many of the teams around us. The scores made that obvious. Our robot needed repeated adjustments, and every change in design or program meant another full test. The task was not simply to write a better program; it was to make a machine that behaved consistently under competition conditions.
+
+## The build
+
+We divided the work into the robot, the program, testing, and the research presentation. That division helped, but it also exposed how often the pieces depended on each other. A change to the robot's centre of gravity changed how the program had to approach a line. A new sensor position changed the value the program could trust.
+
+We ran the full sequence repeatedly, not just individual mechanisms. We compared failed runs, adjusted the robot, and tried again. The presentation forced a different kind of discipline: we had to explain why we had made each choice, not just show that the robot moved. Answering a judge's question about a design decision was often harder than fixing the decision itself.
+
+That was more useful than demonstrating the robot. It showed me that a design decision is not fully understood until you can explain what you gave up. Those questions were not a formality; they were the part of the work that made the design explicit. That is where the next season's process started.
+
+## The result
+
+We did not leave with a top placement. We did leave with a working robot, a clearer understanding of how the scoring worked, and a list of things to change before the next season. The competition showed me that preparation, organisation, and communication are part of the engineering work, not extras that happen after it. The debrief gave us a concrete list: a more repeatable setup, a clearer test plan, and a presentation that explained tradeoffs rather than only features.
 
 ## What I took from it
 
-That year made robotics feel bigger than a school club. It was the first time I saw programming, hardware, presentation, and teamwork collide under a deadline, and it set the pattern for the projects that followed.
+That year made robotics feel bigger than a school club. It was the first time I saw programming, hardware, presentation, and teamwork collide under a deadline. The result was not the number on the leaderboard. It was the realisation that a technical idea only counts when a team can execute it and explain it.

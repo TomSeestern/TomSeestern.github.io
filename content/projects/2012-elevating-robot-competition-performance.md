@@ -1,6 +1,6 @@
 ---
 id: elevating-robot-competition-performance
-title: Elevating Performance in National Robotics Competitions
+title: "Wenzelbots: Engineering a Better Competition Run"
 articleDate: 2012-12-31
 articleContent: As team lead, I turned a disappointing first competition into a structured year of control-algorithm work, robot redesign, recruitment, and a stronger research presentation.
 authorName: Tom Segbers
@@ -18,14 +18,26 @@ technologies:
   - Powerpoint
 ---
 
-After the 2011 competition, we wanted to return better prepared. During 2012, I became team lead and principal developer. We worked with LEGO Mindstorms, LabVIEW, sensor kits, and a separate research presentation in PowerPoint.
+The 2012 season began with a decision: stop treating the competition as a build event and treat it as a system that had to perform on a specific day.
 
-The first robot had exposed weak spots: design choices were rushed, testing was not systematic enough, and the presentation needed the same care as the software. We recruited new members, raised extra funds for our kit, reworked the robot design, and split the research presentation into its own responsibility. That last change mattered more than expected. It gave one group a clear owner and enough time to understand the research instead of assembling slides the night before.
+## The problem
 
-The year became a long cycle of experiments, algorithm changes, sensor tests, team training, and rehearsals. Some ideas sounded good until the robot met the real competition setup. Repeating those tests taught me why preparation beats clever last-minute fixes. We learned to log what changed, compare runs, and keep a known-good version available when an experiment failed.
+The 2011 competition had exposed the weak points. Our design was rushed, our testing was not systematic, and the research presentation was assembled too late. We were not short of ideas. We were short of a process that could turn those ideas into a reliable run when the judges were watching.
 
-Our placement improved significantly. More importantly, I learned to lead a small group, turn a broad goal into practical tasks, and give both the technical work and the presentation the time they needed.
+I became team lead and principal developer for the 2012 season. The goal was not just to build a better robot. It was to make the team better at preparing, testing, and explaining the work.
+
+## The build
+
+We recruited new members, raised additional funds for our kit, and reworked the robot design. We split the research presentation into its own responsibility so it would not become a last-minute slide deck. On the technical side, we turned the program into a series of experiments: change a control parameter, run the course, record the result, and keep a known-good version to return to when an experiment failed.
+
+That last habit mattered. It is easy to keep changing a system until nobody remembers which version worked. Having a known-good baseline gave us the freedom to try something new without risking the whole season. We also rehearsed under competition-like conditions, because a robot that works in a quiet room can behave differently when the floor, lighting, or schedule changes.
+
+We treated the control program as a set of hypotheses. A new control routine had to survive repeated runs with different lighting and battery levels; a sensor change had to be measured against the previous version. We logged what changed and what happened, which sounds ordinary until a team is under deadline and every fix starts to blur into the next. The log became the team's memory. The result was a program we could defend, not just one that happened to work on the day.
+
+## The result
+
+Our national placement improved significantly. More importantly, the team had a repeatable way to prepare: clear ownership, logged tests, and a presentation that reflected the actual work. I learned that leadership in a small technical team is mostly about making the next step obvious and giving people enough context to make good decisions without waiting for permission.
 
 ## What I took from it
 
-The main lesson was that performance is a system property. The robot, the code, the research, and the team's ability to execute under time pressure all contributed to the score. That perspective still shapes how I approach engineering work today.
+The main lesson was that performance is a system property. The robot, the code, the research, and the team's ability to execute under pressure all contributed to the score. I still approach engineering work that way: optimise the whole path to the outcome, not just the part that is most interesting to build.
