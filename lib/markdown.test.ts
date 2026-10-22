@@ -56,6 +56,7 @@ describe("getAllMarkdownEntries", () => {
         outcome: "",
         heroImage: "",
         metrics: [],
+        links: [],
       },
     ])
   })
@@ -83,6 +84,7 @@ describe("getAllMarkdownEntries", () => {
       outcome: "",
       heroImage: "",
       metrics: [],
+      links: [],
     })
   })
 

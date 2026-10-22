@@ -30,6 +30,7 @@ function makeTag(label: string, slug: string, count: number, links: string[]): T
       outcome: "",
       heroImage: "",
       metrics: [],
+      links: [],
       collection: "blog",
     })),
   }

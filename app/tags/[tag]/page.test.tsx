@@ -41,6 +41,7 @@ function makeEntry(collection: "blog" | "project", overrides: Partial<MarkdownEn
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
     collection,
     ...overrides,
   }

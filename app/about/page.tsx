@@ -8,6 +8,7 @@ import { Section } from "@/components/Section/Section"
 import { SectionHeading } from "@/components/SectionHeading/SectionHeading"
 import Testimonials from "@/components/Testimonials/Testimonials"
 import TimelineEntry from "@/components/TimelineEntry/TimelineEntry"
+import { formatYear } from "@/lib/format-date"
 import { getAllProjects } from "@/lib/projects"
 import { getTopTechnologies } from "@/lib/technologies"
 
@@ -39,6 +40,10 @@ export const metadata: Metadata = {
 export default function About() {
   const projects = getAllProjects()
   const technologies = getTopTechnologies(projects, 8)
+  const years = projects.map((project) => formatYear(project.articleDate)).sort()
+  const firstYear = years[0] ?? "—"
+  const lastYear = years[years.length - 1] ?? "—"
+  const archiveSpan = firstYear === lastYear ? firstYear : `${firstYear}—${lastYear}`
 
   return (
     <>
@@ -133,7 +138,7 @@ export default function About() {
               </div>
               <div className="border-b border-rule py-4 sm:pl-6">
                 <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">Archive span</dt>
-                <dd className="mt-2 font-mono text-xl leading-none text-ink">2010—2021</dd>
+                <dd className="mt-2 font-mono text-xl leading-none text-ink">{archiveSpan}</dd>
               </div>
             </dl>
           </div>

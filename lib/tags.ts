@@ -180,6 +180,18 @@ export function getAllTags(): readonly TagSummary[] {
 }
 
 /**
+ * Canonical tag index scoped to the project collection.
+ *
+ * The project archive's "Browse by subject" strip and its `Subjects` count
+ * must describe projects only. Using the sitewide index there mixes in
+ * blog-only tags and inflates shared counts (for example, a tag carried by one
+ * project and one blog post would render as `(2)` on the projects page).
+ */
+export function getAllProjectTags(): readonly TagSummary[] {
+  return buildTagIndex(getAllProjects().map((entry) => ({ entry, collection: "project" as const })))
+}
+
+/**
  * Looks a canonical tag up by its URL slug.
  *
  * @param slug - The slug segment from `/tags/<slug>`.

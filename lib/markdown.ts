@@ -22,6 +22,10 @@ export const markdownFrontmatterSchema = z.object({
     .array(z.object({ label: z.string(), value: z.string() }))
     .default([])
     .catch([]),
+  links: z
+    .array(z.object({ label: z.string(), href: z.string().min(1) }))
+    .default([])
+    .catch([]),
 })
 
 /** Validated frontmatter shape, inferred from {@link markdownFrontmatterSchema}. */
@@ -58,6 +62,7 @@ export type MarkdownEntry = {
   readonly outcome: string
   readonly heroImage: string
   readonly metrics: readonly { readonly label: string; readonly value: string }[]
+  readonly links: readonly { readonly label: string; readonly href: string }[]
 }
 
 /**

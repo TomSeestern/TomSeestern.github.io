@@ -45,6 +45,25 @@ describe("ProjectDossier", () => {
     expect(screen.queryByText("ignored")).not.toBeInTheDocument()
   })
 
+  it("renders public evidence links and drops incomplete entries", () => {
+    // Given / When
+    renderDossier(
+      <ProjectDossier
+        year="2026"
+        stack={["Python"]}
+        subjects={["Robotics"]}
+        links={[
+          { label: "Live site", href: "https://example.com" },
+          { label: " ", href: "https://ignored.example" },
+        ]}
+      />
+    )
+
+    // Then
+    expect(screen.getByRole("link", { name: "Live site" })).toHaveAttribute("href", "https://example.com")
+    expect(screen.queryByRole("link", { name: " " })).not.toBeInTheDocument()
+  })
+
   it("omits empty optional blocks for a legacy entry", () => {
     // Given / When
     renderDossier(<ProjectDossier year="2010" stack={[]} subjects={[]} />)

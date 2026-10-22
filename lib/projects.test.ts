@@ -17,6 +17,7 @@ function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): Markdo
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
     ...overrides,
   }
 }

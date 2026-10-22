@@ -257,6 +257,16 @@ articleContent: Short teaser shown on listings and OG descriptions.
 authorImgSrc: /img/example.png
 authorName: Tom Segbers
 # Projects only:
+featured: false
+role: Lead developer
+outcome: What shipped and what changed.
+heroImage: /img/projects/example.jpg
+metrics:
+  - label: Users
+    value: 100k+
+links:
+  - label: Live site
+    href: https://example.com
 technologies:
   - TypeScript
   - Next.js
@@ -265,10 +275,21 @@ technologies:
 Body of the post or project write-up in Markdown.
 ```
 
+`featured` controls the four selected cases on `/projects` and the home page.
+`role` and `outcome` render in the project dossier. `metrics` is the dossier's
+evidence block, and `links` renders public evidence links. Only use `heroImage`
+with a real project visual; markdown-only projects keep the generated cover.
+Do not link private repositories or LAN-only services from the public site.
+
 `lib/markdown.ts` parses frontmatter with `gray-matter` and validates it
 through a Zod schema. Every field has a `.default()` and `.catch()` fallback so
 malformed frontmatter never breaks the build; missing values fall back to
 placeholder strings. Entries are sorted by `articleDate` descending.
+
+`/projects` builds its subject strip and `Subjects` count from
+`getAllProjectTags()`, so blog-only tags and mixed-content counts cannot leak
+into the project archive. The archive span and selected-project count are
+derived from the project files rather than hardcoded.
 
 The body is rendered as Markdown on the detail pages via `react-markdown`, and
 the `@tailwindcss/typography` plugin styles the rendered HTML through the

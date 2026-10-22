@@ -10,12 +10,12 @@ import { SectionHeading } from "@/components/SectionHeading/SectionHeading"
 import { TagChip } from "@/components/TagChip/TagChip"
 import { formatYear } from "@/lib/format-date"
 import { getAllProjects } from "@/lib/projects"
-import { getAllTags } from "@/lib/tags"
+import { getAllProjectTags } from "@/lib/tags"
 
 export const metadata: Metadata = {
   title: "The work",
   description:
-    "Case files and experiments from Tom Segbers: payment infrastructure, embedded vision, marketplace MVPs, automation, and more.",
+    "Case files and experiments from Tom Segbers: payment infrastructure, embedded vision, creator platforms, humanoid robotics, automation, and more.",
   openGraph: {
     url: "https://tom.segbers.de/projects",
     siteName: "TomSegbers.de",
@@ -43,10 +43,16 @@ interface YearGroup {
 
 export default function ProjectsArchive() {
   const projects = getAllProjects()
-  const allTags = getAllTags()
-  const tags = allTags.slice(0, 12)
+  const subjectTags = getAllProjectTags()
+  const tags = subjectTags.slice(0, 12)
   const featured = projects.filter((project) => project.featured)
   const archiveProjects = projects.filter((project) => !project.featured)
+  const years = projects.map((project) => formatYear(project.articleDate)).sort()
+  const firstYear = years[0] ?? "—"
+  const lastYear = years[years.length - 1] ?? "—"
+  const span = firstYear === lastYear ? firstYear : `${firstYear}—${lastYear}`
+  const selectedLead =
+    featured.length === 1 ? "One selected project leads" : `${featured.length} selected projects lead`
 
   const groups: YearGroup[] = []
   for (const project of archiveProjects) {
@@ -65,7 +71,7 @@ export default function ProjectsArchive() {
         titleId="projects-title"
         eyebrow="Archive"
         title="The work"
-        lead="Case files and experiments from 2010 to 2021. Four selected projects lead; the complete ledger follows by year."
+        lead={`Case files and experiments from ${firstYear} to ${lastYear}. ${selectedLead}; the complete ledger follows by year.`}
         size="compact"
         actions={
           <>
@@ -90,11 +96,11 @@ export default function ProjectsArchive() {
               </div>
               <div className="flex items-baseline justify-between gap-3">
                 <dt className="text-ink-muted">Span</dt>
-                <dd className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink">2010—2021</dd>
+                <dd className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink">{span}</dd>
               </div>
               <div className="flex items-baseline justify-between gap-3">
                 <dt className="text-ink-muted">Subjects</dt>
-                <dd className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink">{allTags.length}</dd>
+                <dd className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink">{subjectTags.length}</dd>
               </div>
             </dl>
           </div>
@@ -131,7 +137,7 @@ export default function ProjectsArchive() {
           id="selected-title"
           eyebrow="I / Case files"
           title="Selected case files"
-          lead="Four projects that show the range: money movement, machine vision, a marketplace MVP, and a public-service workflow."
+          lead="Four case files that show the range: payment infrastructure, embedded vision, a creator-platform exit, and humanoid robotics."
           action={
             <Button href="#archive" variant="ghost" size="sm">
               Skip to archive <ArrowRight className="size-4" />

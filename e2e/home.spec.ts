@@ -13,6 +13,8 @@ test("homepage renders the COLOSSUS sections", async ({ page }) => {
   // The terminal hero is the first artefact, not a portrait or a marquee.
   await expect(page.getByTestId("home-hero")).toBeVisible()
   await expect(page.getByTestId("home-hero").getByText("portfolio / 2026")).toBeVisible()
+  await expect(page.getByTestId("home-archive-status")).toContainText("2010—2026")
+  await expect(page.getByTestId("home-archive-status")).toContainText("25")
   await expect(page.getByTestId("ticker")).toHaveCount(0)
 
   // Curated featured set — exactly four monuments, each a project link.

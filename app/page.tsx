@@ -8,6 +8,7 @@ import { MonumentCard } from "@/components/MonumentCard/MonumentCard"
 import { Section } from "@/components/Section/Section"
 import { SectionHeading } from "@/components/SectionHeading/SectionHeading"
 import { getAllBlogPosts } from "@/lib/blog"
+import { formatYear } from "@/lib/format-date"
 import { getAllProjects, selectFeaturedProjects } from "@/lib/projects"
 import { getTopTechnologies } from "@/lib/technologies"
 
@@ -46,10 +47,19 @@ export default function HomePage() {
   const technologies = getTopTechnologies(projects, 8)
   const latestArticles = articles.slice(0, 3)
   const [leadArticle, ...secondaryArticles] = latestArticles
+  const years = projects.map((project) => formatYear(project.articleDate)).sort()
+  const firstYear = years[0] ?? "—"
+  const lastYear = years[years.length - 1] ?? "—"
+  const archiveSpan = firstYear === lastYear ? firstYear : `${firstYear}—${lastYear}`
 
   return (
     <>
-      <HomeHero projectCount={projects.length} dispatchCount={articles.length} leadProject={leadProject} />
+      <HomeHero
+        projectCount={projects.length}
+        dispatchCount={articles.length}
+        archiveSpan={archiveSpan}
+        leadProject={leadProject}
+      />
 
       <Section
         id="selected-work"
@@ -61,7 +71,7 @@ export default function HomePage() {
           id="selected-work-title"
           eyebrow="I / Case files"
           title="Selected work"
-          lead="Four case files that show the range: payment infrastructure, embedded vision, a marketplace MVP, and a public-service prototype."
+          lead="Four case files that show the range: payment infrastructure, embedded vision, a creator-platform exit, and humanoid robotics."
           action={
             <Button href="/projects" variant="secondary" size="sm">
               All case files <ArrowRight className="size-4" />

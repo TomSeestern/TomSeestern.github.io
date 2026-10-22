@@ -17,6 +17,7 @@ function makeEntry(id: string, date: string): MarkdownEntry {
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
   }
 }
 

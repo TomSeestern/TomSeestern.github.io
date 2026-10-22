@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react"
 import { MarkdownEntry } from "../../lib/markdown"
 
 jest.mock("../../lib/tags", () => ({
-  getAllTags: jest.fn(() => []),
+  getAllProjectTags: jest.fn(() => []),
 }))
 
 jest.mock("../../lib/projects", () => ({
@@ -10,9 +10,11 @@ jest.mock("../../lib/projects", () => ({
 }))
 
 import { getAllProjects } from "../../lib/projects"
+import { getAllProjectTags } from "../../lib/tags"
 import ProjectsArchive from "./page"
 
 const mockGetAllProjects = jest.mocked(getAllProjects)
+const mockGetAllProjectTags = jest.mocked(getAllProjectTags)
 
 function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
   return {
@@ -30,6 +32,7 @@ function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): Markdo
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
     ...overrides,
   }
 }
@@ -58,6 +61,7 @@ const projects: MarkdownEntry[] = [
 describe("ProjectsArchive", () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockGetAllProjectTags.mockReturnValue([])
   })
 
   it("renders the archive hero and the complete project grid", () => {
@@ -75,6 +79,24 @@ describe("ProjectsArchive", () => {
     expect(screen.getByText("Project Alpha")).toBeInTheDocument()
     expect(screen.getByText("Project Beta")).toBeInTheDocument()
     expect(screen.getByText("Project Gamma")).toBeInTheDocument()
+  })
+
+  it("derives the archive span and subject count from the project collection", () => {
+    // Given
+    mockGetAllProjects.mockReturnValue(projects)
+    mockGetAllProjectTags.mockReturnValue([
+      { key: "typescript", label: "TypeScript", slug: "typescript", count: 2, entries: [] },
+      { key: "python", label: "Python", slug: "python", count: 1, entries: [] },
+    ])
+
+    // When
+    render(<ProjectsArchive />)
+
+    // Then
+    expect(screen.getByText(/Case files and experiments from 2023 to 2025/)).toBeInTheDocument()
+    expect(screen.getByText("2023—2025")).toBeInTheDocument()
+    expect(screen.getByText("TypeScript (2)")).toBeInTheDocument()
+    expect(screen.getByText("Python (1)")).toBeInTheDocument()
   })
 
   it("marks only the explicitly featured project", () => {

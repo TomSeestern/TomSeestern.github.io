@@ -46,6 +46,7 @@ function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): Markdo
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
     ...overrides,
   }
 }
@@ -76,6 +77,7 @@ describe("[slug] project entry page", () => {
         { label: "Users", value: "1200" },
         { label: "Uptime", value: "99.9%" },
       ],
+      links: [{ label: "Live site", href: "https://example.com" }],
     })
 
     // When
@@ -84,6 +86,7 @@ describe("[slug] project entry page", () => {
     // Then
     expect(screen.getByRole("heading", { level: 1, name: "Enriched project" })).toBeInTheDocument()
     expect(screen.getByTestId("case-study-hero")).toBeInTheDocument()
+    expect(screen.queryByTestId("project-cover")).not.toBeInTheDocument()
     expect(screen.getByTestId("project-body")).toHaveTextContent("body")
     expect(screen.queryByTestId("case-study-meta")).not.toBeInTheDocument()
 
@@ -95,6 +98,7 @@ describe("[slug] project entry page", () => {
     expect(within(dossier).getByText("Shipped to production")).toBeInTheDocument()
     expect(within(dossier).getByText("Users")).toBeInTheDocument()
     expect(within(dossier).getByText("1200")).toBeInTheDocument()
+    expect(within(dossier).getByRole("link", { name: "Live site" })).toHaveAttribute("href", "https://example.com")
   })
 
   it("renders a legacy entry with no empty hero or meta containers", async () => {
@@ -107,6 +111,7 @@ describe("[slug] project entry page", () => {
     // Then
     expect(screen.queryByTestId("case-study-hero")).not.toBeInTheDocument()
     expect(screen.queryByTestId("case-study-meta")).not.toBeInTheDocument()
+    expect(screen.getByTestId("project-cover")).toBeInTheDocument()
     expect(screen.getByRole("heading", { level: 1, name: "Legacy project" })).toBeInTheDocument()
     expect(screen.getByTestId("project-dossier")).toHaveTextContent("2010")
   })

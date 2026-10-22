@@ -25,6 +25,7 @@ function makeProject(): MarkdownEntry {
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
   }
 }
 

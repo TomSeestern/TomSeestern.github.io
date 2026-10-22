@@ -7,6 +7,10 @@ describe("ProjectCover", () => {
     ["2021-ai-drone-based-change-detection", "vision", "Embedded vision"],
     ["2021-skinshark-nft-minecraft-skin-trading", "marketplace", "Marketplace"],
     ["2020-digitizing-train-ticket-refunds-2020", "refund", "Public service"],
+    ["2026-hammer-robotics-mark-humanoid", "robotics", "Humanoid robotics"],
+    ["2024-layzr-creator-avatar-platform-acquired-by-jodel", "creator", "Creator economy"],
+    ["2026-everyfont-ever-generative-typeface-engine", "type", "Type engine"],
+    ["2026-closedloop-os-agent-orchestration", "agents", "Agent orchestration"],
     ["an-unknown-project", "archive", "Case file"],
   ])("maps %s to the %s cover", (slug, variant, label) => {
     // Given / When

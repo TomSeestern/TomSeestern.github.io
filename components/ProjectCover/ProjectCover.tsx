@@ -1,12 +1,25 @@
 import { twMerge } from "tailwind-merge"
 
-export type ProjectCoverVariant = "payments" | "vision" | "marketplace" | "refund" | "archive"
+export type ProjectCoverVariant =
+  | "payments"
+  | "vision"
+  | "marketplace"
+  | "refund"
+  | "robotics"
+  | "creator"
+  | "type"
+  | "agents"
+  | "archive"
 
 const variantLabels: Record<ProjectCoverVariant, string> = {
   payments: "Payment rails",
   vision: "Embedded vision",
   marketplace: "Marketplace",
   refund: "Public service",
+  robotics: "Humanoid robotics",
+  creator: "Creator economy",
+  type: "Type engine",
+  agents: "Agent orchestration",
   archive: "Case file",
 }
 
@@ -15,6 +28,10 @@ function coverVariant(slug: string): ProjectCoverVariant {
   if (/drone|change-detection/.test(slug)) return "vision"
   if (/skinshark|skin-trading/.test(slug)) return "marketplace"
   if (/refund|train-ticket/.test(slug)) return "refund"
+  if (/hammer|robotics/.test(slug)) return "robotics"
+  if (/layzr|creator-avatar/.test(slug)) return "creator"
+  if (/everyfont|typeface/.test(slug)) return "type"
+  if (/closedloop|agent-orchestration/.test(slug)) return "agents"
   return "archive"
 }
 
@@ -91,6 +108,78 @@ function RefundArt() {
   )
 }
 
+function RoboticsArt() {
+  return (
+    <>
+      <rect x="48" y="70" width="122" height="112" rx="28" className="fill-panel stroke-ink" strokeWidth="3" />
+      <path d="M78 70V50h62v20M78 182v18h62v-18" className="stroke-ink" strokeWidth="3" />
+      <circle cx="86" cy="112" r="9" className="fill-crimson" />
+      <circle cx="132" cy="112" r="9" className="fill-crimson" />
+      <path d="M92 144h34" className="stroke-ink" strokeWidth="4" />
+      <rect x="196" y="126" width="48" height="48" className="fill-gold/50 stroke-ink" strokeWidth="2" />
+      <rect x="252" y="102" width="58" height="72" className="fill-canvas stroke-ink" strokeWidth="2" />
+      <path d="M266 102V84h30v18M266 174v18h30v-18" className="stroke-ink" strokeWidth="2" />
+      <path d="M170 112h26M196 112l-8-7m8 7-8 7" className="stroke-crimson" strokeWidth="3" />
+      <path d="M310 186h34M322 174l12 12-12 12" className="stroke-gold" strokeWidth="3" />
+    </>
+  )
+}
+
+function CreatorArt() {
+  return (
+    <>
+      <rect x="42" y="60" width="128" height="132" rx="8" className="fill-canvas stroke-ink" strokeWidth="3" />
+      <rect x="54" y="72" width="104" height="18" className="fill-crimson" />
+      <circle cx="106" cy="122" r="28" className="fill-gold" />
+      <path d="M78 174c8-24 48-24 56 0" className="fill-ink" />
+      <path d="M196 90h104v104H196z" className="fill-panel stroke-ink" strokeWidth="3" />
+      <circle cx="248" cy="132" r="23" className="fill-crimson" />
+      <path d="M218 180c8-20 52-20 60 0" className="fill-ink" />
+      <path
+        d="M316 58c14 0 24 10 24 24 0 18-24 34-24 34s-24-16-24-34c0-14 10-24 24-24z"
+        className="fill-gold/60 stroke-ink"
+        strokeWidth="2"
+      />
+      <path d="M306 82h20M316 72v20" className="stroke-ink" strokeWidth="3" />
+      <path d="M170 126h26M196 126l-8-7m8 7-8 7" className="stroke-crimson" strokeWidth="3" />
+    </>
+  )
+}
+
+function TypeArt() {
+  return (
+    <>
+      <rect x="42" y="46" width="218" height="148" className="fill-canvas stroke-ink" strokeWidth="3" />
+      <path d="M76 168 132 62l56 106M96 132h72" className="stroke-gold" strokeWidth="8" strokeLinecap="square" />
+      <path d="M286 58h58v58h-58zM286 128h58v58h-58z" className="fill-panel stroke-rule" strokeWidth="2" />
+      <path d="M300 92h30M300 162h30" className="stroke-ink" strokeWidth="4" />
+      <path d="M260 76h18M260 102h18M260 154h18M260 180h18" className="stroke-crimson" strokeWidth="3" />
+      <path d="M42 206h302" className="stroke-rule" strokeWidth="2" />
+    </>
+  )
+}
+
+function AgentsArt() {
+  return (
+    <>
+      <circle cx="132" cy="118" r="44" className="fill-panel stroke-ink" strokeWidth="3" />
+      <circle cx="132" cy="118" r="16" className="fill-gold" />
+      <circle cx="280" cy="72" r="24" className="fill-canvas stroke-ink" strokeWidth="3" />
+      <circle cx="310" cy="158" r="24" className="fill-canvas stroke-ink" strokeWidth="3" />
+      <circle cx="248" cy="194" r="24" className="fill-canvas stroke-ink" strokeWidth="3" />
+      <path
+        d="M174 102 258 80M168 136l118 18M154 156l72 34"
+        className="stroke-rule"
+        strokeWidth="3"
+        strokeDasharray="6 6"
+      />
+      <path d="M268 192c34-18 42-52 18-72" className="stroke-crimson" strokeWidth="3" />
+      <path d="M286 120l-2 14 14-2" className="fill-crimson" />
+      <path d="M62 204h96M62 214h54" className="stroke-gold" strokeWidth="3" />
+    </>
+  )
+}
+
 function ArchiveArt() {
   return (
     <>
@@ -108,6 +197,10 @@ const artByVariant = {
   vision: EmbeddedVisionArt,
   marketplace: MarketplaceArt,
   refund: RefundArt,
+  robotics: RoboticsArt,
+  creator: CreatorArt,
+  type: TypeArt,
+  agents: AgentsArt,
   archive: ArchiveArt,
 } satisfies Record<ProjectCoverVariant, () => JSX.Element>
 

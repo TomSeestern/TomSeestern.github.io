@@ -5,6 +5,13 @@ articleDate: 2019-09-30
 articleContent: I worked in a five-engineer team at a Zeppelin Systems hackathon to prototype a portable bulk-goods analysis station with a Revolution Pi, Bosch XDK sensors, Python, and a Java companion app.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
+role: Developer and AI specialist
+outcome: Delivered a working mobile analysis station and companion-app MVP; the team placed third.
+metrics:
+  - label: Result
+    value: 3rd place
+  - label: Team
+    value: 5 engineers
 tags:
   - Hackathon
   - Innovation
@@ -27,4 +34,6 @@ We treated the hardware station and the app as separate but connected parts of t
 
 We delivered an operational MVP and demonstrated it live. The result was a feasible direction for portable bulk-goods classification, not a claim that a hackathon prototype was ready for industrial deployment. That distinction mattered when presenting the work to an engineering audience.
 
-This project taught me how to ship a coherent end-to-end prototype under severe time limits. Given more time, I would prioritize calibration, repeatable test cases, and field feedback from the people who would operate the device. The hackathon reinforced a pattern I still use: prove the smallest useful workflow first, then improve it with evidence.
+## What I took from it
+
+This project taught me how to ship a coherent end-to-end prototype under severe time limits. Given more time, I would prioritise calibration, repeatable test cases, and field feedback from the people who would operate the device. The hackathon reinforced a pattern I still use: prove the smallest useful workflow first, then improve it with evidence.

@@ -18,6 +18,7 @@ function makeProject(overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
     ...overrides,
   }
 }

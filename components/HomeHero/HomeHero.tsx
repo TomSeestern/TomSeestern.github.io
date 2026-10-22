@@ -9,6 +9,7 @@ import { PixelSigil } from "../PixelSigil/PixelSigil"
 export interface HomeHeroProps {
   projectCount: number
   dispatchCount: number
+  archiveSpan: string
   leadProject?: MarkdownEntry
 }
 
@@ -19,7 +20,7 @@ const statClasses = "font-mono text-[10px] uppercase tracking-[0.14em] text-ink-
  * window carries real archive data. A single pixel column sits behind the
  * window as a low-contrast structural watermark, not as a section costume.
  */
-export function HomeHero({ projectCount, dispatchCount, leadProject }: HomeHeroProps) {
+export function HomeHero({ projectCount, dispatchCount, archiveSpan, leadProject }: HomeHeroProps) {
   return (
     <section data-testid="home-hero" aria-labelledby="home-title" className="relative overflow-hidden bg-canvas">
       <div aria-hidden="true" className="hero-glow absolute inset-0 hidden md:block" />
@@ -81,7 +82,7 @@ export function HomeHero({ projectCount, dispatchCount, leadProject }: HomeHeroP
                 </p>
                 <pre className="mt-1 overflow-x-auto whitespace-pre-wrap text-ink">{`{
   "focus": ["systems", "interfaces"],
-  "archive": "2010—2021",
+  "archive": "${archiveSpan}",
   "caseFiles": ${projectCount}
 }`}</pre>
 
@@ -120,7 +121,7 @@ export function HomeHero({ projectCount, dispatchCount, leadProject }: HomeHeroP
                   {String(dispatchCount).padStart(2, "0")}
                 </dd>
                 <dt className={`${statClasses} px-4 pt-3 sm:px-5`}>Archive</dt>
-                <dd className="px-4 pb-3 font-mono text-sm leading-none text-ink sm:px-5">2010—2021</dd>
+                <dd className="px-4 pb-3 font-mono text-sm leading-none text-ink sm:px-5">{archiveSpan}</dd>
               </dl>
             </div>
 

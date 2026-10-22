@@ -32,6 +32,7 @@ function makeBlogPost(id: string, overrides: Partial<MarkdownEntry> = {}): Markd
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
     ...overrides,
   }
 }

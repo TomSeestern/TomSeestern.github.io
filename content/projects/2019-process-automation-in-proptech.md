@@ -2,9 +2,11 @@
 id: process-automation-proptech-journey
 title: Harnessing Tech for Efficiency - My Journey in Automating PropTech
 articleDate: 2019-12-31
-articleContent: Dive into how I streamlined the property management world by automating and digitizing manual processes, ensuring data consistency, and enhancing self-service platforms for a smarter approach to PropTech.
+articleContent: I digitised manual property-listing workflows for a PropTech client, connected the data locations, and built the APIs and synchronisation needed for a single source of truth.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
+role: Freelance IT consultant
+outcome: Replaced manual property-entry workflows with digitised processes, new APIs, and event-driven data synchronisation.
 tags:
   - Process Automation
   - PropTech
@@ -19,61 +21,16 @@ technologies:
   - PowerBI
 ---
 
-# Project Overview
+A property-management client had a familiar problem: the processes that kept listings current lived in people's heads and in disconnected systems. New properties were entered manually on several communal websites. The same information existed in more than one place, and nobody could say with confidence which copy was correct.
 
-> Digitizing and revolutionizing property management through innovative tech automation.
+I worked as a freelance IT consultant on the project. I started by recording the existing manual processes, then digitised them in Microsoft Visio so the team could see where work moved, where it stopped, and where the same data was entered twice. That map became the basis for the technical work rather than a document produced after the fact.
 
-- **Project Title:** Process Automation in PropTech
-- **Duration:** 2019
-- **Role:** Freelance IT Consultant
-- **Technologies Used:** MS Vision, Custom APIs, Database Synchronization tools, and Integration Platforms
+From there, I identified opportunities to simplify the flow and aligned the changes with the relevant stakeholders. The implementation introduced new APIs and database structures to support the revised processes. I also automated synchronisation between the different data locations so the systems converged on a single source of truth and stayed consistent as records changed.
 
-## Problem Statement and Objectives
+The last step was integration. The new data locations had to connect to the existing display systems and be ready for a relaunch without disrupting the people who used them every day. That meant testing the data flow end to end, not only the individual endpoints, and making the failure states visible enough for the operations team to act on them.
 
-- **Problem Description:** Manual processes dominated the entry of new properties on several communal websites, leading
-  to inefficiencies and data inconsistencies.
-- **Project Objectives:** To automate manual entries, improve process efficiency, create robust APIs and databases, and
-  achieve data consistency across platforms.
-- **Target Audience/Market:** Property technology firms, real estate professionals, and municipal corporations managing
-  property listings.
+## What I took from it
 
-## Challenges and Solutions
+The interesting part of this project was not any single API. It was the gap between how a process is documented and how it actually runs. Recording the manual workflow first made the technical work more accurate and gave stakeholders a shared picture of what would change.
 
-- **Key Challenges:** Navigating through cumbersome manual data entry processes, lack of coherence between different
-  data locations, and ensuring the reliability of property information.
-- **Solutions Developed:** Automated the data entry process using MS Vision, proposed and implemented advanced APIs and
-  database structures, and achieved event-driven consistency across databases.
-- **Impact of Solutions:** Saw a significant dip in manual labor, errors, and a boost in the overall reliability and
-  speed of property management systems.
-
-## Development Process
-
-- **Lifecycle Overview:** Started with analysis and digitization followed by process improvement and stakeholders
-  allignment, then API and database development, and concluded with system integration.
-- **Phases of Development:** Setup, Analysis, Design, Development, Integration, Testing, Deployment, and Monitoring.
-- **Collaboration:** Worked closely with property management teams and key stakeholders to ensure a seamless transition
-  and buy-in for the new system.
-
-## Achievements and Outcomes
-
-- **Milestones:** Successful mapping of manual processes in MS Vision, launch of new-API and database structures,
-  flawless integration with existing systems.
-- **Final Outcomes:** The new system enabled accurate real-time availability of property listings with less manual
-  intervention, transforming the way properties are managed.
-- **Personal Learning:** Gained deeper insights into PropTech and learned the intricacies of managing large-scale
-  automation projects.
-
-## Visuals and Demonstrations
-
-- **Screenshots/Diagrams:** [To be included after blog approval #todo]
-- **Live Demos/Repositories:** [Links will be provided subject to client confidentiality agreements #todo]
-
-## Conclusion
-
-- **Project Impact:** The automation project not only enhanced efficiency but set in motion a new standard for property
-  listings management.
-- **Career Reflection:** This project was a cornerstone in my journey as a developer and consultant, further cementing
-  my interest in AI and smart technologies while contributing to my vision of transforming how industries operate.
-
-Thank you for joining me on this journey through one of my landmark projects. Stay tuned for more insights and stories
-as I continue to navigate the fascinating world of technology and innovation!
+It also reinforced a lesson I keep applying: data consistency is a product feature. If two systems disagree, someone eventually has to reconcile them by hand, and that cost lands on the people least able to absorb it.

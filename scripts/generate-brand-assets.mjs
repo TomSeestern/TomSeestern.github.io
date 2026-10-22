@@ -104,8 +104,8 @@ await ogPage.setContent(`
       <div style="margin-top:12px"><span class="prompt">$</span> cat focus.json</div>
       <div class="strong">{</div>
       <div class="strong">&nbsp; "focus": ["systems", "interfaces"],</div>
-      <div class="strong">&nbsp; "archive": "2010—2021",</div>
-      <div class="strong">&nbsp; "caseFiles": 21</div>
+      <div class="strong">&nbsp; "archive": "2010—2026",</div>
+      <div class="strong">&nbsp; "caseFiles": 25</div>
       <div class="strong">}</div>
       <div class="case">
         <div class="case-label">Selected case file</div>

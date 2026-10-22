@@ -9,6 +9,11 @@ export interface ProjectDossierMetric {
   readonly value: string
 }
 
+export interface ProjectDossierLink {
+  readonly label: string
+  readonly href: string
+}
+
 export interface ProjectDossierProps {
   year: string
   stack: readonly string[]
@@ -16,6 +21,7 @@ export interface ProjectDossierProps {
   role?: string
   outcome?: string
   metrics?: readonly ProjectDossierMetric[]
+  links?: readonly ProjectDossierLink[]
   className?: string
 }
 
@@ -32,10 +38,20 @@ function meaningfulMetrics(metrics: readonly ProjectDossierMetric[]): readonly P
  * outcome, and metrics appear only when the frontmatter actually carries them,
  * so legacy entries do not get empty evidence containers.
  */
-export function ProjectDossier({ year, stack, subjects, role, outcome, metrics = [], className }: ProjectDossierProps) {
+export function ProjectDossier({
+  year,
+  stack,
+  subjects,
+  role,
+  outcome,
+  metrics = [],
+  links = [],
+  className,
+}: ProjectDossierProps) {
   const roleText = nonEmpty(role)
   const outcomeText = nonEmpty(outcome)
   const measuredProof = meaningfulMetrics(metrics)
+  const publicLinks = links.filter((link) => link.label.trim().length > 0 && link.href.trim().length > 0)
 
   return (
     <aside
@@ -99,6 +115,28 @@ export function ProjectDossier({ year, stack, subjects, role, outcome, metrics =
           <div className="border-t border-rule pt-4">
             <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">Outcome</dt>
             <dd className="mt-1 text-sm text-ink">{outcomeText}</dd>
+          </div>
+        ) : null}
+
+        {publicLinks.length > 0 ? (
+          <div className="border-t border-rule pt-4">
+            <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">Links</dt>
+            <dd className="mt-2">
+              <ul className="space-y-2 font-body text-sm">
+                {publicLinks.map((link) => (
+                  <li key={`${link.label}-${link.href}`}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="focus-ring inline-flex min-h-6 items-center break-all text-ink underline decoration-crimson decoration-2 underline-offset-4 hover:text-crimson"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </dd>
           </div>
         ) : null}
       </dl>

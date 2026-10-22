@@ -2,9 +2,20 @@
 id: soudest-multimodal-travel-planner-frontend
 title: Crafting User-Centric Multimodal Travel Planning with SouDest
 articleDate: 2020-04-20
-articleContent: As part of my university endeavor, I took on the challenge to create SouDest, a responsive React-based frontend application, aimed at revolutionizing travel planning by integrating various modes of transport. Leveraging cutting-edge technologies and a user-centric approach, my team's creation facilitates smarter travel decisions based on customizable criteria such as cost, time, and environmental impact.
+articleContent: I built the responsive React frontend for SouDest, turning multimodal route data into comparable options with filters, bookmarks, and export.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
+role: Frontend developer
+outcome: Delivered a responsive React and TypeScript frontend for the SouDest multimodal travel planner.
+metrics:
+  - label: Team
+    value: 2 developers + designer
+  - label: Stack
+    value: React, TypeScript, Material-UI
+heroImage: /img/projects/soudest-web.jpg
+links:
+  - label: SouDest frontend on GitHub
+    href: https://github.com/TomSeestern/soudest_frontend
 tags:
   - React
   - Multimodal Transportation
@@ -21,61 +32,16 @@ technologies:
   - Webpack
 ---
 
-# Project Overview
+SouDest was a university project built by a team of two developers with support from one designer. The product question was straightforward: can a traveller compare routes across different transport modes using the criteria that actually matter, such as price, travel time, and CO2 emissions?
 
-> Revolutionizing multimodal travel planning with a seamless, eco-conscious user experience.
+I built the responsive web frontend in React and TypeScript with Material-UI. The app included login and registration, a profile, route search, API integration, filters, bookmarking, and export. Google Maps provided the route and map layer, while Jest and ESLint gave us a way to keep the growing component tree honest. The frontend had to present several transport options without hiding the tradeoffs, so the result view combined a map, a summary, and a comparable list rather than a single "best" route.
 
-- **Project Title:** SouDest Frontend Development
-- **Duration:** 2020
-- **Role:** Developer
-- **Technologies Used:** TypeScript, React, Material-UI, Jest, ESLint, Google Maps API, Webpack
+The main challenge was information density. A multimodal planner has more variables than a simple directions app: price, duration, transfers, emissions, and user preferences all compete for space. Material-UI gave us accessible primitives, but the hard part was deciding what to show first. We used the designer's Figma flows as a starting point, then simplified screens after testing the API responses with real route data.
 
-## Problem Statement and Objectives
+The frontend was one client in a three-part system. It shared a backend with the Android app and had to stay compatible as the Node.js API evolved. That meant treating the API response as a contract and keeping loading, empty, and error states explicit instead of assuming the happy path.
 
-- **Problem Description:** The challenge was to address the need for a comprehensive multimodal travel planner that can
-  sift through various transport modes to deliver optimal itineraries based on personalized criteria.
-- **Project Objectives:** The goal was to design and develop a responsive web application that provides ideal travel
-  solutions contemplating the user's preferences for cost, time, CO2 emissions, and other factors.
-- **Target Audience/Market:** The primary users of this platform are environmentally-conscious travelers and tech-savvy
-  individuals looking for an efficient way to plan trips using multiple transport options.
+## What I took from it
 
-## Challenges and Solutions
+This project sharpened my frontend skills and gave me a practical understanding of user-centric design: a feature is not finished when the component renders, but when a user can make a decision with it. It also showed me how much of frontend quality lives in the states nobody screenshots.
 
-- **Key Challenges:** The primary complexity lay in creating an intuitive user interface that could handle complex data
-  and provide results in an easily digestible format.
-- **Solutions Developed:** A responsive React frontend was crafted, which included advanced search and filter options,
-  route bookmarking, and export functionalities, all woven into a sleek Material-UI design.
-- **Impact of Solutions:** By delivering a refined user experience, we were able to help users make informed travel
-  decisions that align with their personal values and preferences.
-
-## Development Process
-
-- **Lifecycle Overview:** The project was developed following a structured lifecycle starting from initial ideation,
-  advancing through iterative design and development phases, and concluding with testing and refinement.
-- **Phases of Development:** Key phases included requirement gathering, system design, frontend development, integration
-  with backend services, and rigorous testing using Jest.
-- **Collaboration:** The development was a collaborative effort with a talented designer, which helped in striking the
-  right balance between functionality and visual appeal.
-
-## Achievements and Outcomes
-
-- **Milestones:** Successfully integrating Google Maps API for route visualization, implementing a robust user
-  authentication system, and achieving a responsive design were some of the standout milestones.
-- **Final Outcomes:** A fully functioning, user-friendly multimodal travel planner that emphasizes responsible
-  environmental choices without compromising on user experience.
-- **Personal Learning:** This project sharpened my skills in frontend development and gave me invaluable insights into
-  user-centric design and the importance of efficient performance.
-
-## Visuals and Demonstrations
-
-- **Screenshots/Diagrams:** [Screenshots and diagrams of the application interface to be inserted - #todo]
-- **Live Demos/Repositories:** [Links to the project repository, demos, and documentation to be inserted - #todo]
-
-## Conclusion
-
-- **Project Impact:** SouDest is a testament to the power of human-centric design and technological innovation in
-  tackling real-world challenges.
-- **Career Reflection:** This project symbolizes a key stepping stone in my journey as a developer, as it reflects my
-  commitment to impactful technology and illustrates my capabilities in creating solutions that resonate with end-users.
-
-[Ensure to add personal reflections on specific learning experiences and any notable feedback received from stakeholders or peers, to provide a personalized touch to the conclusion - #todo]
+If I rebuilt it today, I would add integration tests around the API boundary, reduce the component surface with a stricter data layer, and design the empty and error states before the happy path.

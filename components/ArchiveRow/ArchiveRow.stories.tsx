@@ -17,6 +17,7 @@ const project: MarkdownEntry = {
   outcome: "",
   heroImage: "",
   metrics: [],
+  links: [],
 }
 
 const meta: Meta<typeof ArchiveRow> = {

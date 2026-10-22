@@ -2,6 +2,7 @@ import { MarkdownEntry } from "./markdown"
 import {
   buildTagIndex,
   formatTagLabel,
+  getAllProjectTags,
   getAllTags,
   getTagByLegacySlug,
   getTagBySlug,
@@ -26,6 +27,7 @@ function makeEntry(id: string, overrides: Partial<MarkdownEntry> = {}): Markdown
     outcome: "",
     heroImage: "",
     metrics: [],
+    links: [],
     ...overrides,
   }
 }
@@ -251,6 +253,21 @@ describe("buildTagIndex", () => {
     expect(() => buildTagIndex(sources)).toThrow(/build-tools/)
     expect(() => buildTagIndex(sources)).toThrow(/build\.tools/)
     expect(() => buildTagIndex(sources)).toThrow(/build tools/)
+  })
+})
+
+describe("getAllProjectTags", () => {
+  it("contains only project entries and excludes blog-only tags", () => {
+    // Given / When
+    const index = getAllProjectTags()
+    const slugs = index.map((tag) => tag.slug)
+
+    // Then
+    expect(index.length).toBeGreaterThan(0)
+    expect(new Set(slugs).size).toBe(slugs.length)
+    expect(index.every((tag) => tag.entries.every((entry) => entry.collection === "project"))).toBe(true)
+    expect(slugs).not.toContain("recipes")
+    expect(index.every((tag) => tag.count === tag.entries.length && tag.count > 0)).toBe(true)
   })
 })
 

@@ -5,7 +5,9 @@ articleDate: 2021-01-01
 articleContent: I led development of an Ethereum NFT MVP where Minecraft players could upload, claim, and trade skins through a Next.js and TypeScript application.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
-featured: true
+role: Lead developer
+outcome: Shipped a working Ethereum-mainnet MVP for claiming and trading Minecraft skins.
+heroImage: /img/projects/skinshark-dashboard.webp
 tags:
   - NFTs
   - EthereumBlockchain
@@ -28,5 +30,7 @@ The web application used Next.js, React, and TypeScript. MetaMask connected a us
 The hard part was not adding a wallet button. The system needed a clear link between a wallet identity, a skin record, and the token representing it. I designed the user flow around that chain: connect wallet, upload or select a skin, mint a claim, then expose it for trading. The distinction between on-chain ownership and off-chain content was central to explaining the product honestly.
 
 I deployed a working MVP to Ethereum mainnet and refined it with feedback from gaming and AI enthusiasts. The project was useful as a production-adjacent web3 exercise, but it also exposed tradeoffs that product pages often hide: transaction costs, wallet onboarding friction, and the gap between token ownership and game-platform recognition.
+
+## What I took from it
 
 If I built it now, I would start with a clearer custody model, explicit content moderation, and a lower-cost chain or L2. SkinShark gave me practical experience in smart-contract integration, typed frontend boundaries, and designing for systems where part of the product state lives outside my own infrastructure.

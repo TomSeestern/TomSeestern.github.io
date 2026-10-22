@@ -2,11 +2,17 @@
 id: digitizing-train-ticket-refunds-2020
 title: RefundHero - Transforming Train Ticket Reimbursements with Refund Hero
 articleDate: 2020-12-31
-articleContent: |-
-  I built Refund Hero as a full-stack prototype for identifying eligible Deutsche Bahn delay refunds and preparing reimbursement requests. I stopped the project when DB announced a parallel initiative.
+articleContent: I built Refund Hero as a full-stack prototype for identifying eligible Deutsche Bahn delay refunds and preparing reimbursement requests. I stopped it when DB announced a parallel service.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
-featured: true
+role: Founder and full-stack developer
+outcome: Built a working end-to-end refund prototype; stopped the project after Deutsche Bahn announced a competing service.
+metrics:
+  - label: Pricing model
+    value: €2 or 10% per claim
+  - label: Stack
+    value: Django, React, AWS
+heroImage: /img/projects/refundhero-station.jpg
 tags:
   - Digital Transformation
   - Startup Projects
@@ -24,8 +30,14 @@ Refund Hero began with a frustratingly manual process: passengers in Germany had
 
 I designed it as a full-stack application with React and BootstrapCSS on the client, Django on the server, MySQL for application data, and AWS for hosting. The backend included an automated lookup service intended to track train delays and record journey information. That data was the basis for preparing refund requests and batching postal submissions to DB.
 
+The product idea was simple: users looked up a journey, the system checked whether it was eligible, and Refund Hero prepared the paperwork. The first request was free; after that, the service charged €2 or 10% of the refund, whichever was higher. That pricing model forced me to think about unit economics early, even though the product never reached launch.
+
 The hardest technical problem was data coverage. A useful refund service needed reliable information about European train journeys and delays, not a narrow manual lookup. I therefore treated journey collection, persistence, and eligibility checks as core product capabilities rather than background implementation details.
 
 I built a functional prototype and automated significant parts of the workflow. The project did not reach launch because Deutsche Bahn announced a parallel initiative, changing the market before there was a sensible reason to continue investing. Ending it was the right product decision, even after substantial implementation work.
+
+## What I took from it
+
+In hindsight, the DB solution took another three years to appear, and the automated refund workflow we built is still not offered by the official platform. A launch might have found a market, but that is a retrospective judgment, not a reason to ignore the signal at the time.
 
 Refund Hero changed how I assess solo projects. Building a scraper, backend, frontend, database, and hosting stack proved I could take an idea end to end. The more durable lesson was market timing: validate the changing external landscape early and repeatedly, because a technically sound product can still lose its reason to exist.

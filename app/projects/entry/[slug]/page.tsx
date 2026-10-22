@@ -60,11 +60,15 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
       />
 
       <Section tone="canvas" className="py-10 sm:py-14 lg:py-16">
-        <ProjectCover
-          slug={slug}
-          index={projects.findIndex((project) => project.id === slug)}
-          className="mb-10 aspect-[16/7] rounded-lg border border-rule"
-        />
+        {/* A real hero replaces the generated cover; rendering both makes the
+            page open with two competing visuals. */}
+        {frontmatter.heroImage ? null : (
+          <ProjectCover
+            slug={slug}
+            index={projects.findIndex((project) => project.id === slug)}
+            className="mb-10 aspect-[16/7] rounded-lg border border-rule"
+          />
+        )}
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-16">
           <article
             data-testid="project-body"
@@ -81,6 +85,7 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
             role={frontmatter.role}
             outcome={frontmatter.outcome}
             metrics={frontmatter.metrics}
+            links={frontmatter.links}
           />
         </div>
       </Section>
