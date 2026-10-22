@@ -23,14 +23,22 @@ test.describe("site header navigation", () => {
     await expect(toggle).toBeVisible()
     await expect(aboutLink).toBeHidden()
 
-    // When — the toggle is activated.
-    await toggle.click()
+    // When — the toggle is activated. The first click can land before Next.js
+    // hydration attaches the React handler on a cold dev compile, so retry the
+    // real gesture until the observable expanded state proves it was handled.
+    await expect(async () => {
+      await toggle.click()
+      await expect(toggle).toHaveAttribute("aria-expanded", "true")
+    }).toPass({ timeout: 15_000, intervals: [250, 500, 1000] })
 
     // Then — the menu opens.
     await expect(aboutLink).toBeVisible()
 
     // When — the toggle is activated again.
-    await toggle.click()
+    await expect(async () => {
+      await toggle.click()
+      await expect(toggle).toHaveAttribute("aria-expanded", "false")
+    }).toPass({ timeout: 15_000, intervals: [250, 500, 1000] })
 
     // Then — the menu closes.
     await expect(aboutLink).toBeHidden()

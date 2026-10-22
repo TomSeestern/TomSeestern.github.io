@@ -10,21 +10,18 @@ interface TimelineEntryProps {
 
 const TimelineEntry: React.FC<TimelineEntryProps> = ({ time, title, description, link, children }) => {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-stretch">
-      <p className="w-auto shrink-0 text-sm font-medium text-muted dark:text-muted-dark sm:w-32 sm:text-right">
-        {time}
-      </p>
-      <div className="hidden w-px bg-border-subtle dark:bg-border-subtle-dark sm:block sm:shrink-0" />
-      <div className="flex-1 space-y-4 pb-8 sm:pb-12">
-        <h3 className="text-h3-sm text-foreground dark:text-foreground-dark">
+    <div data-testid="timeline-entry" className="grid gap-3 border-t border-rule py-7 sm:grid-cols-[8rem_1fr] sm:gap-8">
+      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-crimson sm:pt-1">{time}</p>
+      <div className="space-y-3 sm:border-l sm:border-rule sm:pl-7">
+        <h3 className="text-h3-sm text-ink">
           <a
             href={link}
-            className="transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:text-accent-hover-dark dark:focus-visible:ring-accent-soft-dark"
+            className="focus-ring rounded-sm decoration-crimson decoration-2 underline-offset-4 hover:text-crimson hover:underline"
           >
             {title}
           </a>
         </h3>
-        <p className="text-base font-normal text-muted dark:text-muted-dark">{description}</p>
+        <p className="max-w-measure-lead font-body text-sm leading-6 text-ink-muted">{description}</p>
         {children}
       </div>
     </div>

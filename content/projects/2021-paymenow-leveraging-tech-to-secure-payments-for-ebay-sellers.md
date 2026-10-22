@@ -5,6 +5,7 @@ articleDate: 2021-12-31
 articleContent: I built a React and AWS application for eBay sellers, focused on making transaction status and outstanding payment actions clear and traceable.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
+featured: true
 tags:
   - eBay
   - Payment

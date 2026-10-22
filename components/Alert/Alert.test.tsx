@@ -8,6 +8,7 @@ describe("Alert", () => {
 
     // Then
     expect(screen.getByRole("status")).toHaveTextContent("Saved")
+    expect(screen.getByRole("status")).toHaveClass("border-verdigris", "bg-panel")
     expect(screen.queryByRole("alert")).not.toBeInTheDocument()
   })
 
@@ -17,6 +18,7 @@ describe("Alert", () => {
 
     // Then
     expect(screen.getByRole("alert")).toHaveTextContent("Something went wrong")
+    expect(screen.getByRole("alert")).toHaveClass("border-danger", "bg-danger-surface")
     expect(screen.queryByRole("status")).not.toBeInTheDocument()
   })
 

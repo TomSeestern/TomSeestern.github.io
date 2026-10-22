@@ -2,46 +2,44 @@ import { expect, test } from "@playwright/test"
 
 import { COPY, FEATURED_PROJECT_COUNT, MAX_HOME_DOM_NODES } from "./fixtures/expectations"
 
-test("homepage renders core sections", async ({ page }) => {
+test("homepage renders the COLOSSUS sections", async ({ page }) => {
   await page.goto("/")
 
-  // Title metadata set in app/page.tsx
+  // Metadata and the exact positioning line stay stable.
   await expect(page).toHaveTitle(/TomSegbers.de/)
-
-  // Header / Navbar (Flowbite Navbar renders as <nav>)
-  const nav = page.locator("nav").first()
-  await expect(nav).toBeVisible()
-  await expect(nav.locator('a[href="/"]')).toBeVisible()
-
-  // Type-led hero — h1 with main tagline and the existing positioning line
-  const heroHeading = page.getByRole("heading", { level: 1 })
-  await expect(heroHeading).toBeVisible()
-  await expect(heroHeading).toHaveText(COPY.home.h1)
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(COPY.home.h1)
   await expect(page.getByText(COPY.home.positioning, { exact: true })).toBeVisible()
 
-  // Curated featured set — exactly N monuments, each a project link
-  const featuredHeading = page.getByRole("heading", { name: COPY.home.featuredH2, level: 2 })
-  await expect(featuredHeading).toBeVisible()
+  // The terminal hero is the first artefact, not a portrait or a marquee.
+  await expect(page.getByTestId("home-hero")).toBeVisible()
+  await expect(page.getByTestId("home-hero").getByText("portfolio / 2026")).toBeVisible()
+  await expect(page.getByTestId("ticker")).toHaveCount(0)
+
+  // Curated featured set — exactly four monuments, each a project link.
+  await expect(page.getByRole("heading", { level: 2, name: COPY.home.featuredH2 })).toBeVisible()
+  await expect(page.getByTestId("home-featured-grid")).toBeVisible()
   const featuredLinks = page.locator('[data-testid="featured-project"]')
   await expect(featuredLinks).toHaveCount(FEATURED_PROJECT_COUNT)
   for (const index of Array.from({ length: FEATURED_PROJECT_COUNT }, (_, i) => i)) {
     await expect(featuredLinks.nth(index)).toHaveAttribute("href", /^\/projects\/entry\/[^/]+$/)
   }
 
-  // The 42-card marquee is gone
+  // Practice band and latest dispatches.
+  await expect(page.getByRole("heading", { level: 2, name: COPY.home.practiceH2 })).toBeVisible()
+  await expect(page.getByTestId("home-practice")).toBeVisible()
+  await expect(page.getByRole("heading", { level: 2, name: COPY.home.recentBlogH2 })).toBeVisible()
+  await expect(page.getByTestId("home-dispatches")).toBeVisible()
+
+  await expect(page.getByTestId("article-card")).toHaveCount(3)
+  expect(await page.locator('a[href^="/blog/entry/"]').count()).toBeGreaterThanOrEqual(3)
+
+  // Closing CTA.
+  await expect(page.getByRole("heading", { level: 2, name: COPY.home.closing })).toBeVisible()
+
+  // The retired marquee, scaffold, and portrait-led hero are gone.
   await expect(page.locator(".animate-marquee, .animate-marquee2")).toHaveCount(0)
-
-  // Founder-arc scaffold — four structural beats, no fabricated content
-  const founderArcHeading = page.getByRole("heading", { name: COPY.home.founderArcH2, level: 2 })
-  await expect(founderArcHeading).toBeVisible()
-  await expect(page.locator('[data-testid="founder-arc-beat"]')).toHaveCount(4)
-
-  // Blog section heading and teasers retained
-  const blogHeading = page.getByRole("heading", { name: COPY.home.recentBlogH2, level: 2 })
-  await expect(blogHeading).toBeVisible()
-
-  const blogCards = page.locator('a[href^="/blog/entry/"]')
-  expect(await blogCards.count()).toBeGreaterThanOrEqual(1)
+  await expect(page.locator('[data-testid="founder-arc-beat"]')).toHaveCount(0)
+  await expect(page.locator('img[alt="Portrait of Tom Segbers"]')).toHaveCount(0)
 })
 
 test("home page stays within the DOM node budget", async ({ page }) => {
@@ -54,4 +52,16 @@ test("home page stays within the DOM node budget", async ({ page }) => {
   // Then — record the measured number on the report, then assert it is within budget.
   test.info().annotations.push({ type: "home-dom-node-count", description: String(nodeCount) })
   expect(nodeCount).toBeLessThanOrEqual(MAX_HOME_DOM_NODES)
+})
+
+test("home page does not overflow at 375px", async ({ page }) => {
+  // Given
+  await page.setViewportSize({ width: 375, height: 812 })
+  await page.goto("/")
+
+  // When
+  const fits = await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)
+
+  // Then
+  expect(fits).toBe(true)
 })

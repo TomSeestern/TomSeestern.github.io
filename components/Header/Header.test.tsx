@@ -9,30 +9,24 @@ describe("Header", () => {
     mockUsePathname.mockReturnValue("/")
   })
 
-  it("links site brand to homepage", () => {
-    // Given
-
-    // When
+  it("links the brand to the homepage", () => {
+    // Given / When
     render(<Header />)
 
     // Then
-    expect(screen.getByRole("link", { name: /Tom Segbers Logo Tom Segbers/ })).toHaveAttribute("href", "/")
+    expect(screen.getByRole("link", { name: "Tom Segbers — home" })).toHaveAttribute("href", "/")
   })
 
-  it("provides logo alternative text", () => {
-    // Given
-
-    // When
+  it("renders the site header landmark", () => {
+    // Given / When
     render(<Header />)
 
     // Then
-    expect(screen.getByRole("img", { name: "Tom Segbers Logo" })).toBeInTheDocument()
+    expect(screen.getByTestId("site-header")).toBeInTheDocument()
   })
 
   it("links About navigation to about page", () => {
-    // Given
-
-    // When
+    // Given / When
     render(<Header />)
 
     // Then
@@ -40,9 +34,7 @@ describe("Header", () => {
   })
 
   it("links Projects navigation to projects page", () => {
-    // Given
-
-    // When
+    // Given / When
     render(<Header />)
 
     // Then
@@ -50,23 +42,21 @@ describe("Header", () => {
   })
 
   it("links Blog navigation to blog page", () => {
-    // Given
-
-    // When
+    // Given / When
     render(<Header />)
 
     // Then
     expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute("href", "/blog")
   })
 
-  it("renders contact call to action pointing to contact page", () => {
-    // Given
-
-    // When
+  it("renders contact calls to action pointing to the contact page", () => {
+    // Given / When
     render(<Header />)
 
     // Then
-    expect(screen.getAllByRole("link", { name: "Contact" })[0]).toHaveAttribute("href", "/contact")
+    expect(
+      screen.getAllByRole("link", { name: "Contact" }).every((link) => link.getAttribute("href") === "/contact")
+    ).toBe(true)
   })
 
   it("exposes the mobile toggle as a disclosure for the navigation list", () => {
@@ -101,6 +91,18 @@ describe("Header", () => {
 
     // When
     fireEvent.click(screen.getByRole("link", { name: "About" }))
+
+    // Then
+    expect(screen.getByRole("button", { name: "Open main menu" })).toHaveAttribute("aria-expanded", "false")
+  })
+
+  it("closes the mobile menu on Escape", () => {
+    // Given
+    render(<Header />)
+    fireEvent.click(screen.getByRole("button", { name: "Open main menu" }))
+
+    // When
+    fireEvent.keyDown(document, { key: "Escape" })
 
     // Then
     expect(screen.getByRole("button", { name: "Open main menu" })).toHaveAttribute("aria-expanded", "false")

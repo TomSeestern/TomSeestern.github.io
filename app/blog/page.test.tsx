@@ -1,26 +1,20 @@
 import { render, screen } from "@testing-library/react"
 import { getAllBlogPosts } from "../../lib/blog"
 import { MarkdownEntry } from "../../lib/markdown"
-
-jest.mock("../../components/ArticleTeaser/ArticleTeaser", () => {
-  return function ArticleTeaser({
-    title,
-    fullArticleLink,
-  }: {
-    readonly title: string
-    readonly fullArticleLink: string
-  }) {
-    return <a href={fullArticleLink}>{title}</a>
-  }
-})
+import { getAllTags } from "../../lib/tags"
 
 jest.mock("../../lib/blog", () => ({
   getAllBlogPosts: jest.fn(),
 }))
 
-import Articles from "./page"
+jest.mock("../../lib/tags", () => ({
+  getAllTags: jest.fn(),
+}))
+
+import BlogIndex from "./page"
 
 const mockGetAllBlogPosts = jest.mocked(getAllBlogPosts)
+const mockGetAllTags = jest.mocked(getAllTags)
 
 function makeBlogPost(id: string, overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
   return {
@@ -47,41 +41,69 @@ const blogPosts: MarkdownEntry[] = [
     title: "Newest post",
     articleDate: new Date("2024-01-01"),
     articleContent: "Newest content",
-    authorImgSrc: "/img/newest.png",
-    authorName: "Tom",
+    tags: ["Homelab"],
   }),
   makeBlogPost("middle-post", {
     title: "Middle post",
     articleDate: new Date("2020-01-01"),
     articleContent: "Middle content",
-    authorImgSrc: "/img/middle.png",
-    authorName: "Tom",
+    tags: ["Automation"],
   }),
   makeBlogPost("oldest-post", {
     title: "Oldest post",
     articleDate: new Date("2019-01-01"),
     articleContent: "Oldest content",
-    authorImgSrc: "/img/oldest.png",
-    authorName: "Tom",
+    tags: ["Recipes"],
   }),
 ]
 
-describe("Articles", () => {
+describe("BlogIndex", () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockGetAllTags.mockReturnValue([
+      { key: "homelab", label: "Homelab", slug: "homelab", count: 2, entries: [] },
+      { key: "recipes", label: "Recipes", slug: "recipes", count: 1, entries: [] },
+    ])
   })
 
-  it("renders getAllBlogPosts results in returned order", () => {
+  it("renders a featured article and the remaining dispatches as rows", () => {
     // Given
     mockGetAllBlogPosts.mockReturnValue(blogPosts)
 
     // When
-    render(<Articles />)
+    render(<BlogIndex />)
 
     // Then
-    expect(mockGetAllBlogPosts).toHaveBeenCalledTimes(1)
-    expect(screen.getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual(
-      blogPosts.map((post) => post.fullArticleLink)
-    )
+    expect(screen.getByRole("heading", { level: 1, name: "Blog" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 2, name: "Latest entries" })).toBeInTheDocument()
+    expect(screen.getByTestId("blog-grid")).toBeInTheDocument()
+    expect(screen.getAllByTestId("article-card")).toHaveLength(1)
+    expect(screen.getAllByTestId("article-row")).toHaveLength(2)
+    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(3)
+  })
+
+  it("renders absolute dates and tag-strip links", () => {
+    // Given
+    mockGetAllBlogPosts.mockReturnValue(blogPosts)
+
+    // When
+    render(<BlogIndex />)
+
+    // Then
+    expect(screen.getAllByText("01 JAN 2024").length).toBeGreaterThan(0)
+    expect(screen.getByRole("link", { name: "Homelab" })).toHaveAttribute("href", "/tags/homelab")
+    expect(screen.getByRole("link", { name: "Recipes" })).toHaveAttribute("href", "/tags/recipes")
+    expect(screen.getByTestId("blog-topics")).toBeInTheDocument()
+  })
+
+  it("renders an empty state when there are no posts", () => {
+    // Given
+    mockGetAllBlogPosts.mockReturnValue([])
+
+    // When
+    render(<BlogIndex />)
+
+    // Then
+    expect(screen.getByText("No dispatches have been published yet.")).toBeInTheDocument()
   })
 })

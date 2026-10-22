@@ -20,11 +20,11 @@ export const FEATURED_PROJECT_COUNT = 4
  *
  * Selection rule, in order:
  * 1. Projects whose frontmatter sets `featured: true` win, preserving the
- *    newest-first order `getAllProjects()` already returns.
- * 2. When fewer than `count` projects are flagged — the current state, since no
- *    content file sets the flag yet — fall back deterministically to the
- *    `count` most recent projects, so the home page always renders a full set
- *    instead of a short or empty one.
+ *    newest-first order `getAllProjects()` already returns. The four current
+ *    newest projects carry the flag explicitly, so this is curation rather than
+ *    an accident of recency.
+ * 2. The recency fallback is retained only as a build-safety net for a content
+ *    directory that has fewer than four flags. It must not be the normal path.
  *
  * @param projects - Full project list, newest-first.
  * @param count - How many monuments to select. Defaults to FEATURED_PROJECT_COUNT.

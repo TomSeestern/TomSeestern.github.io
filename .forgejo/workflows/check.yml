@@ -47,8 +47,8 @@ jobs:
         run: nix develop -c pnpm prettier
       - name: Contrast gate
         run: nix develop -c pnpm contrast
-      - name: Ornament gate
-        run: nix develop -c pnpm ornaments
+      - name: Design token gate
+        run: nix develop -c pnpm design-tokens
       - name: Image size gate
         run: nix develop -c pnpm images
       - name: Font budget gate

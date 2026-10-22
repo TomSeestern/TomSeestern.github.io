@@ -1,11 +1,14 @@
-import { Metadata, ResolvingMetadata } from "next"
+import type { Metadata, ResolvingMetadata } from "next"
+import { notFound, permanentRedirect } from "next/navigation"
 import { metadata as layoutMetadata } from "@/app/layout"
-import { notFound } from "next/navigation"
-import { HiHome } from "react-icons/hi"
-import ArticleComponent from "@/components/ArticleTeaser/ArticleTeaser"
+import { ArticleCard } from "@/components/ArticleCard/ArticleCard"
 import { Breadcrumb, BreadcrumbItem } from "@/components/Breadcrumb/Breadcrumb"
-import ProjectTeaser from "@/components/ProjectTeaser/ProjectTeaser"
-import { getAllTags, getTagBySlug } from "@/lib/tags"
+import { Home } from "@/components/Icon/Home"
+import { MonumentCard } from "@/components/MonumentCard/MonumentCard"
+import { PageHero } from "@/components/PageHero/PageHero"
+import { PixelSigil } from "@/components/PixelSigil/PixelSigil"
+import { Section } from "@/components/Section/Section"
+import { getAllTags, getTagByLegacySlug, getTagBySlug } from "@/lib/tags"
 import type { TaggedEntry } from "@/lib/tags"
 
 interface Params {
@@ -14,32 +17,12 @@ interface Params {
   }>
 }
 
-function renderEntry(entry: TaggedEntry) {
+function renderEntry(entry: TaggedEntry, index: number) {
   if (entry.collection === "project") {
-    return (
-      <ProjectTeaser
-        title={entry.title}
-        imageUrl={entry.fullArticleLink}
-        description={entry.articleContent}
-        technologies={entry.technologies}
-        ctaLink={entry.fullArticleLink}
-        projectDate={entry.articleDate}
-        featured={entry.featured}
-      />
-    )
+    return <MonumentCard project={entry} index={index} />
   }
 
-  return (
-    <ArticleComponent
-      title={entry.title}
-      articleDate={entry.articleDate}
-      articleContent={entry.articleContent}
-      authorImgSrc={entry.authorImgSrc}
-      authorName={entry.authorName}
-      fullArticleLink={entry.fullArticleLink}
-      tags={entry.tags}
-    />
-  )
+  return <ArticleCard entry={entry} index={index} />
 }
 
 export default async function TagArchive({ params }: Params): Promise<JSX.Element> {
@@ -47,15 +30,19 @@ export default async function TagArchive({ params }: Params): Promise<JSX.Elemen
   const tag = getTagBySlug(slug)
 
   if (!tag) {
+    const legacy = getTagByLegacySlug(slug)
+    if (legacy) {
+      permanentRedirect(`/tags/${legacy.slug}`)
+    }
     notFound()
   }
 
   return (
     <>
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <Breadcrumb className="py-2">
+      <div className="mx-auto w-full max-w-width-page px-4 pt-6 sm:px-6 lg:px-10">
+        <Breadcrumb>
           <BreadcrumbItem href="/">
-            <HiHome className="mr-2 inline h-4 w-4" />
+            <Home className="mr-2 size-3.5" />
             Home
           </BreadcrumbItem>
           <BreadcrumbItem href="/tags">Tags</BreadcrumbItem>
@@ -63,26 +50,49 @@ export default async function TagArchive({ params }: Params): Promise<JSX.Elemen
         </Breadcrumb>
       </div>
 
-      <section className="bg-surface antialiased">
-        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
-          <header className="mx-auto max-w-measure-lead text-center">
-            <h1 className="text-h1-sm text-foreground sm:text-h1">{tag.label}</h1>
-            <p className="mt-4 text-body-lg font-light text-muted sm:text-xl">
-              {tag.count === 1
-                ? "1 blog post or project filed under this tag, newest first."
-                : `${tag.count} blog posts and projects filed under this tag, newest first.`}
-            </p>
-          </header>
-          <h2 className="sr-only">Tagged entries</h2>
-          <div className="motion-rise mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
-            {tag.entries.map((entry) => (
-              <div key={entry.fullArticleLink} className="min-w-0">
-                {renderEntry(entry)}
-              </div>
-            ))}
+      <PageHero
+        titleId="tag-title"
+        eyebrow="Filed under"
+        title={tag.label}
+        lead={
+          tag.count === 1
+            ? "1 blog post or project filed under this tag, newest first."
+            : `${tag.count} blog posts and projects filed under this tag, newest first.`
+        }
+        size="compact"
+        aside={
+          <div className="rounded-lg border border-rule bg-panel p-4">
+            <div className="flex items-start justify-between gap-4">
+              <PixelSigil slug={`tag-${tag.slug}`} size="sm" className="size-8" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-crimson">Filed</span>
+            </div>
+            <p className="mt-5 border-t border-rule pt-3 font-body text-sm text-ink-muted">Entries</p>
+            <p className="mt-1 font-mono text-2xl leading-none text-ink">{tag.count}</p>
           </div>
+        }
+      />
+
+      <Section tone="canvas" labelledBy="tagged-entries-title" className="py-10 sm:py-14 lg:py-16">
+        <h2 id="tagged-entries-title" className="sr-only">
+          Tagged entries
+        </h2>
+        <div data-testid="tag-grid" className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          {tag.entries.length > 0 ? (
+            tag.entries.map((entry, index) => (
+              <div key={`${entry.collection}-${entry.fullArticleLink}`} className="min-w-0">
+                {renderEntry(entry, index)}
+              </div>
+            ))
+          ) : (
+            <p
+              data-testid="tag-empty"
+              className="border border-rule-strong bg-panel p-6 font-body text-body text-ink-muted"
+            >
+              No entries are filed under this tag yet.
+            </p>
+          )}
         </div>
-      </section>
+      </Section>
     </>
   )
 }

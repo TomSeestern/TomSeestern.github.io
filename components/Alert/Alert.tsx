@@ -1,4 +1,5 @@
 import React from "react"
+import { Close } from "../Icon/Close"
 import { twMerge } from "tailwind-merge"
 
 export type AlertVariant = "success" | "failure"
@@ -11,21 +12,21 @@ export interface AlertProps {
 }
 
 const variantClasses: Record<AlertVariant, string> = {
-  success: "border-accent-soft bg-surface-elevated text-foreground",
-  failure: "border-accent-secondary bg-surface-elevated text-accent-secondary",
+  success: "border-verdigris bg-panel text-ink",
+  failure: "border-danger bg-danger-surface text-danger",
 }
 
 /**
- * In-tree status/error surface (D11 / T21). A success alert is a polite
- * `role="status"` live region; a failure alert is an assertive `role="alert"`
- * so a submission error is announced immediately. `onDismiss` adds a
- * keyboard-reachable control labelled "Dismiss".
+ * In-tree status/error surface. A success alert is a polite `role="status"`
+ * live region; a failure alert is an assertive `role="alert"` so a submission
+ * error is announced immediately. `onDismiss` adds a keyboard-reachable
+ * control labelled "Dismiss".
  */
 export function Alert({ variant = "success", onDismiss, className, children }: AlertProps) {
   return (
     <div
       role={variant === "failure" ? "alert" : "status"}
-      className={twMerge("flex items-center gap-2 rounded-lg border p-4 text-sm", variantClasses[variant], className)}
+      className={twMerge("flex items-center gap-3 border p-4 font-body text-small", variantClasses[variant], className)}
     >
       <div className="flex-1">{children}</div>
       {onDismiss ? (
@@ -33,19 +34,9 @@ export function Alert({ variant = "success", onDismiss, className, children }: A
           type="button"
           aria-label="Dismiss"
           onClick={onDismiss}
-          className="-m-1.5 inline-flex size-8 shrink-0 items-center justify-center rounded-lg p-1.5 text-muted transition-colors duration-200 hover:bg-surface-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft"
+          className="focus-ring -m-1.5 inline-flex size-10 shrink-0 items-center justify-center border border-current p-1.5 transition-colors duration-150 hover:bg-canvas-deep"
         >
-          <svg
-            aria-hidden="true"
-            className="size-5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          >
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
+          <Close className="size-4" />
         </button>
       ) : null}
     </div>

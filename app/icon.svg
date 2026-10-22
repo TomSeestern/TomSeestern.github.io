@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tom Segbers monogram">
+  <path d="M8 58V30a24 24 0 0 1 48 0v28H8Z" fill="#A62B23" stroke="#17130F" stroke-width="4" />
+  <path d="M17 58V31a15 15 0 0 1 30 0v27H17Z" fill="#EFE6D2" stroke="#17130F" stroke-width="3" />
+  <path d="M29 9h6v5h-6z" fill="#C6942E" />
+  <g fill="#17130F">
+    <path d="M23 31h11v3H23zM27 34h3v12h-3z" />
+    <path d="M38 31h10v3H38zM38 34h3v4h-3zM38 38h10v3H38zM45 41h3v4h-3zM38 45h10v3H38z" />
+  </g>
+</svg>

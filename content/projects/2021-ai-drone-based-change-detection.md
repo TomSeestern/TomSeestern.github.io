@@ -5,6 +5,7 @@ articleDate: 2021-03-30
 articleContent: For my bachelor thesis, I built ISeeUNet, a modified U-Net trained on hybrid real and synthetic datasets for real-time change detection on Nvidia Jetson NX hardware.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
+featured: true
 tags:
   - Artificial Intelligence
   - Drone Technology

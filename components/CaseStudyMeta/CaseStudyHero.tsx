@@ -15,7 +15,7 @@ export default function CaseStudyHero({ src }: CaseStudyHeroProps): JSX.Element 
   return (
     <div
       data-testid="case-study-hero"
-      className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-xl bg-surface-muted"
+      className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-lg border border-rule bg-canvas-deep"
     >
       {/* The fixed-aspect wrapper reserves the hero's layout box so the image
           never shifts the article below it (CLS). */}

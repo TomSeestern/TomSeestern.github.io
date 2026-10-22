@@ -5,6 +5,7 @@ articleDate: 2021-01-01
 articleContent: I led development of an Ethereum NFT MVP where Minecraft players could upload, claim, and trade skins through a Next.js and TypeScript application.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
+featured: true
 tags:
   - NFTs
   - EthereumBlockchain

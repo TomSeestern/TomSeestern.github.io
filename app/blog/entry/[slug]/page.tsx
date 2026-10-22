@@ -1,10 +1,19 @@
-import { Metadata, ResolvingMetadata } from "next"
-import { metadata as layoutMetadata } from "@/app/layout"
+import type { Metadata, ResolvingMetadata } from "next"
+import Image from "next/image"
 import { notFound } from "next/navigation"
-import { HiHome } from "react-icons/hi"
 import ReactMarkdown from "react-markdown"
+import { metadata as layoutMetadata } from "@/app/layout"
+import { ArticleCard } from "@/components/ArticleCard/ArticleCard"
+import { ArticleMeta } from "@/components/ArticleMeta/ArticleMeta"
 import { Breadcrumb, BreadcrumbItem } from "@/components/Breadcrumb/Breadcrumb"
-import { getMarkdownEntry, getMarkdownSlugs } from "@/lib/markdown"
+import { Home } from "@/components/Icon/Home"
+import { PageHero } from "@/components/PageHero/PageHero"
+import { Section } from "@/components/Section/Section"
+import { SectionHeading } from "@/components/SectionHeading/SectionHeading"
+import { getAllBlogPosts } from "@/lib/blog"
+import { formatDate } from "@/lib/format-date"
+import { getMarkdownEntry, getMarkdownSlugs, parseFrontmatter } from "@/lib/markdown"
+import { readingTimeMinutes } from "@/lib/reading-time"
 
 const CONTENT_DIR = "content/blog"
 
@@ -22,25 +31,83 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
     notFound()
   }
 
+  const frontmatter = parseFrontmatter(fileContent.data)
+  const title = frontmatter.title || "Blog Post"
+  const otherPosts = getAllBlogPosts()
+    .filter((post) => post.id !== slug)
+    .slice(0, 2)
+
   return (
     <>
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <Breadcrumb className="py-2">
+      <div className="mx-auto w-full max-w-width-page px-4 pt-6 sm:px-6 lg:px-10">
+        <Breadcrumb>
           <BreadcrumbItem href="/">
-            <HiHome className="mr-2 inline h-4 w-4" />
+            <Home className="mr-2 size-3.5" />
             Home
           </BreadcrumbItem>
           <BreadcrumbItem href="/blog">Blog</BreadcrumbItem>
-          <BreadcrumbItem>{fileContent.data.title || "Content "}</BreadcrumbItem>
+          <BreadcrumbItem>{title}</BreadcrumbItem>
         </Breadcrumb>
       </div>
 
-      <div className="mx-auto flex min-h-screen max-w-3xl flex-col px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
-        <article className="prose prose-lg max-w-none dark:prose-invert">
-          <h1 className="text-h1-sm sm:text-h1">{fileContent.data.title || "Blog Post"}</h1>
-          <ReactMarkdown components={{ h1: () => null }}>{fileContent.content}</ReactMarkdown>
-        </article>
-      </div>
+      <PageHero
+        titleId="dispatch-title"
+        eyebrow={`Dispatch · ${formatDate(frontmatter.articleDate)}`}
+        title={title}
+        lead={frontmatter.articleContent || undefined}
+        size="compact"
+      />
+
+      <Section tone="canvas" className="py-10 sm:py-14 lg:py-16">
+        <div className="mx-auto max-w-measure-article">
+          <ArticleMeta
+            date={frontmatter.articleDate}
+            readingTimeMinutes={readingTimeMinutes(fileContent.content)}
+            tags={frontmatter.tags}
+            author={frontmatter.authorName}
+          />
+
+          <article
+            data-testid="article-body"
+            className="prose prose-lg mt-10 max-w-none font-prose prose-headings:font-display prose-headings:text-ink prose-p:text-ink-muted"
+          >
+            <ReactMarkdown components={{ h1: () => null }}>{fileContent.content}</ReactMarkdown>
+          </article>
+
+          <aside
+            data-testid="author-card"
+            className="mt-12 flex items-center gap-4 rounded-lg border border-rule bg-panel p-5"
+          >
+            <Image
+              src={frontmatter.authorImgSrc}
+              alt=""
+              width={64}
+              height={64}
+              unoptimized
+              className="size-12 shrink-0 rounded-sm border border-rule-strong bg-canvas object-contain p-1"
+            />
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-crimson">Words by</p>
+              <p className="mt-1 font-body text-sm font-medium text-ink">{frontmatter.authorName}</p>
+              <p className="mt-1 font-body text-xs text-ink-muted">Senior developer, systems and interfaces.</p>
+            </div>
+          </aside>
+        </div>
+      </Section>
+
+      <Section tone="panel" labelledBy="more-dispatches-title" className="py-12 sm:py-16 lg:py-20">
+        <SectionHeading
+          id="more-dispatches-title"
+          eyebrow="II / Continue"
+          title="More dispatches"
+          lead="Two more notes from the workbench."
+        />
+        <div data-testid="more-dispatches" className="mt-8 grid gap-6 md:grid-cols-2">
+          {otherPosts.map((post, index) => (
+            <ArticleCard key={post.id} entry={post} index={index + 1} />
+          ))}
+        </div>
+      </Section>
     </>
   )
 }

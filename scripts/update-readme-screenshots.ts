@@ -24,6 +24,7 @@ const DISABLE_ANIMATIONS_CSS = `
     transition-delay: 0s !important;
     caret-color: transparent !important;
   }
+  nextjs-portal { display: none !important; }
 `
 
 function isPortInUse(port: number): Promise<boolean> {

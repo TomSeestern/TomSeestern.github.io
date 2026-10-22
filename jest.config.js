@@ -4,6 +4,7 @@ const createJestConfig = nextJest({
   dir: "./",
 })
 
+/** @type {import('jest').Config} */
 const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testEnvironment: "jest-environment-jsdom",
@@ -12,7 +13,6 @@ const customJestConfig = {
   },
   modulePathIgnorePatterns: ["<rootDir>/dist/"],
   testPathIgnorePatterns: ["<rootDir>/e2e"],
-  transformIgnorePatterns: ["/node_modules/(?!(flowbite-react|debounce)/)"],
   coverageThreshold: {
     global: {
       branches: 80,
@@ -23,14 +23,4 @@ const customJestConfig = {
   },
 }
 
-module.exports = async () => {
-  const config = await createJestConfig(customJestConfig)()
-  return {
-    ...config,
-    transformIgnorePatterns: (config.transformIgnorePatterns || []).map((pattern) =>
-      pattern.includes("node_modules")
-        ? "/node_modules/(?!(\\.pnpm/.*(flowbite-react|debounce)|flowbite-react|debounce)/)"
-        : pattern
-    ),
-  }
-}
+module.exports = createJestConfig(customJestConfig)

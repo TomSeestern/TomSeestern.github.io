@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Section } from "@/components/Section/Section"
 
 export const metadata: Metadata = {
   title: "Impressum",
@@ -28,40 +29,40 @@ export const metadata: Metadata = {
 
 /** Renders an unfilled legal fact as a visible, greppable placeholder. */
 function Placeholder({ label }: { label: string }) {
-  return <span className="font-mono text-accent dark:text-accent-dark">TODO(Tom): {label}</span>
+  return <span className="font-mono text-crimson">TODO(Tom): {label}</span>
 }
 
 export default function Impressum() {
   return (
-    <section className="bg-surface antialiased dark:bg-surface-dark">
-      <div className="mx-auto max-w-screen-md px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
+    <Section tone="canvas" lang="de" className="antialiased" innerClassName="max-w-screen-md py-8 sm:py-16 lg:py-24">
+      <div className="hyphens-auto break-words font-prose">
         <header className="mx-auto max-w-measure-lead text-center">
-          <h1 className="text-h1-sm text-foreground dark:text-foreground-dark sm:text-h1">Impressum</h1>
-          <p className="mt-4 text-body-lg font-light text-muted dark:text-muted-dark">
+          <h1 className="hyphens-auto break-words text-h2-sm text-ink sm:text-h1">Impressum</h1>
+          <p className="mt-4 text-body-lg font-light text-ink-muted">
             Anbieterkennzeichnung und Angaben zum Verantwortlichen für diese Website.
           </p>
         </header>
 
         <div className="mt-12 space-y-10">
           <section aria-labelledby="impressum-angaben">
-            <h2 id="impressum-angaben" className="text-h2-sm text-foreground dark:text-foreground-dark sm:text-h2">
+            <h2 id="impressum-angaben" className="text-h2-sm text-ink sm:text-h2">
               Angaben gemäß § 5 DDG
             </h2>
-            <dl className="mt-6 space-y-4 text-body text-muted dark:text-muted-dark">
+            <dl className="mt-6 space-y-4 text-body text-ink-muted">
               <div>
-                <dt className="font-medium text-foreground dark:text-foreground-dark">Name</dt>
+                <dt className="font-medium text-ink">Name</dt>
                 <dd className="mt-1">
                   <Placeholder label="Name der natürlichen oder juristischen Person" />
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-foreground dark:text-foreground-dark">Anschrift</dt>
+                <dt className="font-medium text-ink">Anschrift</dt>
                 <dd className="mt-1">
                   <Placeholder label="Anschrift (Straße, Hausnummer, PLZ, Ort, Land)" />
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-foreground dark:text-foreground-dark">Kontakt</dt>
+                <dt className="font-medium text-ink">Kontakt</dt>
                 <dd className="mt-1 space-y-1">
                   <p>
                     E-Mail: <Placeholder label="E-Mail-Adresse" />
@@ -72,15 +73,13 @@ export default function Impressum() {
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-foreground dark:text-foreground-dark">Vertretungsberechtigte/r</dt>
+                <dt className="font-medium text-ink">Vertretungsberechtigte/r</dt>
                 <dd className="mt-1">
                   <Placeholder label="Vertretungsberechtigte/r (falls zutreffend)" />
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-foreground dark:text-foreground-dark">
-                  Umsatzsteuer-Identifikationsnummer (falls vorhanden)
-                </dt>
+                <dt className="font-medium text-ink">Umsatzsteuer-Identifikationsnummer (falls vorhanden)</dt>
                 <dd className="mt-1">
                   <Placeholder label="USt-IdNr. gemäß § 27 a UStG (falls vorhanden)" />
                 </dd>
@@ -89,18 +88,18 @@ export default function Impressum() {
           </section>
 
           <section aria-labelledby="impressum-mstv">
-            <h2 id="impressum-mstv" className="text-h2-sm text-foreground dark:text-foreground-dark sm:text-h2">
+            <h2 id="impressum-mstv" className="text-h2-sm text-ink sm:text-h2">
               Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
             </h2>
-            <dl className="mt-6 space-y-4 text-body text-muted dark:text-muted-dark">
+            <dl className="mt-6 space-y-4 text-body text-ink-muted">
               <div>
-                <dt className="font-medium text-foreground dark:text-foreground-dark">Name</dt>
+                <dt className="font-medium text-ink">Name</dt>
                 <dd className="mt-1">
                   <Placeholder label="Name der inhaltlich verantwortlichen Person" />
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-foreground dark:text-foreground-dark">Anschrift</dt>
+                <dt className="font-medium text-ink">Anschrift</dt>
                 <dd className="mt-1">
                   <Placeholder label="Anschrift der inhaltlich verantwortlichen Person" />
                 </dd>
@@ -108,12 +107,12 @@ export default function Impressum() {
             </dl>
           </section>
 
-          <p className="text-small text-muted dark:text-muted-dark">
-            Die mit <span className="font-mono text-accent dark:text-accent-dark">TODO(Tom): …</span> markierten Angaben
-            sind noch nicht befüllt und müssen vor Veröffentlichung durch die verantwortliche Person ersetzt werden.
+          <p className="text-small text-ink-muted">
+            Die mit <span className="font-mono text-crimson">TODO(Tom): …</span> markierten Angaben sind noch nicht
+            befüllt und müssen vor Veröffentlichung durch die verantwortliche Person ersetzt werden.
           </p>
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

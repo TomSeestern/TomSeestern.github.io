@@ -13,59 +13,67 @@ describe("Button", () => {
     expect(screen.getByRole("link", { name: "Contact me" })).toHaveAttribute("href", href)
   })
 
-  it("uses primary styling by default", () => {
-    // Given
-    const href = "/primary"
-
-    // When
-    render(<Button href={href}>Primary action</Button>)
+  it("uses the light primary treatment by default", () => {
+    // Given / When
+    render(<Button href="/primary">Primary action</Button>)
 
     // Then
-    expect(screen.getByRole("link", { name: "Primary action" })).toHaveClass("bg-accent-light", "text-foreground-dark")
+    expect(screen.getByRole("link", { name: "Primary action" })).toHaveClass("bg-ink", "text-canvas", "min-h-11")
   })
 
-  it("uses secondary styling when requested", () => {
-    // Given
-    const href = "/secondary"
-
-    // When
+  it("supports the secondary, ghost, and pixel variants", () => {
+    // Given / When
     render(
-      <Button href={href} intent="secondary">
-        Secondary action
+      <>
+        <Button href="/secondary" variant="secondary">
+          Secondary action
+        </Button>
+        <Button href="/ghost" variant="ghost">
+          Ghost action
+        </Button>
+        <Button href="/pixel" variant="pixel">
+          Pixel action
+        </Button>
+      </>
+    )
+
+    // Then
+    expect(screen.getByRole("link", { name: "Secondary action" })).toHaveClass(
+      "bg-transparent",
+      "text-ink",
+      "border-rule-strong"
+    )
+    expect(screen.getByRole("link", { name: "Ghost action" })).toHaveClass("bg-transparent", "text-ink")
+    expect(screen.getByRole("link", { name: "Pixel action" })).toHaveClass("bg-gold", "text-canvas")
+  })
+
+  it("uses the 44px compact target and the large target on request", () => {
+    // Given / When
+    render(
+      <>
+        <Button href="/compact" size="sm">
+          Compact action
+        </Button>
+        <Button href="/large" size="lg">
+          Large action
+        </Button>
+      </>
+    )
+
+    // Then
+    expect(screen.getByRole("link", { name: "Compact action" })).toHaveClass("min-h-11")
+    expect(screen.getByRole("link", { name: "Large action" })).toHaveClass("min-h-12")
+  })
+
+  it("merges caller classes without dropping the recipe", () => {
+    // Given / When
+    render(
+      <Button href="/merged" className="w-full">
+        Full width
       </Button>
     )
 
     // Then
-    expect(screen.getByRole("link", { name: "Secondary action" })).toHaveClass("bg-transparent", "text-accent-light")
-  })
-
-  it("uses compact sizing when size is sm", () => {
-    // Given
-    const href = "/compact"
-
-    // When
-    render(
-      <Button href={href} size="sm">
-        Compact action
-      </Button>
-    )
-
-    // Then
-    expect(screen.getByRole("link", { name: "Compact action" })).toHaveClass("min-w-20", "min-h-10", "text-sm")
-  })
-
-  it("underlines its link text when underline is enabled", () => {
-    // Given
-    const href = "/underlined"
-
-    // When
-    render(
-      <Button href={href} underline>
-        Underlined action
-      </Button>
-    )
-
-    // Then
-    expect(screen.getByRole("link", { name: "Underlined action" })).toHaveClass("underline")
+    expect(screen.getByRole("link", { name: "Full width" })).toHaveClass("w-full", "bg-ink")
   })
 })

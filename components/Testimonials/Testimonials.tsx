@@ -1,4 +1,5 @@
 import React from "react"
+import { SectionHeading } from "../SectionHeading/SectionHeading"
 
 type IllustrativeExample = {
   readonly id: string
@@ -31,33 +32,31 @@ const ILLUSTRATIVE_EXAMPLES: readonly IllustrativeExample[] = [
   },
 ]
 
-const EXAMPLE_BADGE_LABEL = "Example"
 const EXAMPLE_DISCLAIMER = "Illustrative examples — not real client testimonials."
 
 export default function Testimonials() {
   return (
-    <section aria-labelledby="testimonials-heading" className="mt-12 lg:mt-16">
-      <div className="mx-auto max-w-3xl space-y-4 text-center">
-        <span className="inline-flex items-center rounded-full bg-accent-soft px-2.5 py-1 text-caption font-semibold uppercase tracking-widest text-accent-soft-foreground">
-          {EXAMPLE_BADGE_LABEL}
-        </span>
-        <h2 id="testimonials-heading" className="text-h2-sm text-foreground sm:text-h2">
-          Illustrative feedback
-        </h2>
-        <p className="text-body font-medium text-muted">{EXAMPLE_DISCLAIMER}</p>
+    <section aria-labelledby="testimonials-heading">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <SectionHeading id="testimonials-heading" title="Illustrative examples" lead={EXAMPLE_DISCLAIMER} />
+        <p className="max-w-measure-card rounded-full border border-rule-strong bg-panel px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+          Example only
+        </p>
       </div>
-      <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
         {ILLUSTRATIVE_EXAMPLES.map((example) => (
           <figure
             key={example.id}
-            className="flex flex-col gap-4 rounded-lg bg-surface-muted p-6"
+            className="flex flex-col gap-4 rounded-lg border border-rule bg-panel p-5"
             data-testid="illustrative-example"
           >
-            <blockquote className="text-body text-foreground">
+            <blockquote className="font-body text-body leading-7 text-ink">
               <p>{example.quote}</p>
             </blockquote>
-            <figcaption className="mt-auto">
-              <cite className="text-small font-medium not-italic text-muted">{example.attribution}</cite>
+            <figcaption className="mt-auto border-t border-rule pt-3">
+              <cite className="font-mono text-[10px] uppercase not-italic tracking-[0.12em] text-crimson">
+                {example.attribution}
+              </cite>
             </figcaption>
           </figure>
         ))}

@@ -1,56 +1,82 @@
 import { cva, type VariantProps } from "class-variance-authority"
-
+import React from "react"
 import { twMerge } from "tailwind-merge"
 
-const button = cva(
+/**
+ * Shared button recipe. `Button` renders an anchor; `buttonStyles` is exported
+ * for the contact form's real `<button>` so both surfaces keep the same focus,
+ * touch-target, and pressed-state contract.
+ */
+export const buttonStyles = cva(
   [
-    "justify-center",
     "inline-flex",
     "items-center",
-    "rounded-xl",
-    "text-center",
+    "justify-center",
+    "gap-2",
+    "rounded-md",
     "border",
-    "border-accent-light",
+    "font-body",
+    "font-medium",
+    "tracking-[-0.01em]",
     "transition-colors",
-    "duration-200",
-    "focus-visible:outline-none",
-    "focus-visible:ring-4",
-    "focus-visible:ring-accent-soft",
-    "dark:focus-visible:ring-accent-soft-dark",
+    "duration-150",
+    "disabled:pointer-events-none",
+    "disabled:opacity-60",
   ],
   {
     variants: {
-      intent: {
-        primary: ["bg-accent-light", "text-foreground-dark", "hover:enabled:bg-accent-hover"],
+      variant: {
+        primary: ["border-ink", "bg-ink", "text-canvas", "hover:bg-white", "focus-ring-accent"],
         secondary: [
+          "border-rule-strong",
           "bg-transparent",
-          "text-accent-light",
-          "hover:enabled:bg-accent-light",
-          "hover:enabled:text-foreground-dark",
+          "text-ink",
+          "hover:border-ink",
+          "hover:bg-panel",
+          "focus-ring",
         ],
+        "secondary-night": [
+          "border-rule-strong",
+          "bg-transparent",
+          "text-ink",
+          "hover:border-ink",
+          "hover:bg-panel",
+          "focus-ring",
+        ],
+        ghost: [
+          "border-transparent",
+          "bg-transparent",
+          "text-ink",
+          "underline",
+          "decoration-crimson",
+          "decoration-2",
+          "underline-offset-4",
+          "hover:bg-panel",
+          "focus-ring",
+        ],
+        pixel: ["border-gold", "bg-gold", "text-canvas", "hover:bg-ink", "hover:text-canvas", "focus-ring-accent"],
       },
       size: {
-        sm: ["min-w-20", "h-full", "min-h-10", "text-sm", "py-1.5", "px-4"],
-        lg: ["min-w-32", "h-full", "min-h-12", "text-lg", "py-2.5", "px-6"],
+        sm: ["min-h-11", "px-4", "py-2", "text-[0.8125rem]"],
+        md: ["min-h-11", "px-5", "py-2.5", "text-sm"],
+        lg: ["min-h-12", "px-6", "py-3", "text-sm"],
       },
-      underline: { true: ["underline"], false: [] },
     },
     defaultVariants: {
-      intent: "primary",
-      size: "lg",
+      variant: "primary",
+      size: "md",
     },
   }
 )
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLAnchorElement>, VariantProps<typeof button> {
-  underline?: boolean
+export interface ButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement>, VariantProps<typeof buttonStyles> {
   href: string
 }
 
-export function Button({ className, intent, size, underline, ...props }: ButtonProps) {
+export function Button({ className, variant, size, children, ...props }: ButtonProps) {
   return (
-    <a className={twMerge(button({ intent, size, className, underline }))} {...props}>
-      {props.children}
+    <a className={twMerge(buttonStyles({ variant, size }), className)} {...props}>
+      {children}
     </a>
   )
 }

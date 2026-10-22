@@ -119,9 +119,9 @@ The pre-commit hook (`.pre-commit-config.yaml`) runs only conventional-commit me
 
 ### Code health
 
-#### R3.1) ESLint + Prettier must pass on every commit `[auto: yarn lint && yarn prettier — CI check.yml]`
+#### R3.1) ESLint + Prettier must pass on every commit `[auto: pnpm lint && pnpm prettier — CI check.yml]`
 
-Code must pass `yarn lint` (ESLint with next/react-app/prettier/storybook/tailwindcss configs) and `yarn prettier` (format check) on every push and PR via `.forgejo/workflows/check.yml`.
+Code must pass `pnpm lint` (ESLint with next/react-app/prettier/storybook/tailwindcss configs) and `pnpm prettier` (format check) on every push and PR via `.forgejo/workflows/check.yml`.
 
 #### R3.2) pre-commit is the hook runner `[manual]`
 
@@ -223,13 +223,13 @@ Follow ESLint `import/order` rules (external → builtin → internal → siblin
 
 <!-- manual: project has direnv/nix flakes from the Next.js Enterprise boilerplate but these are supplementary; development works without them -->
 
-The project includes a `flake.nix` and `.envrc` from the upstream boilerplate, providing a reproducible dev shell. However, development also works with plain Node.js ≥18.17.0 and Yarn. This rule is aspirational — the Nix shell is not mandatory.
+The project includes a `flake.nix` and `.envrc` from the upstream boilerplate, providing a reproducible dev shell. However, development also works with plain Node.js ≥18.17.0 and pnpm. This rule is aspirational — the Nix shell is not mandatory.
 
 #### R4.13) Dependency management has explicit Nix and pnpm ownership `[manual]`
 
-<!-- manual: this project uses Yarn (not pnpm) with `yarn.lock`; Nix flake exists but is not the primary dependency manager -->
+<!-- manual: pnpm owns dependencies via `pnpm-lock.yaml`; the Nix flake supplies the toolchain but is not the dependency manager -->
 
-Dependencies are managed via Yarn (`yarn.lock`) with `yarn install --frozen-lockfile`. The Nix flake provides supplementary tooling but is not the primary dependency mechanism. No pnpm is used.
+Dependencies are managed via pnpm (`pnpm-lock.yaml`) with `pnpm install --frozen-lockfile`. The Nix flake supplies Node, pnpm, git, and Playwright libraries but is not a second dependency mechanism.
 
 #### R4.14) Module size ceiling `[manual]`
 
@@ -245,9 +245,9 @@ Higher-level modules (pages, layouts) may import from lower-level modules (compo
 
 #### R4.16) No circular dependencies `[manual]`
 
-<!-- manual: madge coupling graph (`yarn coupling-graph`) can detect circles but is not automated as a pre-commit check -->
+<!-- manual: madge coupling graph (`pnpm coupling-graph`) can detect circles but is not automated as a pre-commit check -->
 
-Circular imports are forbidden. Run `yarn coupling-graph` to generate a dependency graph (`graph.svg`) and inspect for cycles. The Next.js bundler will also error on circular `import` chains.
+Circular imports are forbidden. Run `pnpm coupling-graph` to generate a dependency graph (`graph.svg`) and inspect for cycles. The Next.js bundler will also error on circular `import` chains.
 
 #### R4.17) Public API stability follows semver `[manual]`
 
@@ -315,7 +315,7 @@ Architecture Decision Records live in `docs/adr/`. When a decision affects proje
 
 <!-- manual: the why/what distinction requires reading the surrounding code's intent; an AST cannot know whether `// Increment counter` restates the next line or captures a non-obvious invariant -->
 
-Comments should document intent, non-obvious constraints, and design rationale. Avoid restating what the code already expresses. Good: `// Clamp to viewport — Flowbite's Tooltip escapes on narrow screens`. Bad: `// Set max width`.
+Comments should document intent, non-obvious constraints, and design rationale. Avoid restating what the code already expresses. Good: `// Clamp to viewport — the tooltip escapes on narrow screens`. Bad: `// Set max width`.
 
 #### R5.8) Architecture diagrams are kept fresh `[manual]`
 
@@ -327,7 +327,7 @@ If architecture diagrams exist in `docs/`, they must reflect the current code st
 
 #### R6.1) No code change without executable verification `[auto: .forgejo/workflows/check.yml — CI required status checks]`
 
-Every non-trivial code change must be verified through automated tests. The CI workflow (`check.yml`) runs `yarn lint`, `yarn prettier`, `yarn test`, and Storybook smoke tests on every push and PR. Trivial documentation-only changes are exempt.
+Every non-trivial code change must be verified through automated tests. The CI workflow (`check.yml`) runs `pnpm typecheck`, `pnpm lint`, `pnpm prettier`, `pnpm contrast`, `pnpm design-tokens`, `pnpm images`, `pnpm fonts`, `pnpm test`, `pnpm build`, and Storybook smoke tests on every push and PR. Trivial documentation-only changes are exempt.
 
 #### R6.2) Changed behavior must be covered at the correct layer `[manual]`
 
@@ -347,9 +347,9 @@ Every bug fix must include at least one test (Jest, Storybook, or Playwright) th
 
 **Adapted.** For this portfolio site, the critical user journey is: load homepage → navigate to blog → view a post → open contact form. Playwright e2e tests should cover these core paths.
 
-#### R6.5) Runtime smoke must pass on production build `[auto: yarn build — CI check.yml (Storybook smoke)]`
+#### R6.5) Runtime smoke must pass on production build `[auto: pnpm build — CI check.yml (Storybook smoke)]`
 
-The production build (`yarn build`) must succeed without errors. Storybook smoke tests (`yarn test-storybook`) verify components render correctly after build. The CI workflow enforces both.
+The production build (`pnpm build`) must succeed without errors. Storybook smoke tests (`pnpm test-storybook`) verify components render correctly after build. The CI workflow enforces both.
 
 ### Test design
 
@@ -437,7 +437,7 @@ For significant changes (new components, data flow modifications, architectural 
 
 #### R9.1) Required verification commands must be standardized `[auto: .forgejo/workflows/check.yml — CI required status checks]`
 
-The CI workflow (`check.yml`) enforces `yarn lint`, `yarn prettier`, `yarn test`, and Storybook smoke tests as required verification commands. No additional validation scripts exist — the workflow defines the standard.
+The CI workflow (`check.yml`) is the canonical verification contract: `pnpm typecheck`, `pnpm lint`, `pnpm prettier`, `pnpm contrast`, `pnpm design-tokens`, `pnpm images`, `pnpm fonts`, `pnpm test`, `pnpm build`, and the Storybook smoke step. `pnpm design-tokens` replaces the retired ornament gate; no separate validation script overrides the workflow.
 
 #### R9.2) Nightly deep verification must exist `[manual]`
 
@@ -449,7 +449,7 @@ The CI workflow (`check.yml`) enforces `yarn lint`, `yarn prettier`, `yarn test`
 
 <!-- manual: N/A — no production-critical scripts exist; the site is statically generated at build time -->
 
-**N/A.** The site is pre-built as static HTML via `next build`. No production scripts run server-side. Build determinism is ensured by `yarn.lock` and `yarn install --frozen-lockfile`.
+**N/A.** The site is pre-built as static HTML via `next build`. No production scripts run server-side. Build determinism is ensured by `pnpm-lock.yaml` and `pnpm install --frozen-lockfile`.
 
 #### R9.4) Hotfix process for production breakages `[manual]`
 
@@ -471,9 +471,9 @@ The CI workflow (`check.yml`) enforces `yarn lint`, `yarn prettier`, `yarn test`
 
 #### R9.7) Reproducible builds via Nix flake + pnpm-lock `[manual]`
 
-<!-- manual: N/A — this project uses Yarn (yarn.lock), not pnpm; Nix flake exists but is supplementary -->
+<!-- manual: N/A — reproducibility is provided by pnpm-lock.yaml; the Nix flake is supplementary -->
 
-Build reproducibility is provided by `yarn.lock` and `yarn install --frozen-lockfile`. The Nix flake (`flake.nix`) is supplementary and not required for development or builds. No pnpm is used.
+Build reproducibility is provided by `pnpm-lock.yaml` and `pnpm install --frozen-lockfile`. The Nix flake (`flake.nix`) is supplementary and not required for development or builds.
 
 #### R9.8) Build time budgets are tracked `[manual]`
 
@@ -491,13 +491,13 @@ Build times are visible in CI (`check.yml` logs) and Vercel deployment dashboard
 
 #### R10.1) Dependency versions are pinned against footguns `[manual]`
 
-<!-- manual: `yarn.lock` pins versions; no automated version-pinning script exists -->
+<!-- manual: `pnpm-lock.yaml` pins versions; no automated version-pinning script exists -->
 
-Dependencies are pinned via `yarn.lock` with exact versions. `yarn install --frozen-lockfile` ensures reproducible installs in CI. Renovate bot configuration may be used for automated dependency updates.
+Dependencies are pinned via `pnpm-lock.yaml` with exact versions. `pnpm install --frozen-lockfile` ensures reproducible installs in CI. Renovate bot configuration may be used for automated dependency updates.
 
 #### R10.2) Vulnerability scanning runs on every CI build `[manual]`
 
-<!-- manual: no `yarn audit` step exists in CI; vulnerability scanning is manual or provided by Forgejo's dependency tracking -->
+<!-- manual: no `pnpm audit` step exists in CI; vulnerability scanning is manual or provided by Forgejo's dependency tracking -->
 
 Dependency vulnerabilities are tracked via `pnpm audit` (manual runs) and Forgejo's vulnerability reporting for the repository. No automated `pnpm audit` step is configured in CI. Critical vulnerabilities should be addressed promptly.
 
@@ -561,7 +561,7 @@ Environment variables (Resend API key, etc.) are stored in `.env.local` (exclude
 
 <!-- manual: N/A — disaster recovery for a static site on Vercel is: push code to Forgejo, deploy -->
 
-**N/A.** Recovery procedure: clone the repository from Forgejo, run `yarn install && yarn build`, deploy. Deployment is triggered via Vercel (manually or via a Forgejo Actions job). No runbook is necessary.
+**N/A.** Recovery procedure: clone the repository from Forgejo, run `pnpm install && pnpm build`, deploy. Deployment is triggered via Vercel (manually or via a Forgejo Actions job). No runbook is necessary.
 
 #### R11.5) Capacity planning documented for scaling decisions `[manual]`
 
@@ -575,7 +575,7 @@ Environment variables (Resend API key, etc.) are stored in `.env.local` (exclude
 
 <!-- manual: `@next/bundle-analyzer` is configured but no automated budget enforcement exists -->
 
-Bundle sizes can be analyzed via `yarn analyze` (which runs `@next/bundle-analyzer`). No automated budget enforcement exists in CI. Bundle analysis should be reviewed before major releases.
+Bundle sizes can be analyzed via `pnpm analyze` (which runs `@next/bundle-analyzer`). No automated budget enforcement exists in CI. Bundle analysis should be reviewed before major releases.
 
 #### R12.2) Core Web Vitals budgets (LCP, CLS, INP) `[manual]`
 
@@ -653,7 +653,7 @@ Portfolio images in `public/` should be optimized: prefer WebP/AVIF formats, kee
 
 <!-- manual: no dedicated keyboard-nav e2e spec exists; keyboard accessibility is verified manually via Playwright -->
 
-All interactive elements (links, buttons, form controls, dropdown menus) must be reachable and operable via keyboard alone. Flowbite components provide keyboard support by default — verify any custom components also support Tab, Enter, Escape, and arrow key navigation. Playwright e2e tests should include keyboard-only navigation paths.
+All interactive elements (links, buttons, form controls, dropdown menus) must be reachable and operable via keyboard alone. In-tree primitives use semantic elements and the shared focus ring — verify custom controls also support Tab, Enter, Escape, and arrow key navigation. Playwright e2e tests include keyboard-only navigation paths.
 
 #### R15.2) WCAG 2.2 Level AA is the minimum target `[manual]`
 
@@ -665,7 +665,7 @@ WCAG 2.2 Level AA is the aspirational target. Use semantic HTML, ARIA labels on 
 
 <!-- manual: 44px hit-area target vs density tradeoff is UX-shaped — a CSS grep finds the size, but `density: high` vs `density: low` pages legitimately need different sizes; needs design review -->
 
-Interactive elements should have touch targets of at least 44×44 CSS pixels (WCAG 2.2 minimum). Flowbite components generally meet this. Manual inspection required for custom components — no automated check exists.
+Interactive elements should have touch targets of at least 44×44 CSS pixels (WCAG 2.2 minimum). In-tree controls meet this through `min-h-11` and explicit hit areas. Manual inspection is required for new custom components — no automated check exists.
 
 #### R15.4) Focus indicators are visible on every interactive surface `[manual]`
 
@@ -729,9 +729,9 @@ URLs must be human-readable, shareable, and stable. Blog posts use `/blog/[slug]
 
 #### R15.14) Dark mode parity is required for every page `[manual]`
 
-<!-- manual: no dark-mode visual regression test exists; Flowbite provides dark mode support out of the box -->
+<!-- manual: no alternate-theme visual regression test exists because the site deliberately ships one dark mode -->
 
-If dark mode is enabled (via Flowbite's dark mode support or Tailwind's `dark:` variant), every page must render correctly in both light and dark themes. No content should be invisible or unreadable in either mode. Visual verification is manual — no automated dark-mode screenshot comparison exists.
+The site ships a single dark COLOSSUS mode with `night` and `panel` surfaces. There is no theme toggle, no `html.light` path, and no OS-preference resolver. If an alternate theme is introduced later, every page must render correctly in both themes and a screenshot comparison must be added.
 
 #### R15.15) Image performance and accessibility `[manual]`
 
@@ -785,7 +785,7 @@ Every bug fix must include at least one test (Jest, Storybook, or Playwright) th
 
 #### R16.7) Critical-path suites are first-class `[manual]`
 
-<!-- manual: no `test:critical` script exists; `yarn test` is the canonical test command -->
+<!-- manual: no `test:critical` script exists; `pnpm test` is the canonical test command -->
 
 The canonical test command is `pnpm test` (Jest) and `pnpm e2e:headless` (Playwright). No separate critical-path test suite is defined. For a portfolio site, the critical paths are: homepage renders, blog listing, individual post, contact form submission.
 
@@ -1235,7 +1235,7 @@ A comment that restates what the code already says is noise. `// Increment count
 
 <!-- manual: what vs why is semantic — AST cannot tell if a comment repeats the code, restates intent, or documents a non-obvious constraint; needs review -->
 
-Good comments document intent, non-obvious constraints, and design rationale. Avoid restating what the code already expresses. Good: `// Clamp to viewport — Flowbite's Tooltip escapes on narrow screens`. Bad: `// Set max width`. The "what" is visible in the code; the "why" is what the reader needs.
+Good comments document intent, non-obvious constraints, and design rationale. Avoid restating what the code already expresses. Good: `// Clamp to viewport — the tooltip escapes on narrow screens`. Bad: `// Set max width`. The "what" is visible in the code; the "why" is what the reader needs.
 
 ### Formatting
 
@@ -1335,7 +1335,7 @@ Third-party code has broad applicability, but your system has specific needs. Cl
 
 <!-- manual: wrapper sufficiency depends on architectural intent; AST sees call layers but cannot tell whether third-party concepts still leak through the domain interface -->
 
-Wrap third-party libraries behind your own interfaces. This gives you control over the API surface your application sees, makes testing easier (mock your wrapper, not the library), and isolates your code from breaking changes in dependencies. For this project, the Resend email API is wrapped in a server action, and Flowbite components are used through a consistent component layer.
+Wrap third-party libraries behind your own interfaces. This gives you control over the API surface your application sees, makes testing easier (mock your wrapper, not the library), and isolates your code from breaking changes in dependencies. For this project, the Resend email API is wrapped in a server action, and third-party primitives are used through consistent in-tree components.
 
 #### R33.2) Write learning tests `[manual]`
 

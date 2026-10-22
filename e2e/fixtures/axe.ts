@@ -18,9 +18,8 @@ export type ViolationSummary = {
 }
 
 /**
- * Freeze animations before scanning. The home marquee uses
- * `motion-reduce:animate-none`, so a reduced-motion preference makes the layout
- * deterministic and keeps `color-contrast` node counts stable.
+ * Freeze animations before scanning. A reduced-motion preference makes the
+ * layout deterministic and keeps `color-contrast` node counts stable.
  */
 export async function freezeAnimations(page: Page): Promise<void> {
   await page.emulateMedia({ reducedMotion: "reduce" })

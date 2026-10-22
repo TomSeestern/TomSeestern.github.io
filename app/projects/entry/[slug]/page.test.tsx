@@ -1,6 +1,8 @@
 import { render, screen, within } from "@testing-library/react"
-
+import { TooltipProvider } from "@/components/Providers/TooltipProvider"
+import type { MarkdownEntry } from "@/lib/markdown"
 import { getMarkdownEntry } from "@/lib/markdown"
+import { getAllProjects } from "@/lib/projects"
 import Page from "./page"
 
 jest.mock("react-markdown", () => {
@@ -9,15 +11,17 @@ jest.mock("react-markdown", () => {
   }
 })
 
-// Only the filesystem reader is mocked; `parseFrontmatter` (and its Zod schema)
-// resolves to the real implementation via requireActual. This keeps the test at
-// the integration seam under test — raw frontmatter in, rendered template out.
 jest.mock("@/lib/markdown", () => ({
   ...jest.requireActual("@/lib/markdown"),
   getMarkdownEntry: jest.fn(),
 }))
 
+jest.mock("@/lib/projects", () => ({
+  getAllProjects: jest.fn(),
+}))
+
 const mockGetMarkdownEntry = jest.mocked(getMarkdownEntry)
+const mockGetAllProjects = jest.mocked(getAllProjects)
 
 type MarkdownReaderResult = ReturnType<typeof getMarkdownEntry>
 
@@ -26,17 +30,45 @@ function givenEntry(data: Record<string, unknown>): void {
   mockGetMarkdownEntry.mockReturnValue(fileContent)
 }
 
+function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
+  return {
+    id,
+    title: id,
+    articleDate: new Date("2021-01-01"),
+    articleContent: "",
+    authorImgSrc: "/img/logo.png",
+    authorName: "Tom Segbers",
+    fullArticleLink: `/projects/entry/${id}`,
+    technologies: [],
+    tags: [],
+    featured: false,
+    role: "",
+    outcome: "",
+    heroImage: "",
+    metrics: [],
+    ...overrides,
+  }
+}
+
 describe("[slug] project entry page", () => {
   const params = Promise.resolve({ slug: "example-project" })
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockGetAllProjects.mockReturnValue([
+      makeProject("example-project", { articleDate: new Date("2021-01-01") }),
+      makeProject("older-project", { title: "Older project", articleDate: new Date("2020-01-01") }),
+    ])
   })
 
-  it("renders the hero and labelled metric rows for an enriched entry", async () => {
-    // Given frontmatter carrying the full additive case-study shape
+  it("renders the case-file hero, dossier, and optional evidence", async () => {
+    // Given
     givenEntry({
       title: "Enriched project",
+      articleDate: "2021-06-01",
+      articleContent: "A short case-file lead.",
+      technologies: ["React", "AWS"],
+      tags: ["Payments"],
       role: "Lead Developer",
       outcome: "Shipped to production",
       heroImage: "/img/hero.webp",
@@ -46,36 +78,52 @@ describe("[slug] project entry page", () => {
       ],
     })
 
-    // When the detail page renders
-    render(await Page({ params }))
+    // When
+    render(<TooltipProvider>{await Page({ params })}</TooltipProvider>)
 
-    // Then the hero appears exactly once …
-    expect(screen.getAllByTestId("case-study-hero")).toHaveLength(1)
+    // Then
+    expect(screen.getByRole("heading", { level: 1, name: "Enriched project" })).toBeInTheDocument()
+    expect(screen.getByTestId("case-study-hero")).toBeInTheDocument()
+    expect(screen.getByTestId("project-body")).toHaveTextContent("body")
+    expect(screen.queryByTestId("case-study-meta")).not.toBeInTheDocument()
 
-    // … and the meta section carries the role, outcome, and both metrics.
-    const meta = screen.getByTestId("case-study-meta")
-    expect(within(meta).getByText("Role")).toBeInTheDocument()
-    expect(within(meta).getByText("Lead Developer")).toBeInTheDocument()
-    expect(within(meta).getByText("Outcome")).toBeInTheDocument()
-    expect(within(meta).getByText("Shipped to production")).toBeInTheDocument()
-    expect(within(meta).getByText("Users")).toBeInTheDocument()
-    expect(within(meta).getByText("1200")).toBeInTheDocument()
-    expect(within(meta).getByText("Uptime")).toBeInTheDocument()
-    expect(within(meta).getByText("99.9%")).toBeInTheDocument()
+    const dossier = screen.getByTestId("project-dossier")
+    expect(within(dossier).getByText("2021")).toBeInTheDocument()
+    expect(within(dossier).getByText("React")).toBeInTheDocument()
+    expect(within(dossier).getByText("Payments")).toBeInTheDocument()
+    expect(within(dossier).getByText("Lead Developer")).toBeInTheDocument()
+    expect(within(dossier).getByText("Shipped to production")).toBeInTheDocument()
+    expect(within(dossier).getByText("Users")).toBeInTheDocument()
+    expect(within(dossier).getByText("1200")).toBeInTheDocument()
   })
 
-  it("renders a legacy entry unchanged with no case-study containers", async () => {
-    // Given frontmatter with only the pre-existing fields
-    givenEntry({ title: "Legacy project" })
+  it("renders a legacy entry with no empty hero or meta containers", async () => {
+    // Given
+    givenEntry({ title: "Legacy project", articleDate: "2010-01-01" })
 
-    // When the detail page renders
-    render(await Page({ params }))
+    // When
+    render(<TooltipProvider>{await Page({ params })}</TooltipProvider>)
 
-    // Then no empty hero or meta container is fabricated …
-    expect(screen.queryByTestId("case-study-hero")).toBeNull()
-    expect(screen.queryByTestId("case-study-meta")).toBeNull()
-
-    // … and the original heading still renders.
+    // Then
+    expect(screen.queryByTestId("case-study-hero")).not.toBeInTheDocument()
+    expect(screen.queryByTestId("case-study-meta")).not.toBeInTheDocument()
     expect(screen.getByRole("heading", { level: 1, name: "Legacy project" })).toBeInTheDocument()
+    expect(screen.getByTestId("project-dossier")).toHaveTextContent("2010")
+  })
+
+  it("keeps the breadcrumb current crumb text equal to the H1 and links to the next project", async () => {
+    // Given
+    givenEntry({ title: "Legacy project", articleDate: "2021-01-01" })
+
+    // When
+    render(<TooltipProvider>{await Page({ params })}</TooltipProvider>)
+
+    // Then
+    const breadcrumb = screen.getByRole("navigation", { name: "Breadcrumb" })
+    const currentCrumb = breadcrumb.querySelector('[aria-current="page"]')
+    expect(currentCrumb).toHaveTextContent("Legacy project")
+    expect(screen.getByRole("heading", { level: 2, name: "Next project" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Older project" })).toHaveAttribute("href", "/projects/entry/older-project")
+    expect(screen.getByRole("link", { name: "Back to the archive" })).toHaveAttribute("href", "/projects")
   })
 })

@@ -4,15 +4,12 @@ import * as RadixTooltip from "@radix-ui/react-tooltip"
 import React from "react"
 
 /**
- * Single root Tooltip provider for the whole app.
+ * Route-local tooltip provider.
  *
- * Radix's `Tooltip.Provider` shares open/skip-delay state across every tooltip
- * in the tree. Wrapping the app once (in `app/layout.tsx`) replaces the
- * per-instance provider each `Tooltip` used to mount — the home marquee alone
- * rendered ~168 nested providers, each paying its own context/hydration cost.
- *
- * `delayDuration=200` preserves the previous hover delay; every tooltip now
- * shares one provider instead of one per icon.
+ * Radix's `Tooltip.Provider` shares open/skip-delay state across its subtree.
+ * Only the project dossier uses tooltips, so the provider lives there instead
+ * of in the root layout; pages without dossier tooltips do not pay for the
+ * Radix client bundle.
  */
 export function TooltipProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   return <RadixTooltip.Provider delayDuration={200}>{children}</RadixTooltip.Provider>

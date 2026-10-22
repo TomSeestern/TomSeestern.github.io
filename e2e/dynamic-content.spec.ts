@@ -56,7 +56,7 @@ test("project listing discovers a detail route and breadcrumb returns to project
   await expectNoBrowserErrors(page, async () => {
     // Given
     await page.goto("/projects")
-    // <a> wraps <h3> in ProjectTeaser, not nested inside — use a[href^=...]
+    // The archive title link wraps its heading in MonumentCard — use a[href^=...]
     const projectLinks = page.locator('a[href^="/projects/entry/"]')
     const projectTeasers = page.getByTestId("project-teaser")
 

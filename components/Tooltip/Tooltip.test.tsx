@@ -40,8 +40,8 @@ describe("Tooltip", () => {
     expect(screen.getByRole("button", { name: "Help" })).toBeInTheDocument()
   })
 
-  it("does not mount its own provider — the single root provider owns the context", () => {
-    // Given a single root provider for the whole app
+  it("does not mount its own provider — the route-local provider owns the context", () => {
+    // Given a route-local provider
 
     // When a tooltip renders
     renderInRootProvider(
@@ -50,7 +50,7 @@ describe("Tooltip", () => {
       </Tooltip>
     )
 
-    // Then exactly one provider is mounted (the root), not one per tooltip
+    // Then exactly one provider is mounted (the route wrapper), not one per tooltip
     expect(providerSpy).toHaveBeenCalledTimes(1)
   })
 
@@ -82,6 +82,9 @@ describe("Tooltip", () => {
 
     // Then
     expect(screen.getByRole("tooltip")).toHaveTextContent(explainer)
+    const visibleContent = document.querySelector(".bg-night")
+    expect(visibleContent).toHaveTextContent(explainer)
+    expect(visibleContent).toHaveClass("text-night-ink", "border-gold-ink")
   })
 
   it("reveals explanation when trigger receives keyboard focus", () => {

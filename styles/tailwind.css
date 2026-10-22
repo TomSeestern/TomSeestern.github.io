@@ -4,26 +4,52 @@
 
 @layer base {
   /*
-   * Carved display treatment (T14/D3): H1/H2 use the Newsreader serif display
-   * face, uppercase, with wide tracking. Tracking is `!important` so legacy
-   * `tracking-tight` utilities on page-owned headings (T16/T17 scope) cannot
-   * override the display rhythm — the base layer is the single source here.
-   * T16/T17 replace those utilities with an explicit display utility and this
-   * bridge can then be removed.
+   * Terminal display bridge. Geist Sans carries H1-H3; mono labels are opted
+   * into per component. Keeping this here means a heading cannot silently fall
+   * back to the system stack.
    */
   h1,
-  h2 {
+  h2,
+  h3 {
     font-family: theme("fontFamily.display");
-    text-transform: uppercase;
-    letter-spacing: theme("letterSpacing.display") !important;
+    font-weight: 600;
+    letter-spacing: theme("letterSpacing.display");
+  }
+
+  html {
+    color-scheme: dark;
+    background-color: theme("colors.canvas.DEFAULT");
+  }
+
+  ::selection {
+    background-color: theme("colors.crimson.DEFAULT");
+    color: theme("colors.canvas.DEFAULT");
+  }
+
+  /*
+   * Carets and list markers are browser surfaces too. Left alone they default
+   * to a white caret and grey bullets, which read as unstyled next to the
+   * themed selection and scrollbar.
+   */
+  input,
+  textarea,
+  select {
+    caret-color: theme("colors.crimson.DEFAULT");
+  }
+
+  .prose :where(li)::marker {
+    color: theme("colors.crimson.DEFAULT");
+  }
+
+  html {
+    scrollbar-color: theme("colors.rule.strong") theme("colors.canvas.DEFAULT");
+    scrollbar-width: thin;
   }
 }
 
 /*
- * Reduced motion is absolute (R15.7). When the visitor asks for less motion,
- * nothing on the site transitions or animates. This global guard also covers
- * Flowbite-owned and page-owned `transition-colors` utilities that T15 does not
- * edit, so the whole tree obeys one policy.
+ * Reduced motion is absolute. Nothing on the site transitions or animates when
+ * the visitor asks for less motion, including the retained legacy ticker.
  */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -34,52 +60,126 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  .ticker {
+    animation: none !important;
+  }
 }
 
-/*
- * Motion primitives (T15). Opacity + translateY only, 200–320 ms, one easing
- * curve. The @keyframes live here so they are always emitted; the matching
- * `animate-calm-rise` / `animate-calm-fade` utilities are token-defined in
- * tailwind.config.js. Each utility is wrapped in `no-preference`, so the guard
- * is intrinsic — a primitive can never move under reduced motion.
- */
-@keyframes calm-rise {
+/* ── Terminal surface textures ───────────────────────────────────────────── */
+
+.bg-grid {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.bg-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.hero-glow {
+  background: radial-gradient(circle at 70% 20%, rgba(255, 92, 53, 0.14), transparent 42%),
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.07), transparent 36%);
+}
+
+.scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 3px,
+    rgba(255, 255, 255, 0.035) 3px,
+    rgba(255, 255, 255, 0.035) 4px
+  );
+}
+
+.pixel-grid {
+  background-image: linear-gradient(to right, theme("colors.rule.DEFAULT") 1px, transparent 1px),
+    linear-gradient(to bottom, theme("colors.rule.DEFAULT") 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.dither {
+  background-image: radial-gradient(theme("colors.rule.strong") 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+@media (min-width: 768px) {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Legacy ornament classes are retained for their isolated stories only; no
+ * shipped page uses the arch/meander treatment. */
+.arch-frame {
+  border: 1px solid theme("colors.rule.strong");
+  border-radius: 999px 999px 0 0;
+  overflow: hidden;
+}
+
+.pixel-frame {
+  border: 1px solid theme("colors.rule.strong");
+  box-shadow: 4px 4px 0 0 theme("colors.ink.DEFAULT");
+}
+
+.pixel-frame-sm {
+  border: 1px solid theme("colors.rule.strong");
+  box-shadow: 2px 2px 0 0 theme("colors.ink.DEFAULT");
+}
+
+.meander {
+  background-color: currentColor;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8' viewBox='0 0 16 8'%3E%3Cpath d='M0 7h2V5h2V3h2V1h4v2h2v2h2v2h2' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  mask-repeat: repeat-x;
+  mask-size: 16px 8px;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8' viewBox='0 0 16 8'%3E%3Cpath d='M0 7h2V5h2V3h2V1h4v2h2v2h2v2h2' fill='none' stroke='black' stroke-width='2'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: repeat-x;
+  -webkit-mask-size: 16px 8px;
+}
+
+/* ── Focus ───────────────────────────────────────────────────────────────── */
+
+.focus-ring:focus-visible {
+  outline: 3px solid theme("colors.focus.DEFAULT");
+  outline-offset: 2px;
+}
+
+.focus-ring-inverse:focus-visible {
+  outline: 3px solid theme("colors.focus.inverse");
+  outline-offset: 2px;
+}
+
+.focus-ring-canvas:focus-visible {
+  outline: 3px solid theme("colors.canvas.DEFAULT");
+  outline-offset: 2px;
+}
+
+.focus-ring-accent:focus-visible {
+  outline: 3px solid theme("colors.crimson.DEFAULT");
+  outline-offset: 2px;
+}
+
+/* ── Motion ──────────────────────────────────────────────────────────────── */
+
+@keyframes ticker {
   from {
-    opacity: 0;
-    transform: translateY(0.5rem);
+    transform: translateX(0);
   }
 
   to {
-    opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%);
   }
 }
 
-@keyframes calm-fade {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+.ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker 40s linear infinite;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .motion-rise {
-    animation: calm-rise 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .motion-fade {
-    animation: calm-fade 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-}
-
-/*
- * The single structural motif (T15): a 1px vertical column rule drawn with a
- * plain CSS border — never a pseudo-element, gradient, or shadow. Apply to a
- * column that needs to be separated from the one before it.
- */
-.column-rule {
-  border-inline-start: 1px solid theme("colors.border.DEFAULT");
+.ticker:hover,
+.ticker:focus-within {
+  animation-play-state: paused;
 }

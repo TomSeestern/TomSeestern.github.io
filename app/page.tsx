@@ -1,11 +1,15 @@
-import { Metadata } from "next"
-import Image from "next/image"
-import React from "react"
-import ArticleComponent from "../components/ArticleTeaser/ArticleTeaser"
-import FeaturedSet from "../components/FeaturedSet/FeaturedSet"
-import FounderArc from "../components/FounderArc/FounderArc"
-import { getAllBlogPosts } from "../lib/blog"
-import { getAllProjects, selectFeaturedProjects } from "../lib/projects"
+import type { Metadata } from "next"
+import { ArticleCard } from "@/components/ArticleCard/ArticleCard"
+import { Button } from "@/components/Button/Button"
+import { CapabilityIndex } from "@/components/CapabilityIndex/CapabilityIndex"
+import { HomeHero } from "@/components/HomeHero/HomeHero"
+import { ArrowRight } from "@/components/Icon/ArrowRight"
+import { MonumentCard } from "@/components/MonumentCard/MonumentCard"
+import { Section } from "@/components/Section/Section"
+import { SectionHeading } from "@/components/SectionHeading/SectionHeading"
+import { getAllBlogPosts } from "@/lib/blog"
+import { getAllProjects, selectFeaturedProjects } from "@/lib/projects"
+import { getTopTechnologies } from "@/lib/technologies"
 
 export const metadata: Metadata = {
   title: {
@@ -34,61 +38,107 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Web() {
-  const featuredProjects = selectFeaturedProjects(getAllProjects())
+export default function HomePage() {
+  const projects = getAllProjects()
+  const articles = getAllBlogPosts()
+  const featuredProjects = selectFeaturedProjects(projects)
+  const leadProject = featuredProjects.find((project) => /payment|paymenow/.test(project.id)) ?? featuredProjects[0]
+  const technologies = getTopTechnologies(projects, 8)
+  const latestArticles = articles.slice(0, 3)
+  const [leadArticle, ...secondaryArticles] = latestArticles
 
   return (
     <>
-      <section className="bg-surface">
-        <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 sm:py-20 lg:py-28">
-          <h1 className="max-w-measure-display text-h2-sm leading-none text-foreground sm:text-h1">
-            Tom Segbers — Senior Developer
-          </h1>
-          <p className="mt-6 max-w-measure-lead text-body-lg font-light text-muted sm:text-xl">
-            Building reliable systems and solving hard problems.
+      <HomeHero projectCount={projects.length} dispatchCount={articles.length} leadProject={leadProject} />
+
+      <Section
+        id="selected-work"
+        tone="canvas"
+        labelledBy="selected-work-title"
+        className="scroll-mt-20 py-14 sm:py-16 lg:py-24"
+      >
+        <SectionHeading
+          id="selected-work-title"
+          eyebrow="I / Case files"
+          title="Selected work"
+          lead="Four case files that show the range: payment infrastructure, embedded vision, a marketplace MVP, and a public-service prototype."
+          action={
+            <Button href="/projects" variant="secondary" size="sm">
+              All case files <ArrowRight className="size-4" />
+            </Button>
+          }
+        />
+
+        <div data-testid="home-featured-grid" className="mt-9 grid gap-5 md:grid-cols-2 lg:gap-6">
+          {featuredProjects.map((project, index) => (
+            <MonumentCard key={project.id} project={project} index={index} />
+          ))}
+        </div>
+      </Section>
+
+      <Section tone="canvas-deep" labelledBy="practice-title" className="py-14 sm:py-16 lg:py-24">
+        <SectionHeading
+          id="practice-title"
+          eyebrow="II / Capabilities"
+          title="The practice"
+          lead="I work across the layers that make a product trustworthy: data, interfaces, deployment, and the quiet decisions in between."
+          action={
+            <Button href="/about" variant="ghost" size="sm">
+              About the practice <ArrowRight className="size-4" />
+            </Button>
+          }
+        />
+        <CapabilityIndex technologies={technologies} />
+      </Section>
+
+      <Section tone="canvas" labelledBy="dispatches-title" className="py-14 sm:py-16 lg:py-24">
+        <SectionHeading
+          id="dispatches-title"
+          eyebrow="III / Dispatches"
+          title="Latest dispatches"
+          lead="Notes from the workbench: homelabs, automation, and the occasional recipe."
+          action={
+            <Button href="/blog" variant="secondary" size="sm">
+              All dispatches <ArrowRight className="size-4" />
+            </Button>
+          }
+        />
+        <div data-testid="home-dispatches" className="mt-8 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+          {leadArticle ? (
+            <ArticleCard entry={leadArticle} index={0} variant="feature" className="lg:row-span-2" />
+          ) : null}
+          {secondaryArticles.map((article, index) => (
+            <ArticleCard key={article.id} entry={article} index={index + 1} />
+          ))}
+        </div>
+      </Section>
+
+      <Section tone="night" labelledBy="closing-title" className="py-14 sm:py-16 lg:py-24">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
+          <SectionHeading
+            id="closing-title"
+            eyebrow="IV / Next"
+            title="Let's build something that lasts."
+            lead="If you have a system that needs to be clearer, faster, or more dependable, I would like to hear about it."
+            tone="night"
+            action={
+              <>
+                <Button href="/contact" variant="primary">
+                  Start a conversation
+                </Button>
+                <Button href="/projects" variant="secondary-night">
+                  View the work
+                </Button>
+              </>
+            }
+          />
+          <p className="hidden border-t border-rule pt-4 font-mono text-[10px] uppercase leading-5 tracking-[0.14em] text-ink-muted lg:block">
+            Bring the problem.
+            <br />
+            No pitch deck required.
           </p>
         </div>
-      </section>
-
-      <FeaturedSet projects={featuredProjects} />
-
-      <FounderArc />
-
-      <section className="bg-surface">
-        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
-          <div>
-            <h2 className="mb-4 text-h2-sm text-foreground sm:text-h2">My Recent Blog Posts</h2>
-            <p className="text-body-lg font-light text-muted">
-              These are some of my recent Blog Posts. I write about a variety of topics, including AI, Tech, and more.
-            </p>
-          </div>
-          <div className="mt-8 grid gap-8 md:grid-cols-2">
-            {getAllBlogPosts()
-              .slice(0, 4)
-              .map((article) => (
-                <ArticleComponent
-                  key={article.id}
-                  title={article.title}
-                  articleDate={article.articleDate}
-                  articleContent={article.articleContent}
-                  authorImgSrc={article.authorImgSrc}
-                  authorName={article.authorName}
-                  fullArticleLink={article.fullArticleLink}
-                />
-              ))}
-          </div>
-          <div className="mt-8 flex justify-end">
-            <a
-              href="/blog"
-              title="View all Blog Posts"
-              className="flex items-center rounded text-base font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft"
-            >
-              View all Blog Posts
-              <Image className={"ml-2 h-4 w-4"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
-            </a>
-          </div>
-        </div>
-      </section>
+      </Section>
     </>
   )
 }

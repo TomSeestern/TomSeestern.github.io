@@ -1,5 +1,5 @@
 import { MarkdownEntry } from "./markdown"
-import { FEATURED_PROJECT_COUNT, selectFeaturedProjects } from "./projects"
+import { FEATURED_PROJECT_COUNT, getAllProjects, selectFeaturedProjects } from "./projects"
 
 function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
   return {
@@ -89,5 +89,20 @@ describe("selectFeaturedProjects", () => {
 
     // Then
     expect(selected.map((project) => project.id)).toEqual(["only-one"])
+  })
+
+  it("ships exactly four explicit featured projects from the real content set", () => {
+    // Given — the committed project frontmatter is the source of truth.
+    const projects = getAllProjects()
+    const flagged = projects.filter((project) => project.featured)
+
+    // When
+    const selected = selectFeaturedProjects(projects)
+
+    // Then — the fallback is not doing the selection.
+    expect(flagged).toHaveLength(FEATURED_PROJECT_COUNT)
+    expect(selected).toHaveLength(FEATURED_PROJECT_COUNT)
+    expect(selected.every((project) => project.featured)).toBe(true)
+    expect(new Set(selected.map((project) => project.id)).size).toBe(FEATURED_PROJECT_COUNT)
   })
 })

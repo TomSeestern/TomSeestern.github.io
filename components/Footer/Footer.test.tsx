@@ -2,10 +2,16 @@ import { render, screen } from "@testing-library/react"
 import { Footer } from "./Footer"
 
 describe("Footer", () => {
-  it("renders copyright attribution with the public site link", () => {
-    // Given
+  it("renders the night footer landmark", () => {
+    // Given / When
+    render(<Footer />)
 
-    // When
+    // Then
+    expect(screen.getByTestId("site-footer")).toBeInTheDocument()
+  })
+
+  it("renders copyright attribution with the public site link", () => {
+    // Given / When
     render(<Footer />)
 
     // Then
@@ -14,52 +20,50 @@ describe("Footer", () => {
   })
 
   it("exposes LinkedIn social link with its real destination", () => {
-    // Given
-
-    // When
+    // Given / When
     render(<Footer />)
 
     // Then
-    expect(screen.getByRole("link", { name: /LinkedIn/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "LinkedIn" })).toHaveAttribute(
       "href",
       "https://linkedin.com/in/tomsegbers/"
     )
   })
 
   it("exposes Twitter social link with its real destination", () => {
-    // Given
-
-    // When
+    // Given / When
     render(<Footer />)
 
     // Then
-    expect(screen.getByRole("link", { name: /Twitter/ })).toHaveAttribute("href", "https://twitter.com/TomSegbers")
+    expect(screen.getByRole("link", { name: "Twitter" })).toHaveAttribute("href", "https://twitter.com/TomSegbers")
   })
 
   it("exposes GitHub social link with its real destination", () => {
-    // Given
-
-    // When
+    // Given / When
     render(<Footer />)
 
     // Then
-    expect(screen.getByRole("link", { name: /GitHub/ })).toHaveAttribute("href", "https://www.github.com/TomSegbers/")
+    expect(screen.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", "https://www.github.com/TomSegbers/")
   })
 
   it("exposes Email contact link with its real destination", () => {
-    // Given
-
-    // When
+    // Given / When
     render(<Footer />)
 
     // Then
-    expect(screen.getByRole("link", { name: /Email/ })).toHaveAttribute("href", "/contact")
+    expect(screen.getByRole("link", { name: "Email" })).toHaveAttribute("href", "/contact")
+  })
+
+  it("states the no-cookie, no-tracking policy", () => {
+    // Given / When
+    render(<Footer />)
+
+    // Then
+    expect(screen.getByText("No cookies. No tracking.")).toBeInTheDocument()
   })
 
   it("does not regress social accessible names to obsolete labels", () => {
-    // Given
-
-    // When
+    // Given / When
     render(<Footer />)
 
     // Then

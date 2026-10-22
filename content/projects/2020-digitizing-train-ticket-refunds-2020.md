@@ -6,6 +6,7 @@ articleContent: |-
   I built Refund Hero as a full-stack prototype for identifying eligible Deutsche Bahn delay refunds and preparing reimbursement requests. I stopped the project when DB announced a parallel initiative.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
+featured: true
 tags:
   - Digital Transformation
   - Startup Projects

@@ -7,6 +7,9 @@ import {env} from "./env.mjs"
  */
 const config = withPlugins([[withBundleAnalyzer({enabled: env.ANALYZE})]], {
     reactStrictMode: true,
+    // The dev indicator is useful while coding but leaks into the README
+    // screenshot workflow, which boots a dev server to capture showcase art.
+    devIndicators: false,
     rewrites() {
         return [
             {source: "/healthz", destination: "/api/health"},
@@ -40,16 +43,9 @@ const config = withPlugins([[withBundleAnalyzer({enabled: env.ANALYZE})]], {
         // Optimized derivatives are content-addressed and never change, so cache
         // them at the edge for 31 days instead of Next's 60s default.
         minimumCacheTTL: 2678400,
-        // The corpus's only remote image (the cheesecake recipe photo) is
-        // self-hosted at public/img/cheesecake-ebeltoft.webp, so no
-        // plantoeat.s3.amazonaws.com pattern is needed: react-markdown emits a
-        // plain <img> that next/image never optimizes, and self-hosting keeps
-        // the CSP img-src 'self' policy un-widened. The entries below exist for
-        // Storybook/Flowbite placeholder assets only.
-        remotePatterns: [
-            {protocol: "https", hostname: "flowbite.s3.amazonaws.com"},
-            {protocol: "https", hostname: "placehold.co"},
-        ],
+        // Every content image is self-hosted under public/img. Keeping the
+        // remote allowlist empty preserves the CSP img-src 'self' posture.
+        remotePatterns: [],
     },
 })
 

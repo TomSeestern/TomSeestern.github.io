@@ -12,29 +12,66 @@
 /** Exact user-visible copy asserted by the e2e suite. */
 export const COPY = {
   home: {
-    h1: "Tom Segbers — Senior Developer",
-    positioning: "Building reliable systems and solving hard problems.",
-    featuredH2: "Selected Work",
-    founderArcH2: "Background",
-    recentBlogH2: "My Recent Blog Posts",
-    logoAlt: "Tom Segbers Logo",
+    h1: "Systems that hold.",
+    positioning:
+      "I'm Tom Segbers. I build payment infrastructure, embedded vision, and product systems whose interfaces explain themselves.",
+    featuredH2: "Selected work",
+    practiceH2: "The practice",
+    recentBlogH2: "Latest dispatches",
+    closing: "Let's build something that lasts.",
   },
   about: {
     h1: "About me",
-    formalPositionsH2: "Formal Positions:",
+    eyebrow: "Profile",
+    formalPositionsH2: "Formal positions",
+    toolsH2: "Tools of the trade",
+    examplesH2: "Illustrative examples",
+    closing: "Let's build something that lasts.",
   },
   contact: {
-    h1: "Get in Touch",
+    h1: "Get in touch",
+    eyebrow: "Correspondence",
     submitButton: "Send Message",
     successMessage: "Success! Email sent successfully.",
   },
   notFound: {
     h1: "404",
+    h2: "Page not found",
   },
   projects: {
-    h1: "Showcasing My Journey in Technology and Innovation",
-    archiveH2: "All projects",
+    h1: "The work",
+    eyebrow: "Archive",
+    browseBySubject: "Browse by subject",
+    archiveH2: "The archive",
+    closingH2: "Have a project in mind?",
+    closingCta: "Start a conversation",
     selectedBadge: "Selected",
+  },
+  projectDetail: {
+    caseFileEyebrow: "CASE FILE",
+    stackLabel: "Stack",
+    subjectsLabel: "Subjects",
+    nextProject: "Next project",
+    backToArchive: "Back to the archive",
+  },
+  blog: {
+    h1: "Blog",
+    eyebrow: "Journal",
+    latestEntries: "Latest entries",
+  },
+  blogDetail: {
+    dispatchEyebrow: "DISPATCH",
+    moreDispatches: "More dispatches",
+  },
+  tags: {
+    h1: "Tags",
+    eyebrow: "Index",
+    archiveEyebrow: "Filed under",
+  },
+  microcopy: {
+    readMore: "Read dispatch",
+    learnMore: "View case file",
+    allBlogPosts: "All dispatches",
   },
 } as const
 
@@ -45,15 +82,21 @@ export const BLOG_POST_COUNT = 3
 export const MIN_PROJECT_COUNT = 21
 
 /**
- * Curated "monument" projects the home featured set renders (T16). Mirrors
+ * Curated "monument" projects the home featured set renders. Mirrors
  * `FEATURED_PROJECT_COUNT` in `lib/projects.tsx`; the e2e spec asserts the
  * rendered link count matches this.
  */
 export const FEATURED_PROJECT_COUNT = 4
 
 /**
- * Upper bound for `document.querySelectorAll("*").length` on `/`. The retired
- * marquee rendered 42 cards (~2× the whole site's node budget); this floor keeps
- * the home page from regressing back to a node-bloated layout.
+ * Upper bound for `document.querySelectorAll("*").length` on `/`. The
+ * terminal rebuild adds one hero window, a status line, and a four-row
+ * capability ledger while removing the portrait, ticker, lead-card variant,
+ * and article sigils. The Playwright dev server injects its own
+ * script/title/meta nodes; this bound is measured against that dev surface with
+ * modest headroom, not the old 1800 ceiling that let the retired marquee
+ * through. The v4 status bar and ledger use grid placement instead of per-cell
+ * wrapper divs: measured 608 locally after that trim (CI dev surface ran 656
+ * with the wrappers, so the trim keeps the ceiling valid rather than raising it).
  */
-export const MAX_HOME_DOM_NODES = 1500
+export const MAX_HOME_DOM_NODES = 650

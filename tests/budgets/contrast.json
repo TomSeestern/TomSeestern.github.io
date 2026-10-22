@@ -1,177 +1,261 @@
 {
-  "description": "Shipping token pairs for the single light parchment palette. Each entry is a real foreground/background combination the UI renders — not the palette in the abstract. Contrast is computed by scripts/check-contrast.mjs; text pairs need >=4.5:1 (WCAG 2.2 AA), ui/non-text pairs need >=3:1 (WCAG 1.4.11). Tokens live in tailwind.config.js and are documented in DESIGN.md §2.",
+  "description": "Shipping token pairs for the single dark COLOSSUS palette. Each entry is a real foreground/background combination the UI renders — not the palette in the abstract. Contrast is computed by scripts/check-contrast.mjs; text pairs need >=4.5:1 (WCAG 2.2 AA), ui/non-text pairs need >=3:1 (WCAG 1.4.11). Tokens live in tailwind.config.js and are documented in DESIGN.md §2.",
   "minimums": {
     "text": 4.5,
     "ui": 3
   },
   "pairs": [
     {
-      "name": "body ink on surface",
+      "name": "body ink on canvas",
       "kind": "text",
-      "foreground": "#1B1B1F",
-      "background": "#F5EFE1",
-      "usage": "foreground on surface — body copy, headings"
+      "foreground": "#FAFAFA",
+      "background": "#050505",
+      "usage": "ink on canvas — body copy, headings"
     },
     {
-      "name": "body ink on surface-muted",
+      "name": "body ink on canvas-deep",
       "kind": "text",
-      "foreground": "#1B1B1F",
-      "background": "#EDE4D1",
-      "usage": "foreground on surface-muted — text over muted section/hover surfaces"
+      "foreground": "#FAFAFA",
+      "background": "#0A0A0A",
+      "usage": "ink on canvas-deep — text over recessed bands"
     },
     {
-      "name": "muted on surface",
+      "name": "body ink on panel",
       "kind": "text",
-      "foreground": "#5C5548",
-      "background": "#F5EFE1",
-      "usage": "muted on surface — supporting text, metadata"
+      "foreground": "#FAFAFA",
+      "background": "#0F0F0F",
+      "usage": "ink on panel — card/form text"
     },
     {
-      "name": "muted on surface-muted",
+      "name": "body ink on night",
       "kind": "text",
-      "foreground": "#5C5548",
-      "background": "#EDE4D1",
-      "usage": "muted on surface-muted — supporting text on muted surfaces"
+      "foreground": "#FAFAFA",
+      "background": "#000000",
+      "usage": "ink on night — closing bands"
     },
     {
-      "name": "muted on muted-block",
+      "name": "body ink on night-soft",
       "kind": "text",
-      "foreground": "#5C5548",
-      "background": "#E9DFC9",
-      "usage": "muted on muted-surface — supporting text on inset blocks (/about)"
+      "foreground": "#FAFAFA",
+      "background": "#141414",
+      "usage": "ink on night-soft — raised dark panels"
     },
     {
-      "name": "accent link on surface",
+      "name": "muted on canvas",
       "kind": "text",
-      "foreground": "#A63D28",
-      "background": "#F5EFE1",
-      "usage": "accent on surface — links, accent-as-text"
+      "foreground": "#A1A1AA",
+      "background": "#050505",
+      "usage": "ink-muted on canvas — supporting text"
     },
     {
-      "name": "accent link on surface-muted",
+      "name": "muted on canvas-deep",
       "kind": "text",
-      "foreground": "#A63D28",
-      "background": "#EDE4D1",
-      "usage": "accent on surface-muted — links over muted surfaces"
+      "foreground": "#A1A1AA",
+      "background": "#0A0A0A",
+      "usage": "ink-muted on canvas-deep — supporting text on recessed bands"
     },
     {
-      "name": "accent hover link on surface",
+      "name": "muted on panel",
       "kind": "text",
-      "foreground": "#7F2E1E",
-      "background": "#F5EFE1",
-      "usage": "accent-hover on surface — link hover state"
+      "foreground": "#A1A1AA",
+      "background": "#0F0F0F",
+      "usage": "ink-muted on panel — supporting text"
     },
     {
-      "name": "wine link on surface",
+      "name": "muted on night",
       "kind": "text",
-      "foreground": "#5E2130",
-      "background": "#F5EFE1",
-      "usage": "accent-secondary (oxblood) on surface — second accent as text"
+      "foreground": "#A1A1AA",
+      "background": "#000000",
+      "usage": "ink-muted on night — supporting text"
     },
     {
-      "name": "wine link on surface-muted",
+      "name": "muted on night-soft",
       "kind": "text",
-      "foreground": "#5E2130",
-      "background": "#EDE4D1",
-      "usage": "accent-secondary on surface-muted — second accent as text over muted surfaces"
+      "foreground": "#A1A1AA",
+      "background": "#141414",
+      "usage": "ink-muted on night-soft — supporting text"
     },
     {
-      "name": "cta white on accent",
+      "name": "crimson link on canvas",
       "kind": "text",
-      "foreground": "#FFFFFF",
-      "background": "#A63D28",
-      "usage": "button label on accent background — solid CTA"
+      "foreground": "#FF5C35",
+      "background": "#050505",
+      "usage": "crimson on canvas — links/accents"
     },
     {
-      "name": "cta white on accent-hover",
+      "name": "crimson link on canvas-deep",
       "kind": "text",
-      "foreground": "#FFFFFF",
-      "background": "#7F2E1E",
-      "usage": "button label on accent-hover background — CTA hover"
+      "foreground": "#FF5C35",
+      "background": "#0A0A0A",
+      "usage": "crimson on canvas-deep — links/accents"
     },
     {
-      "name": "cta white on soft-foreground hover",
+      "name": "crimson link on panel",
       "kind": "text",
-      "foreground": "#FFFFFF",
-      "background": "#1F0F0A",
-      "usage": "button label on accent-soft-foreground — CTA hover (Home/Header)"
+      "foreground": "#FF5C35",
+      "background": "#0F0F0F",
+      "usage": "crimson on panel — links/accents"
     },
     {
-      "name": "badge label on accent-soft",
+      "name": "crimson link on night",
       "kind": "text",
-      "foreground": "#1F0F0A",
-      "background": "#BE6A50",
-      "usage": "accent-soft-foreground on accent-soft — badge chip (/about, teasers)"
+      "foreground": "#FF5C35",
+      "background": "#000000",
+      "usage": "crimson on night — links/accents"
     },
     {
-      "name": "button primary warm-white on accent",
+      "name": "crimson link on night-soft",
       "kind": "text",
-      "foreground": "#F2ECE0",
-      "background": "#A63D28",
-      "usage": "Button primary label (foreground-dark) on accent-light"
+      "foreground": "#FF5C35",
+      "background": "#141414",
+      "usage": "crimson on night-soft — links/accents"
     },
     {
-      "name": "button secondary accent on surface",
+      "name": "night ink on night",
       "kind": "text",
-      "foreground": "#A63D28",
-      "background": "#F5EFE1",
-      "usage": "Button secondary label (accent-light) on transparent/surface"
+      "foreground": "#FAFAFA",
+      "background": "#000000",
+      "usage": "night-ink on night — footer/CTA"
     },
     {
-      "name": "wine cta white on wine",
+      "name": "night ink on night-soft",
       "kind": "text",
-      "foreground": "#FFFFFF",
-      "background": "#5E2130",
-      "usage": "button label on accent-secondary background"
+      "foreground": "#FAFAFA",
+      "background": "#141414",
+      "usage": "night-ink on night-soft — raised night panels"
     },
     {
-      "name": "focus ring accent-soft on surface",
+      "name": "night muted on night",
+      "kind": "text",
+      "foreground": "#A1A1AA",
+      "background": "#000000",
+      "usage": "night-muted on night — supporting text"
+    },
+    {
+      "name": "night muted on night-soft",
+      "kind": "text",
+      "foreground": "#A1A1AA",
+      "background": "#141414",
+      "usage": "night-muted on night-soft — supporting text"
+    },
+    {
+      "name": "gold ink on night",
+      "kind": "text",
+      "foreground": "#FAFAFA",
+      "background": "#000000",
+      "usage": "gold-ink on night — eyebrow text"
+    },
+    {
+      "name": "gold ink on night-soft",
+      "kind": "text",
+      "foreground": "#FAFAFA",
+      "background": "#141414",
+      "usage": "gold-ink on night-soft — eyebrow text"
+    },
+    {
+      "name": "canvas on crimson",
+      "kind": "text",
+      "foreground": "#050505",
+      "background": "#FF5C35",
+      "usage": "canvas label on crimson — skip link/accent surface"
+    },
+    {
+      "name": "canvas on gold button",
+      "kind": "text",
+      "foreground": "#050505",
+      "background": "#F5F5F5",
+      "usage": "canvas label on gold — light pixel button"
+    },
+    {
+      "name": "danger on canvas",
+      "kind": "text",
+      "foreground": "#FF6B6B",
+      "background": "#050505",
+      "usage": "danger on canvas — form error text"
+    },
+    {
+      "name": "danger on canvas-deep",
+      "kind": "text",
+      "foreground": "#FF6B6B",
+      "background": "#0A0A0A",
+      "usage": "danger on canvas-deep — form error text"
+    },
+    {
+      "name": "danger on panel",
+      "kind": "text",
+      "foreground": "#FF6B6B",
+      "background": "#0F0F0F",
+      "usage": "danger on panel — form error text"
+    },
+    {
+      "name": "danger on danger-surface",
+      "kind": "text",
+      "foreground": "#FF6B6B",
+      "background": "#2A0F0F",
+      "usage": "danger on danger-surface — error alert"
+    },
+    {
+      "name": "focus ring on canvas",
       "kind": "ui",
-      "foreground": "#BE6A50",
-      "background": "#F5EFE1",
-      "usage": "ring-accent-soft focus ring on surface"
+      "foreground": "#FAFAFA",
+      "background": "#050505",
+      "usage": "focus outline on canvas"
     },
     {
-      "name": "focus ring accent-soft on surface-muted",
+      "name": "focus ring on canvas-deep",
       "kind": "ui",
-      "foreground": "#BE6A50",
-      "background": "#EDE4D1",
-      "usage": "ring-accent-soft focus ring on muted surfaces"
+      "foreground": "#FAFAFA",
+      "background": "#0A0A0A",
+      "usage": "focus outline on canvas-deep"
     },
     {
-      "name": "accent border on surface",
+      "name": "focus ring on panel",
       "kind": "ui",
-      "foreground": "#A63D28",
-      "background": "#F5EFE1",
-      "usage": "accent border/ring on surface"
+      "foreground": "#FAFAFA",
+      "background": "#0F0F0F",
+      "usage": "focus outline on panel"
     },
     {
-      "name": "accent border on surface-muted",
+      "name": "inverse focus ring on night",
       "kind": "ui",
-      "foreground": "#A63D28",
-      "background": "#EDE4D1",
-      "usage": "accent border/ring on muted surfaces"
+      "foreground": "#FAFAFA",
+      "background": "#000000",
+      "usage": "focus-inverse outline on night"
     },
     {
-      "name": "input focus border accent-dark on surface-muted",
+      "name": "inverse focus ring on night-soft",
       "kind": "ui",
-      "foreground": "#B45036",
-      "background": "#EDE4D1",
-      "usage": "focus-visible:border-accent-dark on contact form inputs"
+      "foreground": "#FAFAFA",
+      "background": "#141414",
+      "usage": "focus-inverse outline on night-soft"
     },
     {
-      "name": "wine border on surface",
+      "name": "accent focus ring on canvas",
       "kind": "ui",
-      "foreground": "#5E2130",
-      "background": "#F5EFE1",
-      "usage": "accent-secondary border/ring on surface"
+      "foreground": "#FF5C35",
+      "background": "#050505",
+      "usage": "accent focus outline around light buttons on canvas"
     },
     {
-      "name": "soft-foreground ring on surface",
+      "name": "accent focus ring on panel",
       "kind": "ui",
-      "foreground": "#1F0F0A",
-      "background": "#F5EFE1",
-      "usage": "ring-accent-soft-foreground focus ring on surface"
+      "foreground": "#FF5C35",
+      "background": "#0F0F0F",
+      "usage": "accent focus outline around light buttons on panel"
+    },
+    {
+      "name": "canvas focus ring on crimson",
+      "kind": "ui",
+      "foreground": "#050505",
+      "background": "#FF5C35",
+      "usage": "focus outline on crimson skip link"
+    },
+    {
+      "name": "verdigris status dot on canvas",
+      "kind": "ui",
+      "foreground": "#4ADE80",
+      "background": "#050505",
+      "usage": "verdigris status indicator"
     }
   ]
 }

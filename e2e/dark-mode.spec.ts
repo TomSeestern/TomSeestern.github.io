@@ -5,77 +5,59 @@ import type { A11yScheme } from "./fixtures/a11y-known-violations"
 import { freezeAnimations, scanSeriousViolations, waitForStableRender } from "./fixtures/axe"
 
 /**
- * Single light mode (decision D13).
+ * Single dark mode (decision D13, revised for the terminal rebuild).
  *
- * The site ships one light theme: no toggle, no persisted theme preference, and
- * no inline resolver. This spec replaces the former light/dark coverage — it
- * asserts every public route renders the light surface, no theme control is
- * rendered, and the resolved mode does not depend on the OS
- * `prefers-color-scheme`. The filename is retained to avoid churn.
+ * The site ships one dark theme: no toggle, no persisted theme preference, and
+ * no inline resolver. This spec asserts every public route renders the dark
+ * canvas, no theme control is rendered, and the resolved mode does not depend
+ * on the OS `prefers-color-scheme`. The filename is retained to avoid churn.
  */
 
-// tailwind.config.js `surface.DEFAULT` (#F5EFE1). Measured from the production
-// build's computed `body` background-color after the T13 token remap.
-const lightSurface = "rgb(245, 239, 225)"
-const transparentPng = Buffer.from(
-  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL6zAAAAABJRU5ErkJggg==",
-  "base64"
-)
+// The single dark mode uses the COLOSSUS canvas token (`#050505`).
+const darkSurface = "rgb(5, 5, 5)"
 
-async function interceptUnavailablePlaceholderImage(page: Page): Promise<void> {
-  await page.route(/\/_next\/image\?.*placehold\.co/, (route) =>
-    route.fulfill({ body: transparentPng, contentType: "image/png" })
-  )
-}
-
-async function expectLightSurface(page: Page, route: string): Promise<void> {
+async function expectDarkSurface(page: Page, route: string): Promise<void> {
   await page.goto(route)
 
-  // Exactly one mode: never the dark class, always the light surface.
-  await expect(page.locator("html")).not.toHaveClass(/dark/)
-  await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+  // Exactly one mode: never a light class, always the dark canvas surface.
+  await expect(page.locator("html")).not.toHaveClass(/light/)
+  await expect(page.locator("body")).toHaveCSS("background-color", darkSurface)
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
 }
 
-test("public routes render a single light semantic surface", async ({ page }) => {
+test("public routes render a single dark semantic surface", async ({ page }) => {
   const browserErrors: string[] = []
   page.on("console", (message) => {
     if (message.type() === "error") {
       browserErrors.push(message.text())
     }
   })
-  await interceptUnavailablePlaceholderImage(page)
-
   // When / Then
-  await expectLightSurface(page, "/")
-  await expectLightSurface(page, "/about")
-  await expectLightSurface(page, "/blog")
+  await expectDarkSurface(page, "/")
+  await expectDarkSurface(page, "/about")
+  await expectDarkSurface(page, "/blog")
   const blogDetailUrl = await page.locator('h3 a[href^="/blog/entry/"]').first().getAttribute("href")
-  await expectLightSurface(page, blogDetailUrl ?? "")
-  await expectLightSurface(page, "/projects")
+  await expectDarkSurface(page, blogDetailUrl ?? "")
+  await expectDarkSurface(page, "/projects")
   const projectDetailUrl = await page.locator('a[href^="/projects/entry/"]').first().getAttribute("href")
-  await expectLightSurface(page, projectDetailUrl ?? "")
-  await expectLightSurface(page, "/contact")
+  await expectDarkSurface(page, projectDetailUrl ?? "")
+  await expectDarkSurface(page, "/contact")
 
   // Then
-  const relevantErrors = browserErrors.filter(
-    (err) =>
-      !err.includes("placehold.co") && !err.includes("Image corrupt") && !err.includes("Failed to fetch RSC payload")
-  )
-  expect(relevantErrors).toEqual([])
+  expect(browserErrors).toEqual([])
 })
 
 test("ships no theme toggle and resolves a single mode regardless of system preference", async ({ page }) => {
-  // Given — the OS prefers dark; a single-mode app must ignore it.
-  await page.emulateMedia({ colorScheme: "dark" })
+  // Given — the OS prefers light; a single-mode app must ignore it.
+  await page.emulateMedia({ colorScheme: "light" })
   await page.goto("/")
 
-  // Then — no toggle control is rendered.
+  // Then — no theme control is rendered.
   await expect(page.locator('[data-testid="dark-theme-toggle"]')).toHaveCount(0)
 
-  // Then — the one resolved mode is light, regardless of the OS preference.
-  await expect(page.locator("html")).not.toHaveClass(/dark/)
-  await expect(page.locator("body")).toHaveCSS("background-color", lightSurface)
+  // Then — the one resolved mode is dark, regardless of the OS preference.
+  await expect(page.locator("html")).not.toHaveClass(/light/)
+  await expect(page.locator("body")).toHaveCSS("background-color", darkSurface)
 
   // Then — no resolver script is served and no theme preference is persisted.
   const servedHtml = await page.content()
@@ -86,9 +68,9 @@ test("ships no theme toggle and resolves a single mode regardless of system pref
 
 /**
  * Colour schemes under contrast audit. Kept in sync with `SCHEMES` in
- * `e2e/a11y.spec.ts`; D13 left a single light mode.
+ * `e2e/a11y.spec.ts`; D13 now leaves a single dark mode.
  */
-const CONTRAST_SCHEMES = ["light"] as const satisfies readonly A11yScheme[]
+const CONTRAST_SCHEMES = ["dark"] as const satisfies readonly A11yScheme[]
 
 /**
  * Routes with no known contrast debt. The full public-route scan and the
@@ -108,7 +90,7 @@ test.describe("contrast per scheme (axe color-contrast)", () => {
       test(`${scheme} ${route} has no serious or critical contrast violations`, async ({ page }) => {
         test.setTimeout(90_000)
 
-        // Given — freeze the marquee before first paint.
+        // Given — freeze motion before first paint.
         await freezeAnimations(page)
 
         // When

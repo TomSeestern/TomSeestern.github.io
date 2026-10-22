@@ -29,6 +29,9 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+# direnv cache (flake dev shell)
+.direnv/
 /test-results/
 /playwright-report/
 /playwright/.cache/

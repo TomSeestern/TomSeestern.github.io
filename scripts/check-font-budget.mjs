@@ -1,17 +1,20 @@
 #!/usr/bin/env node
 /**
- * Font budget gate for the carved two-font treatment (T14/D3).
+ * Font budget gate for the COLOSSUS two-family treatment.
  *
  * Zero dependencies. After `pnpm build` it reads what Next actually emitted:
  *   - font families from the `@font-face` rules in `.next/static/css/*.css`
  *   - per-file bytes from `.next/static/media/*.woff2`
- *   - the first-load payload from `<link rel="preload" as="font">` in the
+ *   - the critical preload payload from `<link rel="preload" as="font">` in the
  *     prerendered HTML (Next also marks those files with a `.p.woff2` suffix,
  *     used as a cross-check).
  *
- * Budget: at most 2 families; first-load woff2 <= 100 KiB total, Newsreader
- * portion <= 60 KiB. `next/font/google` emits every unicode-range subset Google
- * serves (cyrillic, greek, latin-ext, ...) but an English page only ever
+ * Budget: exactly 2 families, Geist (interface/display) and Geist Mono
+ * (labels/pixel artifacts); critical preload woff2 <= 100 KiB total. Geist is
+ * preloaded because it paints the LCP heading; Geist Mono is deferred because
+ * it carries labels and terminal metadata below the LCP path.
+ * `next/font/google` emits every unicode-range subset
+ * Google serves (cyrillic, greek, latin-ext, ...) but an English page only ever
  * downloads the preloaded latin subset, so that is the number gated here. The
  * all-subset total is printed for visibility, not asserted.
  *
@@ -30,8 +33,9 @@ const HTML_ROOT = join(NEXT_DIR, "server")
 const KIB = 1024
 const MAX_FAMILIES = 2
 const TOTAL_BUDGET = 100 * KIB
-const NEWSREADER_BUDGET = 60 * KIB
-const NEWSREADER = /newsreader/i
+const EXPECTED_FAMILIES = ["Geist", "Geist Mono"]
+const DISPLAY = /^Geist$/i
+const PIXEL = /^Geist Mono$/i
 
 function walk(dir, matches) {
   const out = []
@@ -59,7 +63,10 @@ function readFamilies() {
     const css = readFileSync(cssFile, "utf8")
     for (const block of css.matchAll(/@font-face\{([^}]*)\}/g)) {
       const body = block[1]
-      const family = /font-family:([^;]+)/.exec(body)?.[1]?.trim()
+      const family = /font-family:([^;]+)/
+        .exec(body)?.[1]
+        ?.trim()
+        .replace(/^["']|["']$/g, "")
       const url = /src:url\(([^)]+)\)/.exec(body)?.[1]?.trim()
       if (!family || !url || /fallback$/i.test(family)) continue
       families.add(family)
@@ -69,7 +76,7 @@ function readFamilies() {
   return { familyByFile, families: [...families].sort() }
 }
 
-/** First-load font files: HTML preload links, falling back to Next's `.p.woff2` marker. */
+/** Critical-preload font files: HTML preload links, falling back to Next's `.p.woff2` marker. */
 function readPreloaded() {
   requireDir(MEDIA_DIR)
   const fromHtml = new Set()
@@ -105,20 +112,29 @@ function main() {
   if (families.length > MAX_FAMILIES) {
     failures.push(`${families.length} font families in use (${families.join(", ")}); budget is ${MAX_FAMILIES}`)
   }
-  if (!families.some((family) => NEWSREADER.test(family))) {
-    failures.push("Newsreader display face is not present in the built CSS")
+  if (!families.some((family) => DISPLAY.test(family))) {
+    failures.push("Geist interface face is not present in the built CSS")
+  }
+  if (!families.some((family) => PIXEL.test(family))) {
+    failures.push("Geist Mono label/pixel face is not present in the built CSS")
+  }
+  for (const expected of EXPECTED_FAMILIES) {
+    if (!families.includes(expected)) failures.push(`expected font family ${expected} is missing from the built CSS`)
   }
   for (const family of families) {
-    if (!shippedFamilies.has(family)) failures.push(`family ${family} has no preloaded woff2 (preload the LCP face)`)
+    if (!EXPECTED_FAMILIES.includes(family))
+      failures.push(`unexpected font family ${family}; budget is ${EXPECTED_FAMILIES.join(", ")}`)
+  }
+  if (!shippedFamilies.has("Geist")) {
+    failures.push("Geist (the LCP face) has no preloaded woff2")
   }
 
   const total = shipped.reduce((sum, row) => sum + row.bytes, 0)
-  const newsreader = shipped.filter((row) => NEWSREADER.test(row.family))
-  const newsreaderTotal = newsreader.reduce((sum, row) => sum + row.bytes, 0)
-  if (total > TOTAL_BUDGET) failures.push(`first-load woff2 ${kib(total)} exceeds ${kib(TOTAL_BUDGET)}`)
-  if (newsreaderTotal > NEWSREADER_BUDGET) {
-    failures.push(`Newsreader woff2 ${kib(newsreaderTotal)} exceeds ${kib(NEWSREADER_BUDGET)}`)
-  }
+  const displayTotal = shipped.filter((row) => DISPLAY.test(row.family)).reduce((sum, row) => sum + row.bytes, 0)
+  const pixelTotal = allEmitted
+    .filter((file) => PIXEL.test(familyByFile.get(file) ?? ""))
+    .reduce((sum, file) => sum + statSync(join(MEDIA_DIR, file)).size, 0)
+  if (total > TOTAL_BUDGET) failures.push(`critical preload woff2 ${kib(total)} exceeds ${kib(TOTAL_BUDGET)}`)
 
   const nameWidth = Math.max(6, ...shipped.map((row) => row.family.length))
   const fileWidth = Math.max(4, ...shipped.map((row) => row.file.length))
@@ -132,8 +148,9 @@ function main() {
 
   const allTotal = allEmitted.reduce((sum, file) => sum + statSync(join(MEDIA_DIR, file)).size, 0)
   console.log("-".repeat(nameWidth + fileWidth + 13))
-  console.log(`First-load woff2: ${kib(total)} / ${kib(TOTAL_BUDGET)} budget`)
-  console.log(`  Newsreader:     ${kib(newsreaderTotal)} / ${kib(NEWSREADER_BUDGET)} budget`)
+  console.log(`Critical preload woff2: ${kib(total)} / ${kib(TOTAL_BUDGET)} budget`)
+  console.log(`  Geist:        ${kib(displayTotal)} (interface/display)`)
+  console.log(`  Geist Mono:   ${kib(pixelTotal)} emitted, deferred (labels/pixel)`)
   console.log(
     `All emitted woff2 (every unicode-range subset, not all downloaded): ${kib(allTotal)} across ${
       allEmitted.length
@@ -146,7 +163,7 @@ function main() {
     process.exit(1)
   }
 
-  console.log(`\nFONT BUDGET GATE PASSED — ${families.length} families, first-load ${kib(total)}.`)
+  console.log(`\nFONT BUDGET GATE PASSED — ${families.length} families, critical preload ${kib(total)}.`)
 }
 
 main()

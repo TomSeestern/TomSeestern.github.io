@@ -17,18 +17,20 @@ export default function PersonTeaser({
   return (
     <a
       href={companyLink}
-      className="flex items-center gap-3 rounded-lg transition-colors duration-200 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft dark:hover:bg-muted-surface-dark dark:focus-visible:ring-accent-soft-dark"
+      className="focus-ring flex items-center gap-3 rounded-md border border-rule bg-canvas p-3 transition-colors duration-150 hover:border-rule-strong"
     >
       <Image
-        className="h-12 w-12 shrink-0 rounded-full object-cover"
+        data-testid="company-logo"
+        className="size-10 shrink-0 rounded-sm border border-rule-strong bg-panel object-contain p-1"
         src={companyLogoSrc}
         alt=""
         width={48}
         height={48}
+        unoptimized
       />
-      <div>
-        <p className="text-lg font-medium leading-tight text-foreground dark:text-foreground-dark">{companyName}</p>
-        <p className="text-sm font-normal text-muted dark:text-muted-dark">{companyDescription}</p>
+      <div className="min-w-0">
+        <p className="font-body text-sm font-medium leading-tight text-ink">{companyName}</p>
+        <p className="mt-1 font-body text-xs text-ink-muted">{companyDescription}</p>
       </div>
     </a>
   )

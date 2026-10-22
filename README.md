@@ -11,6 +11,10 @@ static site generation (SSG) on the Node/Vercel runtime.
 > Forgejo instance ([TomSegbers/tomsegbers-de](http://192.168.7.69:3002/TomSegbers/tomsegbers-de))
 > on 2026-08-09. CI runs on Forgejo Actions (`.forgejo/workflows/`).
 
+The shipped design system is documented in [DESIGN.md](./DESIGN.md); the
+decision record for the COLOSSUS rework is
+[ADR-0001](docs/adr/0001-colossus-rework.md).
+
 ## Table of Contents
 
 - [Showcase](#showcase)
@@ -30,10 +34,10 @@ static site generation (SSG) on the Node/Vercel runtime.
 |                                     Home                                      |                                         Projects                                          |
 | :---------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
 | [![Home](public/img/screenshots/home.webp)](public/img/screenshots/home.webp) | [![Projects](public/img/screenshots/projects.webp)](public/img/screenshots/projects.webp) |
-|     Landing page with hero introduction, featured work, and latest posts.     |         Full portfolio gallery with technology tags and detailed project entries.         |
+|  Terminal hero, equal selected-work cards, capability grid, and dispatches.   |               Selected covers, subject index, and the year-grouped archive.               |
 |                                   **Blog**                                    |                                        **Contact**                                        |
 | [![Blog](public/img/screenshots/blog.webp)](public/img/screenshots/blog.webp) |  [![Contact](public/img/screenshots/contact.webp)](public/img/screenshots/contact.webp)   |
-| Article index sorted by date with markdown rendering and typography styling.  |          Interactive contact form powered by a Next.js server action and Resend.          |
+|           Featured dispatch, clean rows, and a compact topic strip.           |     Correspondence form and side panel backed by a Next.js server action and Resend.      |
 
 ## Tech Stack
 
@@ -45,8 +49,12 @@ static site generation (SSG) on the Node/Vercel runtime.
 - **[Tailwind CSS](https://tailwindcss.com/)** with
   [`@tailwindcss/typography`](https://tailwindcss.com/docs/typography-plugin)
   for Markdown body text
-- **[Flowbite React](https://flowbite-react.com/)** for the `Card` primitive
-  only; the header, breadcrumb, and alert are in-tree components
+- **[Geist + Geist Mono](https://fonts.google.com/)** via `next/font/google`:
+  exactly two custom families (interface/display and mono/pixel labels)
+- **In-tree COLOSSUS primitives** (`Section`, `PageHero`, `MonumentCard`,
+  `ProjectCover`, `ArticleCard`, `PixelSigil`, `PixelColumn`, `PixelGlyph`) with
+  deterministic inline SVG/CSS artwork; Radix Tooltip is the only disclosure
+  primitive
 - **[Nix flake](https://nixos.org/)** + **[direnv](https://direnv.net/)** for a
   reproducible dev shell (Node 22, pnpm, git, Playwright Chromium libs)
 - **[pnpm](https://pnpm.io/)** as the package manager
@@ -94,31 +102,31 @@ A pre-commit hook enforces
 
 From `package.json`:
 
-| Script                 | Purpose                                                 |
-| ---------------------- | ------------------------------------------------------- |
-| `pnpm dev`             | Start the dev server with colorized output              |
-| `pnpm build`           | Production build, generates static pages                |
-| `pnpm start`           | Run the production build locally                        |
-| `pnpm lint`            | Run ESLint over `*.ts` and `*.tsx`                      |
-| `pnpm lint:fix`        | Auto-fix lint errors                                    |
-| `pnpm typecheck`       | Type-check with `tsc --noEmit`                          |
-| `pnpm prettier`        | Check formatting                                        |
-| `pnpm prettier:fix`    | Apply Prettier fixes                                    |
-| `pnpm test`            | Run Jest unit and component tests                       |
-| `pnpm e2e:headless`    | Run Playwright e2e tests in headless mode               |
-| `pnpm e2e:ui`          | Run Playwright e2e tests with the interactive UI        |
-| `pnpm storybook`       | Start Storybook on port 6006                            |
-| `pnpm build-storybook` | Build a static Storybook bundle                         |
-| `pnpm test-storybook`  | Run Storybook smoke tests against the built bundle      |
-| `pnpm analyze`         | Build with `@next/bundle-analyzer` enabled              |
-| `pnpm lighthouse`      | Run Lighthouse CI budgets (LCP/CLS/TBT)                 |
-| `pnpm budget:bundle`   | Check bundle bytes against the committed baseline       |
-| `pnpm contrast`        | Check token pairs against WCAG contrast ratios          |
-| `pnpm ornaments`       | Gate banned ornaments and off-token decorations         |
-| `pnpm images`          | Enforce image byte budget (`≤200 KB`, hero `≤50 KB`)    |
-| `pnpm fonts`           | Enforce font budget (`≤2 families`, `≤100 KiB`)         |
-| `pnpm coupling-graph`  | Render module dependency graph to `graph.svg` via Madge |
-| `pnpm format`          | Apply Prettier to `*.ts`, `*.tsx`, `*.md`               |
+| Script                 | Purpose                                                   |
+| ---------------------- | --------------------------------------------------------- |
+| `pnpm dev`             | Start the dev server with colorized output                |
+| `pnpm build`           | Production build, generates static pages                  |
+| `pnpm start`           | Run the production build locally                          |
+| `pnpm lint`            | Run ESLint over `*.ts` and `*.tsx`                        |
+| `pnpm lint:fix`        | Auto-fix lint errors                                      |
+| `pnpm typecheck`       | Type-check with `tsc --noEmit`                            |
+| `pnpm prettier`        | Check formatting                                          |
+| `pnpm prettier:fix`    | Apply Prettier fixes                                      |
+| `pnpm test`            | Run Jest unit and component tests                         |
+| `pnpm e2e:headless`    | Run Playwright e2e tests in headless mode                 |
+| `pnpm e2e:ui`          | Run Playwright e2e tests with the interactive UI          |
+| `pnpm storybook`       | Start Storybook on port 6006                              |
+| `pnpm build-storybook` | Build a static Storybook bundle                           |
+| `pnpm test-storybook`  | Run Storybook smoke tests against the built bundle        |
+| `pnpm analyze`         | Build with `@next/bundle-analyzer` enabled                |
+| `pnpm lighthouse`      | Run Lighthouse CI budgets (LCP/CLS/TBT)                   |
+| `pnpm budget:bundle`   | Check bundle bytes against the committed baseline         |
+| `pnpm contrast`        | Check token pairs against WCAG contrast ratios            |
+| `pnpm design-tokens`   | Reject legacy tokens, theme utilities, raw hex, old faces |
+| `pnpm images`          | Enforce image byte budget (`≤200 KB`, hero `≤50 KB`)      |
+| `pnpm fonts`           | Enforce font budget (`≤2 families`, `≤100 KiB`)           |
+| `pnpm coupling-graph`  | Render module dependency graph to `graph.svg` via Madge   |
+| `pnpm format`          | Apply Prettier to `*.ts`, `*.tsx`, `*.md`                 |
 
 For e2e tests, Playwright needs a Chromium browser. Inside the Nix devShell,
 set `PLAYWRIGHT_BROWSERS_PATH` to the local cache so Playwright finds a
@@ -148,63 +156,65 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── jest.config.js
 ├── jest.setup.js
 ├── playwright.config.ts
-├── tailwind.config.js         # Tailwind config; registers Flowbite + typography plugins
+├── tailwind.config.js         # COLOSSUS tokens, type scale, typography plugin
 ├── postcss.config.js
 ├── prettier.config.js
 ├── .eslintrc.js
 ├── git-conventional-commits.yaml
 ├── .pre-commit-config.yaml
 ├── app/
-│   ├── layout.tsx             # Root layout: Header, Footer, metadata, viewport
-│   ├── page.tsx               # Home: hero, featured work, founder arc, blog teasers
-│   ├── not-found.tsx
+│   ├── layout.tsx             # Geist/Geist Mono, dark shell, Header/Footer
+│   ├── page.tsx               # Home: terminal hero, equal case files, practice, dispatches
+│   ├── not-found.tsx          # Night-band 404 / Page not found
 │   ├── robots.ts              # Metadata route: allow all, points to sitemap
 │   ├── sitemap.ts             # Metadata route: static + blog/project/tag URLs
-│   ├── icon.png / apple-icon.png / favicon.ico  # Next file-convention icons
-│   ├── about/page.tsx
+│   ├── icon.svg / apple-icon.png / favicon.ico  # Brand assets
+│   ├── about/page.tsx         # Timeline, compact portrait, tools, labelled examples
 │   ├── api/health/route.ts    # Health-check endpoint (returns {status:"ok"})
-│   ├── contact/page.tsx       # Contact form ("use client")
+│   ├── contact/page.tsx       # Contact shell + dispatch side panel
+│   ├── contact/ContactForm.tsx # Client form, unchanged server contract
 │   ├── datenschutz/page.tsx   # Legal: privacy policy (Datenschutz)
 │   ├── impressum/page.tsx     # Legal: imprint (Impressum)
-│   ├── blog/page.tsx          # Blog listing
-│   ├── blog/entry/[slug]/page.tsx   # Blog detail, generateStaticParams
-│   ├── projects/page.tsx      # Projects listing
-│   ├── projects/entry/[slug]/page.tsx  # Project detail, generateStaticParams
-│   ├── tags/page.tsx          # Tag index: every canonical frontmatter tag
-│   └── tags/[tag]/page.tsx    # Tag archive, generateStaticParams
+│   ├── blog/page.tsx          # Featured dispatch + entry list + topic strip
+│   ├── blog/entry/[slug]/page.tsx   # Dispatch detail, generateStaticParams
+│   ├── projects/page.tsx      # Selected covers + year-grouped archive
+│   ├── projects/entry/[slug]/page.tsx  # Case-file detail, generateStaticParams
+│   ├── tags/page.tsx          # Typographic tag index with counts
+│   └── tags/[tag]/page.tsx    # Mixed article/monument tag archive
 ├── components/
-│   ├── Alert/                 # In-tree status/error alert
-│   ├── ArticleTeaser/         # Blog post card
-│   ├── Breadcrumb/            # Detail-route breadcrumb
-│   ├── Button/
-│   ├── CaseStudyMeta/         # Case-study hero, role/outcome/metrics
-│   ├── FeaturedSet/           # "Selected Work" featured grid
-│   ├── Footer/
-│   ├── FounderArc/            # "Background" founder-arc beats
-│   ├── Header/                # In-tree semantic header and nav
-│   ├── PersonTeaser/
-│   ├── ProjectTeaser/         # Project card with technology icons
-│   ├── Providers/             # Single root Tooltip provider
-│   ├── Testimonials/          # Labelled placeholders for future client quotes
-│   ├── TimelineEntry/
+│   ├── Alert/ ArticleCard/ ArchiveRow/ Breadcrumb/ Button/ Card/
+│   ├── CaseStudyMeta/         # CaseStudyHero for project imagery
+│   ├── DesignSystem/          # Storybook-only living specimen
+│   ├── Footer/ Header/        # Night footer, sticky disclosure header
+│   ├── Icon/                  # In-tree icon set (no icon package)
+│   ├── MonumentCard/          # Featured project monument
+│   ├── Ornament/              # ArchFrame, Meander, Laurel, PixelDust
+│   ├── PageHero/ PixelSigil/ ProjectDossier/ Section/ SectionHeading/
+│   ├── TagChip/ TechnologyTooltip/ Testimonials/ Ticker/ TimelineEntry/
+│   ├── PersonTeaser/          # Company/logo panel in the about timeline
+│   ├── Providers/             # Single root Radix Tooltip provider
 │   └── Tooltip/
 ├── lib/
 │   ├── markdown.ts            # Shared gray-matter + Zod frontmatter reader
 │   ├── blog.tsx               # getAllBlogPosts(): wraps markdown reader
 │   ├── projects.tsx           # getAllProjects(): wraps markdown reader
-│   ├── icon-map.ts            # Maps technology strings to icon paths
-│   ├── sendEmail.tsx          # Server action, Resend contact form
+│   ├── content.ts             # Project/blog entry selection and featured flags
+│   ├── format-date.ts         # UTC-stable absolute and year formatting
+│   ├── reading-time.ts        # Reading-time calculation
+│   ├── sigil.ts               # Deterministic 2–3-path pixel sigils
 │   ├── tags.ts                # Canonical tag index across blog and projects
-│   ├── markdown.test.ts
-│   ├── projects.test.ts
-│   ├── tags.test.ts
-│   └── sendEmail.test.tsx
+│   ├── technologies.ts        # Technology frequency for the tools strip
+│   ├── design-tokens.ts       # THEME_COLOR (sole runtime token bridge)
+│   ├── icon-map.ts            # Maps technology strings to icon paths
+│   └── sendEmail.tsx          # Server action, Resend contact form
 ├── content/
 │   ├── blog/*.md              # Blog posts
 │   └── projects/*.md          # Project entries
 ├── e2e/
-│   ├── *.spec.ts              # 13 Playwright e2e specs (home, blog, contact, a11y, …)
+│   ├── *.spec.ts              # 14 Playwright specs incl. visual-language contract
 │   └── fixtures/              # axe config, route expectations, a11y allowlist
+├── docs/adr/
+│   └── 0001-colossus-rework.md  # Tracked design decision record
 ├── tests/                     # Budget fixtures (bundle baseline, contrast pairs)
 ├── public/
 │   ├── img/                   # Photos, OG logo, and Showcase screenshots
@@ -215,7 +225,8 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── styles/
 │   └── tailwind.css           # Tailwind entry: base/components/utilities + display & motion layers
 └── scripts/
-    ├── check-*.{js,mjs}       # CI gates: frontmatter, contrast, ornaments, images, fonts, bundle
+    ├── check-*.{js,mjs}       # Gates: frontmatter, contrast, design tokens, images, fonts, bundle
+    ├── check-design-tokens.mjs # Rejects legacy tokens, dark utilities, raw hex, old faces
     └── update-readme-screenshots.ts  # Captures Showcase screenshots from a dev server
 ```
 

@@ -2,17 +2,27 @@ import "styles/tailwind.css"
 import React from "react"
 import { Footer } from "../components/Footer/Footer"
 import { Header } from "../components/Header/Header"
-import { TooltipProvider } from "../components/Providers/TooltipProvider"
+import { THEME_COLOR } from "@/lib/design-tokens"
 import type { Metadata, Viewport } from "next"
-import { Inter, Newsreader } from "next/font/google"
+import { Geist, Geist_Mono } from "next/font/google"
 
-const inter = Inter({ subsets: ["latin"], display: "swap" })
+// Two custom families: Geist for the whole interface and Geist Mono for labels,
+// counters, and the small terminal artifacts. No decorative display face.
+const geist = Geist({
+  subsets: ["latin"],
+  // The heading is the LCP element. Let the fallback win on a slow first load
+  // instead of repainting the page when the webfont arrives late.
+  display: "optional",
+  variable: "--font-geist-sans",
+})
 
-// Display/serif face for the carved H1/H2 treatment (D3: Inter + Newsreader).
-// One static weight keeps the shipped subset small (Google serves the variable
-// face for multi-weight requests, which blows the 60 KiB budget); 700 covers the
-// h2 token exactly and matches the h1 token without faux-bold synthesis.
-const newsreader = Newsreader({ subsets: ["latin"], weight: "700", display: "swap", variable: "--font-newsreader" })
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  // Labels are not the LCP element either; avoid a late swap reflow.
+  display: "optional",
+  preload: false,
+  variable: "--font-geist-mono",
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tom.segbers.de"),
@@ -44,12 +54,14 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  colorScheme: "dark",
+  themeColor: THEME_COLOR,
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.className} ${newsreader.variable}`}>
-      <body className="flex min-h-screen flex-col bg-surface text-foreground">
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+      <body className="flex min-h-screen flex-col bg-canvas font-body text-ink antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -61,21 +73,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             }),
           }}
         />
-        <TooltipProvider>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-white"
-          >
-            Skip to main content
-          </a>
-          <Header />
+        <a
+          href="#main-content"
+          className="focus-ring-canvas sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-crimson focus:px-4 focus:py-2 focus:font-pixel focus:text-label focus:uppercase focus:text-canvas"
+        >
+          Skip to main content
+        </a>
+        <Header />
 
-          <main id="main-content" tabIndex={-1} className="grow">
-            {children}
-          </main>
+        <main id="main-content" tabIndex={-1} className="grow">
+          {children}
+        </main>
 
-          <Footer />
-        </TooltipProvider>
+        <Footer />
       </body>
     </html>
   )

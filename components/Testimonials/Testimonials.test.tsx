@@ -9,7 +9,7 @@ describe("Testimonials", () => {
     render(<Testimonials />)
 
     // Then
-    expect(screen.getByText("Example")).toBeVisible()
+    expect(screen.getByText("Example only")).toBeVisible()
     expect(screen.getByText("Illustrative examples — not real client testimonials.")).toBeVisible()
   })
 
@@ -41,6 +41,6 @@ describe("Testimonials", () => {
     render(<Testimonials />)
 
     // Then
-    expect(screen.getByRole("heading", { level: 2, name: "Illustrative feedback" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 2, name: "Illustrative examples" })).toBeInTheDocument()
   })
 })

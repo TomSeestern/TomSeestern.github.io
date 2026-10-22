@@ -1,19 +1,26 @@
-import Image from "next/image"
-import React from "react"
-import { Metadata } from "next"
-import ProjectTeaser from "../../components/ProjectTeaser/ProjectTeaser"
-import { getAllProjects, selectFeaturedProjects } from "../../lib/projects"
+import type { Metadata } from "next"
+import { ArchiveRow } from "@/components/ArchiveRow/ArchiveRow"
+import { Button } from "@/components/Button/Button"
+import { ArrowRight } from "@/components/Icon/ArrowRight"
+import { MonumentCard } from "@/components/MonumentCard/MonumentCard"
+import { PageHero } from "@/components/PageHero/PageHero"
+import { PixelSigil } from "@/components/PixelSigil/PixelSigil"
+import { Section } from "@/components/Section/Section"
+import { SectionHeading } from "@/components/SectionHeading/SectionHeading"
+import { TagChip } from "@/components/TagChip/TagChip"
+import { formatYear } from "@/lib/format-date"
+import { getAllProjects } from "@/lib/projects"
+import { getAllTags } from "@/lib/tags"
 
 export const metadata: Metadata = {
-  title: "Projects",
+  title: "The work",
   description:
-    "Showcasing my journey in technology and innovation. Explore projects spanning LabVIEW, robotics, AI, web development, and more — each representing real problem-solving and technical growth.",
+    "Case files and experiments from Tom Segbers: payment infrastructure, embedded vision, marketplace MVPs, automation, and more.",
   openGraph: {
     url: "https://tom.segbers.de/projects",
     siteName: "TomSegbers.de",
-    title: "Projects | TomSegbers.de",
-    description:
-      "Showcasing my journey in technology and innovation — projects with real problem-solving and technical depth.",
+    title: "The work | TomSegbers.de",
+    description: "Selected case files and the complete project archive.",
     images: [
       {
         url: "/img/og-default.png",
@@ -29,64 +36,171 @@ export const metadata: Metadata = {
   },
 }
 
+interface YearGroup {
+  readonly year: string
+  readonly projects: ReturnType<typeof getAllProjects>
+}
+
 export default function ProjectsArchive() {
   const projects = getAllProjects()
-  const featuredProjectIds = new Set(selectFeaturedProjects(projects).map((project) => project.id))
+  const allTags = getAllTags()
+  const tags = allTags.slice(0, 12)
+  const featured = projects.filter((project) => project.featured)
+  const archiveProjects = projects.filter((project) => !project.featured)
+
+  const groups: YearGroup[] = []
+  for (const project of archiveProjects) {
+    const year = formatYear(project.articleDate)
+    const current = groups[groups.length - 1]
+    if (current?.year === year) {
+      groups[groups.length - 1] = { year, projects: [...current.projects, project] }
+    } else {
+      groups.push({ year, projects: [project] })
+    }
+  }
 
   return (
     <>
-      <section className="bg-surface antialiased">
-        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-16 lg:py-24">
-          <div className="mx-auto max-w-2xl space-y-6">
-            <h1 className="mt-3 text-center text-h1-sm text-foreground sm:text-h1">
-              Showcasing My Journey in Technology and Innovation
-            </h1>
-            <p className="mt-4 text-center text-body-lg font-light text-muted sm:text-xl">
-              Here you can find some of my previous projects that have at least 3 months of development time and/or
-              personal significance. Each project represents a unique blend of creativity, technical skill, and
-              dedication.
-            </p>
+      <PageHero
+        titleId="projects-title"
+        eyebrow="Archive"
+        title="The work"
+        lead="Case files and experiments from 2010 to 2021. Four selected projects lead; the complete ledger follows by year."
+        size="compact"
+        actions={
+          <>
+            <Button href="#selected-work" variant="primary">
+              Selected work
+            </Button>
+            <Button href="#archive" variant="secondary">
+              Jump to the archive
+            </Button>
+          </>
+        }
+        aside={
+          <div className="rounded-lg border border-rule bg-panel p-4">
+            <div className="flex items-start justify-between gap-4">
+              <PixelSigil slug="the-work" size="sm" className="size-8" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-crimson">Index</span>
+            </div>
+            <dl className="mt-5 space-y-3 border-t border-rule pt-3 font-body text-sm">
+              <div className="flex items-baseline justify-between gap-3">
+                <dt className="text-ink-muted">Case files</dt>
+                <dd className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink">{projects.length}</dd>
+              </div>
+              <div className="flex items-baseline justify-between gap-3">
+                <dt className="text-ink-muted">Span</dt>
+                <dd className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink">2010—2021</dd>
+              </div>
+              <div className="flex items-baseline justify-between gap-3">
+                <dt className="text-ink-muted">Subjects</dt>
+                <dd className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink">{allTags.length}</dd>
+              </div>
+            </dl>
           </div>
-          <div className="mt-8 flex justify-center">
-            <a
-              href="/blog"
-              title="View all Blog Posts"
-              className="flex items-center rounded text-base font-medium text-accent transition-colors duration-200 hover:text-accent-hover hover:underline focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent-soft"
-            >
-              View Blog Posts
-              <Image className={"ml-2 h-4 w-4"} src={"/icon/arrow-right.svg"} alt="" width={32} height={32} />
-            </a>
-          </div>
-        </div>
-      </section>
+        }
+      />
 
-      <section className="bg-surface antialiased" aria-labelledby="project-archive-heading">
-        <div className="mx-auto max-w-screen-xl px-4 pb-8 sm:px-6 sm:pb-16 lg:pb-24">
-          <div className="max-w-measure-lead">
-            <h2 id="project-archive-heading" className="text-h2-sm text-foreground sm:text-h2">
-              All projects
-            </h2>
-            <p className="mt-3 text-body text-muted">
-              {projects.length} projects, newest first. Entries marked “Selected” are highlighted in the home page
-              featured set.
-            </p>
+      {tags.length > 0 ? (
+        <Section tone="panel" labelledBy="browse-subject-title" className="py-4 sm:py-5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:gap-8">
+            <div className="shrink-0">
+              <h2 id="browse-subject-title" className="font-mono text-[10px] uppercase tracking-[0.14em] text-crimson">
+                Browse by subject
+              </h2>
+              <p className="mt-1 font-body text-small text-ink-muted">The index</p>
+            </div>
+            <ul className="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <li key={tag.slug}>
+                  <TagChip label={`${tag.label} (${tag.count})`} href={`/tags/${tag.slug}`} />
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
-            {projects.map((project) => (
-              <ProjectTeaser
-                key={project.id}
-                title={project.title}
-                imageUrl={project.fullArticleLink}
-                description={project.articleContent}
-                technologies={project.technologies}
-                ctaLink={project.fullArticleLink}
-                projectDate={project.articleDate}
-                featured={featuredProjectIds.has(project.id)}
-              />
-            ))}
+        </Section>
+      ) : null}
+
+      <Section
+        id="selected-work"
+        tone="canvas"
+        labelledBy="selected-title"
+        className="scroll-mt-20 py-10 sm:py-12 lg:py-16"
+      >
+        <SectionHeading
+          id="selected-title"
+          eyebrow="I / Case files"
+          title="Selected case files"
+          lead="Four projects that show the range: money movement, machine vision, a marketplace MVP, and a public-service workflow."
+          action={
+            <Button href="#archive" variant="ghost" size="sm">
+              Skip to archive <ArrowRight className="size-4" />
+            </Button>
+          }
+        />
+        <div data-testid="featured-projects-grid" className="mt-8 grid gap-6 md:grid-cols-2 lg:gap-7">
+          {featured.map((project) => (
+            <MonumentCard key={project.id} project={project} index={projects.indexOf(project)} />
+          ))}
+        </div>
+      </Section>
+
+      <Section tone="canvas-deep" labelledBy="archive-title" className="py-10 sm:py-12 lg:py-16">
+        <div id="archive" className="scroll-mt-20">
+          <SectionHeading
+            id="archive-title"
+            eyebrow="II / Ledger"
+            title="The archive"
+            lead={`${archiveProjects.length} earlier entries, grouped by year. Selected case files stay above; the ledger below is chronological.`}
+            action={
+              <Button href="/blog" variant="ghost" size="sm">
+                Read the journal <ArrowRight className="size-4" />
+              </Button>
+            }
+          />
+
+          <div data-testid="projects-grid" className="mt-8 space-y-12">
+            {groups.length === 0 ? (
+              <p className="border border-rule-strong bg-panel p-6 font-body text-body text-ink-muted">
+                No projects have been published yet.
+              </p>
+            ) : (
+              groups.map((group) => (
+                <div key={group.year} data-testid={`project-year-${group.year}`}>
+                  <p className="mb-3 border-b border-rule pb-2 font-mono text-[10px] uppercase tracking-[0.14em] text-crimson">
+                    {group.year}
+                  </p>
+                  <div>
+                    {group.projects.map((project) => (
+                      <ArchiveRow key={project.id} project={project} index={projects.indexOf(project)} />
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
-      </section>
+      </Section>
+
+      <Section tone="night" labelledBy="projects-closing-title" className="py-10 sm:py-12 lg:py-16">
+        <SectionHeading
+          id="projects-closing-title"
+          eyebrow="III / Next"
+          title="Have a project in mind?"
+          lead="Tell me what is fragile, slow, or unclear. I will tell you how I would approach it."
+          tone="night"
+          action={
+            <>
+              <Button href="/contact" variant="primary">
+                Start a conversation
+              </Button>
+              <Button href="/about" variant="secondary-night">
+                About the practice
+              </Button>
+            </>
+          }
+        />
+      </Section>
     </>
   )
 }

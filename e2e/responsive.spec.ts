@@ -11,7 +11,6 @@ type ResponsiveRoute = {
   readonly name: string
   readonly resolvePath: (page: Page) => Promise<string>
   readonly gridSelector?: string
-  readonly interceptPlaceholderImage?: boolean
 }
 
 const viewportCases = [
@@ -19,17 +18,6 @@ const viewportCases = [
   { name: "tablet", width: 768, height: 1024 },
   { name: "desktop", width: 1280, height: 960 },
 ] as const satisfies readonly ViewportCase[]
-
-const transparentPng = Buffer.from(
-  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL6zAAAAABJRU5ErkJggg==",
-  "base64"
-)
-
-async function interceptUnavailablePlaceholderImage(page: Page): Promise<void> {
-  await page.route(/\/_next\/image\?.*placehold\.co/, (route) =>
-    route.fulfill({ body: transparentPng, contentType: "image/png" })
-  )
-}
 
 async function discoverDetailPath(page: Page, listingPath: string, selector: string): Promise<string> {
   await page.goto(listingPath)
@@ -41,19 +29,21 @@ async function discoverDetailPath(page: Page, listingPath: string, selector: str
 }
 
 const responsiveRoutes: readonly ResponsiveRoute[] = [
-  { name: "home", resolvePath: async () => "/", gridSelector: "main .grid" },
-  { name: "about", resolvePath: async () => "/about", interceptPlaceholderImage: true },
-  { name: "blog", resolvePath: async () => "/blog", gridSelector: "main .grid" },
+  { name: "home", resolvePath: async () => "/", gridSelector: '[data-testid="home-featured-grid"]' },
+  { name: "about", resolvePath: async () => "/about" },
+  { name: "blog", resolvePath: async () => "/blog", gridSelector: '[data-testid="blog-grid"]' },
   {
     name: "blog detail",
     resolvePath: async (page) => discoverDetailPath(page, "/blog", 'h3 a[href^="/blog/entry/"]'),
   },
-  { name: "projects", resolvePath: async () => "/projects", gridSelector: "main .grid" },
+  { name: "projects", resolvePath: async () => "/projects", gridSelector: '[data-testid="featured-projects-grid"]' },
   {
     name: "project detail",
     resolvePath: async (page) => discoverDetailPath(page, "/projects", 'a[href^="/projects/entry/"]'),
   },
   { name: "contact", resolvePath: async () => "/contact" },
+  { name: "datenschutz", resolvePath: async () => "/datenschutz" },
+  { name: "impressum", resolvePath: async () => "/impressum" },
 ]
 
 function collectBrowserErrors(page: Page): readonly string[] {
@@ -104,9 +94,6 @@ for (const route of responsiveRoutes) {
     test(`${route.name} remains usable at ${viewport.name}`, async ({ page }) => {
       // Given
       const browserErrors = collectBrowserErrors(page)
-      if (route.interceptPlaceholderImage) {
-        await interceptUnavailablePlaceholderImage(page)
-      }
       await page.setViewportSize({ width: viewport.width, height: viewport.height })
       const path = await route.resolvePath(page)
 
@@ -130,10 +117,7 @@ for (const route of responsiveRoutes) {
           })
           .toBeGreaterThan(1)
       }
-      const relevantErrors = browserErrors.filter(
-        (err) => !err.includes("placehold.co") && !err.includes("Image corrupt")
-      )
-      expect(relevantErrors).toEqual([])
+      expect(browserErrors).toEqual([])
     })
   }
 }
@@ -147,10 +131,9 @@ test("mobile header renders navigation and hamburger toggle", async ({ page }) =
   // Then
   await expect(page.getByRole("navigation")).toBeVisible()
   await expect(page.getByRole("button", { name: /menu/i })).toBeVisible()
-  await expect(page.getByRole("link", { name: "Tom Segbers" })).toBeVisible()
+  await expect(page.getByTestId("site-header").getByRole("link", { name: /Tom Segbers/ })).toBeVisible()
   await expectDocumentFitsViewport(page)
-  const relevantErrors = browserErrors.filter((err) => !err.includes("placehold.co") && !err.includes("Image corrupt"))
-  expect(relevantErrors).toEqual([])
+  expect(browserErrors).toEqual([])
 })
 
 /** WCAG 2.2 SC 2.5.5 (AAA) / project rule R15.3 target for primary controls. */

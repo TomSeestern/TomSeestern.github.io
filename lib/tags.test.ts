@@ -1,5 +1,14 @@
 import { MarkdownEntry } from "./markdown"
-import { buildTagIndex, getAllTags, getTagBySlug, normalizeTagKey, tagSlug, TagSource } from "./tags"
+import {
+  buildTagIndex,
+  formatTagLabel,
+  getAllTags,
+  getTagByLegacySlug,
+  getTagBySlug,
+  normalizeTagKey,
+  tagSlug,
+  TagSource,
+} from "./tags"
 
 function makeEntry(id: string, overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
   return {
@@ -35,6 +44,37 @@ describe("normalizeTagKey", () => {
     // Given / When / Then
     expect(normalizeTagKey("Digital-Transformation")).toBe("digital transformation")
     expect(normalizeTagKey("Data_Warehousing")).toBe("data warehousing")
+  })
+
+  it("merges camel-case compounds with their spaced form", () => {
+    // Given / When / Then
+    expect(normalizeTagKey("ArtificialIntelligence")).toBe("artificial intelligence")
+    expect(normalizeTagKey("FullStackWebDevelopment")).toBe("full stack web development")
+  })
+})
+
+describe("formatTagLabel", () => {
+  it("splits joined camel-case compounds into readable words", () => {
+    // Given / When / Then
+    expect(formatTagLabel("AndroidAppDevelopment")).toBe("Android App Development")
+    expect(formatTagLabel("FullStackWebDevelopment")).toBe("Full Stack Web Development")
+    expect(formatTagLabel("MultimodalTravelPlanner")).toBe("Multimodal Travel Planner")
+    expect(formatTagLabel("Web3Development")).toBe("Web3 Development")
+  })
+
+  it("leaves acronym endings and brand spellings intact", () => {
+    // Given / When / Then
+    expect(formatTagLabel("LabVIEW")).toBe("LabVIEW")
+    expect(formatTagLabel("NodeJS")).toBe("NodeJS")
+    expect(formatTagLabel("NFTs")).toBe("NFTs")
+    expect(formatTagLabel("eBay")).toBe("eBay")
+    expect(formatTagLabel("C++")).toBe("C++")
+  })
+
+  it("folds separator runs and trims without dropping words", () => {
+    // Given / When / Then
+    expect(formatTagLabel("Digital-Transformation")).toBe("Digital Transformation")
+    expect(formatTagLabel("  Arma   3  ")).toBe("Arma 3")
   })
 })
 
@@ -160,6 +200,20 @@ describe("buildTagIndex", () => {
     expect(tag?.count).toBe(1)
   })
 
+  it("counts a joined compound and its spaced form as one tag", () => {
+    // Given — the corpus carries both spellings for the same concept.
+    const sources = [
+      source(makeEntry("a", { tags: ["ArtificialIntelligence"] }), "project"),
+      source(makeEntry("b", { tags: ["Artificial Intelligence"] }), "blog"),
+    ]
+
+    // When
+    const [tag] = buildTagIndex(sources)
+
+    // Then
+    expect(tag).toMatchObject({ key: "artificial intelligence", slug: "artificial-intelligence", count: 2 })
+  })
+
   it("ignores empty and whitespace-only tags", () => {
     // Given
     const sources = [source(makeEntry("post", { tags: ["", "   "] }), "blog")]
@@ -214,6 +268,14 @@ describe("getAllTags / getTagBySlug", () => {
   it("returns undefined for an unknown slug instead of throwing", () => {
     // Given / When / Then
     expect(getTagBySlug("definitely-not-a-tag")).toBeUndefined()
+  })
+
+  it("resolves a retired camel-case slug to the canonical tag", () => {
+    // Given / When
+    const tag = getTagByLegacySlug("artificialintelligence")
+
+    // Then
+    expect(tag?.slug).toBe("artificial-intelligence")
   })
 
   it("indexes every tagged entry under exactly one canonical slug", () => {

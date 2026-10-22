@@ -1,12 +1,10 @@
 import { expect, test } from "@playwright/test"
-import type { Page } from "@playwright/test"
+import type { Locator, Page } from "@playwright/test"
 
-// CTAs carry `focus-visible:ring-accent-soft-foreground-dark`, so their focus
-// ring is tailwind.config.js `accent.soft-foreground-dark` (#DEA48C). General
-// links/cards use `focus-visible:ring-accent-soft` (accent.soft, #BE6A50).
-// Measured from the production build's computed `box-shadow` after the T13 remap.
-const CTA_FOCUS_RING = /rgb\(222, 164, 140\)/
-const LINK_FOCUS_RING = /rgb\(190, 106, 80\)/
+// COLOSSUS focus rings are 3px outlines. `focus-ring` uses ink; primary CTA
+// buttons use the accent ring so it reads around the light fill.
+const CTA_FOCUS_OUTLINE = "rgb(255, 92, 53)"
+const LINK_FOCUS_OUTLINE = "rgb(250, 250, 250)"
 
 function collectBrowserConsoleErrors(page: Page): readonly string[] {
   const consoleErrors: string[] = []
@@ -22,6 +20,15 @@ function collectBrowserConsoleErrors(page: Page): readonly string[] {
 
 function expectNoUnexpectedBrowserConsoleErrors(consoleErrors: readonly string[]): void {
   expect(consoleErrors).toEqual([])
+}
+
+async function expectOutline(target: Locator, color: string): Promise<void> {
+  await expect(target).toBeVisible()
+  await target.focus()
+  await expect(target).toBeFocused()
+  await expect(target).toHaveCSS("outline-style", "solid")
+  await expect(target).toHaveCSS("outline-width", "3px")
+  await expect(target).toHaveCSS("outline-color", color)
 }
 
 test.describe("interactive accessibility", () => {
@@ -46,34 +53,23 @@ test.describe("interactive accessibility", () => {
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
-  test("keyboard focus gives the custom contact CTA a visible indicator", async ({ page }) => {
+  test("keyboard focus gives the primary header CTA a visible outline", async ({ page }) => {
     // Given
     const consoleErrors = collectBrowserConsoleErrors(page)
     await page.goto("/")
-    const contactCallToAction = page.locator("nav").getByRole("link", { name: "Contact", exact: true }).first()
 
-    // When
-    await contactCallToAction.focus()
-
-    // Then
-    await expect(contactCallToAction).toBeFocused()
-    await expect(contactCallToAction).toHaveCSS("outline-style", "solid")
-    await expect(contactCallToAction).toHaveCSS("box-shadow", CTA_FOCUS_RING)
+    // When / Then
+    await expectOutline(page.locator('header a[href="/contact"]').last(), CTA_FOCUS_OUTLINE)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
-  test("home featured link exposes a visible keyboard focus indicator", async ({ page }) => {
+  test("home featured link exposes a visible keyboard outline", async ({ page }) => {
     // Given
     const consoleErrors = collectBrowserConsoleErrors(page)
     await page.goto("/")
-    const featuredLink = page.locator('[data-testid="featured-project"]').first()
 
-    // When
-    await featuredLink.focus()
-
-    // Then
-    await expect(featuredLink).toBeFocused()
-    await expect(featuredLink).toHaveCSS("box-shadow", LINK_FOCUS_RING)
+    // When / Then
+    await expectOutline(page.locator('[data-testid="featured-project"]').first(), LINK_FOCUS_OUTLINE)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
   })
 
@@ -81,7 +77,7 @@ test.describe("interactive accessibility", () => {
     // Given
     const consoleErrors = collectBrowserConsoleErrors(page)
     await page.goto("/")
-    const projectsCta = page.getByRole("link", { name: "View all Projects" })
+    const projectsCta = page.getByRole("link", { name: "All case files" })
 
     // When
     await projectsCta.focus()
@@ -90,38 +86,5 @@ test.describe("interactive accessibility", () => {
     // Then
     await expect(page).toHaveURL(/\/projects$/)
     expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
-  })
-
-  test("reduced motion freezes every home entrance primitive while content stays visible", async ({ page }) => {
-    // Given
-    const consoleErrors = collectBrowserConsoleErrors(page)
-    await page.emulateMedia({ reducedMotion: "reduce" })
-
-    // When
-    await page.goto("/")
-    const primitives = page.locator(".motion-rise, .motion-fade")
-
-    // Then — the primitives are inert and their content is rendered.
-    const count = await primitives.count()
-    expect(count).toBeGreaterThan(0)
-    for (const index of Array.from({ length: count }, (_, i) => i)) {
-      await expect(primitives.nth(index)).toHaveCSS("animation-name", "none")
-    }
-    await expect(page.locator('[data-testid="featured-project"]').first()).toBeVisible()
-    expectNoUnexpectedBrowserConsoleErrors(consoleErrors)
-  })
-
-  test("home entrance primitives animate when motion is allowed", async ({ page }) => {
-    // Given — positive control: without the reduced-motion preference the
-    // primitive must actually run, so the freeze assertion above cannot pass
-    // vacuously.
-    await page.emulateMedia({ reducedMotion: "no-preference" })
-
-    // When
-    await page.goto("/")
-    const primitive = page.locator(".motion-rise").first()
-
-    // Then
-    await expect(primitive).toHaveCSS("animation-name", "calm-rise")
   })
 })

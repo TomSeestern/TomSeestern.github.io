@@ -7,12 +7,12 @@ import { KNOWN_VIOLATIONS } from "./fixtures/a11y-known-violations"
 /**
  * Colour schemes every public route is scanned in.
  *
- * D13 (T07) removed the dark-mode machinery — the site ships a single light
- * mode, so this is the only scheme. The matching allowlist entries live in
- * `e2e/fixtures/a11y-known-violations.ts`; the integrity test below fails if an
- * entry references a route/scheme this matrix no longer scans.
+ * COLOSSUS ships a single dark mode, so this is the only scheme. The empty
+ * allowlist lives in `e2e/fixtures/a11y-known-violations.ts`; the integrity
+ * test below fails if an entry references a route/scheme this matrix no longer
+ * scans.
  */
-export const SCHEMES = ["light"] as const
+export const SCHEMES = ["dark"] as const
 
 /** Public routes covered by the axe scan. */
 export const A11Y_ROUTES = [
@@ -69,7 +69,7 @@ async function waitForStableRender(page: Page): Promise<void> {
 test.describe("accessibility (axe)", () => {
   test("allowlist references only scanned route/scheme combinations", () => {
     // Guards against stale allowlist entries whose route/scheme is no longer
-    // scanned (e.g. the dark entries removed with D13/T07).
+    // scanned.
     for (const entry of KNOWN_VIOLATIONS) {
       expect(A11Y_ROUTES).toContain(entry.route)
       expect(SCHEMES).toContain(entry.scheme)
@@ -79,9 +79,7 @@ test.describe("accessibility (axe)", () => {
   for (const scheme of SCHEMES) {
     test.describe(`${scheme} scheme`, () => {
       test.beforeEach(async ({ page }) => {
-        // Freeze the marquee (`motion-reduce:animate-none`) so axe reads a
-        // deterministic layout — the running animation changes which cards are
-        // visible, which would make `color-contrast` node counts flaky.
+        // Freeze motion so axe reads a deterministic layout.
         await page.emulateMedia({ reducedMotion: "reduce" })
       })
 

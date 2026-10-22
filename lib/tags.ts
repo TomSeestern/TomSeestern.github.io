@@ -7,8 +7,8 @@ export type TagCollection = "blog" | "project"
 
 /**
  * A single entry filed under a canonical tag. It is the full {@link MarkdownEntry}
- * plus the collection it came from, so the tag archive can reuse the existing
- * `ArticleTeaser` / `ProjectTeaser` components without re-reading frontmatter.
+ * plus the collection it came from, so the tag archive can reuse the shared
+ * `ArticleCard` / `MonumentCard` primitives without re-reading frontmatter.
  * `title`, `fullArticleLink`, and `articleDate` are inherited from the entry.
  */
 export type TaggedEntry = MarkdownEntry & { readonly collection: TagCollection }
@@ -29,21 +29,51 @@ export interface TagSummary {
 }
 
 /**
+ * Spellings the camel-case splitter must not touch. `eBay` is the only tag in
+ * the current corpus that needs protection; the list stays small on purpose.
+ */
+const PROTECTED_LABELS = new Map<string, string>([["ebay", "eBay"]])
+
+/**
+ * Turns a raw frontmatter tag into the label a reader should see.
+ *
+ * The content corpus contains joined compounds (`AndroidAppDevelopment`,
+ * `FullStackWebDevelopment`, `ArtificialIntelligence`) next to their spaced
+ * equivalents. Splitting at a lowercase→uppercase boundary followed by a
+ * lowercase word humanises those without damaging acronym endings: `LabVIEW`,
+ * `NodeJS`, `iOS` and `NFTs` stay intact because the uppercase run that follows
+ * is not the start of a new word. The split is display-only; it does not invent
+ * a claim, it only reveals the words already in the tag.
+ *
+ * @param rawTag - A tag exactly as authored in frontmatter.
+ */
+export function formatTagLabel(rawTag: string): string {
+  const trimmed = rawTag.trim()
+  const protectedLabel = PROTECTED_LABELS.get(trimmed.toLowerCase())
+  if (protectedLabel) {
+    return protectedLabel
+  }
+  return trimmed
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z0-9])([A-Z][a-z])/g, "$1 $2")
+    .replace(/\s+/g, " ")
+}
+
+/**
  * Collapses a raw frontmatter tag into its grouping key.
  *
- * The key is the raw tag trimmed, with `_`/`-` separator runs folded into a
- * single space, internal whitespace collapsed, and lowercased. Folding `_`/`-`
- * is deliberately broader than a pure whitespace collapse: the content set
- * carries `Digital-Transformation` once and `Digital Transformation` twice for
- * one concept, and content is read-only. Without folding, those two keys slug
- * to the same `digital-transformation` and trip the collision assertion below,
- * breaking the build. Folding is a documented merge of punctuation variants,
- * not a silent one — genuinely distinct keys still collide and throw.
+ * The key is the formatted label lowercased, with `_`/`-` separator runs folded
+ * into a single space and internal whitespace collapsed. Folding separators and
+ * camel boundaries merges punctuation variants of one concept — the content set
+ * carries `Digital-Transformation` once and `Digital Transformation` twice, and
+ * `ArtificialIntelligence` next to `Artificial Intelligence`. Those pairs must
+ * not become two archive entries over one idea. Genuinely distinct keys still
+ * collide on slug and throw.
  *
  * @param rawTag - A tag exactly as authored in frontmatter.
  */
 export function normalizeTagKey(rawTag: string): string {
-  return rawTag.trim().replace(/[_-]+/g, " ").replace(/\s+/g, " ").toLowerCase()
+  return formatTagLabel(rawTag).replace(/[_-]+/g, " ").replace(/\s+/g, " ").toLowerCase()
 }
 
 /**
@@ -72,7 +102,7 @@ function canonicalLabel(forms: ReadonlyMap<string, number>): string {
   const ranked = Array.from(forms.entries()).sort(
     (a, b) => b[1] - a[1] || a[0].toLowerCase().localeCompare(b[0].toLowerCase()) || (a[0] < b[0] ? -1 : 1)
   )
-  return ranked[0]?.[0] ?? ""
+  return formatTagLabel(ranked[0]?.[0] ?? "")
 }
 
 function compareNewestFirst(a: TaggedEntry, b: TaggedEntry): number {
@@ -158,4 +188,23 @@ export function getAllTags(): readonly TagSummary[] {
  */
 export function getTagBySlug(slug: string): TagSummary | undefined {
   return getAllTags().find((tag) => tag.slug === slug)
+}
+
+/**
+ * Resolves a retired tag slug that differs from the canonical one only by
+ * separators.
+ *
+ * Camel-case keys used to slug without hyphens (`/tags/artificialintelligence`);
+ * they now split into words (`/tags/artificial-intelligence`). The route uses
+ * this to answer an old URL with a permanent redirect instead of a 404, so the
+ * taxonomy repair does not break inbound links.
+ *
+ * @param slug - A possibly retired slug segment from `/tags/<slug>`.
+ */
+export function getTagByLegacySlug(slug: string): TagSummary | undefined {
+  const compact = slug.replace(/-/g, "")
+  if (compact.length === 0) {
+    return undefined
+  }
+  return getAllTags().find((tag) => tag.slug.replace(/-/g, "") === compact)
 }
