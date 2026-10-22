@@ -16,6 +16,6 @@ describe("contact page", () => {
   })
 
   it("exports the canonical URL for the contact route", () => {
-    expect(metadata.alternates?.canonical).toBe("https://tom.segbers.de/contact")
+    expect(metadata.alternates?.canonical).toBe("https://tomsegbers.de/contact")
   })
 })

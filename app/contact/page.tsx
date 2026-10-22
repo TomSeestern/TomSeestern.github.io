@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   title: "Contact",
   description: "Get in touch with Tom Segbers — collaboration ideas, project proposals, or just to say hello.",
   alternates: {
-    canonical: "https://tom.segbers.de/contact",
+    canonical: "https://tomsegbers.de/contact",
   },
   openGraph: {
-    url: "https://tom.segbers.de/contact",
+    url: "https://tomsegbers.de/contact",
     siteName: "TomSegbers.de",
     title: "Contact | TomSegbers.de",
     description: "Get in touch with Tom Segbers — collaboration ideas, project proposals, or just to say hello.",

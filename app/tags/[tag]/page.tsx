@@ -118,7 +118,7 @@ export async function generateMetadata({ params }: Params, parent: ResolvingMeta
     title: `Tag: ${tag.label}`,
     description,
     alternates: {
-      canonical: new URL(`/tags/${tag.slug}`, layoutMetadata.metadataBase || "https://tom.segbers.de").toString(),
+      canonical: new URL(`/tags/${tag.slug}`, layoutMetadata.metadataBase || "https://tomsegbers.de").toString(),
     },
     openGraph: {
       title: `Tag: ${tag.label} | TomSegbers.de`,

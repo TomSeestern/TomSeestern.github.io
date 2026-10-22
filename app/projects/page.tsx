@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description:
     "Case files and experiments from Tom Segbers: payment infrastructure, embedded vision, creator platforms, humanoid robotics, automation, and more.",
   openGraph: {
-    url: "https://tom.segbers.de/projects",
+    url: "https://tomsegbers.de/projects",
     siteName: "TomSegbers.de",
     title: "The work | TomSegbers.de",
     description: "Selected case files and the complete project archive.",

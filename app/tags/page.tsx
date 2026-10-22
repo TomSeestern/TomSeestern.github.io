@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description:
     "Browse every blog post and project by topic. A server-rendered index of all content tags on TomSegbers.de.",
   openGraph: {
-    url: "https://tom.segbers.de/tags",
+    url: "https://tomsegbers.de/tags",
     siteName: "TomSegbers.de",
     title: "Tags | TomSegbers.de",
     description: "Browse every blog post and project by topic.",

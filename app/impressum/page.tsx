@@ -5,10 +5,10 @@ export const metadata: Metadata = {
   title: "Impressum",
   description: "Impressum und Anbieterkennzeichnung gemäß § 5 DDG für TomSegbers.de.",
   alternates: {
-    canonical: "https://tom.segbers.de/impressum",
+    canonical: "https://tomsegbers.de/impressum",
   },
   openGraph: {
-    url: "https://tom.segbers.de/impressum",
+    url: "https://tomsegbers.de/impressum",
     siteName: "TomSegbers.de",
     title: "Impressum | TomSegbers.de",
     description: "Impressum und Anbieterkennzeichnung gemäß § 5 DDG für TomSegbers.de.",

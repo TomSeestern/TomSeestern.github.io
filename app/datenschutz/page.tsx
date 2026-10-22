@@ -5,10 +5,10 @@ export const metadata: Metadata = {
   title: "Datenschutzerklärung",
   description: "Informationen zur Verarbeitung personenbezogener Daten auf TomSegbers.de gemäß Art. 13 DSGVO.",
   alternates: {
-    canonical: "https://tom.segbers.de/datenschutz",
+    canonical: "https://tomsegbers.de/datenschutz",
   },
   openGraph: {
-    url: "https://tom.segbers.de/datenschutz",
+    url: "https://tomsegbers.de/datenschutz",
     siteName: "TomSegbers.de",
     title: "Datenschutzerklärung | TomSegbers.de",
     description: "Informationen zur Verarbeitung personenbezogener Daten auf TomSegbers.de gemäß Art. 13 DSGVO.",

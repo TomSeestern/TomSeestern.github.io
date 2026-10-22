@@ -5,7 +5,7 @@ import { MetadataRoute } from "next"
 import { getAllTags } from "@/lib/tags"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://tom.segbers.de"
+  const baseUrl = "https://tomsegbers.de"
 
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [

@@ -32,6 +32,9 @@ const OG_HEIGHT = 630
 /** Path of the single purpose-built OG asset wired across every route. */
 const OG_ASSET_PATH = "/img/og-default.png"
 
+/** Canonical public origin used by page metadata and the sitemap. */
+const PUBLIC_ORIGIN = "https://tomsegbers.de"
+
 async function metaContent(page: Page, selector: string): Promise<string | null> {
   return page.locator(selector).first().getAttribute("content")
 }
@@ -94,10 +97,14 @@ test.describe("social-share metadata", () => {
       expect(canonical ?? ogUrl, `no canonical signal on ${route}`).toBeTruthy()
       const routePath = new URL(route, page.url()).pathname
       if (canonical) {
-        expect(new URL(canonical, page.url()).pathname, `canonical drifted on ${route}`).toBe(routePath)
+        const canonicalUrl = new URL(canonical, page.url())
+        expect(canonicalUrl.origin, `canonical origin drifted on ${route}`).toBe(PUBLIC_ORIGIN)
+        expect(canonicalUrl.pathname, `canonical drifted on ${route}`).toBe(routePath)
       }
       if (ogUrl) {
-        expect(new URL(ogUrl, page.url()).pathname, `og:url drifted on ${route}`).toBe(routePath)
+        const ogUrlValue = new URL(ogUrl, page.url())
+        expect(ogUrlValue.origin, `og:url origin drifted on ${route}`).toBe(PUBLIC_ORIGIN)
+        expect(ogUrlValue.pathname, `og:url drifted on ${route}`).toBe(routePath)
       }
     }
   })

@@ -2,7 +2,7 @@
 
 [![CI](http://192.168.7.69:3002/TomSegbers/tomsegbers-de/actions/badge.svg?style=flat)](http://192.168.7.69:3002/TomSegbers/tomsegbers-de/actions)
 
-Source for [tom.segbers.de](https://tom.segbers.de), a personal portfolio site.
+Source for [tomsegbers.de](https://tomsegbers.de), a personal portfolio site.
 Static, no auth, no database, no tracking. Content lives as Markdown files under
 `content/`. The site is built with the Next.js App Router and pre-rendered with
 static site generation (SSG) on the Node/Vercel runtime.

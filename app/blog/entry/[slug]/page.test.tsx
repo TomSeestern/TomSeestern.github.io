@@ -31,6 +31,6 @@ describe("[slug] blog entry page", () => {
 
   it("generates canonical link tag metadata", async () => {
     const metadata = await generateMetadata({ params }, {} as never)
-    expect(metadata.alternates?.canonical).toBe(`https://tom.segbers.de/blog/entry/${slug}`)
+    expect(metadata.alternates?.canonical).toBe(`https://tomsegbers.de/blog/entry/${slug}`)
   })
 })

@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://tom.segbers.de/sitemap.xml",
+    sitemap: "https://tomsegbers.de/sitemap.xml",
   }
 }

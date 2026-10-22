@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tom.segbers.de"),
+  metadataBase: new URL("https://tomsegbers.de"),
   title: {
     template: "%s | TomSegbers.de",
     default: "TomSegbers.de — Senior Developer",
@@ -69,7 +69,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "TomSegbers.de",
-              url: "https://tom.segbers.de",
+              url: "https://tomsegbers.de",
             }),
           }}
         />

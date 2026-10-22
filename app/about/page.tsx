@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description:
     "A short overview of Tom Segbers' formal education and work experience — from freelance IT developer to Founder & Tech Lead at LAYZR.gg.",
   openGraph: {
-    url: "https://tom.segbers.de/about",
+    url: "https://tomsegbers.de/about",
     siteName: "TomSegbers.de",
     title: "About me | TomSegbers.de",
     description:

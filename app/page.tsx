@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description:
     "Personal portfolio of Tom Segbers — Senior Developer. Building reliable systems and solving hard problems. Explore projects, blog posts, and get in touch.",
   openGraph: {
-    url: "https://tom.segbers.de/",
+    url: "https://tomsegbers.de/",
     siteName: "TomSegbers.de",
     title: "TomSegbers.de — Senior Developer",
     description:
