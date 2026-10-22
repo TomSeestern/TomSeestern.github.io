@@ -131,20 +131,15 @@ module.exports = {
     },
     assert: {
       assertions: {
-        // 2700 ms, not 2500: main's article route paints its title at a 2552 ms
-        // median (2552 / 2107 / 2557 across three runs on 2026-10-21). It is a
-        // text LCP — no hero image — so the delay is the shared client bundle
-        // from flowbite, flowbite-react, react-icons and date-fns.
-        // `feat/colossus-rework` drops those libraries and clears 2500; restore
-        // this budget together with the TBT one when it lands.
-        "largest-contentful-paint": ["error", { maxNumericValue: 2700, aggregationMethod: "median" }],
+        // Original ceilings, restored once the redesign dropped flowbite,
+        // flowbite-react, react-icons and date-fns from the client bundle. While
+        // those shipped, the article route measured a 2552 ms LCP median and
+        // `/projects` a 241 ms TBT median, so both budgets were temporarily
+        // relaxed to 2700 / 300 (git history has the measurements). Any future
+        // regression past these numbers is the bundle growing again.
+        "largest-contentful-paint": ["error", { maxNumericValue: 2500, aggregationMethod: "median" }],
         "cumulative-layout-shift": ["error", { maxNumericValue: 0.1, aggregationMethod: "median" }],
-        // 300 ms, not 200: main's `/projects` sits at the edge of 200 (median
-        // 241 ms across three runs on 2026-10-21) because that route ships
-        // 128 kB of first-load JS from flowbite, flowbite-react, react-icons and
-        // date-fns. `feat/colossus-rework` drops those libraries (106 kB) and
-        // passes at 200 — restore this budget to 200 once that lands.
-        "total-blocking-time": ["error", { maxNumericValue: 300, aggregationMethod: "median" }],
+        "total-blocking-time": ["error", { maxNumericValue: 200, aggregationMethod: "median" }],
       },
     },
     upload: {
