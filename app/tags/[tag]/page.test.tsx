@@ -37,6 +37,7 @@ function makeEntry(collection: "blog" | "project", overrides: Partial<MarkdownEn
     technologies: collection === "project" ? ["React"] : [],
     tags: ["TypeScript"],
     featured: collection === "project",
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",

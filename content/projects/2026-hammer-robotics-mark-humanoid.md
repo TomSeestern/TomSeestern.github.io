@@ -6,6 +6,7 @@ articleContent: I founded Hammer Robotics to automate heavy logistics work with 
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
 featured: true
+recentHighlight: true
 role: Founder and CEO
 outcome: Built a functional humanoid prototype for autonomous baggage handling in six months and prepared pilots with three major German airports.
 metrics:

@@ -5,8 +5,16 @@ articleDate: 2026-10-14
 articleContent: I built ClosedLoopOS, an open-source TypeScript platform that turns business processes into YAML SOPs and assigns them to AI agents with an operational dashboard.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
+featured: true
 role: Creator and maintainer
 outcome: Shipped an open-source agent-orchestration platform with a live demo, SOP library, run history, and agent roster.
+metrics:
+  - label: Test/spec files
+    value: "709"
+  - label: API routes
+    value: "154"
+  - label: Dashboard pages
+    value: "48"
 heroImage: /img/projects/closedloop-os.png
 links:
   - label: Live demo

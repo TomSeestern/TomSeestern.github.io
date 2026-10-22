@@ -15,6 +15,7 @@ export const markdownFrontmatterSchema = z.object({
   technologies: z.array(z.string()).default([]).catch([]),
   tags: z.array(z.string()).default([]).catch([]),
   featured: z.boolean().default(false).catch(false),
+  recentHighlight: z.boolean().default(false).catch(false),
   role: z.string().default("").catch(""),
   outcome: z.string().default("").catch(""),
   heroImage: z.string().default("").catch(""),
@@ -58,6 +59,7 @@ export type MarkdownEntry = {
   readonly technologies: string[]
   readonly tags: string[]
   readonly featured: boolean
+  readonly recentHighlight: boolean
   readonly role: string
   readonly outcome: string
   readonly heroImage: string

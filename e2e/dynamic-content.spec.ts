@@ -96,6 +96,12 @@ test("project archive presents the featured selection as selected", async ({ pag
     // Given
     await page.goto("/projects")
     await expect(page.getByRole("heading", { level: 1, name: COPY.projects.h1 })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 2, name: COPY.projects.recentHighlightH2 })).toBeVisible()
+    await expect(page.getByTestId("recent-highlight")).toContainText(COPY.projects.recentHighlightProject)
+    await expect(page.getByTestId("featured-projects-grid").getByTestId("project-teaser")).toHaveCount(
+      FEATURED_PROJECT_COUNT - 1
+    )
+    await expect(page.getByTestId("featured-projects-grid")).not.toContainText(COPY.projects.recentHighlightProject)
     await expect(page.getByRole("heading", { level: 2, name: COPY.projects.archiveH2 })).toBeVisible()
 
     // Then — the shared selection rule marks exactly FEATURED_PROJECT_COUNT entries.

@@ -258,6 +258,7 @@ authorImgSrc: /img/example.png
 authorName: Tom Segbers
 # Projects only:
 featured: false
+recentHighlight: false
 role: Lead developer
 outcome: What shipped and what changed.
 heroImage: /img/projects/example.jpg
@@ -275,8 +276,10 @@ technologies:
 Body of the post or project write-up in Markdown.
 ```
 
-`featured` controls the four selected cases on `/projects` and the home page.
-`role` and `outcome` render in the project dossier. `metrics` is the dossier's
+`featured` controls the four selected cases on the home page. On `/projects`,
+`recentHighlight: true` promotes one featured project into a dedicated highlight
+section, and the other three render as the selected cards. `role` and `outcome`
+render in the project dossier. `metrics` is the dossier's
 evidence block, and `links` renders public evidence links. Only use `heroImage`
 with a real project visual; markdown-only projects keep the generated cover.
 Do not link private repositories or LAN-only services from the public site.

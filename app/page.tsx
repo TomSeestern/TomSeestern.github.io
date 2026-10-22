@@ -43,7 +43,10 @@ export default function HomePage() {
   const projects = getAllProjects()
   const articles = getAllBlogPosts()
   const featuredProjects = selectFeaturedProjects(projects)
-  const leadProject = featuredProjects.find((project) => /payment|paymenow/.test(project.id)) ?? featuredProjects[0]
+  const leadProject =
+    featuredProjects.find((project) => project.recentHighlight) ??
+    featuredProjects.find((project) => /payment|paymenow/.test(project.id)) ??
+    featuredProjects[0]
   const technologies = getTopTechnologies(projects, 8)
   const latestArticles = articles.slice(0, 3)
   const [leadArticle, ...secondaryArticles] = latestArticles
@@ -71,7 +74,7 @@ export default function HomePage() {
           id="selected-work-title"
           eyebrow="I / Case files"
           title="Selected work"
-          lead="Four case files that show the range: payment infrastructure, embedded vision, a creator-platform exit, and humanoid robotics."
+          lead="Four case files that show the range: humanoid robotics, a creator-platform exit, embedded vision, and agent orchestration."
           action={
             <Button href="/projects" variant="secondary" size="sm">
               All case files <ArrowRight className="size-4" />

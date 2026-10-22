@@ -42,7 +42,7 @@ describe("real project case files", () => {
         "2021-ai-drone-based-change-detection",
         "2024-layzr-creator-avatar-platform-acquired-by-jodel",
         "2026-hammer-robotics-mark-humanoid",
-        "2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers",
+        "2026-closedloop-os-agent-orchestration",
       ].sort()
     )
 
@@ -51,6 +51,15 @@ describe("real project case files", () => {
       expect(project.outcome.trim().length).toBeGreaterThan(0)
       expect(project.metrics.length).toBeGreaterThan(0)
     }
+  })
+
+  it("marks exactly Hammer Robotics as the recent highlight", () => {
+    // Given / When
+    const highlights = projects.filter((project) => project.recentHighlight)
+
+    // Then
+    expect(highlights.map((project) => project.id)).toEqual(["2026-hammer-robotics-mark-humanoid"])
+    expect(highlights.every((project) => project.featured)).toBe(true)
   })
 
   it("gives the new scan-derived case files a public link", () => {

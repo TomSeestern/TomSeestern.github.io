@@ -42,6 +42,7 @@ function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): Markdo
     technologies: [],
     tags: [],
     featured: false,
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",

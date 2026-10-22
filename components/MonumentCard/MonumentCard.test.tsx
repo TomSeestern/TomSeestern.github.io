@@ -14,6 +14,7 @@ function makeProject(overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
     technologies: ["React", "AWS", "Lambda", "RDS"],
     tags: ["Payments"],
     featured: true,
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",

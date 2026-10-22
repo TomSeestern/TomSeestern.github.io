@@ -28,6 +28,7 @@ function makeProject(id: string, overrides: Partial<MarkdownEntry> = {}): Markdo
     technologies: [],
     tags: [],
     featured: false,
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",
@@ -44,6 +45,7 @@ const projects: MarkdownEntry[] = [
     articleContent: "Alpha description",
     technologies: ["TypeScript", "Next.js"],
     featured: true,
+    recentHighlight: false,
   }),
   makeProject("project-beta", {
     title: "Project Beta",
@@ -112,6 +114,28 @@ describe("ProjectsArchive", () => {
     expect(screen.getByTestId("featured-projects-grid")).toHaveTextContent("Project Alpha")
     expect(screen.getByTestId("project-year-2024")).toBeInTheDocument()
     expect(screen.getByTestId("project-year-2023")).toBeInTheDocument()
+  })
+
+  it("renders the recent highlight separately from the selected grid", () => {
+    // Given
+    const highlightedProject = makeProject("hammer-robotics", {
+      title: "Hammer Robotics: Building Mark",
+      articleDate: new Date("2026-10-22"),
+      articleContent: "A humanoid for airport baggage handling.",
+      featured: true,
+      recentHighlight: true,
+    })
+    mockGetAllProjects.mockReturnValue([highlightedProject, ...projects])
+
+    // When
+    render(<ProjectsArchive />)
+
+    // Then
+    expect(screen.getByRole("heading", { level: 2, name: "Recent highlight" })).toBeInTheDocument()
+    expect(screen.getByTestId("recent-highlight")).toHaveTextContent("Hammer Robotics")
+    expect(screen.getByTestId("featured-projects-grid")).toHaveTextContent("Project Alpha")
+    expect(screen.getByTestId("featured-projects-grid")).not.toHaveTextContent("Hammer Robotics")
+    expect(screen.getByRole("link", { name: "Recent highlight" })).toHaveAttribute("href", "#recent-highlight")
   })
 
   it("renders the closing CTA and archive headings", () => {

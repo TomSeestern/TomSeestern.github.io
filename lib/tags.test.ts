@@ -23,6 +23,7 @@ function makeEntry(id: string, overrides: Partial<MarkdownEntry> = {}): Markdown
     technologies: [],
     tags: [],
     featured: false,
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",

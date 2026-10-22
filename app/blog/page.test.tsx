@@ -28,6 +28,7 @@ function makeBlogPost(id: string, overrides: Partial<MarkdownEntry> = {}): Markd
     technologies: [],
     tags: [],
     featured: false,
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",

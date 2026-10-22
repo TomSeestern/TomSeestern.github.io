@@ -13,6 +13,7 @@ function makeEntry(id: string, date: string): MarkdownEntry {
     technologies: [],
     tags: [],
     featured: false,
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",

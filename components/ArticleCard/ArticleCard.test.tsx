@@ -14,6 +14,7 @@ function makeEntry(overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
     technologies: [],
     tags: ["Recipes", "Cheesecake"],
     featured: false,
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",

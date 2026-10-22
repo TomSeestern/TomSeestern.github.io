@@ -59,6 +59,14 @@ for (const filename of projectFiles) {
     throw new Error(`${filename}: featured case files need at least one evidence metric.`)
   }
 
+  if (data.recentHighlight !== undefined && typeof data.recentHighlight !== "boolean") {
+    throw new Error(`${filename}: recentHighlight must be a boolean.`)
+  }
+
+  if (data.recentHighlight === true && data.featured !== true) {
+    throw new Error(`${filename}: recentHighlight requires featured: true.`)
+  }
+
   if (data.links !== undefined) {
     if (!Array.isArray(data.links)) {
       throw new Error(`${filename}: links must be an array.`)

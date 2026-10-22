@@ -15,7 +15,7 @@ import { getAllProjectTags } from "@/lib/tags"
 export const metadata: Metadata = {
   title: "The work",
   description:
-    "Case files and experiments from Tom Segbers: payment infrastructure, embedded vision, creator platforms, humanoid robotics, automation, and more.",
+    "Case files and experiments from Tom Segbers: humanoid robotics, creator platforms, embedded vision, agent orchestration, and more.",
   openGraph: {
     url: "https://tomsegbers.de/projects",
     siteName: "TomSegbers.de",
@@ -45,14 +45,16 @@ export default function ProjectsArchive() {
   const projects = getAllProjects()
   const subjectTags = getAllProjectTags()
   const tags = subjectTags.slice(0, 12)
-  const featured = projects.filter((project) => project.featured)
+  const recentHighlight = projects.find((project) => project.recentHighlight)
+  const featured = projects.filter((project) => project.featured && project.id !== recentHighlight?.id)
   const archiveProjects = projects.filter((project) => !project.featured)
   const years = projects.map((project) => formatYear(project.articleDate)).sort()
   const firstYear = years[0] ?? "—"
   const lastYear = years[years.length - 1] ?? "—"
   const span = firstYear === lastYear ? firstYear : `${firstYear}—${lastYear}`
-  const selectedLead =
-    featured.length === 1 ? "One selected project leads" : `${featured.length} selected projects lead`
+  const selectedLabel = featured.length === 1 ? "One selected case file" : `${featured.length} selected case files`
+  const selectedLead = `${selectedLabel} follow${featured.length === 1 ? "s" : ""}`
+  const highlightLead = recentHighlight ? `${recentHighlight.title.split(":")[0]} is the recent highlight; ` : ""
 
   const groups: YearGroup[] = []
   for (const project of archiveProjects) {
@@ -71,11 +73,14 @@ export default function ProjectsArchive() {
         titleId="projects-title"
         eyebrow="Archive"
         title="The work"
-        lead={`Case files and experiments from ${firstYear} to ${lastYear}. ${selectedLead}; the complete ledger follows by year.`}
+        lead={`Case files and experiments from ${firstYear} to ${lastYear}. ${highlightLead}${selectedLead}. The complete ledger runs below by year.`}
         size="compact"
         actions={
           <>
-            <Button href="#selected-work" variant="primary">
+            <Button href="#recent-highlight" variant="primary">
+              Recent highlight
+            </Button>
+            <Button href="#selected-work" variant="secondary">
               Selected work
             </Button>
             <Button href="#archive" variant="secondary">
@@ -107,6 +112,35 @@ export default function ProjectsArchive() {
         }
       />
 
+      {recentHighlight ? (
+        <Section
+          id="recent-highlight"
+          tone="canvas-deep"
+          labelledBy="recent-highlight-title"
+          className="scroll-mt-20 py-8 sm:py-10"
+        >
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-rule pb-4">
+            <div>
+              <h2
+                id="recent-highlight-title"
+                className="font-mono text-[10px] uppercase tracking-[0.14em] text-crimson"
+              >
+                Recent highlight
+              </h2>
+              <p className="mt-2 max-w-measure-lead font-body text-small text-ink-muted">
+                The current build, in detail.
+              </p>
+            </div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+              {formatYear(recentHighlight.articleDate)}
+            </span>
+          </div>
+          <div data-testid="recent-highlight" className="mt-6">
+            <MonumentCard project={recentHighlight} index={projects.indexOf(recentHighlight)} variant="lead" />
+          </div>
+        </Section>
+      ) : null}
+
       {tags.length > 0 ? (
         <Section tone="panel" labelledBy="browse-subject-title" className="py-4 sm:py-5">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:gap-8">
@@ -137,14 +171,14 @@ export default function ProjectsArchive() {
           id="selected-title"
           eyebrow="I / Case files"
           title="Selected case files"
-          lead="Four case files that show the range: payment infrastructure, embedded vision, a creator-platform exit, and humanoid robotics."
+          lead={`${selectedLabel} across a creator-platform exit, embedded vision, and agent orchestration.`}
           action={
             <Button href="#archive" variant="ghost" size="sm">
               Skip to archive <ArrowRight className="size-4" />
             </Button>
           }
         />
-        <div data-testid="featured-projects-grid" className="mt-8 grid gap-6 md:grid-cols-2 lg:gap-7">
+        <div data-testid="featured-projects-grid" className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-7">
           {featured.map((project) => (
             <MonumentCard key={project.id} project={project} index={projects.indexOf(project)} />
           ))}

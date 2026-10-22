@@ -42,6 +42,8 @@ export const COPY = {
     h1: "The work",
     eyebrow: "Archive",
     browseBySubject: "Browse by subject",
+    recentHighlightH2: "Recent highlight",
+    recentHighlightProject: "Hammer Robotics",
     archiveH2: "The archive",
     closingH2: "Have a project in mind?",
     closingCta: "Start a conversation",

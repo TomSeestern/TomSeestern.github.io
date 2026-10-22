@@ -26,6 +26,7 @@ function makeTag(label: string, slug: string, count: number, links: string[]): T
       technologies: [],
       tags: [label],
       featured: false,
+      recentHighlight: false,
       role: "",
       outcome: "",
       heroImage: "",

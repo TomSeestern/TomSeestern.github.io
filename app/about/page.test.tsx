@@ -21,6 +21,7 @@ function makeProject(): MarkdownEntry {
     technologies: ["React", "TypeScript", "AWS"],
     tags: [],
     featured: true,
+    recentHighlight: false,
     role: "",
     outcome: "",
     heroImage: "",

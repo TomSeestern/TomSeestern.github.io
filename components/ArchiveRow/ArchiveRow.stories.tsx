@@ -13,6 +13,7 @@ const project: MarkdownEntry = {
   technologies: ["Python", "Keras", "TensorFlow", "Unity"],
   tags: ["AI"],
   featured: true,
+  recentHighlight: false,
   role: "",
   outcome: "",
   heroImage: "",

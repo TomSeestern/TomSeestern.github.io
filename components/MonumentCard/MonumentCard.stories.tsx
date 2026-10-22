@@ -14,6 +14,7 @@ const project: MarkdownEntry = {
   technologies: ["React", "BootstrapCSS", "AWS-Amplify", "Lambda"],
   tags: ["eBay", "Payments"],
   featured: true,
+  recentHighlight: false,
   role: "",
   outcome: "",
   heroImage: "",

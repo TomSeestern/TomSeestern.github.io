@@ -5,7 +5,6 @@ articleDate: 2021-12-31
 articleContent: I built and launched PayMeNow, a React and AWS application that made transaction status and outstanding payment actions clear for eBay sellers.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
-featured: true
 role: Full-stack developer and IT consultant
 outcome: Took a seller-facing payment-status product from concept and design through launch, analytics, and ongoing support.
 metrics:
