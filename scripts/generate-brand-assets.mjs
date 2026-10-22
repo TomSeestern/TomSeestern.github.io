@@ -11,6 +11,7 @@
  * It is intentionally not part of `pnpm build`; generated PNGs are committed.
  */
 import { chromium } from "@playwright/test"
+import { readdirSync, readFileSync } from "node:fs"
 import { readFile } from "node:fs/promises"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -19,6 +20,16 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const BRAND_MARK = join(REPO_ROOT, "public", "icon", "brand-mark.svg")
 const APPLE_ICON = join(REPO_ROOT, "app", "apple-icon.png")
 const OG_IMAGE = join(REPO_ROOT, "public", "img", "og-default.png")
+const PROJECTS_DIRECTORY = join(REPO_ROOT, "content", "projects")
+const projectFiles = readdirSync(PROJECTS_DIRECTORY).filter((filename) => filename.endsWith(".md"))
+const projectYears = projectFiles
+  .map((filename) => readFileSync(join(PROJECTS_DIRECTORY, filename), "utf8").match(/^articleDate:\s*(\d{4})/m)?.[1])
+  .filter((year) => Boolean(year))
+  .sort()
+const projectCount = projectFiles.length
+const firstProjectYear = projectYears[0] ?? "—"
+const lastProjectYear = projectYears[projectYears.length - 1] ?? "—"
+const archiveSpan = firstProjectYear === lastProjectYear ? firstProjectYear : `${firstProjectYear}—${lastProjectYear}`
 
 const brandMark = await readFile(BRAND_MARK, "utf8")
 const brandDataUri = `data:image/svg+xml;base64,${Buffer.from(brandMark).toString("base64")}`
@@ -104,8 +115,8 @@ await ogPage.setContent(`
       <div style="margin-top:12px"><span class="prompt">$</span> cat focus.json</div>
       <div class="strong">{</div>
       <div class="strong">&nbsp; "focus": ["systems", "interfaces"],</div>
-      <div class="strong">&nbsp; "archive": "2010—2026",</div>
-      <div class="strong">&nbsp; "caseFiles": 25</div>
+      <div class="strong">&nbsp; "archive": "${archiveSpan}",</div>
+      <div class="strong">&nbsp; "caseFiles": ${projectCount}</div>
       <div class="strong">}</div>
       <div class="case">
         <div class="case-label">Selected case file</div>

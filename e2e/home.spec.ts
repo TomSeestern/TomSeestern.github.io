@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { COPY, FEATURED_PROJECT_COUNT, MAX_HOME_DOM_NODES } from "./fixtures/expectations"
+import { COPY, FEATURED_PROJECT_COUNT, MAX_HOME_DOM_NODES, PROJECT_CASE_FILE_COUNT } from "./fixtures/expectations"
 
 test("homepage renders the COLOSSUS sections", async ({ page }) => {
   await page.goto("/")
@@ -14,7 +14,7 @@ test("homepage renders the COLOSSUS sections", async ({ page }) => {
   await expect(page.getByTestId("home-hero")).toBeVisible()
   await expect(page.getByTestId("home-hero").getByText("portfolio / 2026")).toBeVisible()
   await expect(page.getByTestId("home-archive-status")).toContainText("2010—2026")
-  await expect(page.getByTestId("home-archive-status")).toContainText("25")
+  await expect(page.getByTestId("home-archive-status")).toContainText(String(PROJECT_CASE_FILE_COUNT))
   await expect(page.getByTestId("ticker")).toHaveCount(0)
 
   // Curated featured set — exactly four monuments, each a project link.

@@ -79,7 +79,10 @@ export const COPY = {
 export const BLOG_POST_COUNT = 3
 
 /** Project entries expected under `content/projects/` (asserted as a floor). */
-export const MIN_PROJECT_COUNT = 21
+export const MIN_PROJECT_COUNT = 28
+
+/** Published project case files shown in the home archive status. */
+export const PROJECT_CASE_FILE_COUNT = 28
 
 /**
  * Curated "monument" projects the home featured set renders. Mirrors

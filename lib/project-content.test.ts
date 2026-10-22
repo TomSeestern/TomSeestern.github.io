@@ -72,4 +72,26 @@ describe("real project case files", () => {
       expect(project.links.length).toBeGreaterThan(0)
     }
   })
+
+  it("publishes the deferred case files with a real visual and evidence", () => {
+    // Given / When
+    const deferredIds = [
+      "2026-fullsound-browser-engine-sound",
+      "2026-audioforge-printable-audiobook-covers",
+      "2026-foerderhebel-ai-grant-database",
+    ]
+
+    // Then
+    for (const id of deferredIds) {
+      const project = projects.find((entry) => entry.id === id)
+      expect(project).toBeDefined()
+      if (!project) {
+        throw new Error(`Missing expected project: ${id}`)
+      }
+      expect(project.heroImage.trim().length).toBeGreaterThan(0)
+      expect(project.metrics.length).toBeGreaterThan(0)
+      expect(project.role.trim().length).toBeGreaterThan(0)
+      expect(project.outcome.trim().length).toBeGreaterThan(0)
+    }
+  })
 })

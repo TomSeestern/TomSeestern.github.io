@@ -2,7 +2,7 @@ const fs = require("fs")
 const path = require("path")
 const matter = require("gray-matter")
 
-const EXPECTED_PROJECT_COUNT = 25
+const EXPECTED_PROJECT_COUNT = 28
 const REQUIRED_STRING_FIELDS = ["title", "articleContent", "authorName", "authorImgSrc", "role", "outcome"]
 const REQUIRED_ARRAY_FIELDS = ["tags", "technologies"]
 const PLACEHOLDER_PATTERN = /#todo|to be inserted|to be included|lorem ipsum/i
