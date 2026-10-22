@@ -171,7 +171,8 @@ async function main() {
       process.env.PLAYWRIGHT_BROWSERS_PATH = path.join(process.env.HOME, ".cache/ms-playwright")
     }
 
-    browser = await chromium.launch({ headless: true })
+    const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+    browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) })
 
     for (const item of TARGET_ROUTES) {
       await captureRouteScreenshot(browser, baseURL, item)
