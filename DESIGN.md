@@ -104,9 +104,10 @@ embed raw hex.
     Product. Semantic, mono, and never illustrative.
   - **Pixel sigil** — deterministic mirrored 8×8 archive seal. Used in the hero
     window and index panels, not repeated on every article card.
-  - **Project cover** — a hand-built SVG plate on `night`: payment card, drone
-    scan, skin marketplace, refund ticket, or generic archive. One accent colour,
-    monochrome line work, and a scanline overlay.
+  - **Project cover** — one of 28 hand-built SVG plates on `night`, keyed by
+    project: maze, robot, economy loop, data pipeline, payment rail, glyph grid,
+    and so on. Every project gets its own diagram and label; `archive` is only a
+    fallback. One accent colour, monochrome line work, and a scanline overlay.
   - **Grid / hero glow / scanlines** — low-opacity technical texture. Never
     behind body copy without a solid panel.
 - Cards use `rounded-lg`; controls use `rounded-md`. The terminal window is the
@@ -150,6 +151,10 @@ embed raw hex.
   `role="status"` success contract are unchanged. Inputs use `canvas`, 1px
   `rule-strong` borders, ink text, focus outlines; submit is disabled while
   sending.
+- **Case-study hero** — real screenshots stay evidence inside a `night` plate:
+  an `Evidence / Product surface` strip, the year, an `object-contain` image, and
+  a caption with the project title and figure number. Missing screenshots fall
+  back to the project-specific cover plate.
 - **Project dossier** — sticky facts panel with year, stack, subjects, optional
   role/outcome/metrics. 1px rules; no shadow.
 - **404** — night surface, pixel-column plate, `Page not found` H2, and the

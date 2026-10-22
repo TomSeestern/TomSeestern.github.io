@@ -9,14 +9,19 @@ describe("CaseStudyHero", () => {
     const src = "/img/hero.webp"
 
     // When
-    render(<CaseStudyHero src={src} />)
+    render(<CaseStudyHero src={src} title="Enriched project" year="2021" index={4} />)
 
     // Then
     const hero = screen.getByTestId("case-study-hero")
     expect(hero).toBeInTheDocument()
+    expect(hero).toHaveTextContent("Evidence / Product surface")
+    expect(hero).toHaveTextContent("Enriched project")
+    expect(hero).toHaveTextContent("2021")
+    expect(hero).toHaveTextContent("Fig. 05")
     const image = hero.querySelector("img")
     expect(image).toHaveAttribute("src", expect.stringContaining(encodeURIComponent(src)))
     expect(image).toHaveAttribute("alt", "")
+    expect(image).toHaveClass("object-contain")
   })
 
   it("renders nothing when the source is empty", () => {

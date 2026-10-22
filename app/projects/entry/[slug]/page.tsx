@@ -35,6 +35,7 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
   const frontmatter = parseFrontmatter(fileContent.data)
   const title = frontmatter.title || "Project"
   const projects = getAllProjects()
+  const projectIndex = projects.findIndex((project) => project.id === slug)
   const nextProject = getAdjacentEntries(projects, slug).next
   const nextIndex = nextProject ? projects.findIndex((project) => project.id === nextProject.id) : -1
 
@@ -65,16 +66,21 @@ export default async function Page({ params }: Params): Promise<JSX.Element> {
         {frontmatter.heroImage ? null : (
           <ProjectCover
             slug={slug}
-            index={projects.findIndex((project) => project.id === slug)}
-            className="mb-10 aspect-[16/7] rounded-lg border border-rule"
+            index={projectIndex}
+            className="mb-10 aspect-[16/10] rounded-lg border border-rule"
           />
         )}
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-16">
           <article
             data-testid="project-body"
-            className="prose prose-lg max-w-none font-prose prose-headings:font-display prose-headings:text-ink prose-p:text-ink-muted"
+            className="prose prose-lg min-w-0 max-w-none font-prose prose-headings:font-display prose-headings:text-ink prose-p:text-ink-muted"
           >
-            <CaseStudyHero src={frontmatter.heroImage} />
+            <CaseStudyHero
+              src={frontmatter.heroImage}
+              title={title}
+              year={formatYear(frontmatter.articleDate)}
+              index={projectIndex}
+            />
             <ReactMarkdown components={{ h1: () => null }}>{fileContent.content}</ReactMarkdown>
           </article>
 

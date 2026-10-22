@@ -34,7 +34,8 @@ const archiveSpan = firstProjectYear === lastProjectYear ? firstProjectYear : `$
 const brandMark = await readFile(BRAND_MARK, "utf8")
 const brandDataUri = `data:image/svg+xml;base64,${Buffer.from(brandMark).toString("base64")}`
 
-const browser = await chromium.launch()
+const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+const browser = await chromium.launch(executablePath ? { executablePath } : {})
 
 const applePage = await browser.newPage({ viewport: { width: 180, height: 180 }, deviceScaleFactor: 1 })
 await applePage.setContent(`
