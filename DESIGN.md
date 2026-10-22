@@ -152,7 +152,7 @@ embed raw hex.
   `rule-strong` borders, ink text, focus outlines; submit is disabled while
   sending.
 - **Case-study hero** — real screenshots stay evidence inside a `night` plate:
-  an `Evidence / Product surface` strip, the year, an `object-contain` image, and
+  an `Evidence / Case file` strip, the year, an `object-contain` image, and
   a caption with the project title and figure number. Missing screenshots fall
   back to the project-specific cover plate.
 - **Project dossier** — sticky facts panel with year, stack, subjects, optional

@@ -14,7 +14,7 @@ describe("CaseStudyHero", () => {
     // Then
     const hero = screen.getByTestId("case-study-hero")
     expect(hero).toBeInTheDocument()
-    expect(hero).toHaveTextContent("Evidence / Product surface")
+    expect(hero).toHaveTextContent("Evidence / Case file")
     expect(hero).toHaveTextContent("Enriched project")
     expect(hero).toHaveTextContent("2021")
     expect(hero).toHaveTextContent("Fig. 05")
