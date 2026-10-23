@@ -50,6 +50,12 @@ deploy it.
 - **Vercel:** the project's Git connection builds the GitHub repository's `main`
   branch. The mirror does not call Vercel; a deployment is the Git integration's
   response to the mirrored push.
+- **GitHub branch protection:** `main` carries none. The pre-migration rules
+  (pull request, one approval, three required GitHub Actions checks, force-push
+  disabled, admins enforced) rejected the deploy key with `GH006` and referenced
+  workflows that no longer exist once the Forgejo tree replaces `.github/`.
+  Protection was removed on 2026-10-24. GitHub write access stays owner-only and
+  the mirror remains read-only by policy.
 
 ## Consequences
 
