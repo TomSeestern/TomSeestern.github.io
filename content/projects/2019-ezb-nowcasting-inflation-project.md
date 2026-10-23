@@ -26,7 +26,7 @@ technologies:
   - Seaborn
 ---
 
-The most useful result from the hackathon was not the model. It was the decision not to make the model bigger.
+The most useful result from the hackathon was the decision not to make the model bigger. The model itself was secondary.
 
 ## The problem
 

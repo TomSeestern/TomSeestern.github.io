@@ -46,9 +46,9 @@ The problem is concrete. Baggage handling has a chronic labour shortage, and the
 
 ## The build
 
-We built a fully functional prototype for autonomous baggage unloading within six months. The team was three engineers, which forced us to keep the architecture focused: perception, planning, and control had to be testable independently, and the hardware had to be robust enough to survive repeated iteration. We used Python, ROS 2, Isaac Sim, computer vision, and custom hardware, then moved between simulation and real-world tests to shorten the loop between a software change and a physical result.
+We built a fully functional prototype for autonomous baggage unloading within six months. The team was three engineers, which forced us to keep the architecture focused: perception, planning, and control had to be testable independently, and the hardware had to survive repeated iteration. We used Python, ROS 2, Isaac Sim, computer vision, and custom hardware, then moved between simulation and real-world tests to shorten the loop between a software change and a physical result.
 
-The hard part was not making the robot move once. It was building a system that could explain why it failed. If a grasp missed, we needed to know whether the perception stack had mislocated the bag, the planner had chosen an unreachable pose, or the hardware had not delivered the commanded force. That separation between perception, planning, and control is what makes the prototype useful as a platform rather than a one-off demo.
+The hard part was building a system that could explain why it failed. A one-off demonstration was only the start. If a grasp missed, we needed to know whether the perception stack had mislocated the bag, the planner had chosen an unreachable pose, or the hardware had not delivered the commanded force. That separation between perception, planning, and control is what makes the prototype useful as a platform rather than a one-off demo.
 
 That work led to pilot preparation with three major German airports. It also helped us secure €300k in non-dilutive grants and €25k in awards, and attracted three term sheets from top-tier VCs and industry experts. Those signals matter, but the engineering milestone matters more: a robot that can do a useful piece of the job in a real environment.
 

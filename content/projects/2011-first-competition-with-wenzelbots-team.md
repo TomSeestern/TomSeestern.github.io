@@ -24,7 +24,7 @@ The first national robotics competition made the gap visible. We arrived with a 
 
 In 2011, I joined the Wenzelbots for my first national robotics competition. We had to build and program a LEGO Mindstorms NXT robot in LabVIEW, then make it complete several tasks in one run. The competition also scored the research and design work behind the robot, which meant the team had to explain its decisions to judges.
 
-We were younger and less experienced than many of the teams around us. The scores made that obvious. Our robot needed repeated adjustments, and every change in design or program meant another full test. The task was not simply to write a better program; it was to make a machine that behaved consistently under competition conditions.
+We were younger and less experienced than many of the teams around us. The scores made that obvious. Our robot needed repeated adjustments, and every change in design or program meant another full test. The task went beyond writing a better program: the machine had to behave consistently under competition conditions.
 
 ## The build
 
@@ -32,7 +32,7 @@ We divided the work into the robot, the program, testing, and the research prese
 
 We ran the full sequence repeatedly, not just individual mechanisms. We compared failed runs, adjusted the robot, and tried again. The presentation forced a different kind of discipline: we had to explain why we had made each choice, not just show that the robot moved. Answering a judge's question about a design decision was often harder than fixing the decision itself.
 
-That was more useful than demonstrating the robot. It showed me that a design decision is not fully understood until you can explain what you gave up. Those questions were not a formality; they were the part of the work that made the design explicit. That is where the next season's process started.
+That was more useful than demonstrating the robot. It showed me that a design decision is not fully understood until you can explain what you gave up. Those questions made the design explicit; they were part of the work, not a formality. That is where the next season's process started.
 
 ## The result
 
@@ -40,4 +40,4 @@ We did not leave with a top placement. We did leave with a working robot, a clea
 
 ## What I took from it
 
-That year made robotics feel bigger than a school club. It was the first time I saw programming, hardware, presentation, and teamwork collide under a deadline. The result was not the number on the leaderboard. It was the realisation that a technical idea only counts when a team can execute it and explain it.
+That year made robotics feel bigger than a school club. It was the first time I saw programming, hardware, presentation, and teamwork collide under a deadline. The result was the realisation that a technical idea only counts when a team can execute it and explain it. The number on the leaderboard was secondary.

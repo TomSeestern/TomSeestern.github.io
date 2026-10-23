@@ -27,7 +27,7 @@ The client did not have a software problem. It had a data ownership problem that
 
 A property-management client had a familiar problem: the processes that kept listings current lived in people's heads and in disconnected systems. New properties were entered manually on several communal websites. The same information existed in more than one place, and nobody could say with confidence which copy was correct.
 
-I worked as a freelance IT consultant on the project. The mandate was not to add another tool. It was to make the existing workflow coherent enough to support a relaunch without creating more manual reconciliation for the operations team.
+I worked as a freelance IT consultant on the project. The mandate was to make the existing workflow coherent enough to support a relaunch without creating more manual reconciliation for the operations team. Adding another tool would not accomplish that.
 
 ## The build
 
@@ -45,6 +45,6 @@ The manual property-entry workflow was replaced with digitised processes, new AP
 
 ## What I took from it
 
-The interesting part of this project was not any single API. It was the gap between how a process is documented and how it actually runs. Recording the manual workflow first made the technical work more accurate and gave stakeholders a shared picture of what would change.
+The interesting part of this project was the gap between how a process is documented and how it actually runs. No single API captured that. Recording the manual workflow first made the technical work more accurate and gave stakeholders a shared picture of what would change.
 
 It also reinforced a lesson I keep applying: data consistency is a product feature. If two systems disagree, someone eventually has to reconcile them by hand, and that cost lands on the people least able to absorb it.

@@ -57,6 +57,6 @@ Foerderhebel turns fragmented grant information into a multilingual product with
 
 ## What I took from it
 
-The hardest part was not scraping more pages. It was deciding when a grant is trustworthy enough to publish, how to represent uncertainty, and how to keep three language versions from drifting apart. A database of public information is only useful if the user can tell where a claim came from and when it was last true.
+The hardest part was deciding when a grant is trustworthy enough to publish, how to represent uncertainty, and how to keep three language versions from drifting apart. Scraping more pages was the smaller problem. A database of public information is only useful if the user can tell where a claim came from and when it was last true.
 
 That is the part I would carry into any research-heavy product: make provenance visible, make freshness a first-class field, and design for the fact that the source will change after you ship.

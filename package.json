@@ -12,6 +12,7 @@
     "prettier": "prettier --check \"**/*.{js,jsx,ts,tsx}\"",
     "prettier:fix": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "contrast": "node scripts/check-contrast.mjs",
+    "content:audit": "node scripts/check-content-slop.js",
     "design-tokens": "node scripts/check-design-tokens.mjs",
     "images": "node scripts/check-image-size.mjs",
     "fonts": "node scripts/check-font-budget.mjs",

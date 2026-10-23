@@ -29,7 +29,7 @@ technologies:
   - AndroidStudio
 ---
 
-Thirty hours is not much time to build a travel planner. It is enough to find out which features are actually essential.
+Thirty hours is enough to find out which features are actually essential. Building the whole travel planner was never realistic.
 
 ## The problem
 
@@ -47,7 +47,7 @@ The Android client was also my first serious use of fragments, RecyclerView adap
 
 ## The result
 
-We shipped a native Android MVP that could authenticate, search, and present multimodal options. It was not a production travel product, but it was a coherent end-to-end client that proved the core workflow. The time constraint made the result more honest: every screen had to justify its place. Testing on a physical device exposed layout and lifecycle problems that the emulator hid, especially around rotation and slow network responses. I fixed those before the final demo, and the app felt more like a product because of it.
+We shipped a native Android MVP that could authenticate, search, and present multimodal options. It was a coherent end-to-end client that proved the core workflow, even though it was not a production travel product. The time constraint made the result more honest: every screen had to justify its place. Testing on a physical device exposed layout and lifecycle problems that the emulator hid, especially around rotation and slow network responses. I fixed those before the final demo, and the app felt more like a product because of it.
 
 ## What I took from it
 

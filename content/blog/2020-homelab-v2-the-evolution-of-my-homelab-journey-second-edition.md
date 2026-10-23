@@ -2,7 +2,7 @@
 id: the-evolution-of-my-homelab-journey-second-edition
 title: The Evolution of My Homelab Journey - The Second Iteration
 articleDate: 2020-12-31
-articleContent: In this blog, I detail the journey of developing my second iteration of homelab, complete with autonomous servers, automation, and artificial intelligence technologies.
+articleContent: My second homelab replaced a Raspberry Pi with a loud, power-hungry Dell R710. It taught me where capacity helped, where it hurt, and what the failures changed.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
 tags:
@@ -20,7 +20,7 @@ Still, it gave me room to learn what I could not learn on a small board.
 
 ### From ESXi to unRAID
 
-I started with ESXi, moved to Ubuntu, then settled on unRAID OS. That progression was less about finding one perfect platform and more about working out how I wanted to operate the machine.
+I started with ESXi, moved to Ubuntu, then settled on unRAID OS. Each move taught me more about how I wanted to run the machine than about finding a perfect platform.
 
 On unRAID, I ran Nextcloud, ownCloud, VPN services, and OpenHAB as Docker containers. Later, I used it as a VM platform too. Containers covered the always-on services, while VMs gave me isolation for experiments that needed their own operating system.
 

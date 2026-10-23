@@ -34,11 +34,11 @@ In a marketplace, a completed sale is not the same as a completed payment.
 
 PayMeNow addressed a trust problem for eBay sellers: completing an auction did not always mean receiving payment promptly. I worked as a full-stack developer and IT consultant to build an application around that concern, with a focus on a clear seller-facing flow and durable transaction records.
 
-The product was not a payment processor. It was a visibility and action layer. Sellers needed to understand what had happened to their money and what, if anything, they still needed to do. That distinction shaped every screen.
+The product was a visibility and action layer, not a payment processor. Sellers needed to understand what had happened to their money and what, if anything, they still needed to do. That distinction shaped every screen.
 
 ## The build
 
-I was responsible for the full platform, including concept, design, implementation, launch, analytics, and ongoing support. That scope made the product decisions concrete. A feature was not done when the code worked; it was done when a seller could look at the application and understand the state of a transaction.
+I was responsible for the full platform, including concept, design, implementation, launch, analytics, and ongoing support. That scope made the product decisions concrete. A feature was done when a seller could look at the application and understand the state of a transaction. Working code was only the starting point.
 
 I built the frontend with React and BootstrapCSS, starting from Figma mockups to test the product flow before implementation. AWS Amplify provided managed backend services, AWS Lambda ran server-side application logic, and Amazon RDS stored transaction data. This split suited a small product because the UI, application logic, and relational records could evolve independently without managing servers for each concern.
 
@@ -56,4 +56,4 @@ I took a seller-facing payment-status product from concept and design through la
 
 This project deepened my understanding of payment-adjacent systems, where correctness, traceability, and clear user communication matter together. I would now add formal audit trails, idempotent payment-state transitions, and threat modelling before claiming any payment-security guarantees.
 
-PayMeNow remains a useful example of translating a marketplace risk into an end-to-end product design. The hard part was not the AWS wiring. It was earning enough trust that a seller would use the screen when money was late.
+PayMeNow remains a useful example of translating a marketplace risk into an end-to-end product design. The hard part was earning enough trust that a seller would use the screen when money was late. The AWS wiring was solvable.

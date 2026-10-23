@@ -46,7 +46,7 @@ I built the platform in TypeScript and Next.js with a YAML-first schema. The das
 
 The repo now contains a full orchestration stack: a `clos` CLI for scaffolding, validating, triggering, and streaming SOP runs; a TypeScript SDK with `AgentRuntime`, `ClosedLoopClient`, and PM scheduler APIs; a priority-based scheduler; retries and escalation; and an audit trail with step lineage, inputs, outputs, and agent attribution. SOP templates cover customer onboarding, incident response, and weekly team review.
 
-The scope is visible in the evidence: 709 test/spec files, 154 API routes, and 48 dashboard pages. That is not a weekend prototype with a chat box. It is a product surface with the unglamorous parts included: persistence, authentication, error contracts, run history, and tests. The live demo is at closed-loop-os.vercel.app.
+The scope is visible in the evidence: 709 test/spec files, 154 API routes, and 48 dashboard pages. That is a product surface with the unglamorous parts included: persistence, authentication, error contracts, run history, and tests. It is far from a weekend prototype with a chat box. The live demo is at closed-loop-os.vercel.app.
 
 ## The result
 

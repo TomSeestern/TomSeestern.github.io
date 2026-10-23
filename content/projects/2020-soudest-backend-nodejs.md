@@ -47,4 +47,4 @@ We delivered a Node.js/Express API with Passport authentication, JWT routes, SQL
 
 ## What I took from it
 
-This project made session management and API boundaries tangible for me. If I rebuilt it now, I would make token expiry, refresh flows, audit logging, and automated integration tests first-class concerns. The core lesson was that authentication is not a checkbox. It shapes how every client reaches the system.
+This project made session management and API boundaries tangible for me. If I rebuilt it now, I would make token expiry, refresh flows, audit logging, and automated integration tests first-class concerns. The core lesson was that authentication shapes how every client reaches the system. It is not a checkbox.

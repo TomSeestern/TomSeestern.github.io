@@ -57,4 +57,4 @@ AudioForge turns audiobook metadata into a printable object with a live preview,
 
 ## What I took from it
 
-The project was a lesson in designing around a physical output. A 3D model is not finished when it looks correct; it is finished when someone can print it, and that means respecting the limits of the tools downstream. It also reinforced a privacy principle I care about: a local workflow should not quietly become a data-collection workflow.
+The project was a lesson in designing around a physical output. A 3D model is finished when someone can print it, not when it looks correct. That means respecting the limits of the tools downstream. It also reinforced a privacy principle I care about: a local workflow should not quietly become a data-collection workflow.

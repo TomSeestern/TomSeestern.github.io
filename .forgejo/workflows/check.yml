@@ -45,6 +45,8 @@ jobs:
         run: nix develop -c pnpm lint
       - name: Format check
         run: nix develop -c pnpm prettier
+      - name: Content slop audit
+        run: nix develop -c pnpm content:audit
       - name: Contrast gate
         run: nix develop -c pnpm contrast
       - name: Design token gate

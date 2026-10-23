@@ -122,6 +122,7 @@ From `package.json`:
 | `pnpm lighthouse`      | Run Lighthouse CI budgets (LCP/CLS/TBT)                   |
 | `pnpm budget:bundle`   | Check bundle bytes against the committed baseline         |
 | `pnpm contrast`        | Check token pairs against WCAG contrast ratios            |
+| `pnpm content:audit`   | Check published prose for slop patterns and hidden text   |
 | `pnpm design-tokens`   | Reject legacy tokens, theme utilities, raw hex, old faces |
 | `pnpm images`          | Enforce image byte budget (`≤200 KB`, hero `≤50 KB`)      |
 | `pnpm fonts`           | Enforce font budget (`≤2 families`, `≤100 KiB`)           |
@@ -213,8 +214,10 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 ├── e2e/
 │   ├── *.spec.ts              # 14 Playwright specs incl. visual-language contract
 │   └── fixtures/              # axe config, route expectations, a11y allowlist
-├── docs/adr/
-│   └── 0001-colossus-rework.md  # Tracked design decision record
+├── docs/
+│   ├── adr/
+│   │   └── 0001-colossus-rework.md  # Tracked design decision record
+│   └── content-audit.md       # Prose gate: rules, limits, exemptions
 ├── tests/                     # Budget fixtures (bundle baseline, contrast pairs)
 ├── public/
 │   ├── img/                   # Photos, OG logo, and Showcase screenshots
@@ -226,6 +229,8 @@ export PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright
 │   └── tailwind.css           # Tailwind entry: base/components/utilities + display & motion layers
 └── scripts/
     ├── check-*.{js,mjs}       # Gates: frontmatter, contrast, design tokens, images, fonts, bundle
+    ├── check-content-slop.js  # Published-prose and hidden-text gate
+    ├── content-audit/         # Rule engine, extractors, and focused fixtures
     ├── check-design-tokens.mjs # Rejects legacy tokens, dark utilities, raw hex, old faces
     └── update-readme-screenshots.ts  # Captures Showcase screenshots from a dev server
 ```
@@ -241,6 +246,12 @@ collections:
 
 The slug is the file name without the `.md` extension. `lib/blog.tsx` and
 `lib/projects.tsx` are thin wrappers around the shared reader.
+
+Published prose is also checked by `pnpm content:audit`. The gate covers the
+Markdown collections and visible UI copy, and it rejects hidden Unicode, prompt
+residue, unknown frontmatter keys, and high-confidence AI-writing patterns. Its
+scope, rule set, false-positive policy, and watermark limits are documented in
+[`docs/content-audit.md`](docs/content-audit.md).
 
 Frontmatter `tags` drive their own routes. `lib/tags.ts` builds a canonical
 index at build time (folding label variants such as casing, separators, and

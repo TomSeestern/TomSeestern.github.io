@@ -19,7 +19,7 @@ technologies:
   - Azure
 ---
 
-The hardest part of a data warehouse is not the pipeline. It is getting several departments to agree on what a number means and who is allowed to change it.
+The hardest part of a data warehouse is getting several departments to agree on what a number means and who is allowed to change it. The pipeline was the more familiar problem.
 
 ## The problem
 
@@ -35,11 +35,11 @@ I worked with department heads and IT staff to refine the reports through feedba
 
 The design had to accommodate two kinds of change: scheduled changes to the warehouse and the less predictable changes in departmental questions. I kept the transformation logic explicit so a report owner could trace a number back to its source instead of treating the dashboard as a black box.
 
-Data quality was the part that could quietly sink the project. We added checks around missing values, duplicate records, and changed source formats, and made refresh failures visible to the people who owned the reports. That was not glamorous work, but it was the difference between a dashboard people trusted and one they checked against a spreadsheet before every meeting.
+Data quality was the part that could quietly sink the project. We added checks around missing values, duplicate records, and changed source formats, and made refresh failures visible to the people who owned the reports. That work was unglamorous. It was also the difference between a dashboard people trusted and one they checked against a spreadsheet before every meeting.
 
 ## The result
 
-We delivered a cloud data warehouse and department-specific Power BI reporting for municipal staff. The lasting value was not only the warehouse. It established a repeatable way for the administration to turn operational data into usable information.
+We delivered a cloud data warehouse and department-specific Power BI reporting for municipal staff. The lasting value came from more than the warehouse: it established a repeatable way for the administration to turn operational data into usable information.
 
 ## What I took from it
 

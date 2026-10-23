@@ -49,7 +49,7 @@ That boundary mattered more than any individual DSP block: the audio thread must
 
 A Three.js view uses the same engine model to animate the crankshaft, pistons, valves, turbo, and Wankel rotor, with live telemetry for RPM, exhaust temperature, manifold pressure, air/fuel ratio, and per-cylinder combustion. The visualisation targets 60 fps and drops detail on low-end devices rather than hiding the physics. I kept the engine configurations data-driven so the audio and visual layers read the same preset definition.
 
-The failure table was not decoration. It made audio dropouts, missed deadlines, and fallback behaviour visible during development, which is essential when a problem in the audio thread can sound like a bad preset. I would rather ship a system that tells the user it is degrading than one that hides the failure behind a convincing noise.
+The failure table made audio dropouts, missed deadlines, and fallback behaviour visible during development, which is essential when a problem in the audio thread can sound like a bad preset. I would rather ship a system that tells the user it is degrading than one that hides the failure behind a convincing noise.
 
 ## The result
 
@@ -57,4 +57,4 @@ FullSound is a browser-native engine simulator with real-time audio synthesis, W
 
 ## What I took from it
 
-The project made real-time boundaries concrete. The interesting part was not making one DSP block sound good in isolation; it was keeping the audio thread deterministic while a separate worker ran a heavier simulation and a renderer drew the result. That is the part I would carry into another simulation project: make the physical model the shared source of truth, then treat audio and graphics as two views of it.
+The project made real-time boundaries concrete. The interesting part was keeping the audio thread deterministic while a separate worker ran a heavier simulation and a renderer drew the result. A single DSP block sounding good in isolation was only one part of the problem. That is the part I would carry into another simulation project: make the physical model the shared source of truth, then treat audio and graphics as two views of it.

@@ -29,13 +29,13 @@ SQF felt familiar in places because I already knew some C++ and Python, but it a
 
 ## The build
 
-I tested missions with real players, watched where they got stuck, and changed the scripts. A mission that read well on paper could become boring or confusing once people played it together. That pushed me to think about objectives, pacing, and failure states, not only code. If a squad could not tell what to do next, the script was not finished, even if it ran without errors.
+I tested missions with real players, watched where they got stuck, and changed the scripts. A mission that read well on paper could become boring or confusing once people played it together. That pushed me to think about objectives, pacing, and failure states as well as code. If a squad could not tell what to do next, the script was not finished, even if it ran without errors.
 
-Community feedback shaped most decisions. Players would tell me where they stopped understanding the objective or lost momentum, and that was more useful than a bug report. I learned to watch the mission as a sequence of decisions rather than a set of scripts. That changed how I used the mission editor: instead of starting with what I could spawn, I started with what a squad should see, hear, and worry about at each stage. I clarified objectives, adjusted pacing, and made failure recoverable where possible. The scripts existed to support that sequence, and keeping the logic small enough to explain made debugging more focused. The goal was a shared experience, not a showcase for the script.
+Community feedback shaped most decisions. Players would tell me where they stopped understanding the objective or lost momentum, and that was more useful than a bug report. I learned to watch the mission as a sequence of decisions rather than a set of scripts. That changed how I used the mission editor: instead of starting with what I could spawn, I started with what a squad should see, hear, and worry about at each stage. I clarified objectives, adjusted pacing, and made failure recoverable where possible. The scripts existed to support that sequence, and keeping the logic small enough to explain made debugging more focused. The goal was a shared experience. The script was a means, not the attraction.
 
 ## The result
 
-I shipped a series of Arma 3 multiplayer missions for four to eight players. None of them were commercial products, but they were shared experiences that people chose to spend an evening with. That made the feedback loop immediate and social. The best feedback was not praise; it was a squad telling me exactly where the mission stopped making sense.
+I shipped a series of Arma 3 multiplayer missions for four to eight players. None of them were commercial products, but they were shared experiences that people chose to spend an evening with. That made the feedback loop immediate and social. The best feedback was a squad telling me exactly where the mission stopped making sense. Praise was pleasant but not useful.
 
 ## What I took from it
 

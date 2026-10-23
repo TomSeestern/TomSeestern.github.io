@@ -24,7 +24,7 @@ The 2012 season began with a decision: stop treating the competition as a build 
 
 The 2011 competition had exposed the weak points. Our design was rushed, our testing was not systematic, and the research presentation was assembled too late. We were not short of ideas. We were short of a process that could turn those ideas into a reliable run when the judges were watching.
 
-I became team lead and principal developer for the 2012 season. The goal was not just to build a better robot. It was to make the team better at preparing, testing, and explaining the work.
+I became team lead and principal developer for the 2012 season. The goal was to make the team better at preparing, testing, and explaining the work. A better robot was the visible result, not the whole point.
 
 ## The build
 

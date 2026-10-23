@@ -98,8 +98,8 @@ export default function About() {
               </p>
               <p className="mt-6 max-w-measure-lead font-body text-body-lg text-ink-muted">
                 I started with LabVIEW and a robot that refused to follow a line, studied applied computer science,
-                freelanced across web and desktop software, and founded a startup at the intersection of streaming and
-                blockchain. The through-line is the same: make the system legible, then make it hold.
+                freelanced across web and desktop software, and founded a startup that connected streaming with
+                blockchain. The work keeps returning to the same question: make the system legible, then make it hold.
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
                 <a
@@ -156,7 +156,7 @@ export default function About() {
           <TimelineEntry
             time="2021 - 2024"
             title="Founder & Tech Lead @ LAYZR.gg"
-            description="Founding a new startup at the intersection of streaming and blockchain."
+            description="Founding a startup that connected streaming with blockchain."
             link="https://layzr.gg"
           >
             <PersonTeaser

@@ -45,11 +45,11 @@ I created a hybrid dataset from HD source material and synthetic scenes generate
 
 ## The build
 
-The model was a modified U-Net architecture, chosen because pixel-level change detection needs spatial detail, not only an image-level label. I evaluated architecture and dataset choices against the conflicting constraints of detection quality and runtime cost. The final system was designed to identify small movements, tolerate changing light, and operate during omnidirectional flight. It also had to cope with camera ego-motion, which makes naive frame differencing unreliable.
+The model was a modified U-Net architecture, chosen because pixel-level change detection needs spatial detail beyond an image-level label. I evaluated architecture and dataset choices against the conflicting constraints of detection quality and runtime cost. The final system was designed to identify small movements, tolerate changing light, and operate during omnidirectional flight. It also had to cope with camera ego-motion, which makes naive frame differencing unreliable.
 
 Deployment mattered from the beginning. I targeted an Nvidia Jetson NX rather than treating inference hardware as an afterthought. That forced tradeoffs between model size, input processing, and real-time performance. Working with RWU and HATtec GmbH gave the thesis access to domain feedback and a more realistic benchmark for the work.
 
-The most interesting engineering was not a single layer or loss function. It was the loop between synthetic scene generation, training, and evaluation. If the synthetic data was too clean, the model learned the renderer. If it was too close to the test footage, the evaluation stopped being an honest test of transfer. I had to keep asking which part of the result came from the model and which came from the dataset.
+The most interesting engineering was the loop between synthetic scene generation, training, and evaluation. No single layer or loss function captured it. If the synthetic data was too clean, the model learned the renderer. If it was too close to the test footage, the evaluation stopped being an honest test of transfer. I had to keep asking which part of the result came from the model and which came from the dataset.
 
 ## The result
 

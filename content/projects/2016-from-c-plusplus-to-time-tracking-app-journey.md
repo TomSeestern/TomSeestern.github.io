@@ -34,7 +34,7 @@ That meant thinking about transactions, default values, and how to show a failur
 
 Qt's model/view separation made that boundary practical: I could change how an entry was displayed without rewriting the storage code, and I could test the storage code without clicking through a form. The CSV export was also a small lesson in product thinking. It gave users a way to move their data and made the application feel less like a sealed box.
 
-The final application had to handle a failed save and an edited entry, and it had to keep the interface and the stored data in agreement. I added validation at the boundary and kept the calculation in one place so the interface and the export agreed. The goal was not a feature list; it was an application that could be trusted with someone's working time.
+The final application had to handle a failed save and an edited entry, and it had to keep the interface and the stored data in agreement. I added validation at the boundary and kept the calculation in one place so the interface and the export agreed. The goal was an application that could be trusted with someone's working time. A feature list was not the measure.
 
 ## The result
 

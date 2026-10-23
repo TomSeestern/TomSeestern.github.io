@@ -17,7 +17,7 @@ tags:
 
 My third homelab iteration started with an old tower PC. Rather than retire it, I turned it into a Docker and VM host running unRAID OS. It now carries services I use every day, including Nextcloud, Bitwarden, VPN, AdGuard, Home Assistant, Overleaf, Portainer, Grafana, InfluxDB, Telegraf, and Z-Wave2MQTT.
 
-This setup is less about running every service I can find and more about learning where self-hosting helps. A home server becomes interesting when storage, monitoring, automation, and access control have to work together.
+I am more interested in learning where self-hosting helps than in running every service I can find. A home server becomes interesting when storage, monitoring, automation, and access control have to work together.
 
 ## One Host, Many Services
 
@@ -29,7 +29,7 @@ I also run Automatic1111 and ComfyUI. Both are useful for testing local AI workf
 
 More than 50 mobile and stationary sensors feed data into my setup. Home Assistant handles automations, while InfluxDB stores measurements and Grafana makes them visible. That combination lets me track air quality, energy consumption, sleep patterns, and the state of devices around the house.
 
-Not every device belongs on the main network. Some systems run on separate network media to keep regular traffic away from automation devices. Segmentation is not glamorous, but it makes troubleshooting easier and keeps an experimental service from becoming everyone else's network problem.
+Not every device belongs on the main network. Some systems run on separate network media to keep regular traffic away from automation devices. Segmentation is unglamorous. It makes troubleshooting easier, and it keeps an experimental service from becoming everyone else's network problem.
 
 ## Storage, Backups, and Recovery
 
@@ -39,6 +39,6 @@ I use local HTTPS encryption and an OpenVPN server for remote access. Those choi
 
 ## What I Automate
 
-Home Assistant ties the stack together. Some automations are simple, such as lighting control. Others rely on sensor data, including air-quality monitoring, energy usage, and sleep tracking. The useful part is not the dashboard. It is having data and controls in one place, then being able to test a small change without buying another cloud subscription.
+Home Assistant ties the stack together. Some automations are simple, such as lighting control. Others rely on sensor data, including air-quality monitoring, energy usage, and sleep tracking. The useful part is having data and controls in one place, then being able to test a small change without buying another cloud subscription. The dashboard is only the surface.
 
 This homelab is still a workbench. The old tower PC, unRAID, Docker, Ubuntu VM, InfluxDB, Grafana, Home Assistant, and local AI tools all have limits. Finding those limits, then making tradeoffs around them, is why I keep iterating on it.

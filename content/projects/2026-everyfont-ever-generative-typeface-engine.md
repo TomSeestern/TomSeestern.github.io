@@ -53,6 +53,6 @@ EveryFontEver.com is live and exports real TTF files. The interface makes a 2^76
 
 ## What I took from it
 
-EveryFontEver sits at the intersection of creative tooling and systems design. It required the same discipline as a production application: a typed engine, reproducible state, export paths that actually work, and a UI that explains itself without a manual.
+EveryFontEver combines creative tooling with systems design. It required the same discipline as a production application: a typed engine, reproducible state, export paths that actually work, and a UI that explains itself without a manual.
 
 The project also changed how I think about generative interfaces. It is easy to produce something novel; it is harder to give a user a clear sense of what they are looking at, how to change it, and how to return to a result later. The address format, the visual ledger, and the direct manipulation controls are all attempts to answer that.

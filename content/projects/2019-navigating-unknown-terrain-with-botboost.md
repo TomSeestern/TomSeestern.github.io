@@ -37,7 +37,7 @@ A\* was one of several control algorithms we implemented and benchmarked. The fi
 
 The implementation details were where the project became real. The front sensor threshold was 1.2 metres and the left sensor threshold 1.5 metres. The robot could only declare itself back on the line after travelling at least 0.4 metres, which prevented it from oscillating between obstacle detection and line joining. We also limited acceleration because a sudden move above 0.2 m/s made the robot drift roughly 30 degrees to the right.
 
-The simulation phase was not a formality. It gave us a reproducible place to compare controllers before we committed time on the physical robot, and it exposed assumptions about sensor range that would have been expensive to discover during a run. We still had to tune the final thresholds on the TurtleBot, but the simulations narrowed the search.
+The simulation phase gave us a reproducible place to compare controllers before we committed time on the physical robot. It also exposed assumptions about sensor range that would have been expensive to discover during a run. We still had to tune the final thresholds on the TurtleBot, but the simulations narrowed the search.
 
 ## The result
 

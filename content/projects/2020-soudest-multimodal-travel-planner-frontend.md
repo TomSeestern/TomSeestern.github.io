@@ -54,6 +54,6 @@ We delivered a responsive React and TypeScript frontend for the SouDest multimod
 
 ## What I took from it
 
-This project sharpened my frontend skills and gave me a practical understanding of user-centric design: a feature is not finished when the component renders, but when a user can make a decision with it. It also showed me how much of frontend quality lives in the states nobody screenshots.
+This project sharpened my frontend skills and gave me a practical understanding of user-centric design: a feature is finished when a user can make a decision with it, not when the component renders. It also showed me how much of frontend quality lives in the states nobody screenshots.
 
 If I rebuilt it today, I would add integration tests around the API boundary, reduce the component surface with a stricter data layer, and design the empty and error states before the happy path.

@@ -56,11 +56,11 @@ We built the system on Node.js and Terraform, with AWS providing the infrastruct
 
 The most important engineering constraint was that a creator campaign could not wait for a maintenance window. When a streamer went live, thousands of fans could arrive at once, and a failure would be visible to the audience in real time. We maintained 100% uptime during critical growth periods by treating deploys, observability, and rollback paths as part of the product rather than infrastructure chores.
 
-The company raised €500k in seed funding, with Atlantic Labs and the Evolve Incubator leading the round. LAYZR also won the Top 50 Startup Award in 2021, the Digital Rising Award, and the Next in Esports Award. Those signals mattered because they came from people who understood the creator market, not only the technology.
+The company raised €500k in seed funding, with Atlantic Labs and the Evolve Incubator leading the round. LAYZR also won the Top 50 Startup Award in 2021, the Digital Rising Award, and the Next in Esports Award. Those signals mattered because they came from people who understood the creator market as well as the technology.
 
 ## The result
 
-LAYZR reached more than 100k monthly active users and more than 1,000 streamer partnerships. In 2024, Jodel acquired the company to bring avatars into its social platform. The acquisition was a milestone, not a finish line: it confirmed that the platform, the team, and the product had earned a place in the market.
+LAYZR reached more than 100k monthly active users and more than 1,000 streamer partnerships. In 2024, Jodel acquired the company to bring avatars into its social platform. The acquisition was a milestone. It confirmed that the platform, the team, and the product had earned a place in the market.
 
 ## What I took from it
 

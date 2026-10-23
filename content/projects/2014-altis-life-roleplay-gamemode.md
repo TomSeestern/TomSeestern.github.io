@@ -39,7 +39,7 @@ The first challenge was scale. More players meant more server pressure, more edg
 
 I led a small team of developers and moderators, oversaw the servers, and handled project management. That meant splitting work, reviewing changes, and deciding when a feature was stable enough to ship. We kept adding features, watching performance, collecting feedback, and updating the gamemode instead of treating launch as the finish line.
 
-The technical work was only half of it. A roleplay server is a social product: the economy has to feel fair, the rules have to be understandable, and the moderation tools have to let people resolve conflicts without breaking the world. I learned to design changes around player behaviour, not just around what the code made possible.
+The technical work was only half of it. A roleplay server is a social product: the economy has to feel fair, the rules have to be understandable, and the moderation tools have to let people resolve conflicts without breaking the world. I learned to design changes around player behaviour as well as what the code made possible.
 
 On the server side, persistence was the difference between a scenario and a world. Player money, vehicles, houses, and faction state had to survive restarts without becoming a source of duplication or loss. We treated the database as part of the game design, not a storage detail, and added checks around the actions that could change an economy fastest. That is where I learned to think about exploits as ordinary failure modes rather than as something a moderator would clean up later.
 

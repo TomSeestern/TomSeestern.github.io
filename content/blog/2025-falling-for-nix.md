@@ -22,9 +22,9 @@ I did not start using Nix because I wanted a new hobby. I started because I want
 
 By the end of 2025, my desktop, laptop, and home server are described by one flake. That sentence sounds modest. For me it is the biggest change in how I think about machines since I stopped installing Linux from scratch.
 
-## The first surprise: it is not just a package manager
+## The first surprise: it describes more than packages
 
-Nix is a package manager in the same way Git is a folder watcher. The package part is real, but it is not the interesting part.
+Nix is often introduced as a package manager. The package part is real. The more useful idea is the build description.
 
 The interesting part is that a Nix expression describes a build, and a flake describes a whole system: inputs, packages, modules, users, services, and the small policy decisions that normally live in a wiki page nobody updates. The lock file pins the inputs. The build produces a closure. The machine activates a generation.
 
@@ -66,7 +66,7 @@ Home Manager handles the user layer. My shell, Git configuration, editor setting
 
 DevShells turned out to be just as useful as the system configuration. A project can declare the compiler, formatter, language server, and command-line tools it expects. `direnv` loads the shell when I enter the directory. The same project gets the same toolchain on every machine, and a new machine does not need a separate install ritual before it can build anything.
 
-Secrets are handled with `sops-nix`. The encrypted material lives with the configuration; the private key lives on the machine; the secret is decrypted at activation and exposed at a path the service expects. That is not a claim that secrets are now risk-free. It is a claim that the boundary is visible and does not depend on a forgotten `.env` file in a home directory.
+Secrets are handled with `sops-nix`. The encrypted material lives with the configuration; the private key lives on the machine; the secret is decrypted at activation and exposed at a path the service expects. I am not claiming that secrets are now risk-free. The boundary is visible, and it does not depend on a forgotten `.env` file in a home directory.
 
 A local binary cache made the rebuilds tolerable. Without it, the purity is real but so is the waiting. With it, a rebuild is usually a few minutes and sometimes less. This is the unglamorous part of the story: a good build graph still needs good infrastructure around it.
 
@@ -76,11 +76,11 @@ The first thing I like is that a change is reviewable. I can look at a diff and 
 
 The second is that a new machine is mostly a mapping exercise. The hardware file still comes from the machine, because hardware is stubborn and full of exceptions. Everything above that layer is a choice I can read, copy, and adjust. The first boot is not a blank page.
 
-The third is rollback. When a rebuild goes wrong, the previous generation is still there. That does not make me careless, but it does make the system feel less fragile. The escape hatch is part of the design, not an admission that the design failed.
+The third is rollback. When a rebuild goes wrong, the previous generation is still there. I still try to be careful, but the system feels less fragile. The escape hatch is part of the design, not an admission that the design failed.
 
 The fourth is development environments. I used to keep a mental list of tools for each project. Now the project keeps the list. That is a small change with a large effect on how often I wonder why a build behaves differently on another machine.
 
-The fifth is the quiet one: less folklore. When something breaks, I can point at a revision instead of a habit. When I want to know why a machine has a package, I can follow the module that put it there. The configuration is not perfect documentation, but it is a much better starting point than “I think I installed that in 2022.”
+The fifth is the quiet one: less folklore. When something breaks, I can point at a revision instead of a habit. When I want to know why a machine has a package, I can follow the module that put it there. The configuration is imperfect documentation, and it is a much better starting point than “I think I installed that in 2022.”
 
 ## The cost is real
 
@@ -112,6 +112,6 @@ The part I feel is legibility. I can explain how a machine is put together witho
 
 Nix did not make me love configuration for its own sake. It made the machine legible.
 
-The best compliment I can give it is not that the setup is reproducible. It is that I no longer have to remember how it was made.
+The best compliment I can give it is that I no longer have to remember how it was made.
 
 That is a strange thing to fall in love with. It is also the first time my machines have felt like mine.
