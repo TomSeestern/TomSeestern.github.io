@@ -46,6 +46,36 @@ describe("content audit", () => {
     expect(rulesFor(result)).toContain("slop-vocabulary")
   })
 
+  it("flags a trailing significance participle", () => {
+    const result = auditMarkdownSource(
+      "# Notes\n\nThe system retries failed jobs, highlighting the importance of resilience.\n",
+      "analysis.md"
+    )
+
+    expect(rulesFor(result)).toContain("superficial-analysis")
+  })
+
+  it("flags a canned conclusion heading", () => {
+    const result = auditMarkdownSource("# Notes\n\n## Final thoughts\n\nThe server is stable.\n", "conclusion.md")
+
+    expect(rulesFor(result)).toContain("canned-conclusion")
+  })
+
+  it("flags a formulaic article opening", () => {
+    const result = auditMarkdownSource("# Notes\n\nIn this article, we explore the system.\n", "intro.md")
+
+    expect(rulesFor(result)).toContain("formulaic-intro")
+  })
+
+  it("flags dense formal transitions", () => {
+    const result = auditMarkdownSource(
+      "# Notes\n\nMoreover, the server restarted. Furthermore, the logs rotated. Additionally, the queue drained. Notably, the test passed.\n",
+      "transitions.md"
+    )
+
+    expect(rulesFor(result)).toContain("transition-density")
+  })
+
   it("flags hidden Unicode", () => {
     const hidden = String.fromCodePoint(0x200b)
     const result = auditMarkdownSource(`# Notes\n\nHello${hidden}world\n`, "hidden.md")
