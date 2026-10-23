@@ -561,7 +561,7 @@ Environment variables (Resend API key, etc.) are stored in `.env.local` (exclude
 
 <!-- manual: N/A — disaster recovery for a static site on Vercel is: push code to Forgejo, deploy -->
 
-**N/A.** Recovery procedure: clone the repository from Forgejo, run `pnpm install && pnpm build`, deploy. Deployment is triggered via Vercel (manually or via a Forgejo Actions job). No runbook is necessary.
+**N/A.** Recovery procedure: clone the repository from Forgejo, run `pnpm install && pnpm build`, deploy. Deployment is automatic: a push to Forgejo `main` mirrors that branch to GitHub ([ADR-0002](docs/adr/0002-github-main-mirror.md)), and Vercel builds it. No runbook is necessary.
 
 #### R11.5) Capacity planning documented for scaling decisions `[manual]`
 

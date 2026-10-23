@@ -336,10 +336,21 @@ Playwright specs, and `@lhci/cli` runs the Lighthouse CI budgets
 
 ## Deployment
 
-Deployed on [Vercel](https://vercel.com/). Previously a push to `main` on
-GitHub triggered the production deploy via the GitHub integration; since the
-Forgejo migration the deploy is triggered manually (`vercel --prod`) or via a
-Forgejo Actions job. Rollbacks are performed through the Vercel dashboard.
+Deployed on [Vercel](https://vercel.com/). Forgejo is the source of truth: a
+push to `main` runs the `mirror-main` workflow, which force-pushes exactly
+`refs/heads/main` to the GitHub repository
+[`TomSeestern/TomSeestern.github.io`](https://github.com/TomSeestern/TomSeestern.github.io)
+over a repository-scoped deploy key. Vercel's Git integration builds that
+branch and publishes it to https://tomsegbers.de. Feature branches, `dev`, and
+tags are never mirrored; GitHub is read-only by policy and direct GitHub
+commits are overwritten by the next mirror run.
+
+The workflow authenticates with the Forgejo Actions secret `MIRROR_SSH_KEY`
+(private half of the GitHub write deploy key) and verifies GitHub's host keys
+from `docs/security/github-known-hosts`. Direct `vercel --prod` deploys are no
+longer part of the release path; rollbacks are performed through the Vercel
+dashboard. The decision is recorded in
+[ADR-0002](docs/adr/0002-github-main-mirror.md).
 
 `pnpm build` runs `next build` and pre-renders all pages with SSG. The page
 count grows with content: as of 2026-09-12 the build pre-renders 127 static
