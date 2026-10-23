@@ -122,7 +122,7 @@ From `package.json`:
 | `pnpm lighthouse`      | Run Lighthouse CI budgets (LCP/CLS/TBT)                   |
 | `pnpm budget:bundle`   | Check bundle bytes against the committed baseline         |
 | `pnpm contrast`        | Check token pairs against WCAG contrast ratios            |
-| `pnpm content:audit`   | Check published prose for slop patterns and hidden text   |
+| `pnpm content:audit`   | Check prose for slop, search spam, and hidden text        |
 | `pnpm design-tokens`   | Reject legacy tokens, theme utilities, raw hex, old faces |
 | `pnpm images`          | Enforce image byte budget (`≤200 KB`, hero `≤50 KB`)      |
 | `pnpm fonts`           | Enforce font budget (`≤2 families`, `≤100 KiB`)           |
@@ -248,9 +248,10 @@ The slug is the file name without the `.md` extension. `lib/blog.tsx` and
 `lib/projects.tsx` are thin wrappers around the shared reader.
 
 Published prose is also checked by `pnpm content:audit`. The gate covers the
-Markdown collections and visible UI copy, and it rejects hidden Unicode, prompt
-residue, unknown frontmatter keys, and high-confidence AI-writing patterns. Its
-scope, rule set, false-positive policy, and watermark limits are documented in
+Markdown collections, visible UI copy, and exact duplicate spans between content
+files. It rejects hidden Unicode, prompt residue, unknown frontmatter keys, and
+high-confidence AI-writing and search-spam patterns. Its scope, rule set,
+false-positive policy, and watermark limits are documented in
 [`docs/content-audit.md`](docs/content-audit.md).
 
 Frontmatter `tags` drive their own routes. `lib/tags.ts` builds a canonical

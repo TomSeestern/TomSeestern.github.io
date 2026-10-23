@@ -5,7 +5,7 @@ import { ArticleCard } from "./ArticleCard"
 function makeEntry(overrides: Partial<MarkdownEntry> = {}): MarkdownEntry {
   return {
     id: "2019-ebeltoft-cheesecake-recipe",
-    title: "Memorable Ebeltoft Cheesecake",
+    title: "Ebeltoft Cheesecake: A Recipe from Cafe Moeslund",
     articleDate: new Date("2019-08-21T00:00:00Z"),
     articleContent: "A simple recipe from a sailing trip.",
     authorImgSrc: "/img/logo.png",
@@ -30,7 +30,7 @@ describe("ArticleCard", () => {
     render(<ArticleCard entry={makeEntry()} index={0} />)
 
     // Then
-    expect(screen.getByTestId("article-card")).toHaveTextContent("Memorable Ebeltoft Cheesecake")
+    expect(screen.getByTestId("article-card")).toHaveTextContent("Ebeltoft Cheesecake: A Recipe from Cafe Moeslund")
     expect(screen.getByText("21 AUG 2019")).toBeInTheDocument()
     expect(screen.getByTestId("article-tag")).toHaveTextContent("Recipes")
     expect(screen.getByRole("link", { name: /Read dispatch/i })).toHaveAttribute(

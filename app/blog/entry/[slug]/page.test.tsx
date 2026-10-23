@@ -17,7 +17,7 @@ describe("[slug] blog entry page", () => {
 
     // Then
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Memorable Ebeltoft Cheesecake – A Sweet Souvenir"
+      "Ebeltoft Cheesecake: A Recipe from Cafe Moeslund"
     )
     const meta = screen.getByTestId("article-meta")
     expect(meta).toHaveTextContent("21 AUG 2019")

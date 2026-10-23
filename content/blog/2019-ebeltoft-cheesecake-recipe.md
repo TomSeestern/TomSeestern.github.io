@@ -1,8 +1,8 @@
 ---
 id: 2019-ebeltoft-cheesecake-recipe
-title: Memorable Ebeltoft Cheesecake – A Sweet Souvenir
+title: "Ebeltoft Cheesecake: A Recipe from Cafe Moeslund"
 articleDate: 2019-08-21
-articleContent: Discover how to create the delightful Ebeltoft Cheesecake I first tasted in a little café in Denmark. This simple yet irresistible dessert is sure to make a lasting impression on your taste buds, just as it did mine.
+articleContent: I first ate this cheesecake at Cafe Moeslund in Ebeltoft, Denmark. Here is the recipe I make at home, with a Digestive base and a white-chocolate cream.
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
 tags:
@@ -12,7 +12,7 @@ tags:
   - Cooking
 ---
 
-# Unforgettable Ebeltoft Cheesecake: A Delightful Culinary Adventure
+# Ebeltoft Cheesecake: A Recipe from Cafe Moeslund
 
 During a sailing trip to Ebeltoft, Denmark, I stopped at a small café called Cafe Moeslund and had a slice of cheesecake. It was the best cheesecake I have ever eaten.
 

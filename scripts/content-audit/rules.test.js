@@ -1,5 +1,8 @@
 "use strict"
 
+const fs = require("fs")
+const os = require("os")
+const path = require("path")
 const { auditMarkdownSource, auditTsxSource, runAudit } = require("./audit")
 
 function rulesFor(result) {
@@ -74,6 +77,163 @@ describe("content audit", () => {
     )
 
     expect(rulesFor(result)).toContain("transition-density")
+  })
+
+  it("flags unsourced vague attribution", () => {
+    const result = auditMarkdownSource("# Notes\n\nExperts say the server is stable.\n", "attribution.md")
+
+    expect(rulesFor(result)).toContain("vague-attribution")
+  })
+
+  it("allows vague attribution when the same line cites a source", () => {
+    const result = auditMarkdownSource(
+      "# Notes\n\nResearch shows the server is stable ([status page](https://example.com/status)).\n",
+      "attribution.md"
+    )
+
+    expect(rulesFor(result)).not.toContain("vague-attribution")
+  })
+
+  it("flags didactic hedging", () => {
+    const result = auditMarkdownSource("# Notes\n\nIt is important to note that the server restarted.\n", "hedging.md")
+
+    expect(rulesFor(result)).toContain("hedging-disclaimer")
+  })
+
+  it("does not flag a concrete sentence about importance", () => {
+    const result = auditMarkdownSource(
+      "# Notes\n\nThe restart was important because it cleared the stuck queue.\n",
+      "hedging.md"
+    )
+
+    expect(rulesFor(result)).not.toContain("hedging-disclaimer")
+  })
+
+  it("flags stock phrasing", () => {
+    const result = auditMarkdownSource(
+      "# Notes\n\nWhen it comes to deployments, the queue is the bottleneck.\n",
+      "formulaic.md"
+    )
+
+    expect(rulesFor(result)).toContain("formulaic-phrase")
+  })
+
+  it("does not flag a literal core measurement", () => {
+    const result = auditMarkdownSource("# Notes\n\nThe core is 40 mm wide.\n", "formulaic.md")
+
+    expect(rulesFor(result)).not.toContain("formulaic-phrase")
+  })
+
+  it("flags an outline-like challenge conclusion", () => {
+    const result = auditMarkdownSource(
+      "# Notes\n\nDespite its promising results, the project faces challenges.\n",
+      "outline.md"
+    )
+
+    expect(rulesFor(result)).toContain("outline-conclusion")
+  })
+
+  it("does not flag a concrete challenge", () => {
+    const result = auditMarkdownSource(
+      "# Notes\n\nThe first challenge was scale: the queue doubled under load.\n",
+      "outline.md"
+    )
+
+    expect(rulesFor(result)).not.toContain("outline-conclusion")
+  })
+
+  it("flags promotional hype", () => {
+    const result = auditMarkdownSource("# Notes\n\nThe result is an unforgettable, must-see improvement.\n", "promo.md")
+
+    expect(rulesFor(result)).toContain("promotional-language")
+  })
+
+  it("does not flag a factual description", () => {
+    const result = auditMarkdownSource("# Notes\n\nThe result cut the queue from nine minutes to two.\n", "promo.md")
+
+    expect(rulesFor(result)).not.toContain("promotional-language")
+  })
+
+  it("flags repeated keyword phrases", () => {
+    const result = auditMarkdownSource(
+      [
+        "# Notes",
+        "",
+        "The best seo agency is the best seo agency for a reason.",
+        "Choose the best seo agency, then ask the best seo agency for a plan.",
+        "A best seo agency should explain the work, and the best seo agency should measure it.",
+        "This is the best seo agency.",
+        "",
+      ].join("\n"),
+      "stuffed.md"
+    )
+
+    expect(rulesFor(result)).toContain("keyword-stuffing")
+  })
+
+  it("does not flag ordinary technical repetition", () => {
+    const result = auditMarkdownSource(
+      [
+        "# Notes",
+        "",
+        "The deployment pipeline runs the deployment pipeline tests before the deployment pipeline applies changes.",
+        "A deployment pipeline can fail, and a deployment pipeline should report why.",
+        "",
+      ].join("\n"),
+      "repetition.md"
+    )
+
+    expect(rulesFor(result)).not.toContain("keyword-stuffing")
+  })
+
+  it("flags an exact duplicate span across two content files", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "content-audit-duplicate-"))
+    try {
+      const blogDirectory = path.join(root, "content", "blog")
+      fs.mkdirSync(blogDirectory, { recursive: true })
+      const shared =
+        "The deployment pipeline validates configuration before it applies changes to any production host in the cluster today."
+      fs.writeFileSync(
+        path.join(blogDirectory, "one.md"),
+        `# One\n\n${shared}\n\nThis paragraph is unique to the first file.\n`
+      )
+      fs.writeFileSync(
+        path.join(blogDirectory, "two.md"),
+        `# Two\n\n${shared}\n\nThis paragraph is unique to the second file.\n`
+      )
+
+      const result = runAudit({ root })
+      const duplicateFiles = result.findings
+        .filter((finding) => finding.rule === "duplicate-content")
+        .map((finding) => finding.file)
+        .sort()
+
+      expect(duplicateFiles).toEqual(["content/blog/one.md", "content/blog/two.md"])
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true })
+    }
+  })
+
+  it("does not flag a short shared phrase across two content files", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "content-audit-duplicate-"))
+    try {
+      const blogDirectory = path.join(root, "content", "blog")
+      fs.mkdirSync(blogDirectory, { recursive: true })
+      fs.writeFileSync(
+        path.join(blogDirectory, "one.md"),
+        "# One\n\nThe deployment pipeline validates configuration before it applies changes. The first file adds context.\n"
+      )
+      fs.writeFileSync(
+        path.join(blogDirectory, "two.md"),
+        "# Two\n\nThe deployment pipeline validates configuration before it applies changes. The second file adds other context.\n"
+      )
+
+      const result = runAudit({ root })
+
+      expect(rulesFor(result)).not.toContain("duplicate-content")
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true })
+    }
   })
 
   it("flags hidden Unicode", () => {

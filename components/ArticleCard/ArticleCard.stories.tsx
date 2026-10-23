@@ -4,7 +4,7 @@ import { ArticleCard } from "./ArticleCard"
 
 const entry: MarkdownEntry = {
   id: "2019-ebeltoft-cheesecake-recipe",
-  title: "Memorable Ebeltoft Cheesecake",
+  title: "Ebeltoft Cheesecake: A Recipe from Cafe Moeslund",
   articleDate: new Date("2019-08-21T00:00:00Z"),
   articleContent: "A simple recipe from a sailing trip, and the two-day fridge wait that makes it work.",
   authorImgSrc: "/img/logo.png",

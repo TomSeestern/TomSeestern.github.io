@@ -15,6 +15,7 @@ const {
   scanPromptArtifacts,
 } = require("./rules")
 const { extractMarkdown, extractTsx } = require("./extract")
+const { findDuplicateContent, scanKeywordStuffing } = require("./repetition")
 
 const MARKDOWN_EXTENSIONS = new Set([".md", ".mdx"])
 const COPY_EXTENSIONS = new Set([".tsx"])
@@ -123,6 +124,14 @@ function auditMarkdownSource(raw, file) {
     suppressions,
   })
 
+  scanKeywordStuffing({
+    file,
+    body: extracted.bodyProse,
+    startLine: extracted.bodyStartLine,
+    findings,
+    suppressions,
+  })
+
   findUnknownFrontmatterKeys({
     file,
     data: extracted.data,
@@ -136,6 +145,8 @@ function auditMarkdownSource(raw, file) {
     file,
     kind: "markdown",
     findings,
+    bodyProse: extracted.bodyProse,
+    bodyStartLine: extracted.bodyStartLine,
     words: stats.words + extracted.frontmatterProse.reduce((total, segment) => total + countWords(segment.text), 0),
     stats,
   }
@@ -174,7 +185,7 @@ function auditFile(root, filePath) {
 function runAudit({ root = process.cwd(), targets = [] } = {}) {
   const files = resolveTargets(root, targets)
   const results = files.map((filePath) => auditFile(root, filePath))
-  const findings = results.flatMap((result) => result.findings)
+  const findings = [...results.flatMap((result) => result.findings), ...findDuplicateContent(results)]
 
   findings.sort((left, right) => {
     if (left.file !== right.file) return left.file.localeCompare(right.file)

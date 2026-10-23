@@ -53,7 +53,7 @@ The failure table made audio dropouts, missed deadlines, and fallback behaviour 
 
 ## The result
 
-FullSound is a browser-native engine simulator with real-time audio synthesis, WASM pipe physics, and a live Three.js engine view. It runs locally through Vite; there is no public deployment link, so this case file is the evidence trail rather than a live demo.
+FullSound is a browser-native engine simulator with real-time audio synthesis, WASM pipe physics, and a live Three.js engine view. It runs locally through Vite; the test suite and production build are the reproducible evidence.
 
 ## What I took from it
 

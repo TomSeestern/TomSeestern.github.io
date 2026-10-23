@@ -53,7 +53,7 @@ I built the UI around the two real workflows, connecting a library or creating a
 
 ## The result
 
-AudioForge turns audiobook metadata into a printable object with a live preview, bulk generation, and print estimates. It runs locally through the app; there is no public deployment link, so this case file is the evidence trail rather than a live demo.
+AudioForge turns audiobook metadata into a printable object with a live preview, bulk generation, and print estimates. The app runs locally; the screenshot set, contract tests, and browser-side generation path are the reproducible evidence.
 
 ## What I took from it
 

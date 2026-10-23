@@ -61,6 +61,36 @@ const RULE_META = Object.freeze({
     label: "Transition density",
     message: "Too many formal transitions. Delete most of them and let the paragraphs connect by subject.",
   },
+  "vague-attribution": {
+    label: "Vague attribution",
+    message:
+      "Name the source and link it, or remove the unsourced claim. “Experts say” without a citation is not evidence.",
+  },
+  "hedging-disclaimer": {
+    label: "Hedging disclaimer",
+    message: "Delete the didactic hedge; state the fact or the constraint directly.",
+  },
+  "formulaic-phrase": {
+    label: "Formulaic phrase",
+    message: "Replace the stock phrase with the concrete subject, step, or result.",
+  },
+  "outline-conclusion": {
+    label: "Outline conclusion",
+    message: "End on a concrete result or next step instead of a generic challenges-and-future formula.",
+  },
+  "promotional-language": {
+    label: "Promotional language",
+    message: "Replace the hype adjective with the concrete detail that earned the reaction.",
+  },
+  "keyword-stuffing": {
+    label: "Keyword stuffing",
+    message:
+      "Use the phrase where it belongs, not as a repeated ranking signal. Rewrite the passage around the specific point.",
+  },
+  "duplicate-content": {
+    label: "Duplicate content",
+    message: "Remove or rewrite the copied span. Search engines treat scraped or duplicated content as low-value.",
+  },
 })
 
 const HIDDEN_RANGES = [
@@ -243,6 +273,87 @@ const CANNED_CONCLUSION_PATTERNS = [
   /\boverall,\s/gi,
 ]
 
+const VAGUE_ATTRIBUTION_PATTERNS = [
+  [
+    "unsourced authority",
+    /\b(?:experts?|analysts?|researchers?|scientists?|scholars?|critics?|observers?|commentators?|industry insiders?|sources?)\s+(?:say|says|said|believe|believes|argue|argues|agree|agrees|suggest|suggests|warn|warns|note|notes|claim|claims|have (?:said|noted|argued|shown)|has (?:said|noted|argued|shown))\b/gi,
+  ],
+  [
+    "unsourced study",
+    /\b(?:studies|research|evidence|data|reports?)\s+(?:show|shows|suggest|suggests|indicate|indicates|confirm|confirms|reveal|reveals|prove|proves)\b/gi,
+  ],
+  [
+    "vague consensus",
+    /\b(?:it is|it's|it’s)\s+(?:widely|generally|commonly|often)\s+(?:believed|thought|said|accepted|understood|reported|known)\b/gi,
+  ],
+  [
+    "vague group",
+    /\b(?:many|most|some|several)\s+(?:people|experts|observers|critics|researchers|analysts)\s+(?:believe|think|say|argue|agree|suggest)\b/gi,
+  ],
+  ["vague source", /\baccording to (?:experts|analysts|researchers|sources|reports|studies)\b/gi],
+  [
+    "vague consensus",
+    /\b(?:there is|there's)\s+a\s+(?:growing|widely held|common)\s+(?:belief|consensus|perception|view)\b/gi,
+  ],
+  ["vague consensus", /\b(?:widely|commonly|generally)\s+(?:regarded|seen|considered)\s+as\b/gi],
+]
+
+const HEDGING_PATTERNS = [
+  [
+    "didactic note",
+    /\b(?:it is|it's|it’s)\s+(?:important|worth|necessary|essential|crucial|useful)\s+to\s+(?:note|remember|mention|understand|consider|keep in mind)\b/gi,
+  ],
+  ["didactic aside", /\b(?:needless to say|it goes without saying|it should be noted|it bears mentioning)\b/gi],
+  ["didactic rule", /\bas a (?:general|helpful) (?:rule|reminder)\b/gi],
+]
+
+const FORMULAIC_PHRASE_PATTERNS = [
+  ["stock transition", /\bwhen it comes to\b/gi],
+  ["stock framing", /\bat its core,\s/gi],
+  ["stock summary", /\bin a nutshell\b/gi],
+  ["stock reveal", /\bhere(?:'s|’s| is) (?:the thing|the kicker|what (?:you need to know|matters))\b/gi],
+  ["stock reveal", /\bthe best part is\b/gi],
+  ["stock reveal", /\bthat(?:'s|’s| is) where [^.!?\n]{1,60} comes in\b/gi],
+  ["stock framing", /\bwhether you(?:'re|’re| are) (?:a|an) [^.!?\n]{1,60} or (?:a|an) [^.!?\n]{1,60}\b/gi],
+  ["stock invitation", /\blook no further\b/gi],
+  ["stock promise", /\bby the end of this (?:article|post|guide)\b/gi],
+  ["stock invitation", /\blet(?:'s|’s| us) (?:break (?:it|this) down|explore|look at)\b/gi],
+  ["stock metaphor", /\bnavigate the (?:complexities|complexity|challenges)\b/gi],
+  ["stock metaphor", /\bdive deeper\b/gi],
+]
+
+const OUTLINE_CONCLUSION_PATTERNS = [
+  [
+    "formulaic challenge",
+    /\bdespite (?:its|these|those|the) [^.!?\n]{0,90}\b(?:challenges|limitations|obstacles|setbacks)\b/gi,
+  ],
+  [
+    "formulaic challenge",
+    /\b(?:faces?|facing|continues? to face)\s+(?:some\s+)?(?:challenges|headwinds|obstacles)\b/gi,
+  ],
+  ["future formula", /\bthe future of [^.!?\n]{1,90}\blies in\b/gi],
+  [
+    "future formula",
+    /\b(?:only time will tell|the possibilities are endless|the future looks bright|what the future holds)\b/gi,
+  ],
+  ["future formula", /\bcontinues? to evolve\b/gi],
+  ["future formula", /\bas the [^.!?\n]{1,60} continues? to (?:evolve|change)\b/gi],
+  ["future formula", /\b(?:will|may) (?:shape|define|determine) the future of\b/gi],
+]
+
+const PROMOTIONAL_PATTERNS = [
+  [
+    "hype adjective",
+    /\b(?:unforgettable|memorable|delightful|irresistible|breathtaking|stunning|jaw-dropping|mind-blowing|awe-inspiring|once-in-a-lifetime|unmissable)\b/gi,
+  ],
+  ["hype adjective", /\b(?:must-see|must-visit|award-winning|world-renowned)\b/gi],
+  ["hype verb", /\b(?:boast(?:s|ed|ing)?|nestl(?:e|es|ed|ing))\b/gi],
+  [
+    "hype phrase",
+    /\b(?:a feast for the senses|a hidden gem|something for everyone|the perfect blend of|a perfect blend of)\b/gi,
+  ],
+]
+
 const TRANSITION_REGEX = /\b(?:Moreover|Furthermore|Additionally|Notably|Importantly)\b/gi
 const CONCLUSION_HEADING_REGEX =
   /^(?:in conclusion|conclusion|final thoughts?|key takeaways?|summary|wrap[- ]?up|the bottom line)$/i
@@ -303,16 +414,46 @@ function lineColumnAt(text, startLine, index) {
   return { line, column }
 }
 
+function hasCitationOnLine(text, index) {
+  const lineStart = text.lastIndexOf("\n", index - 1) + 1
+  const nextNewline = text.indexOf("\n", index)
+  const lineEnd = nextNewline === -1 ? text.length : nextNewline
+  const line = text.slice(lineStart, lineEnd)
+  return /\]\([^)]*\)|\bhttps?:\/\/|\[\^[^\]]+\]/.test(line)
+}
+
 function addFinding(findings, suppressions, finding) {
   const allowedRules = suppressions && suppressions.get(finding.line)
   if (allowedRules && allowedRules.has(finding.rule)) return
 
-  const dedupeKey = finding.dedupeKey || `${finding.rule}|${finding.line}`
-  if (findings.some((existing) => (existing.dedupeKey || `${existing.rule}|${existing.line}`) === dedupeKey)) {
+  const dedupeKey = finding.dedupeKey || `${finding.rule}|${finding.file}|${finding.line}`
+  if (
+    findings.some(
+      (existing) => (existing.dedupeKey || `${existing.rule}|${existing.file}|${existing.line}`) === dedupeKey
+    )
+  ) {
     return
   }
 
   findings.push({ ...finding, dedupeKey })
+}
+
+function scanPatternGroup({ file, text, startLine, findings, suppressions, rule, patterns, skipMatch }) {
+  for (const [label, regex] of patterns) {
+    for (const match of text.matchAll(new RegExp(regex.source, regex.flags))) {
+      if (skipMatch && skipMatch(match)) continue
+      const { line, column } = lineColumnAt(text, startLine, match.index)
+      addFinding(findings, suppressions, {
+        rule,
+        file,
+        line,
+        column,
+        detail: label,
+        excerpt: visibleExcerpt(text, match.index, match[0].length),
+        message: RULE_META[rule].message,
+      })
+    }
+  }
 }
 
 function collectSuppressions(text, startLine, file) {
@@ -403,7 +544,7 @@ function scanHiddenUnicode({ file, text, startLine, findings, suppressions }) {
       detail: `${describeCodePoint(codePoint)} ${hiddenLabel(codePoint)}`,
       excerpt: visibleExcerpt(text, match.index, match[0].length),
       message: RULE_META["hidden-unicode"].message,
-      dedupeKey: `hidden-unicode|${line}|${codePoint}`,
+      dedupeKey: `hidden-unicode|${file}|${line}|${codePoint}`,
     })
   }
 }
@@ -553,6 +694,57 @@ function analyzeProseSegments({ file, segments, findings, suppressions }) {
         })
       }
     }
+
+    scanPatternGroup({
+      file,
+      text,
+      startLine,
+      findings,
+      suppressions,
+      rule: "vague-attribution",
+      patterns: VAGUE_ATTRIBUTION_PATTERNS,
+      skipMatch: (match) => hasCitationOnLine(text, match.index),
+    })
+
+    scanPatternGroup({
+      file,
+      text,
+      startLine,
+      findings,
+      suppressions,
+      rule: "hedging-disclaimer",
+      patterns: HEDGING_PATTERNS,
+    })
+
+    scanPatternGroup({
+      file,
+      text,
+      startLine,
+      findings,
+      suppressions,
+      rule: "formulaic-phrase",
+      patterns: FORMULAIC_PHRASE_PATTERNS,
+    })
+
+    scanPatternGroup({
+      file,
+      text,
+      startLine,
+      findings,
+      suppressions,
+      rule: "outline-conclusion",
+      patterns: OUTLINE_CONCLUSION_PATTERNS,
+    })
+
+    scanPatternGroup({
+      file,
+      text,
+      startLine,
+      findings,
+      suppressions,
+      rule: "promotional-language",
+      patterns: PROMOTIONAL_PATTERNS,
+    })
   }
 }
 
@@ -743,14 +935,19 @@ module.exports = {
   RULE_META,
   FRONTMATTER_KEYS,
   HIDDEN_REGEX,
+  addFinding,
   analyzeMarkdownStructure,
   analyzeProseSegments,
   collectSuppressions,
   countWords,
   findRuleOfThree,
   findUnknownFrontmatterKeys,
+  hasCitationOnLine,
+  lineColumnAt,
   scanEmoji,
   scanHiddenComments,
   scanHiddenUnicode,
+  scanPatternGroup,
   scanPromptArtifacts,
+  visibleExcerpt,
 }
