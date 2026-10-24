@@ -1,40 +1,43 @@
-import { LegalFactsError, legalFactsSchema, legalFactsSource, readLegalFacts } from "./legal-facts"
+import { LegalFactsError, legalFactsSchema, readLegalFacts } from "./legal-facts"
 
 const completeFacts = {
   name: "Test Person",
-  street: "Teststrasse 1",
+  street: "c/o Teststrasse 1",
   postalCode: "12345",
   city: "Teststadt",
   country: "Deutschland",
   email: "test@example.com",
-  phone: "+49 123 456789",
   mstvResponsible: {
     name: "Test Person",
-    street: "Teststrasse 1",
+    street: "c/o Teststrasse 1",
     postalCode: "12345",
     city: "Teststadt",
     country: "Deutschland",
   },
-  supervisoryAuthority: "Testaufsichtsbehörde",
-  mailboxHost: "Test Mailbox Host",
-  retentionPeriod: "6 Monate",
+  retentionPeriod: "sechs Monate nach der letzten Nachricht",
+}
+
+function missingFrom(source: unknown): readonly string[] {
+  try {
+    readLegalFacts(source)
+  } catch (error) {
+    expect(error).toBeInstanceOf(LegalFactsError)
+    return (error as LegalFactsError).missing
+  }
+
+  throw new Error("expected readLegalFacts to throw")
 }
 
 describe("legal facts", () => {
-  it("rejects the shipped empty source and names every missing field", () => {
-    expect(() => readLegalFacts()).toThrow(LegalFactsError)
+  it("names every missing required field", () => {
+    // An absent object reports at its own path; a present-but-empty one reports
+    // at the failing leaf, which the next test covers.
+    expect(missingFrom({})).toEqual(expect.arrayContaining(["name", "email", "retentionPeriod", "mstvResponsible"]))
+  })
 
-    try {
-      readLegalFacts()
-      throw new Error("expected readLegalFacts to throw")
-    } catch (error) {
-      expect(error).toBeInstanceOf(LegalFactsError)
-      const { missing } = error as LegalFactsError
-      expect(missing).toContain("name")
-      expect(missing).toContain("email")
-      expect(missing).toContain("mstvResponsible.name")
-      expect(missing).toContain("retentionPeriod")
-    }
+  it("refuses an incomplete postal address instead of rendering a gap", () => {
+    expect(missingFrom({ ...completeFacts, postalCode: "" })).toContain("postalCode")
+    expect(missingFrom({ ...completeFacts, city: "" })).toContain("city")
   })
 
   it("parses a complete source", () => {
@@ -44,17 +47,14 @@ describe("legal facts", () => {
     })
   })
 
-  it("treats the VAT id as optional", () => {
+  it("treats phone and VAT id as optional", () => {
     expect(legalFactsSchema.safeParse(completeFacts).success).toBe(true)
+    expect(legalFactsSchema.safeParse({ ...completeFacts, phone: "+49 123 456789" }).success).toBe(true)
     expect(legalFactsSchema.safeParse({ ...completeFacts, vatId: "DE123456789" }).success).toBe(true)
   })
 
   it("rejects an invalid contact email", () => {
     const result = legalFactsSchema.safeParse({ ...completeFacts, email: "not-an-email" })
     expect(result.success).toBe(false)
-  })
-
-  it("ships an empty source until the owner fills it", () => {
-    expect(legalFactsSource.name).toBe("")
   })
 })

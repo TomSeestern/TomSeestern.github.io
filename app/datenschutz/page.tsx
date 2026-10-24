@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Section } from "@/components/Section/Section"
+import { readLegalFacts } from "@/lib/legal-facts"
 
 export const metadata: Metadata = {
   title: "Datenschutzerklärung",
@@ -27,12 +28,10 @@ export const metadata: Metadata = {
   },
 }
 
-/** Renders an unfilled legal fact as a visible, greppable placeholder. */
-function Placeholder({ label }: { label: string }) {
-  return <span className="font-mono text-crimson">TODO(Tom): {label}</span>
-}
-
 export default function Datenschutz() {
+  // Throws LegalFactsError during static generation if a fact is missing.
+  const facts = readLegalFacts()
+
   return (
     <Section tone="canvas" lang="de" className="antialiased" innerClassName="max-w-screen-md py-8 sm:py-16 lg:py-24">
       <div className="hyphens-auto break-words font-prose">
@@ -48,38 +47,27 @@ export default function Datenschutz() {
             <h2 id="datenschutz-verantwortlicher" className="text-h2-sm text-ink sm:text-h2">
               Verantwortlicher
             </h2>
-            <p className="mt-4 text-body text-ink-muted">
-              Verantwortlicher im Sinne der DSGVO ist die im Impressum genannte Person. Die dort noch offenen Angaben
-              sind zu befüllen:
-            </p>
+            <p className="mt-4 text-body text-ink-muted">Verantwortlicher im Sinne der DSGVO ist:</p>
             <dl className="mt-6 space-y-4 text-body text-ink-muted">
               <div>
                 <dt className="font-medium text-ink">Name</dt>
-                <dd className="mt-1">
-                  <Placeholder label="Name des Verantwortlichen" />
-                </dd>
+                <dd className="mt-1">{facts.name}</dd>
               </div>
               <div>
                 <dt className="font-medium text-ink">Anschrift</dt>
                 <dd className="mt-1">
-                  <Placeholder label="Anschrift des Verantwortlichen" />
+                  {facts.street}
+                  <br />
+                  {facts.postalCode} {facts.city}
+                  <br />
+                  {facts.country}
                 </dd>
               </div>
               <div>
                 <dt className="font-medium text-ink">Kontakt</dt>
                 <dd className="mt-1 space-y-1">
-                  <p>
-                    E-Mail: <Placeholder label="E-Mail-Adresse des Verantwortlichen" />
-                  </p>
-                  <p>
-                    Telefon: <Placeholder label="Telefonnummer des Verantwortlichen" />
-                  </p>
-                </dd>
-              </div>
-              <div>
-                <dt className="font-medium text-ink">Datenschutzbeauftragte/r (falls benannt)</dt>
-                <dd className="mt-1">
-                  <Placeholder label="Datenschutzbeauftragte/r (falls vorhanden)" />
+                  <p>E-Mail: {facts.email}</p>
+                  {facts.phone ? <p>Telefon: {facts.phone}</p> : null}
                 </dd>
               </div>
             </dl>
@@ -98,9 +86,9 @@ export default function Datenschutz() {
               Hosting-Anbieter sind in dessen eigener Datenschutzerklärung beschrieben.
             </p>
             <p className="mt-4 text-body text-ink-muted">
-              Ein Auftragsverarbeitungsvertrag mit dem Hosting-Anbieter sowie Angaben zu Übermittlungen in Drittländer
-              sind zu prüfen bzw. zu ergänzen:{" "}
-              <Placeholder label="Auftragsverarbeitungsvertrag mit Vercel und Angaben zur Drittlandübermittlung" />
+              Eine Verarbeitung kann auch in den USA stattfinden. Angaben zur Auftragsverarbeitung und zu den Garantien
+              für Drittlandübermittlungen ergeben sich aus der aktuellen Datenschutzerklärung von Vercel und dem dort
+              veröffentlichten Data Processing Addendum (vercel.com/legal/privacy-policy, vercel.com/legal/dpa).
             </p>
           </section>
 
@@ -121,9 +109,9 @@ export default function Datenschutz() {
               Der Versand der Formularnachricht erfolgt über den E-Mail-Dienst <strong>Resend</strong> (Resend, Inc.,
               US-amerikanischer Anbieter). Die eingegebenen Daten werden dabei an Resend übermittelt und auf der
               Infrastruktur des Anbieters verarbeitet, um die E-Mail zuzustellen. Dabei kann eine Verarbeitung
-              personenbezogener Daten in den USA stattfinden. Angaben zu den eingesetzten Auftragsverarbeitungsverträgen
-              und Garantien für Drittlandübermittlungen sind zu ergänzen:{" "}
-              <Placeholder label="Auftragsverarbeitung und Drittlandgarantien für Resend" />
+              personenbezogener Daten in den USA stattfinden. Angaben zur Auftragsverarbeitung und zu den Garantien für
+              Drittlandübermittlungen ergeben sich aus der aktuellen Datenschutzerklärung von Resend und dem dort
+              veröffentlichten Data Processing Addendum (resend.com/legal/privacy-policy, resend.com/legal/dpa).
             </p>
             <p className="mt-4 text-body text-ink-muted">
               Rechtsgrundlage für die Verarbeitung ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO (Verarbeitung zur
@@ -137,9 +125,7 @@ export default function Datenschutz() {
               zusammengeführt und nicht an Dritte weitergegeben. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f
               DSGVO (berechtigtes Interesse an der Abwehr von Missbrauch).
             </p>
-            <p className="mt-4 text-body text-ink-muted">
-              Speicherdauer: <Placeholder label="Speicherdauer der Kontaktanfragen und E-Mails" />
-            </p>
+            <p className="mt-4 text-body text-ink-muted">Speicherdauer: {facts.retentionPeriod}</p>
           </section>
 
           <section aria-labelledby="datenschutz-cookies">

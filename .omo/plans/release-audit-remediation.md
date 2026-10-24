@@ -628,7 +628,23 @@ message Resend rejected, and no page publishes an unfilled legal fact.
   `nix develop -c pnpm build` exits 0; both new page tests pass;
   and **before** the facts are supplied, `pnpm build` fails with
   `LegalFactsError` naming the missing fields (confirm once, then fill and re-run).
-- **Status:** blocked — needs owner-supplied legal facts
+- **Status:** done
+- **Proof:** `grep -rn 'TODO(Tom)' app/` → nothing (also no `Placeholder`
+  remains). `pnpm build` exit 0, 173 pages, with
+  `89584<!-- --> Ehingen (Donau)` rendered into `.next/server/app/impressum.html`.
+  `jest lib/legal-facts.test.ts app/impressum app/datenschutz` → 12 passed;
+  full suite 308 passed. Guard proven before the facts were filled: with
+  `postalCode`/`city` empty the build exited 1 with
+  `Error [LegalFactsError]: Legal facts are incomplete: postalCode, city,
+  mstvResponsible.postalCode, mstvResponsible.city.`
+  **Amendment:** the plan's fact list included a phone, a VAT id, a supervisory
+  authority and a mailbox host. The owner holds none of the first three, and the
+  mailbox is not outsourced, so those fields were made optional or removed
+  rather than filled with fiction. The two provider paragraphs (Vercel, Resend)
+  no longer promise a DPA: Vercel's DPA covers Pro/Enterprise plans only, so the
+  pages point at each provider's published privacy policy and DPA instead of
+  asserting a contract on a Hobby account. The retention period is a stated
+  policy (six months) supplied by the owner.
 
 ## Parallelisation
 
@@ -673,25 +689,16 @@ message Resend rejected, and no page publishes an unfilled legal fact.
 
 ## Results
 
-**19 of 20 tasks are `done`. `T19` is `blocked` on owner-supplied data, and one
-half of `T7` (the post-merge dry run) could not be performed without deploying.**
+**All 20 tasks are `done`. One half of `T7` (the post-merge dry run) could not be
+performed without deploying; everything else is verified.**
 
-### Blocked (read this first)
+### Still open
 
-- **T19 — wire the legal pages to real facts.** Blocked on the owner: name,
-  street, postal code, city, country, contact email, phone, VAT ID (or none),
-  the § 18 MStV responsible person, the competent supervisory authority, the
-  host storing `website@tomsegbers.de`, and the retention period. The mechanism
-  that makes this safe to leave open is in place and proven: `lib/legal-facts.ts`
-  ships an empty source and `readLegalFacts()` throws `LegalFactsError` naming
-  every missing field, so once the pages import it a build cannot publish an
-  unfilled legal notice. The pages still render `<Placeholder>` (9 occurrences
-  each) and are unchanged.
 - **T7 — post-merge observation.** The step, its guard, the tip check and the
   workflow deletion are all in place and the workflows parse, but "push a commit
   that fails `pnpm test` on a scratch branch and confirm GitHub `main` does not
-  move" needs a real push to Forgejo, which would deploy. Prove it on the first
-  post-merge push.
+  move" needs a real push to Forgejo, which would deploy. Prove it with the next
+  deliberately-failing push.
 
 ### What changed
 
@@ -765,12 +772,13 @@ half of `T7` (the post-merge dry run) could not be performed without deploying.*
 | 6 | `pnpm design-tokens` | exit 0 |
 | 7 | `pnpm images` | `IMAGE SIZE GATE PASSED — 115 image(s)` |
 | 8 | `pnpm fonts` | `FONT BUDGET GATE PASSED — 2 families, critical preload 28.6 KiB` |
-| 9 | `pnpm test` | `301 passed`, 47 suites, coverage floors met |
-| 10 | `pnpm build` | exit 0, `Generating static pages (173/173)`, `Next.js 15.5.28` |
-| 11 | `CI=1 playwright test --project=chromium --workers=1` | **`100 passed (1.6m)`** |
+| 9 | `pnpm test` | `308 passed`, 47 suites, coverage floors met |
+| 10 | `pnpm build` | exit 0, `Generating static pages (173/173)`, `Next.js 15.5.28`; red by design until the address was complete (`LegalFactsError: … postalCode, city, mstvResponsible.postalCode, mstvResponsible.city`) |
+| 11 | `CI=1 playwright test --project=chromium --workers=1` | **`100 passed (1.2m)`** |
 | 12 | `playwright test e2e/metadata.spec.ts` | `8 passed (38.4s)`; removing one canonical → `1 failed`, `no canonical link on /about` |
 | 13 | `playwright test e2e/a11y.spec.ts` | `12 passed (28.5s)` after the 2.5.3 fix |
 | 14 | `jest lib/sendEmail.test.tsx` | 17 passed; stashing the fix → `1 failed` |
+| 14b | `jest lib/legal-facts.test.ts app/impressum app/datenschutz` | 12 passed; `grep -rn 'TODO(Tom)' app/` → nothing |
 | 15 | `jest lib/legal-facts.test.ts` / `lib/sitemap.test.ts` | 5 passed / 8 passed (with `public-urls`) |
 | 16 | `jest app/about/page.test.tsx` | 4 passed |
 | 17 | `jest components/Header components/Footer` | 19 passed |
@@ -821,11 +829,17 @@ Always rebuild before those gates. CI is already correct (`Build` precedes
     gitignored with an explanatory comment.
 12. **T18** — `content:audit` and the new CI steps were added to R6.1 as well as
     R9.1, since both enumerate the same list and both were stale.
+13. **T19** — the owner holds no phone, VAT id or supervisory authority, and the
+    mailbox is not outsourced, so those fields became optional or were removed
+    instead of being filled. The Vercel/Resend paragraphs point at the published
+    privacy policies and DPAs rather than claiming a contract, because Vercel's
+    DPA covers Pro/Enterprise only.
 
 ### Not done, and why
 
-- The **legal facts themselves** (T19) — owner input, listed above.
-- The **post-merge dry run** (T7) — needs a real deploy.
+- The **post-merge dry run** (T7) — needs a deliberately failing push, which
+  would deploy if it unexpectedly passed.
+- Nothing else. The legal facts are filled and the pages render them.
 - Nothing has been committed. The working tree holds the whole change set,
   including 186 previously hidden `.omo/` files, which should be staged as part
   of the release commit.

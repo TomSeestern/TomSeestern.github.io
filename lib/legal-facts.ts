@@ -4,19 +4,19 @@ import { z } from "zod"
  * Legal facts published by `/impressum` and `/datenschutz`.
  *
  * They live here, not inline in the pages, so a missing fact fails the build
- * instead of rendering a visible placeholder on a live commercial domain
- * (§ 5 DDG, § 18 Abs. 2 MStV, Art. 13 DSGVO).
+ * instead of rendering a visible placeholder on a live domain (§ 5 DDG,
+ * § 18 Abs. 2 MStV, Art. 13 DSGVO).
  *
- * `vatId` is optional on purpose: § 27a UStG only requires one where the
- * operator actually holds a USt-IdNr.
+ * Only the facts that legally apply to a natural person operating this site are
+ * required. `phone`, `vatId` and `supervisoryAuthority` are optional because
+ * none of them is mandatory here: § 5 Abs. 1 Nr. 2 DDG asks for a channel that
+ * enables immediate contact (the e-mail address satisfies it), § 27a UStG only
+ * applies to holders of a USt-IdNr., and Art. 13 DSGVO does not require naming
+ * a supervisory authority.
+ *
+ * There is no `mailboxHost` field: `web@tomsegbers.de` is not outsourced to a
+ * mailbox provider, so there is no processor to disclose.
  */
-const postalAddressSchema = z.object({
-  street: z.string().min(1),
-  postalCode: z.string().min(1),
-  city: z.string().min(1),
-  country: z.string().min(1),
-})
-
 export const legalFactsSchema = z.object({
   name: z.string().min(1),
   street: z.string().min(1),
@@ -24,47 +24,49 @@ export const legalFactsSchema = z.object({
   city: z.string().min(1),
   country: z.string().min(1),
   email: z.string().email(),
-  phone: z.string().min(1),
+  phone: z.string().min(1).optional(),
   vatId: z.string().min(1).optional(),
-  mstvResponsible: z
-    .object({
-      name: z.string().min(1),
-    })
-    .and(postalAddressSchema),
-  supervisoryAuthority: z.string().min(1),
-  mailboxHost: z.string().min(1),
+  mstvResponsible: z.object({
+    name: z.string().min(1),
+    street: z.string().min(1),
+    postalCode: z.string().min(1),
+    city: z.string().min(1),
+    country: z.string().min(1),
+  }),
+  /** Stated policy, not a placeholder: it must match how enquiries are handled. */
   retentionPeriod: z.string().min(1),
 })
 
 export type LegalFacts = z.infer<typeof legalFactsSchema>
 
 /**
- * The facts the site owner must provide. Empty by design until they do: the
- * runtime check below turns each empty string into a build failure naming the
- * field, which is the only reliable way to keep an unfilled legal notice from
- * shipping.
+ * The facts the site owner must provide. Empty values are deliberate until the
+ * owner supplies them: the runtime check below turns each one into a build
+ * failure that names the field, which is the only reliable way to keep an
+ * unfilled legal notice from shipping.
  *
- * Typed as `unknown` input on purpose — the empty literal must not satisfy
- * `LegalFacts`, or the compiler would hide the gap this check exists to catch.
+ * Typed as `Record<string, unknown>` on purpose — an empty literal must not
+ * satisfy `LegalFacts`, or the compiler would hide the gap this check exists to
+ * catch.
  */
 export const legalFactsSource: Record<string, unknown> = {
-  name: "",
-  street: "",
-  postalCode: "",
-  city: "",
-  country: "",
-  email: "",
-  phone: "",
+  name: "Tom Segbers",
+  street: "c/o Drei-Kreuz-Straße 26",
+  postalCode: "89584",
+  city: "Ehingen (Donau)",
+  country: "Deutschland",
+  email: "web@tomsegbers.de",
   mstvResponsible: {
-    name: "",
-    street: "",
-    postalCode: "",
-    city: "",
-    country: "",
+    name: "Tom Segbers",
+    street: "c/o Drei-Kreuz-Straße 26",
+    postalCode: "89584",
+    city: "Ehingen (Donau)",
+    country: "Deutschland",
   },
-  supervisoryAuthority: "",
-  mailboxHost: "",
-  retentionPeriod: "",
+  retentionPeriod:
+    "Kontaktanfragen und die daraus entstehende Korrespondenz werden nach Abschluss der Bearbeitung, spätestens " +
+    "sechs Monate nach der letzten Nachricht, gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten " +
+    "entgegenstehen.",
 }
 
 /** Thrown when a page renders before the legal facts are complete. */
