@@ -1,0 +1,86 @@
+COLOSSUS v4 — design elevation evidence
+Date: 2026-10-21 (Europe/Berlin)
+Branch: feat/colossus-rework
+Base: 334910c
+Head: 5c06895 (24d47f0 design pass + 5c06895 DOM-budget trim)
+Task: raise the v3 terminal portfolio with a design-skill-driven craft pass.
+
+Skill
+  pbakaus/impeccable 4.7.0 (Apache-2.0), plugin/skills/impeccable, cloned to
+  /tmp/opencode/impeccable. `scripts/impeccable context` resolved
+  NO_PRODUCT_MD + SCOPED_EXISTING_ALLOWED + EXISTING_VISUAL_SYSTEM, so DESIGN.md
+  and the rendered site are the design authority. Read: SKILL.md,
+  craft-floor.md, polish.md, audit.md.
+  Consequence: refine the existing world; no redesign, no new runtime deps, no
+  generated raster art.
+
+Findings fixed (pre-change screenshots in /tmp/opencode/shots)
+  F1  #selected-work absent on / and /projects: both hero CTAs did nothing.
+  F2  /projects: 21 rows, each with 2 links to one case file (84 focusables).
+  F3  /tags: 86 count-sorted tags, ArtificialIntelligence split from
+      Artificial Intelligence, ~30 raw camelCase labels, no A-Z grouping.
+  F4  Home repeated the same three counts in the window, metric row, and cards.
+  F5  Four capability cards, one shape, no ranking.
+  F6  Journal: three equal cards, no lead.
+  F7  Eyebrows restated the H2; /tags and /blog repeated their hero label in
+      the summary card.
+  F8  Blog topic chips duplicated after normalisation.
+  F9  Testimonials carried an "Example" eyebrow and an "Example only" badge.
+  F10 Display tracking at -0.055em closed counters at 92px.
+  F11 Caret and prose markers fell back to UA colours.
+  F12 Untouched: routes, copy claims, metadata/canonical URLs, contact action,
+      legal pages, privacy posture.
+
+Verification — local (final tree)
+
+  pnpm typecheck       exit 0
+  pnpm lint            exit 0 (0 errors, 26 pre-existing warnings)
+  pnpm prettier        exit 0
+  pnpm contrast        PASSED — 36/36 pairs
+  pnpm design-tokens   PASSED — 132 files
+  pnpm images          PASSED — 103 images
+  pnpm build           exit 0 — 126 static pages, /tags/[tag] 85 paths
+  pnpm fonts           PASSED — 2 families, 28.6 KiB critical preload
+  pnpm exec jest       exit 0 — 43 suites / 213 tests
+  pnpm build-storybook exit 0
+  pnpm test-storybook  exit 0 — 13 suites / 16 tests
+
+Verification — CI on the pushed head 5c06895
+  Check                ✅ successful in 3m33s (install, typecheck, build, lint,
+                       prettier, contrast, design-tokens, images, fonts, jest,
+                       Storybook build + smoke)
+  Playwright Tests     ✅ successful in 5m27s (100 chromium tests)
+  Lighthouse budgets   ✅ successful in 7m2s
+
+Live checks (dev server, E2E_CONTACT_FORM_SUCCESS=true)
+  GET /tags/artificialintelligence -> 308 /tags/artificial-intelligence
+  /tags: "85 tags across 24 blog posts and projects", one Artificial
+  Intelligence, labels "Android App Development" / "Web3 Development".
+  Home status line: CASE FILES 21 · DISPATCHES 03 · ARCHIVE 2010—2021.
+  Home DOM nodes measured 608 on the dev surface (ceiling 650).
+
+DOM budget incident (R20.2 triage)
+  First CI Playwright run on 24d47f0 failed only the home DOM budget: 656 > 650.
+  Cause: per-cell wrapper divs in the new status bar (3) and capability ledger
+  (8), plus a redundant count span per tool (8). Fix: grid placement instead of
+  wrappers, drop the redundant spans → 608 measured locally, ceiling unchanged.
+  Re-run green. No assertion or ceiling was weakened.
+
+Check-workflow incident
+  The first Check run on 24d47f0 failed at the Storybook step with
+  EADDRINUSE 0.0.0.0:6006: a local http-server from this session still held the
+  port on the shared runner host. Killed it; the Check re-run is green. Not a
+  code failure.
+
+Playwright flake triage
+  contact.spec.ts:115 failed once in a 2-worker local batch; it passed
+  standalone and in the 1-worker full contact run (9/9), and CI is green.
+  Classification: local harness contention.
+
+Screenshots
+  public/img/screenshots/{home,projects,blog,contact}.webp regenerated with
+  `pnpm screenshots:update` against the current build.
+
+Not verified here
+  Firefox/WebKit locally (CI runs its own matrix; chromium green here). No
+  Lighthouse threshold was changed.

@@ -25,7 +25,6 @@ export const COPY = {
     eyebrow: "Profile",
     formalPositionsH2: "Formal positions",
     toolsH2: "Tools of the trade",
-    examplesH2: "Illustrative examples",
     closing: "Let's build something that lasts.",
   },
   contact: {

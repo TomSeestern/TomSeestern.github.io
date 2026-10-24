@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react"
+import BlogIndex from "./page"
 import { getAllBlogPosts } from "../../lib/blog"
 import { MarkdownEntry } from "../../lib/markdown"
 import { getAllTags } from "../../lib/tags"
@@ -10,8 +11,6 @@ jest.mock("../../lib/blog", () => ({
 jest.mock("../../lib/tags", () => ({
   getAllTags: jest.fn(),
 }))
-
-import BlogIndex from "./page"
 
 const mockGetAllBlogPosts = jest.mocked(getAllBlogPosts)
 const mockGetAllTags = jest.mocked(getAllTags)

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react"
-import { TooltipProvider } from "../Providers/TooltipProvider"
 import { TechnologyTooltip } from "./TechnologyTooltip"
+import { TooltipProvider } from "../Providers/TooltipProvider"
 
 describe("TechnologyTooltip", () => {
   it("renders a focusable trigger with an accessible name and sr-only text", () => {

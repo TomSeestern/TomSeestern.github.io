@@ -1,0 +1,177 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 31 tests using 1 worker
+
+[1/31] [chromium] › e2e/dark-mode.spec.ts:29:5 › public routes render a single light semantic surface
+
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[2/31] [chromium] › e2e/dark-mode.spec.ts:51:5 › ships no theme toggle and resolves a single mode regardless of system preference
+[3/31] [chromium] › e2e/dark-mode.spec.ts:91:11 › contrast per scheme (axe color-contrast) › light /contact has no serious or critical contrast violations
+[4/31] [chromium] › e2e/dark-mode.spec.ts:91:11 › contrast per scheme (axe color-contrast) › light /blog/entry/2019-ebeltoft-cheesecake-recipe has no serious or critical contrast violations
+[5/31] [chromium] › e2e/dark-mode.spec.ts:91:11 › contrast per scheme (axe color-contrast) › light /projects/entry/2020-soudest-backend-nodejs has no serious or critical contrast violations
+[6/31] [chromium] › e2e/responsive.spec.ts:93:9 › home remains usable at mobile
+[7/31] [chromium] › e2e/responsive.spec.ts:93:9 › home remains usable at tablet
+[8/31] [chromium] › e2e/responsive.spec.ts:93:9 › home remains usable at desktop
+[9/31] [chromium] › e2e/responsive.spec.ts:93:9 › about remains usable at mobile
+[10/31] [chromium] › e2e/responsive.spec.ts:93:9 › about remains usable at tablet
+[11/31] [chromium] › e2e/responsive.spec.ts:93:9 › about remains usable at desktop
+[12/31] [chromium] › e2e/responsive.spec.ts:93:9 › blog remains usable at mobile
+[13/31] [chromium] › e2e/responsive.spec.ts:93:9 › blog remains usable at tablet
+[14/31] [chromium] › e2e/responsive.spec.ts:93:9 › blog remains usable at desktop
+[15/31] [chromium] › e2e/responsive.spec.ts:93:9 › blog detail remains usable at mobile
+[16/31] [chromium] › e2e/responsive.spec.ts:93:9 › blog detail remains usable at tablet
+[17/31] [chromium] › e2e/responsive.spec.ts:93:9 › blog detail remains usable at desktop
+[18/31] [chromium] › e2e/responsive.spec.ts:93:9 › projects remains usable at mobile
+[19/31] [chromium] › e2e/responsive.spec.ts:93:9 › projects remains usable at tablet
+[20/31] [chromium] › e2e/responsive.spec.ts:93:9 › projects remains usable at desktop
+[21/31] [chromium] › e2e/responsive.spec.ts:93:9 › project detail remains usable at mobile
+[22/31] [chromium] › e2e/responsive.spec.ts:93:9 › project detail remains usable at tablet
+[23/31] [chromium] › e2e/responsive.spec.ts:93:9 › project detail remains usable at desktop
+[24/31] [chromium] › e2e/responsive.spec.ts:93:9 › contact remains usable at mobile
+[25/31] [chromium] › e2e/responsive.spec.ts:93:9 › contact remains usable at tablet
+[26/31] [chromium] › e2e/responsive.spec.ts:93:9 › contact remains usable at desktop
+[27/31] [chromium] › e2e/responsive.spec.ts:124:5 › mobile header renders navigation and hamburger toggle
+  1) [chromium] › e2e/responsive.spec.ts:124:5 › mobile header renders navigation and hamburger toggle 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('link', { name: /Tom Segbers/ })
+    Expected: visible
+    Error: strict mode violation: getByRole('link', { name: /Tom Segbers/ }) resolved to 2 elements:
+        1) <a href="/" aria-label="Tom Segbers — home" class="focus-ring flex min-h-11 items-center gap-3 rounded-sm">…</a> aka getByTestId('site-header').getByRole('link', { name: 'Tom Segbers — home' })
+        2) <a href="/" aria-label="Tom Segbers — home" class="focus-ring-inverse flex items-center gap-3">…</a> aka getByTestId('site-footer').getByRole('link', { name: 'Tom Segbers — home' })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('link', { name: /Tom Segbers/ })
+
+
+      131 |   await expect(page.getByRole("navigation")).toBeVisible()
+      132 |   await expect(page.getByRole("button", { name: /menu/i })).toBeVisible()
+    > 133 |   await expect(page.getByRole("link", { name: /Tom Segbers/ })).toBeVisible()
+          |                                                                 ^
+      134 |   await expectDocumentFitsViewport(page)
+      135 |   expect(browserErrors).toEqual([])
+      136 | })
+        at /home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:133:65
+
+    Error Context: test-results/responsive-mobile-header-r-242d1-gation-and-hamburger-toggle-chromium/error-context.md
+
+
+[28/31] [chromium] › e2e/responsive.spec.ts:206:7 › touch targets › contact form primary controls meet the 44px touch target
+[29/31] [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › / interactive controls meet the WCAG 2.2 target-size floor
+  2) [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › / interactive controls meet the WCAG 2.2 target-size floor 
+
+    Error: undersized targets on /: [{"tag":"a","label":"View case file","width":170,"height":16},{"tag":"a","label":"View case file","width":170,"height":16},{"tag":"a","label":"View case file","width":170,"height":16},{"tag":"a","label":"View case file","width":170,"height":16},{"tag":"a","label":"Read dispatch","width":169,"height":16},{"tag":"a","label":"Read dispatch","width":169,"height":16},{"tag":"a","label":"Read dispatch","width":169,"height":16}]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 44
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "height": 16,
+    +     "label": "View case file",
+    +     "tag": "a",
+    +     "width": 170,
+    +   },
+    +   Object {
+    +     "height": 16,
+    +     "label": "View case file",
+    +     "tag": "a",
+    +     "width": 170,
+    +   },
+    +   Object {
+    +     "height": 16,
+    +     "label": "View case file",
+    +     "tag": "a",
+    +     "width": 170,
+    +   },
+    +   Object {
+    +     "height": 16,
+    +     "label": "View case file",
+    +     "tag": "a",
+    +     "width": 170,
+    +   },
+    +   Object {
+    +     "height": 16,
+    +     "label": "Read dispatch",
+    +     "tag": "a",
+    +     "width": 169,
+    +   },
+    +   Object {
+    +     "height": 16,
+    +     "label": "Read dispatch",
+    +     "tag": "a",
+    +     "width": 169,
+    +   },
+    +   Object {
+    +     "height": 16,
+    +     "label": "Read dispatch",
+    +     "tag": "a",
+    +     "width": 169,
+    +   },
+    + ]
+
+      223 |
+      224 |       const violations = await collectUndersizedTargets(page, MIN_WCAG_TARGET_SIZE_PX)
+    > 225 |       expect(violations, `undersized targets on ${route}: ${JSON.stringify(violations)}`).toEqual([])
+          |                                                                                           ^
+      226 |     })
+      227 |   }
+      228 | })
+        at /home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:225:91
+
+    Error Context: test-results/responsive-touch-targets-i-37f9d--WCAG-2-2-target-size-floor-chromium/error-context.md
+
+
+[30/31] [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › /blog interactive controls meet the WCAG 2.2 target-size floor
+  3) [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › /blog interactive controls meet the WCAG 2.2 target-size floor 
+
+    Error: undersized targets on /blog: [{"tag":"a","label":"Read dispatch","width":169,"height":16}]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 8
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "height": 16,
+    +     "label": "Read dispatch",
+    +     "tag": "a",
+    +     "width": 169,
+    +   },
+    + ]
+
+      223 |
+      224 |       const violations = await collectUndersizedTargets(page, MIN_WCAG_TARGET_SIZE_PX)
+    > 225 |       expect(violations, `undersized targets on ${route}: ${JSON.stringify(violations)}`).toEqual([])
+          |                                                                                           ^
+      226 |     })
+      227 |   }
+      228 | })
+        at /home/tom/Projects/tomsegbers-de/e2e/responsive.spec.ts:225:91
+
+    Error Context: test-results/responsive-touch-targets-b-d6d83--WCAG-2-2-target-size-floor-chromium/error-context.md
+
+
+[31/31] [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › /contact interactive controls meet the WCAG 2.2 target-size floor
+  3 failed
+    [chromium] › e2e/responsive.spec.ts:124:5 › mobile header renders navigation and hamburger toggle 
+    [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › / interactive controls meet the WCAG 2.2 target-size floor 
+    [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › /blog interactive controls meet the WCAG 2.2 target-size floor 
+  28 passed (2.4m)

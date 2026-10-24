@@ -1,5 +1,5 @@
-import type { MarkdownEntry } from "./markdown"
 import { getAdjacentEntries } from "./content"
+import type { MarkdownEntry } from "./markdown"
 
 function makeEntry(id: string, date: string): MarkdownEntry {
   return {

@@ -1,0 +1,20 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 start /home/tom/Projects/tomsegbers-de
+> next start
+
+ ⨯ Failed to start server
+Error: listen EADDRINUSE: address already in use :::3055
+    at <unknown> (Error: listen EADDRINUSE: address already in use :::3055)
+    at new Promise (<anonymous>) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 3055
+}
+ ELIFECYCLE  Command failed with exit code 1.

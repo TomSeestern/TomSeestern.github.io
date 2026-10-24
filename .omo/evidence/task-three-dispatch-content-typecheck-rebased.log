@@ -1,0 +1,9 @@
+error (ignored): SQLite database '/home/tom/.cache/nix/eval-cache-v6/aa2acce5f0e51fe60428c84364a6c363cb969ad0180d0ba2b478bac72d68fe6a.sqlite' is busy
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 typecheck /home/tom/Projects/tomsegbers-de
+> node_modules/typescript/bin/tsc --noEmit
+

@@ -1,0 +1,8 @@
+PASS app/projects/page.test.tsx (8.559 s)
+PASS app/projects/entry/[slug]/page.test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        20.336 s
+Ran all test suites matching /app\/projects/i.

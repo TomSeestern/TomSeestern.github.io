@@ -1,0 +1,7 @@
+/	LCP 2108.2 ms	CLS 0.000	TBT 80.0 ms
+/about	LCP 2181.2 ms	CLS 0.000	TBT 32.0 ms
+/blog	LCP 1952.4 ms	CLS 0.000	TBT 57.0 ms
+/blog/entry/2019-ebeltoft-cheesecake-recipe	LCP 2030.7 ms	CLS 0.000	TBT 30.5 ms
+/projects	LCP 2104.2 ms	CLS 0.000	TBT 63.0 ms
+/projects/entry/2020-soudest-backend-nodejs	LCP 2213.4 ms	CLS 0.000	TBT 29.5 ms
+/contact	LCP 1954.4 ms	CLS 0.000	TBT 54.0 ms

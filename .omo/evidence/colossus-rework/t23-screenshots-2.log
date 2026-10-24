@@ -1,0 +1,13 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 screenshots:update /home/tom/Projects/tomsegbers-de
+> npx tsx scripts/update-readme-screenshots.ts
+
+Captured home.webp (38.9 KB) from /
+Captured projects.webp (26.4 KB) from /projects
+Captured blog.webp (22.5 KB) from /blog
+Captured contact.webp (22.4 KB) from /contact

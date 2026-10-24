@@ -2,6 +2,14 @@ import { getAllBlogPosts } from "./blog"
 import type { MarkdownEntry } from "./markdown"
 import { getAllProjects } from "./projects"
 
+/**
+ * Tag pages below this entry count are `noindex` and excluded from the sitemap.
+ * The site has ~120 tag routes for ~34 entries; thin pages that contain one
+ * link add crawl noise and dilute the pages that matter. Raise this only if the
+ * content volume grows enough that the tag archive becomes genuinely useful.
+ */
+export const MIN_INDEXABLE_TAG_ENTRIES = 3
+
 /** Which content collection a tagged entry came from. */
 export type TagCollection = "blog" | "project"
 

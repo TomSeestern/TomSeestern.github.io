@@ -1,0 +1,175 @@
+# Brand mark and project hero system — evidence
+
+Timestamp: 2026-10-22T21:51:40Z (finalized 2026-10-23T00:02:00Z)
+Task: favicon/header mark + all project hero images
+Base commit: 2a40197
+Feature commit: 89b3e20
+Docs screenshot commit: 81d9f73
+Copy commit: eeb455a
+Model: 9router/default
+
+## Scope
+
+- Replaced the warm legacy favicon with a COLOSSUS mark: 64×64 tile, arch,
+  T monogram, single `#FF5C35` pixel.
+- Rebuilt `app/favicon.ico` as 16×16 + 32×32 PNG-in-ICO entries and
+  `app/apple-icon.png` at 180×180 from `public/icon/brand-mark.svg`.
+- Regenerated `public/img/og-default.png` with the new header mark.
+- Split `ProjectCover` art into `art/early.tsx`, `art/work.tsx`, `art/now.tsx`,
+  and `art/index.ts`; added 28 project-specific SVG plates plus an `archive`
+  fallback, each with a distinct label.
+- Rewrote `CaseStudyHero` as a night evidence plate with an `Evidence / Case file`
+  strip, year,
+  `object-contain` image, scanlines, and title/figure caption.
+- Changed the detail cover from 16:7 to 16:10 so the full plate is visible.
+- Added `min-w-0` to the article and wrapped the hero caption; fixes long-title
+  horizontal overflow at 320/375/390 px.
+- Updated Jest coverage for all 28 mappings, uniqueness, fallback, metadata,
+  caption, and `object-contain`.
+- Added an optional `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` override to
+  `scripts/generate-brand-assets.mjs`; this host's default Playwright browser
+  cannot load libglib, so the nix Chromium path is required.
+
+## Delivery
+
+- `89b3e20 feat(brand): refresh favicon and project hero system`
+- `81d9f73 chore(docs): refresh site screenshots`
+- `eeb455a fix(projects): label hero evidence as case file`
+- All three commits pushed to `origin/main` after rebasing over `2a40197`
+  (`chore(docs): update feature screenshots [skip ci]`).
+
+README previews were regenerated against the final production build with
+`PORT=4321 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=<nix-chromium> npm run
+screenshots:update`. `scripts/update-readme-screenshots.ts` now accepts the same
+optional executable override as `scripts/generate-brand-assets.mjs`.
+
+## Verification
+
+### Typecheck / lint / formatting
+
+Command: `npm run typecheck`
+
+Result: exit 0, no output.
+
+Command: `npm run lint`
+
+Result: exit 0; 0 errors, 26 pre-existing warnings outside changed files.
+
+Command: `npm run prettier`
+
+Result: exit 0; all matched files formatted.
+
+### Gates
+
+Command: `npm run design-tokens`
+
+Result: PASS — 138 files, no legacy tokens, dark utilities, raw hex, or retired
+faces.
+
+Command: `npm run contrast`
+
+Result: PASS — 36/36 pairs.
+
+Command: `npm run images`
+
+Result: PASS — 115 images within budget; `public/img/og-default.png` 71.9 KB.
+
+Command: `npm run fonts`
+
+Result: PASS — 2 families; critical preload 28.6 KiB / 100 KiB.
+
+### Jest
+
+Command: `npm test -- --runInBand`
+
+Result: exit 0.
+
+Output tail:
+
+```text
+Test Suites: 45 passed, 45 total
+Tests:       251 passed, 251 total
+Snapshots:   0 total
+Time:        6.809 s
+```
+
+Focused contracts also passed:
+
+- `components/ProjectCover/ProjectCover.test.tsx` — 28 mapping cases, unique
+  keys, archive fallback.
+- `components/CaseStudyMeta/CaseStudyHero.test.tsx` — 3 cases, including
+  metadata, `Fig. 05`, and `object-contain`.
+
+### Build and Storybook
+
+Command: `npm run build`
+
+Result: exit 0; 160 static pages, including all 28 project routes.
+
+Command: `npm run build-storybook`
+
+Result: exit 0; output `storybook-static`. Webpack emitted existing asset-size
+warnings (largest 1.35 MiB entrypoint), no build error.
+
+### Browser route audit
+
+Command: one-off Playwright audit against `http://127.0.0.1:4321`, using
+`/nix/store/...-ungoogled-chromium-149.0.7827.200/bin/chromium`.
+
+Coverage:
+
+- 28/28 project detail routes at 1440×1000 and 390×844.
+- 28/28 again at 375×800 and 320×800 for overflow only.
+- `/` and `/projects` at 1440×1000 and 390×844.
+
+Results:
+
+- 0 HTTP failures.
+- 0 console/page errors.
+- 0 horizontal-overflow failures.
+- 28/28 routes had exactly one hero.
+- 16/16 generated-cover routes had a unique non-archive variant.
+- 12/12 screenshot heroes had loaded images.
+- Final copy audit after `eeb455a`: 56/56 desktop/mobile loads passed; the
+  screenshot plate read `EVIDENCE / CASE FILE`, the year, title, and figure.
+- Header mark loaded on every route.
+- `/` and `/projects` each rendered 4 ProjectCover elements (lead + 3
+  featured cards).
+- Document icon links resolved to `/favicon.ico` (16×16), `/icon.svg`
+  (any, SVG), and `/apple-icon.png` (180×180).
+
+Favicon/PNG decode probe:
+
+```json
+[
+  { "path": "/favicon.ico", "status": 200, "type": "image/x-icon", "width": 32, "height": 32 },
+  { "path": "/apple-icon.png", "status": 200, "type": "image/png", "width": 180, "height": 180 }
+]
+```
+
+`/icon.svg` is served with `content-type: image/svg+xml` and is referenced by
+the document; Chromium's `createImageBitmap` does not decode SVG blobs, so that
+probe reported an expected decode error rather than a request failure.
+
+### Visual checks
+
+- `/tmp/opencode/cover-sheet.png`: all 28 cover plates, 4-column contact sheet.
+- `/tmp/opencode/hero-contact-sheet.png`: all 12 real-screenshot evidence plates.
+- `/tmp/opencode/hero-altis.png`, `hero-labview.png`, `hero-soudest.png`,
+  `hero-hammer.png`, `hero-hammer-final.png`: cover and screenshot hero
+  close-ups.
+- `/tmp/opencode/favicon-view.png`: 16 px, 32 px, and 180 px favicon/icon preview.
+- `/tmp/opencode/projects-desktop.png`, `projects-mobile.png`,
+  `featured-cards.png`, `recent-highlight.png`.
+
+## Not verified / open
+
+- Public deployment: not performed. The checkout is local; Vercel credentials
+  were unavailable in the prior session.
+- `npm run budget:bundle` requires `.next/analyze/__bundle_analysis.json` from
+  `pnpm analyze`; it was not run because bundle budgets are not part of the
+  check.yml gate.
+- Storybook test-runner (`test-storybook`) was not run in this host because the
+  default Playwright browser lacks libglib; `build-storybook` passed.
+- Token usage is not exposed by the local runtime, so no token count is
+  fabricated here.

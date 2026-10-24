@@ -1,0 +1,4 @@
+SELF-TEST PASSED — fixture rejected 3 violation(s); clean fixture accepted.
+  - ../../../../tmp/colossus-design-token-self-test-Nar31t/bad.tsx:1: legacy surface-muted token
+  - ../../../../tmp/colossus-design-token-self-test-Nar31t/bad.tsx:1: dark-mode utility
+  - ../../../../tmp/colossus-design-token-self-test-Nar31t/bad.tsx:1: raw hex colour #ff00aa (use a semantic token)

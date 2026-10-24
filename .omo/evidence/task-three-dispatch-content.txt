@@ -1,0 +1,195 @@
+Three dispatch content — evidence
+=================================
+
+Timestamp: 2026-10-23 (Europe/Berlin)
+Plan: .omo/plans/2026-three-dispatch-content.md
+Boulder: .omo/boulders/task-three-dispatch-content.md
+
+Scope
+-----
+Added:
+- content/blog/2025-falling-for-nix.md (articleDate 2025-12-31)
+- content/blog/2026-unraid-declarative-homelab-v4.md (articleDate 2026-02-28)
+- content/blog/2026-what-llm-agents-are-missing.md (articleDate 2026-10-23)
+
+Updated:
+- e2e/fixtures/expectations.ts: BLOG_POST_COUNT 3 -> 6
+- public/img/screenshots/home.webp: dispatch count now 06
+- public/img/screenshots/blog.webp: now lists six dispatches
+
+Frontmatter inventory
+---------------------
+Command:
+  node - <<'NODE' ... gray-matter read of content/blog/*.md ... NODE
+
+Observed:
+  2019-ebeltoft-cheesecake-recipe.md      2019-08-21  317 body words
+  2020-homelab-...-second-edition.md     2020-12-31  470 body words
+  2024-homelab-...-automation.md          2023-12-31  471 body words
+  2025-falling-for-nix.md                 2025-12-31 1535 body words
+    tags: NixOS, Nix, Declarative Configuration, Linux
+  2026-unraid-declarative-homelab-v4.md  2026-02-28 1512 body words
+    tags: Unraid, Homelab, Infrastructure as Code, Docker, Home Assistant
+  2026-what-llm-agents-are-missing.md    2026-10-23 1198 body words
+    tags: AI Agents, LLM, Software Engineering, Automation
+
+All three new files have title, articleDate, articleContent, authorName,
+authorImgSrc, and tags; each body starts with a matching H1 (the detail page
+strips the H1 and uses frontmatter for the visible title).
+
+Static gates
+------------
+Command (run in the project Nix dev shell, with PNPM_HOME and
+npm_config_prefix unset):
+
+  pnpm typecheck
+  EXIT_CODE=0
+
+  pnpm lint
+  26 problems (0 errors, 26 pre-existing warnings)
+  EXIT_CODE=0
+
+  pnpm prettier
+  All matched files use Prettier code style!
+  EXIT_CODE=0
+
+  pnpm test --runInBand
+  Test Suites: 45 passed, 45 total
+  Tests:       251 passed, 251 total
+  EXIT_CODE=0
+
+  pnpm build
+  ✓ Compiled successfully
+  ✓ Generating static pages (173/173)
+  EXIT_CODE=0
+
+  pnpm images
+  IMAGE SIZE GATE PASSED — 115 image(s) within budget.
+  home.webp 37.9 KB; blog.webp 32.4 KB
+  EXIT_CODE=0
+
+  pnpm contrast
+  CONTRAST GATE PASSED — all 36 pair(s) meet their minimums.
+  EXIT_CODE=0
+
+  pnpm design-tokens
+  DESIGN-TOKEN GATE PASSED — 138 file(s), no legacy tokens, dark utilities,
+  raw hex, or retired faces.
+  EXIT_CODE=0
+
+  pnpm fonts
+  FONT BUDGET GATE PASSED — 2 families, critical preload 28.6 KiB.
+  EXIT_CODE=0
+
+Note: the first attempted Jest invocation used `pnpm test -- --runInBand`.
+pnpm forwarded the literal `--runInBand` as a Jest pattern, so Jest reported
+"No tests found". The corrected invocation `pnpm test --runInBand` ran the full
+suite above. No test or assertion was changed or skipped.
+
+Production browser surface
+--------------------------
+Production server: `pnpm exec next start -p 3040` after a clean build.
+Verifier: .omo/evidence/task-three-dispatch-content-browser.mjs
+Result: EXIT_CODE=0
+  OK: six dispatches, three new routes, tag archives, two onward cards each,
+  no 375px overflow
+
+Observed:
+- /blog: HTTP 200; six `h3 a[href^="/blog/entry/"]` links, newest-first:
+    1. What LLM Agents Are Still Missing
+    2. Unraid, Declaratively: The Fourth Homelab Iteration
+    3. Falling for Nix: One Flake, Three Machines
+    4. Transforming my Homelab with Advanced Automation - The 3rd Iteration Journey
+    5. The Evolution of My Homelab Journey - The Second Iteration
+    6. Memorable Ebeltoft Cheesecake – A Sweet Souvenir
+- New routes: HTTP 200, correct H1, non-empty article body, author card,
+  two onward article cards, and no horizontal overflow at 375px:
+    /blog/entry/2025-falling-for-nix
+    /blog/entry/2026-unraid-declarative-homelab-v4
+    /blog/entry/2026-what-llm-agents-are-missing
+- Tag archives: HTTP 200 for /tags/nixos, /tags/unraid, /tags/ai-agents,
+  and /tags/infrastructure-as-code; each has at least one entry.
+- Browser console: no errors.
+- Screenshots at 1280 and 375 are in .omo/evidence/ (blog-six-dispatches-*,
+  dispatch-*-375.png, *-375-full.png).
+
+E2E triage
+----------
+Command:
+  pnpm exec playwright test e2e/dynamic-content.spec.ts --project=chromium
+
+First run: 3 workers; 1 passed, 2 timed out (blog and project breadcrumbs) in
+the dev server. The project journey is untouched by this content change, so the
+failure is not content-specific. Re-ran serially:
+
+  pnpm exec playwright test e2e/dynamic-content.spec.ts --project=chromium --workers=1
+  3 passed (55.8s)
+  EXIT_CODE=0
+
+Also ran the blog journey alone:
+
+  pnpm exec playwright test e2e/dynamic-content.spec.ts -g "blog listing" \
+    --project=chromium --workers=1
+  1 passed (40.8s)
+  EXIT_CODE=0
+
+Conclusion: the parallel dev-server timeout was a runner/dev-server flake, not a
+regression. The production browser verifier and the serial e2e run both pass.
+
+Screenshot refresh
+------------------
+The dev-server e2e run rewrote .next while a production server was still
+serving it, which produced an initial CSS-less screenshot. The production
+server was stopped, a clean `pnpm build` was run, a fresh production server was
+started, and home.webp/blog.webp were recaptured. The final captures are styled,
+show the updated dispatch count, and pass `pnpm images`.
+Recapture log: .omo/evidence/task-three-dispatch-content-screenshots-final.log
+
+Content boundary checks
+-----------------------
+Checked the three new files for:
+- real LAN IPs, tailnet suffixes, hostnames
+- source repository URLs and secret names/values
+- source-project identifiers and unique artifact names
+- credentials, API keys, session secrets
+- post-February-2026 Unraid incident details
+
+Result: no matches other than harmless substrings in ordinary words
+(`risk-free` matching a key-like pattern, `docker-compose` matching an id-like
+pattern). The Nix post mentions `sops-nix` as a public tool, not any secret
+name or value. The manifesto does not mention its source project or unique
+terminology. The Nix post does not present the later impermanence/disko
+migration as complete.
+
+Deployment
+----------
+Not performed. Vercel credentials are not available in this session; the
+verification above is local production-build verification.
+
+Token usage
+-----------
+Not available. No provider billing data was queried, so no token total is
+claimed here.
+
+Rebase and final verification
+-----------------------------
+The first push was rejected because origin/main had advanced to defc345
+(chore(docs): update feature screenshots [skip ci]). The content commit was
+rebased onto defc345. The only conflicts were the binary home.webp/blog.webp
+screenshots; the content commit's captures were kept because they show six
+dispatches. origin's contact.webp/projects.webp updates stayed in the base.
+
+After the rebase, the full affected gates were re-run at commit 7cdd8ed:
+  pnpm typecheck          EXIT_CODE=0
+  pnpm lint               26 problems (0 errors, 26 pre-existing warnings); EXIT_CODE=0
+  pnpm prettier           All matched files use Prettier code style; EXIT_CODE=0
+  pnpm images             IMAGE SIZE GATE PASSED — 115 images; EXIT_CODE=0
+  pnpm test --runInBand   Test Suites: 45 passed, Tests: 251 passed; EXIT_CODE=0
+  pnpm build              ✓ Generating static pages (173/173); EXIT_CODE=0
+  production browser      six dispatches, three routes, tags, 375px overflow; EXIT_CODE=0
+
+Commit and push
+---------------
+Commit: 7cdd8ed feat(blog): add three new dispatches
+Push: defc345..7cdd8ed main -> main (origin confirmed at 7cdd8ed)
+Working tree: clean and synced with origin/main.

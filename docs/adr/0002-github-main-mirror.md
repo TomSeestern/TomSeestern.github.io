@@ -1,7 +1,8 @@
 # ADR-0002 — Forgejo `main` mirror to GitHub for Vercel deploys
 
 - Date: 2026-10-24
-- Status: accepted
+- Status: accepted — **superseded in part by [ADR-0003](0003-deploy-gated-on-check.md)**,
+  which moves the mirror into `check.yml` so no deploy can outrun the gates.
 - Supersedes: the README's “manual `vercel --prod` or a Forgejo job” deployment
   procedure, which left production stale after the Forgejo migration.
 

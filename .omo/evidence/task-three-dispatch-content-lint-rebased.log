@@ -1,0 +1,79 @@
+error (ignored): SQLite database '/home/tom/.cache/nix/eval-cache-v6/aa2acce5f0e51fe60428c84364a6c363cb969ad0180d0ba2b478bac72d68fe6a.sqlite' is busy
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 lint /home/tom/Projects/tomsegbers-de
+> eslint . --ext .ts,.tsx
+
+
+/home/tom/Projects/tomsegbers-de/app/about/page.test.tsx
+  4:1  warning  `./page` import should occur before type import of `../../lib/markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/blog/entry/[slug]/page.tsx
+  119:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/blog/page.test.tsx
+  14:1  warning  `./page` import should occur before import of `../../lib/blog`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/layout.tsx
+  5:1  warning  `@/lib/design-tokens` import should occur before import of `../components/Footer/Footer`  import/order
+  6:1  warning  `next` type import should occur before import of `react`                                  import/order
+  7:1  warning  `next/font/google` import should occur before import of `react`                           import/order
+
+/home/tom/Projects/tomsegbers-de/app/projects/entry/[slug]/page.tsx
+  126:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/projects/page.test.tsx
+  14:1  warning  `./page` import should occur before import of `../../lib/markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/sitemap.ts
+  3:1  warning  `gray-matter` import should occur before import of `fs`  import/order
+  4:1  warning  `next` import should occur before import of `fs`         import/order
+
+/home/tom/Projects/tomsegbers-de/app/tags/[tag]/page.test.tsx
+  5:1  warning  `./page` import should occur before type import of `../../../lib/markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/tags/[tag]/page.tsx
+  104:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/tags/page.test.tsx
+  4:1  warning  `./page` import should occur before type import of `../../lib/tags`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/Alert/Alert.tsx
+  3:1  warning  `tailwind-merge` import should occur before import of `../Icon/Close`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/Breadcrumb/Breadcrumb.tsx
+   3:1   warning  `tailwind-merge` import should occur before import of `../Icon/ArrowRight`     import/order
+  35:11  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+  42:11  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/DesignSystem/DesignSystem.stories.tsx
+  7:1  warning  `../Button/Button` import should occur before import of `../Icon`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/PixelSigil/PixelSigil.tsx
+  2:1  warning  `tailwind-merge` import should occur before import of `@/lib/sigil`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/ProjectDossier/ProjectDossier.tsx
+  4:1  warning  `../Providers/TooltipProvider` import should occur before import of `../TagChip/TagChip`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/TechnologyTooltip/TechnologyTooltip.test.tsx
+  3:1  warning  `./TechnologyTooltip` import should occur before import of `../Providers/TooltipProvider`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/Tooltip/Tooltip.stories.tsx
+  3:1  warning  `./Tooltip` import should occur before import of `../Providers/TooltipProvider`  import/order
+
+/home/tom/Projects/tomsegbers-de/lib/content.test.ts
+  2:1  warning  `./content` import should occur before type import of `./markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/lib/markdown.ts
+  3:1  warning  `gray-matter` import should occur before import of `fs`  import/order
+  4:1  warning  `zod` import should occur before import of `fs`          import/order
+
+/home/tom/Projects/tomsegbers-de/lib/sendEmail.tsx
+  3:1  warning  `await-to-js` import should occur before import of `next/headers`  import/order
+
+✖ 26 problems (0 errors, 26 warnings)
+  0 errors and 21 warnings potentially fixable with the `--fix` option.
+

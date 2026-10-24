@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs"
-import { TooltipProvider } from "../Providers/TooltipProvider"
 import { Tooltip } from "./Tooltip"
+import { TooltipProvider } from "../Providers/TooltipProvider"
 
 const meta: Meta<typeof Tooltip> = {
   title: "Primitives/Tooltip",

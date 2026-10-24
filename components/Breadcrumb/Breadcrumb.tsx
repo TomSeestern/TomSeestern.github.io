@@ -1,6 +1,6 @@
 import React from "react"
-import { ArrowRight } from "../Icon/ArrowRight"
 import { twMerge } from "tailwind-merge"
+import { ArrowRight } from "../Icon/ArrowRight"
 
 export interface BreadcrumbProps extends React.ComponentPropsWithoutRef<"nav"> {
   children: React.ReactNode
@@ -32,14 +32,14 @@ export function BreadcrumbItem({ href, children, className, ...props }: Breadcru
       {isLink ? (
         <a
           href={href}
-          className="focus-ring flex min-w-0 items-center font-pixel text-[0.625rem] uppercase tracking-[0.1em] text-ink-muted transition-colors duration-150 hover:text-crimson"
+          className="focus-ring flex min-w-0 items-center font-pixel text-[0.625rem] uppercase tracking-widest text-ink-muted transition-colors duration-150 hover:text-crimson"
         >
           {children}
         </a>
       ) : (
         <span
           aria-current="page"
-          className="flex min-w-0 items-center truncate font-pixel text-[0.625rem] uppercase tracking-[0.1em] text-ink"
+          className="flex min-w-0 items-center truncate font-pixel text-[0.625rem] uppercase tracking-widest text-ink"
         >
           {children}
         </span>

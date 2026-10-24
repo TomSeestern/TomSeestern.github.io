@@ -1,0 +1,202 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 build /home/tom/Projects/tomsegbers-de
+> next build
+
+ ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+   ▲ Next.js 15.5.24
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 47s
+   Linting and checking validity of types ...
+
+./app/about/page.tsx
+4:8  Warning: 'path' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+46:15  Warning: Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+127:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/blog/entry/[slug]/page.tsx
+2:1  Warning: `@/app/layout` import should occur after import of `react-markdown`  import/order
+30:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+52:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/blog/page.test.tsx
+21:1  Warning: `./page` import should occur before import of `../../lib/blog`  import/order
+
+./app/blog/page.tsx
+3:1  Warning: `next` import should occur before import of `../../components/ArticleTeaser/ArticleTeaser`  import/order
+
+./app/layout.tsx
+6:1  Warning: `@/lib/design-tokens` import should occur before import of `../components/Footer/Footer`  import/order
+7:1  Warning: `next` type import should occur before import of `react`  import/order
+8:1  Warning: `next/font/google` import should occur before import of `react`  import/order
+
+./app/page.tsx
+87:22  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/projects/entry/[slug]/page.tsx
+2:1  Warning: `@/app/layout` import should occur after import of `react-markdown`  import/order
+34:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+58:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/projects/page.test.tsx
+28:1  Warning: `./page` import should occur before import of `../../lib/markdown`  import/order
+
+./app/projects/page.tsx
+3:1  Warning: `next` import should occur before import of `next/image`  import/order
+57:22  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/sitemap.ts
+3:1  Warning: `gray-matter` import should occur before import of `fs`  import/order
+4:1  Warning: `next` import should occur before import of `fs`  import/order
+
+./app/tags/[tag]/page.tsx
+2:1  Warning: `@/app/layout` import should occur after import of `react-icons/hi`  import/order
+58:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+94:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/tags/page.tsx
+44:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Alert/Alert.tsx
+3:1  Warning: `tailwind-merge` import should occur before import of `../Icon/Close`  import/order
+
+./components/ArchiveRow/ArchiveRow.tsx
+3:1  Warning: `@/lib/format-date` import should occur before type import of `@/lib/markdown`  import/order
+6:1  Warning: `tailwind-merge` import should occur before type import of `@/lib/markdown`  import/order
+50:15  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+59:12  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+65:15  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+70:11  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+./components/ArticleCard/ArticleCard.tsx
+3:1  Warning: `@/lib/format-date` import should occur before type import of `@/lib/markdown`  import/order
+7:1  Warning: `../Card/Card` import should occur before import of `../Icon/ArrowRight`  import/order
+8:1  Warning: `tailwind-merge` import should occur before type import of `@/lib/markdown`  import/order
+32:17  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+36:15  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+./components/ArticleMeta/ArticleMeta.tsx
+22:7  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+./components/ArticleTeaser/ArticleTeaser.tsx
+2:1  Warning: `../Card/Card` import should occur after import of `react`  import/order
+74:20  Warning: Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+97:13  Warning: Classnames 'h-7, w-7' could be replaced by the 'size-7' shorthand!  tailwindcss/enforces-shorthand
+110:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Breadcrumb/Breadcrumb.tsx
+3:1  Warning: `tailwind-merge` import should occur before import of `../Icon/ArrowRight`  import/order
+35:11  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+42:11  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+./components/DesignSystem/DesignSystem.stories.tsx
+7:1  Warning: `../Button/Button` import should occur before import of `../Icon`  import/order
+
+./components/Footer/Footer.tsx
+2:1  Warning: `next/image` import should occur before import of `react`  import/order
+9:29  Warning: 'props' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+28:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+35:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+42:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+49:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Header/Header.tsx
+39:13  Warning: Classnames 'h-6, w-6' could be replaced by the 'size-6' shorthand!  tailwindcss/enforces-shorthand
+39:13  Warning: Classnames 'sm:h-9, sm:w-9' could be replaced by the 'sm:size-9' shorthand!  tailwindcss/enforces-shorthand
+
+./components/MonumentCard/MonumentCard.tsx
+3:1  Warning: `@/lib/format-date` import should occur before type import of `@/lib/markdown`  import/order
+6:1  Warning: `../Card/Card` import should occur before import of `../Icon/ArrowUpRight`  import/order
+7:1  Warning: `tailwind-merge` import should occur before type import of `@/lib/markdown`  import/order
+55:15  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+65:17  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+68:17  Warning: The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+./components/PersonTeaser/PersonTeaser.tsx
+23:9  Warning: Classnames 'h-12, w-12' could be replaced by the 'size-12' shorthand!  tailwindcss/enforces-shorthand
+
+./components/PixelSigil/PixelSigil.tsx
+2:1  Warning: `tailwind-merge` import should occur before import of `@/lib/sigil`  import/order
+
+./components/ProjectTeaser/ProjectTeaser.test.tsx
+3:1  Warning: `@testing-library/react` import should occur before import of `date-fns`  import/order
+10:1  Warning: `./ProjectTeaser` import should occur before import of `../../lib/icon-map`  import/order
+
+./components/ProjectTeaser/ProjectTeaser.tsx
+1:1  Warning: `react` import should occur after import of `next/link`  import/order
+2:1  Warning: `../Tooltip/Tooltip` import should occur after import of `../../lib/icon-map`  import/order
+4:1  Warning: `../Card/Card` import should occur after import of `../../lib/icon-map`  import/order
+31:3  Warning: 'imageUrl' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+43:7  Warning: Classnames 'h-full, w-full' could be replaced by the 'size-full' shorthand!  tailwindcss/enforces-shorthand
+82:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+100:20  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Tooltip/Tooltip.stories.tsx
+3:1  Warning: `./Tooltip` import should occur before import of `../Providers/TooltipProvider`  import/order
+
+./lib/content.test.ts
+2:1  Warning: `./content` import should occur before type import of `./markdown`  import/order
+
+./lib/markdown.ts
+3:1  Warning: `gray-matter` import should occur before import of `fs`  import/order
+4:1  Warning: `zod` import should occur before import of `fs`  import/order
+
+./lib/sendEmail.tsx
+3:1  Warning: `await-to-js` import should occur before import of `next/headers`  import/order
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/127) ...
+   Generating static pages (31/127) 
+   Generating static pages (63/127) 
+   Generating static pages (95/127) 
+ ✓ Generating static pages (127/127)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                                              Size  First Load JS
+┌ ○ /                                                                                   174 B         111 kB
+├ ○ /_not-found                                                                         140 B         102 kB
+├ ○ /about                                                                              160 B         108 kB
+├ ƒ /api/health                                                                         140 B         102 kB
+├ ○ /apple-icon.png                                                                       0 B            0 B
+├ ○ /blog                                                                               174 B         111 kB
+├ ● /blog/entry/[slug]                                                                1.65 kB         126 kB
+├   ├ /blog/entry/2019-ebeltoft-cheesecake-recipe
+├   ├ /blog/entry/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition
+├   └ /blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation
+├ ○ /contact                                                                          9.14 kB         111 kB
+├ ○ /datenschutz                                                                        140 B         102 kB
+├ ○ /icon.svg                                                                             0 B            0 B
+├ ○ /impressum                                                                          140 B         102 kB
+├ ○ /projects                                                                           181 B         128 kB
+├ ● /projects/entry/[slug]                                                            1.65 kB         126 kB
+├   ├ /projects/entry/2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms
+├   ├ /projects/entry/2011-first-competition-with-wenzelbots-team
+├   ├ /projects/entry/2012-elevating-robot-competition-performance
+├   └ [+18 more paths]
+├ ○ /robots.txt                                                                         140 B         102 kB
+├ ○ /sitemap.xml                                                                        140 B         102 kB
+├ ○ /tags                                                                               483 B         106 kB
+└ ● /tags/[tag]                                                                       1.66 kB         129 kB
+    ├ /tags/robotics
+    ├ /tags/arma-3
+    ├ /tags/digital-transformation
+    └ [+83 more paths]
++ First Load JS shared by all                                                          102 kB
+  ├ chunks/26-f9a8958c8fc95dc8.js                                                     46.2 kB
+  ├ chunks/3f9eb5ed-4ee7e796f67bc406.js                                               54.2 kB
+  └ other shared chunks (total)                                                       1.86 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

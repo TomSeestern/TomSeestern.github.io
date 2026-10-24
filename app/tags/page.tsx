@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: "Tags",
   description:
     "Browse every blog post and project by topic. A server-rendered index of all content tags on TomSegbers.de.",
+  alternates: {
+    canonical: "https://tomsegbers.de/tags",
+  },
   openGraph: {
     url: "https://tomsegbers.de/tags",
     siteName: "TomSegbers.de",

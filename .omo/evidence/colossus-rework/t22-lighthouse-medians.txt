@@ -1,0 +1,16 @@
+/	LCP 2114.0 ms	CLS 0.000	TBT 38.5 ms
+/about	LCP 2182.5 ms	CLS 0.000	TBT 28.0 ms
+/blog	LCP 1953.8 ms	CLS 0.000	TBT 48.0 ms
+/blog/entry/2019-ebeltoft-cheesecake-recipe	LCP 2030.3 ms	CLS 0.000	TBT 30.0 ms
+/projects	LCP 2103.5 ms	CLS 0.000	TBT 59.0 ms
+/projects/entry/2020-soudest-backend-nodejs	LCP 1878.5 ms	CLS 0.000	TBT 41.0 ms
+/contact	LCP 1953.8 ms	CLS 0.000	TBT 74.0 ms
+
+Runs:
+/ 2114/0.00/39 2448/0.00/68 2051/0.00/26
+/about 2182/0.00/29 2254/0.00/26 2180/0.00/28
+/blog 1954/0.00/48 1954/0.00/152 1901/0.00/27
+/blog/entry/2019-ebeltoft-cheesecake-recipe 2028/0.00/30 2030/0.00/30 2103/0.00/28
+/projects 2515/0.00/62 2104/0.00/59 2103/0.00/59
+/projects/entry/2020-soudest-backend-nodejs 2216/0.00/31 1878/0.00/41 1757/0.00/134
+/contact 1904/0.00/63 1954/0.00/86 1954/0.00/74

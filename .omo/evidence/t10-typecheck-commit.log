@@ -1,0 +1,7 @@
+[main 2bdf1e9] fix(test): add additive frontmatter fields to page test fixtures
+ 8 files changed, 236 insertions(+), 28 deletions(-)
+ create mode 100644 .omo/evidence/t10-typecheck-green.log
+ create mode 100644 .omo/evidence/t10-typecheck-lint.log
+ create mode 100644 .omo/evidence/t10-typecheck-prettier.log
+ create mode 100644 .omo/evidence/t10-typecheck-red.log
+ create mode 100644 .omo/evidence/t10-typecheck-test.log

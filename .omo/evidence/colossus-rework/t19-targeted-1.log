@@ -1,0 +1,32 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 15 tests using 1 worker
+
+[1/15] [chromium] › e2e/interactions.spec.ts:35:7 › interactive accessibility › skip link becomes visible on Tab and moves focus to main content on Enter
+[2/15] [chromium] › e2e/interactions.spec.ts:56:7 › interactive accessibility › keyboard focus gives the primary header CTA a visible outline
+[3/15] [chromium] › e2e/interactions.spec.ts:66:7 › interactive accessibility › home featured link exposes a visible keyboard outline
+[4/15] [chromium] › e2e/interactions.spec.ts:76:7 › interactive accessibility › keyboard activation follows a home CTA without a pointer
+
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[5/15] [chromium] › e2e/tooltip.spec.ts:18:7 › tooltip (single root provider) › technology tooltip opens on hover and dismisses on Escape on a project dossier
+[6/15] [chromium] › e2e/visual-language.spec.ts:9:9 › COLOSSUS visual-language contract › / ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[7/15] [chromium] › e2e/visual-language.spec.ts:9:9 › COLOSSUS visual-language contract › /projects ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[8/15] [chromium] › e2e/visual-language.spec.ts:9:9 › COLOSSUS visual-language contract › /blog ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[9/15] [chromium] › e2e/visual-language.spec.ts:9:9 › COLOSSUS visual-language contract › /about ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[10/15] [chromium] › e2e/visual-language.spec.ts:9:9 › COLOSSUS visual-language contract › /contact ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[11/15] [chromium] › e2e/visual-language.spec.ts:9:9 › COLOSSUS visual-language contract › /tags ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[12/15] [chromium] › e2e/visual-language.spec.ts:45:9 › COLOSSUS visual-language contract › / renders at least one deterministic pixel sigil
+[13/15] [chromium] › e2e/visual-language.spec.ts:45:9 › COLOSSUS visual-language contract › /projects renders at least one deterministic pixel sigil
+[14/15] [chromium] › e2e/visual-language.spec.ts:45:9 › COLOSSUS visual-language contract › /blog renders at least one deterministic pixel sigil
+[15/15] [chromium] › e2e/visual-language.spec.ts:54:7 › COLOSSUS visual-language contract › home ticker is static under prefers-reduced-motion
+  15 passed (1.0m)

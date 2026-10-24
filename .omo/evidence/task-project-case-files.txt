@@ -1,0 +1,168 @@
+TASK project-case-files
+DATE 2026-10-22T14:57Z
+COMMIT 94636cc feat(content): refresh project case files and archive evidence
+PLAN .omo/plans/2026-project-case-files.md
+BOULDER .omo/boulders/task-project-case-files.md
+
+## Baseline
+
+- Before: 21 project files. Two published entries still contained TODO/template
+  copy (2020 SouDest frontend, 2019 PropTech). No case file carried a role,
+  outcome, public link, or real hero image.
+- After: 25 project files. All 21 existing bodies rewritten or expanded; four
+  new scan-derived files added.
+
+New files:
+- content/projects/2024-layzr-creator-avatar-platform-acquired-by-jodel.md
+- content/projects/2026-hammer-robotics-mark-humanoid.md
+- content/projects/2026-everyfont-ever-generative-typeface-engine.md
+- content/projects/2026-closedloop-os-agent-orchestration.md
+
+## Source scan
+
+- GitHub: TomSeestern; orgs layzr, paymenowde, Streamtopia, hammer-robotics,
+  LooperLabs.
+- Forgejo: TomSegbers on the LAN instance (used as evidence only; not linked).
+- Selected: LAYZR, Hammer Robotics, EveryFontEver.com, ClosedLoopOS.
+- Deferred shortlist and privacy constraints are recorded in
+  .omo/notepads/2026-project-case-files.md.
+
+## Implementation
+
+- lib/markdown.ts: optional `links: [{label, href}]` frontmatter schema/type.
+- components/ProjectDossier/ProjectDossier.tsx: renders public evidence links;
+  drops blank entries; link test added.
+- app/projects/entry/[slug]/page.tsx: passes links; omits the generated cover
+  when a real `heroImage` exists (removes duplicate hero visuals).
+- lib/tags.ts: `getAllProjectTags()`; app/projects/page.tsx uses it for the
+  subject strip and `Subjects` count. Archive span and selected count are
+  derived from content.
+- app/about/page.tsx: archive span derived from content instead of 2010—2021.
+- components/HomeHero/HomeHero.tsx + app/page.tsx: home hero archive span is
+  derived from the project collection; the home selected-work lead names the
+  current four featured cases. `e2e/home.spec.ts` asserts 2010—2026 and 25.
+- scripts/generate-brand-assets.mjs: OG card mock updated to 2010—2026 / 25;
+  public/img/og-default.png regenerated (1200 × 630).
+- components/ProjectCover: added robotics, creator, type, and agent variants;
+  tests cover them.
+- scripts/check-project-frontmatter.js: count 25, required role/outcome,
+  non-empty tags/technologies, quoted metric values, public http(s) links, and
+  TODO/template rejection.
+- lib/project-content.test.ts: real-content inventory, placeholder, featured-set,
+  and scan-link invariants.
+- README.md: documents `featured`, `role`, `outcome`, `heroImage`, `metrics`,
+  `links`, and project-scoped subjects.
+- public/img/projects/: nine optimized project images.
+
+Featured set (exactly four): Hammer Robotics, LAYZR, ISeeUNet, PayMeNow.
+SkinShark and RefundHero moved to the archive.
+
+## Commands and results
+
+1. `nix develop --command bash -lc 'node scripts/check-project-frontmatter.js'`
+   - PASS 25/25; final line `COUNT 25`.
+
+2. `nix develop --command bash -lc 'pnpm typecheck'`
+   - Exit 0.
+
+3. `nix develop --command bash -lc 'pnpm lint'`
+   - Exit 0; 0 errors. 26 warnings are pre-existing import-order,
+     unused `parent`, and arbitrary-tracking-value warnings.
+
+4. `nix develop --command bash -lc 'pnpm prettier'`
+   - Exit 0; all matched files use Prettier style.
+
+5. `nix develop --command bash -lc 'pnpm test --runInBand'`
+   - 44 suites passed, 44 total.
+   - 224 tests passed, 224 total.
+
+6. `nix develop --command bash -lc 'pnpm images'`
+   - 112 images scanned; all within budget.
+   - New images: soudest-android.png 168.0 KB, iseeu-net-change-detection.jpg
+     116.3 KB, everyfont-ever.png 99.7 KB, layzr-jodel.jpg 66.5 KB,
+     closedloop-os.png 64.1 KB, skinshark-dashboard.webp 63.2 KB,
+     soudest-web.jpg 53.6 KB, hammer-mark-i.jpg 48.4 KB,
+     refundhero-station.jpg 32.5 KB.
+
+7. `nix develop --command bash -lc 'pnpm contrast'`
+   - 36/36 pairs pass.
+
+8. `nix develop --command bash -lc 'pnpm design-tokens'`
+   - 133 files pass; no legacy tokens, dark utilities, raw hex, or retired faces.
+
+9. `nix develop --command bash -lc 'pnpm fonts'`
+   - 2/2 families; critical preload 28.6 KiB / 100 KiB.
+
+10. `nix develop --command bash -lc 'pnpm build'`
+    - Exit 0; compiled successfully; 146 static pages generated.
+    - `/projects/entry/[slug]` lists 25 paths.
+
+11. `nix develop --command bash -lc 'pnpm build-storybook --quiet'`
+    - Exit 0; storybook-static generated.
+
+12. CI-style Storybook smoke:
+    `npx concurrently ... "npx wait-on ... && pnpm test-storybook"`
+    - 13 suites passed; 16 tests passed.
+
+13. `CI=1 nix develop --command bash -lc 'CI=1 pnpm exec playwright test --project=chromium'`
+    - 100 passed (9.0m), 0 failed.
+    - Note: the first local run used 11 workers against a cold dev server; it
+      timed out while compiling pages. The CI-mode rerun uses one worker and
+      the repository's retry policy, matching `.forgejo/workflows/playwright.yml`.
+
+14. Live production surface (port 3100):
+    custom Playwright check against 25 detail routes.
+    - PROJECT SURFACE PASSED — 25 detail pages, featured covers, archive,
+      sitemap, heroes, dossier links.
+    - Verified `/projects` shows 25 case files, 2010—2026, project-scoped
+      subjects with no blog-only `Recipes`, four featured cards, and four
+      distinct cover variants.
+    - Verified every project route returns 200, has one H1, body, dossier,
+      correct hero/cover choice, loaded hero images, dossier links, and featured
+      evidence block.
+    - Log: /tmp/opencode/project-surface-2.log
+
+15. External link check:
+    - 200: layzr.gg, Business Insider LAYZR article, LinkedIn acquisition post,
+      hammer-robotics.de, everyfontever.com, closed-loop-os.vercel.app,
+      ISEEU-Net repo + thesis PDF, SouDest Android/backend/frontend, BotBoost,
+      AT89C5131A, LCD-Display.
+    - Founderio Hammer profile returned 403 behind Cloudflare; link removed.
+    - paymenow.de is parked; PayMeNow repository is private. No dead/private
+      link was added; PayMeNow keeps role/outcome/evidence metrics and the
+      generated cover.
+
+16. Final home-hero verification after the archive-span change:
+    `CI=1 nix develop --command bash -lc 'CI=1 pnpm exec playwright test --project=chromium e2e/home.spec.ts'`
+    - 3 passed (58.5s); asserts 2010—2026 and 25 in `home-archive-status`,
+      plus the existing DOM budget and 375px overflow checks.
+
+17. Final production build after the home/OG changes:
+    `nix develop --command bash -lc 'pnpm build'`
+    - Exit 0; 146 static pages, 25 project routes, `/projects` and `/` static.
+    - `pnpm images` still passes 112 image(s); regenerated OG is 73 KB.
+
+## Visual evidence
+
+- .omo/evidence/project-case-files/projects.png
+- .omo/evidence/project-case-files/hammer.png
+- .omo/evidence/project-case-files/layzr.png
+- .omo/evidence/project-case-files/everyfont-dossier.png
+- .omo/evidence/project-case-files/paymenow-dossier.png
+- public/img/og-default.png (regenerated OG card, inspected: 2010—2026, 25)
+
+## Residual notes
+
+- Blog `/blog` still uses the sitewide `getAllTags()` topic index. The requested
+  fix was the project subject index; blog scoping was not changed.
+- PayMeNow has no public live URL or usable screenshot because the domain is
+  parked and the repo is private. It remains featured on role/outcome/evidence,
+  with the generated cover.
+- Forgejo public repos are only reachable on the LAN and are not linked from the
+  public site.
+
+## Token usage
+
+The runtime does not expose token telemetry, so no exact count is available.
+This session used several context checkpoints and repeated verification runs;
+that is an instrumentation limitation, not an estimate presented as fact.

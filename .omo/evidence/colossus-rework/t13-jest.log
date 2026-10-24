@@ -1,0 +1,10 @@
+PASS app/blog/entry/[slug]/page.test.tsx
+  [slug] blog entry page
+    ✓ renders the dispatch header, metadata, body, author card, and onward reading (320 ms)
+    ✓ generates canonical link tag metadata (4 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        3.002 s
+Ran all test suites matching /app\/blog\/entry/i.

@@ -1,16 +1,10 @@
 name: Update Screenshots
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "app/**"
-      - "components/**"
-      - "content/**"
-      - "styles/**"
-      - "public/**"
-      - "scripts/update-readme-screenshots.ts"
+  # Manual only. This job used to push a `[skip ci]` commit straight to main,
+  # which bypassed the gate and could advance the deploy branch without a
+  # mirror check. A dispatch run now produces an ordinary commit that goes
+  # through Check like any other (ADR-0003).
   workflow_dispatch:
 
 # One slot per ref: Lighthouse measures total-blocking-time on a shared host, and
@@ -54,7 +48,7 @@ jobs:
             git config user.name "Forgejo Actions Bot"
             git config user.email "bot@noreply.local"
             git add public/img/screenshots/
-            git commit -m "chore(docs): update feature screenshots [skip ci]"
+            git commit -m "chore(docs): update feature screenshots"
             git push origin main
           else
             echo "No screenshot changes detected."

@@ -353,13 +353,14 @@ dashboard. The decision is recorded in
 [ADR-0002](docs/adr/0002-github-main-mirror.md).
 
 `pnpm build` runs `next build` and pre-renders all pages with SSG. The page
-count grows with content: as of 2026-09-12 the build pre-renders 127 static
-pages across 17 route patterns, one page per blog post, project, and canonical
-tag on top of the fixed routes. The site is served on the Node/Vercel runtime;
-`output: 'export'` is deliberately not set. The only server-side runtime code is the
-contact form server action, which calls the Resend API. The site has no
-middleware, no instrumentation hook, no OpenTelemetry, and no custom API
-routes beyond the Next.js health-check rewrites in `next.config.mjs`.
+count grows with content: as of 2026-10-24 the build pre-renders 173 pages —
+the fixed routes plus one page per blog post, project, and indexable tag. The
+site is served on the Node/Vercel runtime; `output: 'export'` is deliberately
+not set. The only server-side runtime code is the contact form server action,
+which calls the Resend API. The only API surface is `/api/health`, reachable
+directly and through four aliases (`/healthz`, `/api/healthz`, `/health`,
+`/ping`) declared as rewrites in `next.config.mjs`. The site has no middleware,
+no instrumentation hook and no OpenTelemetry.
 
 For local production verification:
 

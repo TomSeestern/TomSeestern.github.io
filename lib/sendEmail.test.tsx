@@ -38,6 +38,7 @@ describe("sendEmail", () => {
   beforeEach(async () => {
     mockEnv.RESEND_API_KEY = "test-resend-key"
     mockEnv.E2E_CONTACT_FORM_SUCCESS = undefined
+    delete process.env.VERCEL_ENV
     mockSend.mockReset()
     mockHeadersGet.mockReset()
     mockHeadersGet.mockReturnValue(null)
@@ -46,7 +47,7 @@ describe("sendEmail", () => {
   })
 
   it("returns success for valid input when Resend accepts", async () => {
-    mockSend.mockResolvedValue({ id: "email-id" } as never)
+    mockSend.mockResolvedValue({ data: { id: "email-id" }, error: null } as never)
 
     const result = await sendEmail(validFormData)
 
@@ -114,6 +115,80 @@ describe("sendEmail", () => {
     consoleError.mockRestore()
   })
 
+  it("returns a form error when Resend resolves an API error", async () => {
+    mockSend.mockResolvedValue({
+      data: null,
+      error: { name: "validation_error", message: "from domain not verified" },
+    } as never)
+    const consoleError = jest.spyOn(console, "error").mockImplementation(() => {})
+
+    const result = await sendEmail(validFormData)
+
+    expect(result).toMatchObject({
+      success: false,
+      errors: { _form: expect.stringContaining("Failed to send email") },
+    })
+    expect(consoleError).toHaveBeenCalled()
+    consoleError.mockRestore()
+  })
+
+  it("returns a form error when Resend resolves without a message id", async () => {
+    mockSend.mockResolvedValue({ data: {}, error: null } as never)
+    const consoleError = jest.spyOn(console, "error").mockImplementation(() => {})
+
+    const result = await sendEmail(validFormData)
+
+    expect(result).toMatchObject({
+      success: false,
+      errors: { _form: expect.stringContaining("Failed to send email") },
+    })
+    consoleError.mockRestore()
+  })
+
+  it("returns a field error for a name over 100 characters", async () => {
+    const result = await sendEmail({ ...validFormData, name: "a".repeat(101) })
+
+    expect(result).toMatchObject({
+      success: false,
+      errors: { name: "Please keep your name under 100 characters" },
+    })
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
+  it("returns a field error for a name containing a line break", async () => {
+    const result = await sendEmail({ ...validFormData, name: "Tom\r\nBcc: x@example.com" })
+
+    expect(result).toMatchObject({
+      success: false,
+      errors: { name: "Please remove line breaks from your name" },
+    })
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
+  it("returns a field error for a message over 5000 characters", async () => {
+    const result = await sendEmail({ ...validFormData, message: "m".repeat(5001) })
+
+    expect(result).toMatchObject({
+      success: false,
+      errors: { message: "Please keep your message under 5000 characters" },
+    })
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
+  it("ignores the E2E shortcut in a production deployment", async () => {
+    process.env.VERCEL_ENV = "production"
+    mockEnv.E2E_CONTACT_FORM_SUCCESS = "true"
+    mockEnv.RESEND_API_KEY = undefined
+
+    const result = await sendEmail(validFormData)
+
+    expect(result).toEqual({
+      success: false,
+      errors: { _form: "Email service is not configured." },
+    })
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
   it("returns form error when RESEND_API_KEY is not set", async () => {
     mockEnv.RESEND_API_KEY = undefined
 
@@ -136,7 +211,7 @@ describe("sendEmail", () => {
   })
 
   it("returns form error when rate limit exceeded", async () => {
-    mockSend.mockResolvedValue({ id: "email-id" } as never)
+    mockSend.mockResolvedValue({ data: { id: "email-id" }, error: null } as never)
 
     // 5 requests within the window should succeed
     for (let i = 0; i < 5; i++) {
@@ -153,7 +228,7 @@ describe("sendEmail", () => {
   })
 
   it("returns validation error without consuming rate limit for invalid input", async () => {
-    mockSend.mockResolvedValue({ id: "email-id" } as never)
+    mockSend.mockResolvedValue({ data: { id: "email-id" }, error: null } as never)
 
     const invalidData = { ...validFormData, name: "" }
     for (let i = 0; i < 6; i++) {
@@ -173,7 +248,7 @@ describe("sendEmail", () => {
       if (key === "x-forwarded-for") return "192.168.1.42, 10.0.0.1"
       return null
     }) as any)
-    mockSend.mockResolvedValue({ id: "email-id" } as never)
+    mockSend.mockResolvedValue({ data: { id: "email-id" }, error: null } as never)
 
     const result = await sendEmail(validFormData)
 

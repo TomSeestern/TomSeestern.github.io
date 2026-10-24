@@ -25,6 +25,22 @@ const ROUTES = [
   "/projects/entry/2020-soudest-backend-nodejs",
 ] as const
 
+/**
+ * Every fixed route must declare its own canonical. Kept separate from ROUTES
+ * because the OG-image assertion above only applies to routes that carry the
+ * purpose-built card.
+ */
+const CANONICAL_ROUTES = [
+  "/",
+  "/about",
+  "/blog",
+  "/projects",
+  "/tags",
+  "/contact",
+  "/impressum",
+  "/datenschutz",
+] as const
+
 /** The purpose-built OG card dimensions (OpenGraph "rich card" 1.91:1). */
 const OG_WIDTH = 1200
 const OG_HEIGHT = 630
@@ -81,7 +97,7 @@ test.describe("social-share metadata", () => {
 
   test("canonical link and og:url stay on their route", async ({ page }) => {
     test.setTimeout(120_000)
-    for (const route of ROUTES) {
+    for (const route of CANONICAL_ROUTES) {
       // Given
       await page.goto(route)
 
@@ -93,14 +109,13 @@ test.describe("social-share metadata", () => {
         () => document.querySelector('meta[property="og:url"]')?.getAttribute("content") ?? null
       )
 
-      // Then — at least one canonical signal exists and neither drifts off-route.
-      expect(canonical ?? ogUrl, `no canonical signal on ${route}`).toBeTruthy()
+      // Then — a canonical link is mandatory. It used to fall back to og:url,
+      // which hid five routes that shipped no canonical at all.
+      expect(canonical, `no canonical link on ${route}`).toBeTruthy()
       const routePath = new URL(route, page.url()).pathname
-      if (canonical) {
-        const canonicalUrl = new URL(canonical, page.url())
-        expect(canonicalUrl.origin, `canonical origin drifted on ${route}`).toBe(PUBLIC_ORIGIN)
-        expect(canonicalUrl.pathname, `canonical drifted on ${route}`).toBe(routePath)
-      }
+      const canonicalUrl = new URL(canonical as string, page.url())
+      expect(canonicalUrl.origin, `canonical origin drifted on ${route}`).toBe(PUBLIC_ORIGIN)
+      expect(canonicalUrl.pathname, `canonical drifted on ${route}`).toBe(routePath)
       if (ogUrl) {
         const ogUrlValue = new URL(ogUrl, page.url())
         expect(ogUrlValue.origin, `og:url origin drifted on ${route}`).toBe(PUBLIC_ORIGIN)

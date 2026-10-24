@@ -1,0 +1,8 @@
+PASS components/ProjectDossier/ProjectDossier.test.tsx (9.473 s)
+PASS app/projects/entry/[slug]/page.test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        18.065 s
+Ran all test suites matching /app\/projects\/entry|components\/ProjectDossier/i.

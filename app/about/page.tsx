@@ -6,7 +6,6 @@ import { PageHero } from "@/components/PageHero/PageHero"
 import PersonTeaser from "@/components/PersonTeaser/PersonTeaser"
 import { Section } from "@/components/Section/Section"
 import { SectionHeading } from "@/components/SectionHeading/SectionHeading"
-import Testimonials from "@/components/Testimonials/Testimonials"
 import TimelineEntry from "@/components/TimelineEntry/TimelineEntry"
 import { formatYear } from "@/lib/format-date"
 import { getAllProjects } from "@/lib/projects"
@@ -15,7 +14,10 @@ import { getTopTechnologies } from "@/lib/technologies"
 export const metadata: Metadata = {
   title: "About me",
   description:
-    "A short overview of Tom Segbers' formal education and work experience — from freelance IT developer to Founder & Tech Lead at LAYZR.gg.",
+    "A short overview of Tom Segbers' formal education and work experience — from freelance IT developer to Founder & CEO at Hammer Robotics.",
+  alternates: {
+    canonical: "https://tomsegbers.de/about",
+  },
   openGraph: {
     url: "https://tomsegbers.de/about",
     siteName: "TomSegbers.de",
@@ -154,22 +156,35 @@ export default function About() {
         />
         <div id="timeline" data-testid="about-timeline" className="mt-8">
           <TimelineEntry
+            time="2024 – present"
+            title="Founder & CEO @ Hammer Robotics"
+            description="Building embodied AI for heavy logistics work, starting with a humanoid prototype for airport baggage handling."
+            link="https://hammer-robotics.de"
+          >
+            <PersonTeaser
+              companyName="Hammer Robotics"
+              companyLogoSrc="/img/projects/hammer-mark-i.jpg"
+              companyDescription="Munich-based robotics company automating physically demanding logistics work with humanoid robots."
+              companyLink="https://hammer-robotics.de"
+            />
+          </TimelineEntry>
+          <TimelineEntry
             time="2021 - 2024"
-            title="Founder & Tech Lead @ LAYZR.gg"
-            description="Founding a startup that connected streaming with blockchain."
-            link="https://layzr.gg"
+            title="Co-Founder & CTO @ LAYZR.gg"
+            description="Co-founded a creator platform for digital collectibles and led its engineering through acquisition by Jodel."
+            link="/projects/entry/2024-layzr-creator-avatar-platform-acquired-by-jodel"
           >
             <PersonTeaser
               companyName="LAYZR.gg"
               companyLogoSrc="/img/layzrgg_logo.png"
-              companyDescription="LAYZR.gg is a platform for fans to collect digital collectibles and build thier digital identity."
-              companyLink="https://layzr.gg"
+              companyDescription="LAYZR.gg is a platform for fans to collect digital collectibles and build their digital identity."
+              companyLink="/projects/entry/2024-layzr-creator-avatar-platform-acquired-by-jodel"
             />
           </TimelineEntry>
           <TimelineEntry
             time="2020-2021"
-            title="HATtec: Bachelor and Working Student"
-            description="Focusing on developing real-time AI solutions for my Bachelor Thesis."
+            title="HATtec: Working Student & Bachelor's Thesis"
+            description="Focusing on developing real-time AI solutions for my bachelor's thesis."
             link="https://hattec.de"
           >
             <PersonTeaser
@@ -182,7 +197,7 @@ export default function About() {
           <TimelineEntry
             time="2018-2021"
             title="(B.SC.) Applied Computer Science"
-            description="Completed my Bachelor of Applied Computer Science at the Ravensburg-Weingarten University of Applied Science."
+            description="Completed my Bachelor of Applied Computer Science at the Ravensburg-Weingarten University of Applied Sciences."
             link="https://rwu.de"
           >
             <div className="space-y-2 border border-rule-strong bg-panel p-4">
@@ -232,10 +247,6 @@ export default function About() {
             </div>
           ))}
         </div>
-      </Section>
-
-      <Section tone="canvas" className="py-12 sm:py-16 lg:py-20">
-        <Testimonials />
       </Section>
 
       <Section tone="night" labelledBy="about-closing-title" className="py-12 sm:py-16 lg:py-20">

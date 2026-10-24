@@ -1,5 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fs = require("fs")
+// Import groups are declared statically. They used to be derived by enumerating
+// the working directory, which made lint verdicts depend on whatever stray
+// directories happened to exist — a clean clone and a tree with
+// `storybook-static/` or `test-results/` disagreed.
+const INTERNAL_DIRECTORIES = ["app", "components", "content", "e2e", "lib", "public", "scripts", "styles"]
 
 module.exports = {
   extends: ["next", "prettier", "plugin:storybook/recommended", "plugin:tailwindcss/recommended"],
@@ -29,11 +32,11 @@ module.exports = {
     ],
     "tailwindcss/classnames-order": "off",
     "import/order": [
-      1,
+      2,
       {
         groups: ["external", "builtin", "internal", "sibling", "parent", "index"],
         pathGroups: [
-          ...getDirectoriesToSort().map((singleDir) => ({
+          ...INTERNAL_DIRECTORIES.map((singleDir) => ({
             pattern: `${singleDir}/**`,
             group: "internal",
           })),
@@ -59,15 +62,4 @@ module.exports = {
       },
     ],
   },
-}
-
-function getDirectoriesToSort() {
-  const ignoredSortingDirectories = [".git", ".next", ".vscode", "node_modules"]
-  return getDirectories(process.cwd()).filter((f) => !ignoredSortingDirectories.includes(f))
-}
-
-function getDirectories(path) {
-  return fs.readdirSync(path).filter(function (file) {
-    return fs.statSync(path + "/" + file).isDirectory()
-  })
 }

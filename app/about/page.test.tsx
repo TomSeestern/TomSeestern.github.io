@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
+import About from "./page"
 import type { MarkdownEntry } from "../../lib/markdown"
 import { getAllProjects } from "../../lib/projects"
-import About from "./page"
 
 jest.mock("../../lib/projects", () => ({
   getAllProjects: jest.fn(),
@@ -44,11 +44,12 @@ describe("About", () => {
     expect(screen.getByRole("heading", { level: 1, name: "About me" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { level: 2, name: "Formal positions" })).toBeInTheDocument()
     expect(screen.getByTestId("about-timeline")).toBeInTheDocument()
-    expect(screen.getAllByTestId("timeline-entry")).toHaveLength(4)
-    expect(screen.getByRole("heading", { level: 3, name: "Founder & Tech Lead @ LAYZR.gg" })).toBeInTheDocument()
+    expect(screen.getAllByTestId("timeline-entry")).toHaveLength(5)
+    expect(screen.getByRole("heading", { level: 3, name: "Founder & CEO @ Hammer Robotics" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 3, name: "Co-Founder & CTO @ LAYZR.gg" })).toBeInTheDocument()
   })
 
-  it("renders the portrait, tools band, and illustrative-example disclaimer", () => {
+  it("renders the portrait and the tools band without illustrative testimonials", () => {
     // Given / When
     render(<About />)
 
@@ -56,9 +57,7 @@ describe("About", () => {
     expect(screen.getByRole("img", { name: "Portrait of Tom Segbers" })).toBeInTheDocument()
     expect(screen.getByTestId("about-tools")).toBeInTheDocument()
     expect(screen.getByRole("heading", { level: 2, name: "Tools of the trade" })).toBeInTheDocument()
-    expect(screen.getByRole("heading", { level: 2, name: "Illustrative examples" })).toBeInTheDocument()
-    expect(screen.getByText("Illustrative examples — not real client testimonials.")).toBeInTheDocument()
-    expect(screen.getAllByTestId("illustrative-example")).toHaveLength(3)
+    expect(screen.queryByText("Illustrative examples — not real client testimonials.")).not.toBeInTheDocument()
   })
 
   it("uses the local placeholder asset and never the remote placeholder host", () => {

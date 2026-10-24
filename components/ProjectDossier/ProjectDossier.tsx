@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge"
 import { normalizeTagKey, tagSlug } from "@/lib/tags"
-import { TagChip } from "../TagChip/TagChip"
 import { TooltipProvider } from "../Providers/TooltipProvider"
+import { TagChip } from "../TagChip/TagChip"
 import { TechnologyTooltip } from "../TechnologyTooltip/TechnologyTooltip"
 
 export interface ProjectDossierMetric {

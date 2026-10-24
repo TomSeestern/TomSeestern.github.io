@@ -1,0 +1,14 @@
+Font budget gate — families:  (0/2)
+FAMILY  FILE       SIZE
+-----------------------
+-----------------------
+First-load woff2: 0.0 KiB / 100.0 KiB budget
+  Cinzel:        0.0 KiB (display)
+  Silkscreen:    0.0 KiB (pixel)
+All emitted woff2 (every unicode-range subset, not all downloaded): 48.2 KiB across 6 file(s)
+
+FONT BUDGET GATE FAILED — 4 issue(s):
+  - Cinzel display face is not present in the built CSS
+  - Silkscreen pixel face is not present in the built CSS
+  - expected font family Cinzel is missing from the built CSS
+  - expected font family Silkscreen is missing from the built CSS

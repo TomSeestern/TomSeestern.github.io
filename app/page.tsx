@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   },
   description:
     "Personal portfolio of Tom Segbers — Senior Developer. Building reliable systems and solving hard problems. Explore projects, blog posts, and get in touch.",
+  alternates: {
+    canonical: "https://tomsegbers.de",
+  },
   openGraph: {
     url: "https://tomsegbers.de/",
     siteName: "TomSegbers.de",

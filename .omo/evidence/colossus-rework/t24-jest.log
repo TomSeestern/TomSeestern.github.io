@@ -1,0 +1,57 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 test /home/tom/Projects/tomsegbers-de
+> cross-env FORCE_COLOR=1 jest
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mcontent.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mprojects.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mtags.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mmarkdown.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/MonumentCard/[22m[1mMonumentCard.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/tags/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Button/[22m[1mButton.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1msendEmail.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Alert/[22m[1mAlert.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Card/[22m[1mCard.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/PersonTeaser/[22m[1mPersonTeaser.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Breadcrumb/[22m[1mBreadcrumb.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/blog/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/projects/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/ArchiveRow/[22m[1mArchiveRow.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1msigil.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/tags/[tag]/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/ProjectDossier/[22m[1mProjectDossier.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/TimelineEntry/[22m[1mTimelineEntry.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/SectionHeading/[22m[1mSectionHeading.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/contact/[22m[1mContactForm.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/about/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mreading-time.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/ArticleCard/[22m[1mArticleCard.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Header/[22m[1mHeader.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mformat-date.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mtechnologies.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Testimonials/[22m[1mTestimonials.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/PageHero/[22m[1mPageHero.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Tooltip/[22m[1mTooltip.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/projects/entry/[slug]/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/PixelSigil/[22m[1mPixelSigil.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/contact/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Section/[22m[1mSection.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/CaseStudyMeta/[22m[1mCaseStudyHero.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Ticker/[22m[1mTicker.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Footer/[22m[1mFooter.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/TagChip/[22m[1mTagChip.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/ArticleMeta/[22m[1mArticleMeta.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Ornament/[22m[1mOrnament.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/blog/entry/[slug]/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/TechnologyTooltip/[22m[1mTechnologyTooltip.test.tsx[22m
+
+[1mTest Suites: [22m[1m[32m42 passed[39m[22m, 42 total
+[1mTests:       [22m[1m[32m201 passed[39m[22m, 201 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        3.369 s
+[2mRan all test suites[22m[2m.[22m

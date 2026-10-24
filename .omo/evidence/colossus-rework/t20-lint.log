@@ -1,0 +1,193 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 lint /home/tom/Projects/tomsegbers-de
+> eslint . --ext .ts,.tsx
+
+
+/home/tom/Projects/tomsegbers-de/app/about/page.test.tsx
+  4:1  warning  `./page` import should occur before type import of `../../lib/markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/about/page.tsx
+    2:1   warning  `next` type import should occur before import of `next/image`                                                 import/order
+    6:10  warning  'PixelDust' is defined but never used. Allowed unused vars must match /^_/u                                   @typescript-eslint/no-unused-vars
+    7:1   warning  `@/components/Button/Button` import should occur before import of `@/components/Icon/ArrowRight`              import/order
+   11:1   warning  `@/components/PersonTeaser/PersonTeaser` import should occur before import of `@/components/Section/Section`  import/order
+  134:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                                 tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/app/blog/entry/[slug]/page.tsx
+    4:1   warning  `next/navigation` import should occur before import of `@/app/layout`                                             import/order
+    5:1   warning  `react-markdown` import should occur before import of `@/app/layout`                                              import/order
+   11:1   warning  `@/components/ArticleCard/ArticleCard` import should occur before import of `@/components/Breadcrumb/Breadcrumb`  import/order
+   12:1   warning  `@/components/ArticleMeta/ArticleMeta` import should occur before import of `@/components/Breadcrumb/Breadcrumb`  import/order
+   63:22  warning  The arbitrary class 'min-h-[18rem]' could be replaced by 'min-h-72'                                               tailwindcss/no-unnecessary-arbitrary-value
+  101:18  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                                     tailwindcss/no-unnecessary-arbitrary-value
+  130:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u                                          @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/blog/page.test.tsx
+  14:1  warning  `./page` import should occur before import of `../../lib/blog`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/blog/page.tsx
+    6:1   warning  `@/components/ArticleCard/ArticleCard` import should occur before import of `@/components/Icon/ArrowRight`  import/order
+    7:1   warning  `@/components/Button/Button` import should occur before import of `@/components/Icon/ArrowRight`            import/order
+   50:17  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                               tailwindcss/no-unnecessary-arbitrary-value
+   53:17  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                               tailwindcss/no-unnecessary-arbitrary-value
+   70:9   warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                               tailwindcss/no-unnecessary-arbitrary-value
+   92:22  warning  The arbitrary class 'min-h-[18rem]' could be replaced by 'min-h-72'                                         tailwindcss/no-unnecessary-arbitrary-value
+  111:13  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                               tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/app/contact/ContactForm.tsx
+  118:13  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+  144:13  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+  170:13  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/app/contact/page.tsx
+   2:1   warning  `./ContactForm` import should occur after import of `@/components/Section/Section`                 import/order
+   3:1   warning  `@/components/Ornament/ArchFrame` import should occur after import of `@/components/Icon/Twitter`  import/order
+   4:1   warning  `@/components/Ornament/Laurel` import should occur after import of `@/components/Icon/Twitter`     import/order
+   5:1   warning  `@/components/Ornament/PixelDust` import should occur after import of `@/components/Icon/Twitter`  import/order
+  80:21  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                      tailwindcss/no-unnecessary-arbitrary-value
+  89:16  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                      tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/app/layout.tsx
+  6:1  warning  `@/lib/design-tokens` import should occur before import of `../components/Footer/Footer`  import/order
+  7:1  warning  `next` type import should occur before import of `react`                                  import/order
+  8:1  warning  `next/font/google` import should occur before import of `react`                           import/order
+
+/home/tom/Projects/tomsegbers-de/app/not-found.tsx
+  4:1  warning  `@/components/Button/Button` import should occur before import of `@/components/Ornament/ArchFrame`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/page.tsx
+   2:1   warning  `next` type import should occur before import of `next/image`                                                    import/order
+   7:1   warning  `@/components/Button/Button` import should occur before import of `@/components/Icon/ArrowRight`                 import/order
+   8:1   warning  `@/components/ArticleCard/ArticleCard` import should occur before import of `@/components/Icon/ArrowRight`       import/order
+   9:1   warning  `@/components/MonumentCard/MonumentCard` import should occur before import of `@/components/Ornament/ArchFrame`  import/order
+  72:22  warning  The arbitrary class 'min-h-[20rem]' could be replaced by 'min-h-80'                                              tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/app/projects/entry/[slug]/page.tsx
+    3:1   warning  `next/navigation` import should occur before import of `@/app/layout`                                           import/order
+    4:1   warning  `react-markdown` import should occur before import of `@/app/layout`                                            import/order
+   15:1   warning  `@/components/ArchiveRow/ArchiveRow` import should occur before import of `@/components/Breadcrumb/Breadcrumb`  import/order
+   16:1   warning  `@/components/CaseStudyMeta/CaseStudyHero` import should occur before import of `@/components/Icon/Home`        import/order
+   63:22  warning  The arbitrary class 'min-h-[18rem]' could be replaced by 'min-h-72'                                             tailwindcss/no-unnecessary-arbitrary-value
+   99:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'                                   tailwindcss/no-unnecessary-arbitrary-value
+  117:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u                                        @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/projects/page.test.tsx
+  13:1  warning  `./page` import should occur before import of `../../lib/markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/projects/page.tsx
+   6:1   warning  `@/components/Button/Button` import should occur before import of `@/components/Icon/ArrowRight`                 import/order
+   7:1   warning  `@/components/ArchiveRow/ArchiveRow` import should occur before import of `@/components/Icon/ArrowRight`         import/order
+   8:1   warning  `@/components/MonumentCard/MonumentCard` import should occur before import of `@/components/Ornament/ArchFrame`  import/order
+  80:22  warning  The arbitrary class 'min-h-[18rem]' could be replaced by 'min-h-72'                                              tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/app/sitemap.ts
+  3:1  warning  `gray-matter` import should occur before import of `fs`  import/order
+  4:1  warning  `next` import should occur before import of `fs`         import/order
+
+/home/tom/Projects/tomsegbers-de/app/tags/[tag]/page.test.tsx
+  5:1  warning  `./page` import should occur before type import of `../../../lib/markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/tags/[tag]/page.tsx
+    3:1   warning  `next/navigation` import should occur before import of `@/app/layout`                                             import/order
+    9:1   warning  `@/components/ArticleCard/ArticleCard` import should occur before import of `@/components/Breadcrumb/Breadcrumb`  import/order
+   10:1   warning  `@/components/MonumentCard/MonumentCard` import should occur before import of `@/components/Ornament/ArchFrame`   import/order
+   62:22  warning  The arbitrary class 'min-h-[18rem]' could be replaced by 'min-h-72'                                               tailwindcss/no-unnecessary-arbitrary-value
+  100:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u                                          @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/tags/page.test.tsx
+  4:1  warning  `./page` import should occur before type import of `../../lib/tags`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/tags/page.tsx
+   6:1   warning  `@/components/Icon/ArrowUpRight` import should occur before import of `@/components/Ornament/ArchFrame`      import/order
+   7:1   warning  `@/components/Breadcrumb/Breadcrumb` import should occur before import of `@/components/Ornament/ArchFrame`  import/order
+   8:1   warning  `@/components/Icon/Home` import should occur before import of `@/components/Ornament/ArchFrame`              import/order
+  65:22  warning  The arbitrary class 'min-h-[18rem]' could be replaced by 'min-h-72'                                          tailwindcss/no-unnecessary-arbitrary-value
+  88:23  warning  The arbitrary class 'tracking-[0.02em]' could be replaced by 'tracking-display'                              tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/Alert/Alert.tsx
+  3:1  warning  `tailwind-merge` import should occur before import of `../Icon/Close`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/ArchiveRow/ArchiveRow.tsx
+   3:1   warning  `@/lib/format-date` import should occur before type import of `@/lib/markdown`  import/order
+   6:1   warning  `tailwind-merge` import should occur before type import of `@/lib/markdown`     import/order
+  50:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+  59:12  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+  65:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+  70:11  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/ArticleCard/ArticleCard.tsx
+   3:1   warning  `@/lib/format-date` import should occur before type import of `@/lib/markdown`  import/order
+   7:1   warning  `../Card/Card` import should occur before import of `../Icon/ArrowRight`        import/order
+   8:1   warning  `tailwind-merge` import should occur before type import of `@/lib/markdown`     import/order
+  32:17  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+  36:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/ArticleMeta/ArticleMeta.tsx
+  22:7  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/Breadcrumb/Breadcrumb.tsx
+   3:1   warning  `tailwind-merge` import should occur before import of `../Icon/ArrowRight`     import/order
+  35:11  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+  42:11  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/DesignSystem/DesignSystem.stories.tsx
+  7:1  warning  `../Button/Button` import should occur before import of `../Icon`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/Footer/Footer.tsx
+   60:14  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+  125:14  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/Header/Header.tsx
+  47:7  warning  The arbitrary class 'border-b-[3px]' could be replaced by 'border-b-3'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/MonumentCard/MonumentCard.tsx
+   3:1   warning  `@/lib/format-date` import should occur before type import of `@/lib/markdown`  import/order
+   6:1   warning  `../Card/Card` import should occur before import of `../Icon/ArrowUpRight`      import/order
+   7:1   warning  `tailwind-merge` import should occur before type import of `@/lib/markdown`     import/order
+  55:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+  65:17  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+  68:17  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'   tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/PixelSigil/PixelSigil.tsx
+  2:1  warning  `tailwind-merge` import should occur before import of `@/lib/sigil`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/ProjectDossier/ProjectDossier.tsx
+    3:1   warning  `@/lib/tags` import should occur before import of `../TagChip/TagChip`         import/order
+    4:1   warning  `tailwind-merge` import should occur before import of `../TagChip/TagChip`     import/order
+   61:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+   66:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+   83:15  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+  105:17  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+  112:17  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/TechnologyTooltip/TechnologyTooltip.test.tsx
+  3:1  warning  `./TechnologyTooltip` import should occur before import of `../Providers/TooltipProvider`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/Testimonials/Testimonials.tsx
+  48:12  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+  63:21  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/TimelineEntry/TimelineEntry.tsx
+  14:10  warning  The arbitrary class 'tracking-[0.1em]' could be replaced by 'tracking-widest'  tailwindcss/no-unnecessary-arbitrary-value
+
+/home/tom/Projects/tomsegbers-de/components/Tooltip/Tooltip.stories.tsx
+  3:1  warning  `./Tooltip` import should occur before import of `../Providers/TooltipProvider`  import/order
+
+/home/tom/Projects/tomsegbers-de/lib/content.test.ts
+  2:1  warning  `./content` import should occur before type import of `./markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/lib/markdown.ts
+  3:1  warning  `gray-matter` import should occur before import of `fs`  import/order
+  4:1  warning  `zod` import should occur before import of `fs`          import/order
+
+/home/tom/Projects/tomsegbers-de/lib/sendEmail.tsx
+  3:1  warning  `await-to-js` import should occur before import of `next/headers`  import/order
+
+✖ 108 problems (0 errors, 108 warnings)
+  0 errors and 102 warnings potentially fixable with the `--fix` option.
+

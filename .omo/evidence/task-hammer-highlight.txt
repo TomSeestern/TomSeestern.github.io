@@ -1,0 +1,104 @@
+TASK: Hammer Robotics recent highlight + ClosedLoopOS featured swap
+DATE: 2026-10-22T20:29:18+02:00
+COMMIT: 5b4471e feat(projects): highlight Hammer and feature ClosedLoopOS
+BRANCH: main
+ENVIRONMENT: Nix dev shell; Node v22.23.1; pnpm 10.15.1; Next.js 15.5.24
+
+RESULT
+- `/projects` renders one dedicated Recent highlight section for Hammer Robotics.
+- Hammer is excluded from the selected grid; the selected grid renders exactly
+  ClosedLoopOS, LAYZR, and ISeeUNet.
+- PayMeNow is no longer featured and renders in the archive.
+- Home renders all four featured projects and its hero lead is the recent
+  highlight (Hammer Robotics).
+- ClosedLoopOS is now featured and carries three evidence metrics from its
+  repository.
+
+CONTENT / SOURCE EVIDENCE
+ClosedLoopOS source repository:
+  repo: TomSegbers/ClosedLoopOS
+  branch: main
+  commit: a40904c52353d873aca9a4819834488f520fcef1
+  tree query: Forgejo API `git/trees/main?recursive=true&per_page=100&page=N`
+  complete tree: 39 pages, 3703 unique paths
+  metrics computed from the complete tree:
+    709 files matching __tests__/**/*.test|spec.ts(x) or *.test|spec.ts(x)
+    154 files matching app/api/**/route.ts(x)
+    48 files matching app/dashboard/**/page.tsx
+  content file: content/projects/2026-closedloop-os-agent-orchestration.md
+  frontmatter metrics added: Test/spec files "709"; API routes "154";
+  Dashboard pages "48".
+
+FRONTMATTER
+- 2026-hammer-robotics-mark-humanoid.md: featured: true, recentHighlight: true
+- 2026-closedloop-os-agent-orchestration.md: featured: true
+- 2021-paymenow-...md: featured flag removed
+- lib/markdown.ts: recentHighlight schema default false
+- scripts/check-project-frontmatter.js: validates recentHighlight is boolean and
+  requires featured: true when set
+
+VERIFICATION COMMANDS AND OBSERVED RESULTS
+1. node scripts/check-project-frontmatter.js
+   PASS for all 28 project files; final line `COUNT 28`.
+2. pnpm typecheck
+   Exit 0 (tsc --noEmit).
+3. pnpm test --runInBand
+   45/45 suites passed; 229/229 tests passed.
+4. pnpm lint
+   0 errors; 26 warnings (pre-existing import-order/arbitrary-value warnings,
+   no errors).
+5. pnpm prettier
+   "All matched files use Prettier code style!"
+6. pnpm design-tokens
+   PASSED — 134 files, no legacy tokens/dark utilities/raw hex/retired faces.
+7. pnpm contrast
+   PASSED — all 36 pairs meet minimums.
+8. pnpm images
+   PASSED — 115 images within budget.
+9. pnpm build
+   Succeeded; 160 static pages generated, 28 project entry routes.
+10. pnpm fonts
+    PASSED after build — 2 families (Geist, Geist Mono); critical preload
+    28.6 KiB / 100 KiB.
+11. pnpm exec playwright test --project=chromium
+    Run against the production build on 127.0.0.1:3030 with
+    E2E_CONTACT_FORM_SUCCESS=true: 100 passed.
+    This includes the new `/projects` assertions:
+    - one `Recent highlight` h2
+    - `[data-testid=recent-highlight]` contains Hammer Robotics
+    - selected grid has FEATURED_PROJECT_COUNT - 1 (3) project teasers
+    - selected grid does not contain Hammer Robotics
+    - full archive still renders 28 project teasers.
+12. Production DOM assertions via Playwright:
+    selected grid h3 titles = ["ClosedLoopOS...", "LAYZR...", "ISeeUNet..."]
+    highlight h3 = "Hammer Robotics: Building Mark for Airport Baggage Handling"
+    home featured grid = [Hammer, ClosedLoopOS, LAYZR, ISeeUNet]
+    home hero contains Hammer Robotics
+    ClosedLoopOS dossier contains Test/spec files 709, API routes 154,
+    Dashboard pages 48
+    mobile /projects horizontal overflow = 0 px
+    Desktop and mobile screenshots captured in /tmp/opencode.
+
+TRIAGE NOTES
+- An initial Playwright run against `next dev` timed out on two detail-page
+  navigations while the page snapshot had already rendered. The same suite run
+  against the production `next start` build passed 100/100. No timeout or test
+  assertion was changed. Classified as a dev-server cold-load/environment
+  issue, not a deliverable regression.
+- Contact-form e2e tests initially failed against a manually started production
+  server without `E2E_CONTACT_FORM_SUCCESS`; rerunning with that test flag passed
+  13/13 contact/static-route tests, then 100/100 full suite.
+- Public deployment was not performed from this environment (manual Vercel
+  deployment per README; no credentials here). CI is being checked after push.
+
+PUSH / CI / DEPLOYMENT
+- Pushed to origin/main: cf96691..5b4471e.
+- Public site check after push: https://tomsegbers.de/projects returns 200 but
+  still contains 0 occurrences of "Recent highlight", "Hammer Robotics is the
+  recent highlight", or "ClosedLoopOS"; it contains PayMeNow. /sitemap.xml and
+  /robots.txt return 404. The public deployment is stale and was not changed
+  from this environment.
+- Forgejo Actions: newest runs (through 3849) are `waiting`; the self-hosted
+  `linux` runner has not consumed the queued workflows. CI is not yet verified.
+- Deploy the committed build to the public site when Vercel credentials are
+  available.

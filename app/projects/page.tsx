@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "The work",
   description:
     "Case files and experiments from Tom Segbers: humanoid robotics, creator platforms, embedded vision, agent orchestration, and more.",
+  alternates: {
+    canonical: "https://tomsegbers.de/projects",
+  },
   openGraph: {
     url: "https://tomsegbers.de/projects",
     siteName: "TomSegbers.de",

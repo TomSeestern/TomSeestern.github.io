@@ -1,0 +1,121 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 images /home/tom/Projects/tomsegbers-de
+> node scripts/check-image-size.mjs
+
+Image byte-budget gate
+  root   : public
+  limits : image 200 KB, hero 50 KB
+  scanned: 102 image(s)
+
+STATUS  KIND      SIZE  BUDGET  PATH                                
+--------------------------------------------------------------------
+PASS    image  79.9 KB  200 KB  public/img/logo.png                 
+PASS    image  58.8 KB  200 KB  public/img/layzrgg_logo.png         
+PASS    image  56.3 KB  200 KB  public/img/og-default.png           
+PASS    image  42.6 KB  200 KB  public/img/cheesecake-ebeltoft.webp 
+PASS    image  38.9 KB  200 KB  public/img/screenshots/home.webp    
+PASS    image  30.6 KB  200 KB  public/img/Tom_Segbers_Frontal.webp 
+PASS    image  26.4 KB  200 KB  public/img/screenshots/projects.webp
+PASS    image  24.0 KB  200 KB  public/icon/labview.svg             
+PASS    image  22.5 KB  200 KB  public/img/screenshots/blog.webp    
+PASS    image  22.4 KB  200 KB  public/img/screenshots/contact.webp 
+PASS    image  11.0 KB  200 KB  public/img/hattec_logo.jpg          
+PASS    image   9.9 KB  200 KB  public/icon/seaborn.svg             
+PASS    image   9.6 KB  200 KB  public/img/placeholder.png          
+PASS    image   9.2 KB  200 KB  public/icon/aws2.svg                
+PASS    image   8.2 KB  200 KB  public/icon/teamspeak3.svg          
+PASS    image   7.5 KB  200 KB  public/icon/ford.svg                
+PASS    image   6.5 KB  200 KB  public/icon/spotify.svg             
+PASS    image   6.0 KB  200 KB  public/icon/microsoft.svg           
+PASS    image   5.6 KB  200 KB  public/icon/flowbite.svg            
+PASS    image   5.6 KB  200 KB  public/icon/aws.svg                 
+PASS    image   5.1 KB  200 KB  public/icon/react.svg               
+PASS    image   4.5 KB  200 KB  public/icon/intel.svg               
+PASS    image   4.5 KB  200 KB  public/icon/raspberrypi.svg         
+PASS    image   4.4 KB  200 KB  public/icon/pinata.svg              
+PASS    image   4.0 KB  200 KB  public/icon/microsoft-visio.svg     
+PASS    image   3.9 KB  200 KB  public/icon/sql.svg                 
+PASS    image   3.6 KB  200 KB  public/icon/scikit-learn.svg        
+PASS    image   3.5 KB  200 KB  public/icon/arma3.svg               
+PASS    image   3.2 KB  200 KB  public/icon/metamask.svg            
+PASS    image   2.7 KB  200 KB  public/icon/fedex.svg               
+PASS    image   2.6 KB  200 KB  public/icon/atmel.svg               
+PASS    image   2.5 KB  200 KB  public/icon/jest.svg                
+PASS    image   2.5 KB  200 KB  public/icon/express.svg             
+PASS    image   2.4 KB  200 KB  public/icon/powerbi.svg             
+PASS    image   2.3 KB  200 KB  public/icon/androidstudio.svg       
+PASS    image   2.3 KB  200 KB  public/icon/java.svg                
+PASS    image   2.3 KB  200 KB  public/icon/eclipse.svg             
+PASS    image   2.1 KB  200 KB  public/icon/teams.svg               
+PASS    image   2.0 KB  200 KB  public/icon/python.svg              
+PASS    image   2.0 KB  200 KB  public/icon/googlemaps.svg          
+PASS    image   2.0 KB  200 KB  public/icon/illustrator.svg         
+PASS    image   1.9 KB  200 KB  public/icon/sharepoint.svg          
+PASS    image   1.7 KB  200 KB  public/icon/c++.svg                 
+PASS    image   1.7 KB  200 KB  public/icon/typescript.svg          
+PASS    image   1.6 KB  200 KB  public/icon/azure.svg               
+PASS    image   1.6 KB  200 KB  public/icon/bosch.svg               
+PASS    image   1.5 KB  200 KB  public/icon/assembly.svg            
+PASS    image   1.5 KB  200 KB  public/icon/powerpoint.svg          
+PASS    image   1.4 KB  200 KB  public/icon/figma.svg               
+PASS    image   1.4 KB  200 KB  public/icon/qtcreator.svg           
+PASS    image   1.4 KB  200 KB  public/icon/netflix.svg             
+PASS    image   1.4 KB  200 KB  public/icon/opencv.svg              
+PASS    image   1.3 KB  200 KB  public/icon/html5.svg               
+PASS    image   1.2 KB  200 KB  public/icon/ros.svg                 
+PASS    image   1.2 KB  200 KB  public/icon/css3.svg                
+PASS    image   1.2 KB  200 KB  public/icon/nvidia.svg              
+PASS    image   1.1 KB  200 KB  public/icon/c.svg                   
+PASS    image   1.1 KB  200 KB  public/icon/sqf.svg                 
+PASS    image   1.1 KB  200 KB  public/icon/android.svg             
+PASS    image   1.1 KB  200 KB  public/icon/tailwindcss.svg         
+PASS    image   1.1 KB  200 KB  public/icon/ubuntu.svg              
+PASS    image   1.1 KB  200 KB  public/icon/nodejs.svg              
+PASS    image   1.0 KB  200 KB  public/icon/lambda.svg              
+PASS    image    981 B  200 KB  public/icon/dribble.svg             
+PASS    image    936 B  200 KB  public/icon/nextjs.svg              
+PASS    image    926 B  200 KB  public/icon/google-cloud.svg        
+PASS    image    829 B  200 KB  public/icon/keras.svg               
+PASS    image    807 B  200 KB  public/icon/obsidian.svg            
+PASS    image    792 B  200 KB  public/icon/jwt.svg                 
+PASS    image    739 B  200 KB  public/icon/github.svg              
+PASS    image    735 B  200 KB  public/icon/gitlab.svg              
+PASS    image    732 B  200 KB  public/icon/webpack.svg             
+PASS    image    704 B  200 KB  public/icon/django.svg              
+PASS    image    699 B  200 KB  public/icon/google-colab.svg        
+PASS    image    672 B  200 KB  public/img/placeholder-company.svg  
+PASS    image    663 B  200 KB  public/icon/tensorflow.svg          
+PASS    image    531 B  200 KB  public/icon/bootstrapcss.svg        
+PASS    image    518 B  200 KB  public/icon/brand-mark.svg          
+PASS    image    499 B  200 KB  public/icon/git.svg                 
+PASS    image    490 B  200 KB  public/icon/eslint.svg              
+PASS    image    478 B  200 KB  public/icon/material-ui.svg         
+PASS    image    474 B  200 KB  public/icon/aws-amplify.svg         
+PASS    image    443 B  200 KB  public/icon/passport.svg            
+PASS    image    419 B  200 KB  public/icon/rds.svg                 
+PASS    image    412 B  200 KB  public/icon/list.svg                
+PASS    image    402 B  200 KB  public/icon/windows.svg             
+PASS    image    398 B  200 KB  public/icon/office365.svg           
+PASS    image    395 B  200 KB  public/icon/unity.svg               
+PASS    image    375 B  200 KB  public/icon/openzeppelin.svg        
+PASS    image    363 B  200 KB  public/icon/legomindstorms nxt.svg  
+PASS    image    363 B  200 KB  public/icon/legomindstorms.svg      
+PASS    image    357 B  200 KB  public/icon/twitter.svg             
+PASS    image    325 B  200 KB  public/icon/article.svg             
+PASS    image    307 B  200 KB  public/icon/close-x.svg             
+PASS    image    303 B  200 KB  public/icon/linkedin.svg            
+PASS    image    272 B  200 KB  public/icon/camera.svg              
+PASS    image    268 B  200 KB  public/icon/calender.svg            
+PASS    image    261 B  200 KB  public/icon/burger-menu.svg         
+PASS    image    250 B  200 KB  public/icon/arrow-right.svg         
+PASS    image    240 B  200 KB  public/icon/speaker.svg             
+PASS    image    235 B  200 KB  public/icon/facebook.svg            
+PASS    image    152 B  200 KB  public/icon/mail.svg                
+
+IMAGE SIZE GATE PASSED — 102 image(s) within budget.
+

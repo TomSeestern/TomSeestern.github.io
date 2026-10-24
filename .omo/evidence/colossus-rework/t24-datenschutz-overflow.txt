@@ -1,0 +1,198 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+{
+  viewport: 375,
+  scrollWidth: 578,
+  offenders: [
+    {
+      tag: 'HTML',
+      id: '',
+      cls: '__variable_7771b9 __variable_f89b3a',
+      left: 0,
+      right: 375,
+      width: 375,
+      scrollWidth: 578,
+      clientWidth: 375,
+      text: "@font-face{font-family:'__nextjs-Geist';font-style:normal;font-weight:400 600;font-display:swap;src:"
+    },
+    {
+      tag: 'BODY',
+      id: '',
+      cls: 'flex min-h-screen flex-col bg-canvas font-body text-ink antialiased',
+      left: 0,
+      right: 375,
+      width: 375,
+      scrollWidth: 578,
+      clientWidth: 375,
+      text: '{"@context":"https://schema.org","@type":"WebSite","name":"TomSegbers.de","url":"https://tom.segbers'
+    },
+    {
+      tag: 'A',
+      id: '',
+      cls: 'focus-ring-canvas sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-crimson focus:px',
+      left: -1,
+      right: 0,
+      width: 1,
+      scrollWidth: 155,
+      clientWidth: 1,
+      text: 'Skip to main content'
+    },
+    {
+      tag: 'SPAN',
+      id: '',
+      cls: 'sr-only',
+      left: 336.5,
+      right: 337.5,
+      width: 1,
+      scrollWidth: 131,
+      clientWidth: 1,
+      text: 'Open main menu'
+    },
+    {
+      tag: 'MAIN',
+      id: 'main-content',
+      cls: 'grow',
+      left: 0,
+      right: 375,
+      width: 375,
+      scrollWidth: 578,
+      clientWidth: 375,
+      text: 'DatenschutzerklärungInformationen zur Verarbeitung personenbezogener Daten nach Art. 13 DSGVO.Verant'
+    },
+    {
+      tag: 'SECTION',
+      id: '',
+      cls: 'relative bg-canvas text-ink antialiased',
+      left: 0,
+      right: 375,
+      width: 375,
+      scrollWidth: 578,
+      clientWidth: 375,
+      text: 'DatenschutzerklärungInformationen zur Verarbeitung personenbezogener Daten nach Art. 13 DSGVO.Verant'
+    },
+    {
+      tag: 'DIV',
+      id: '',
+      cls: 'mx-auto w-full max-w-width-page px-4 sm:px-6 lg:px-10 max-w-screen-md py-8 sm:py-16 lg:py-24',
+      left: 0,
+      right: 375,
+      width: 375,
+      scrollWidth: 578,
+      clientWidth: 375,
+      text: 'DatenschutzerklärungInformationen zur Verarbeitung personenbezogener Daten nach Art. 13 DSGVO.Verant'
+    },
+    {
+      tag: 'DIV',
+      id: '',
+      cls: 'font-prose',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 562,
+      clientWidth: 343,
+      text: 'DatenschutzerklärungInformationen zur Verarbeitung personenbezogener Daten nach Art. 13 DSGVO.Verant'
+    },
+    {
+      tag: 'HEADER',
+      id: '',
+      cls: 'mx-auto max-w-measure-lead text-center',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 562,
+      clientWidth: 343,
+      text: 'DatenschutzerklärungInformationen zur Verarbeitung personenbezogener Daten nach Art. 13 DSGVO.'
+    },
+    {
+      tag: 'H1',
+      id: '',
+      cls: 'text-h1-sm text-ink sm:text-h1',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 562,
+      clientWidth: 343,
+      text: 'Datenschutzerklärung'
+    },
+    {
+      tag: 'DIV',
+      id: '',
+      cls: 'mt-12 space-y-10',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 363,
+      clientWidth: 343,
+      text: 'VerantwortlicherVerantwortlicher im Sinne der DSGVO ist die im Impressum genannte Person. Die dort n'
+    },
+    {
+      tag: 'SECTION',
+      id: '',
+      cls: '',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 363,
+      clientWidth: 343,
+      text: 'VerantwortlicherVerantwortlicher im Sinne der DSGVO ist die im Impressum genannte Person. Die dort n'
+    },
+    {
+      tag: 'H2',
+      id: 'datenschutz-verantwortlicher',
+      cls: 'text-h2-sm text-ink sm:text-h2',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 363,
+      clientWidth: 343,
+      text: 'Verantwortlicher'
+    },
+    {
+      tag: 'SECTION',
+      id: '',
+      cls: '',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 349,
+      clientWidth: 343,
+      text: 'Kontaktformular und E-Mail-VersandÜber das Kontaktformular können Sie eine Nachricht an den Verantwo'
+    },
+    {
+      tag: 'H2',
+      id: 'datenschutz-kontaktformular',
+      cls: 'text-h2-sm text-ink sm:text-h2',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 349,
+      clientWidth: 343,
+      text: 'Kontaktformular und E-Mail-Versand'
+    },
+    {
+      tag: 'SECTION',
+      id: '',
+      cls: '',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 345,
+      clientWidth: 343,
+      text: 'Beschwerderecht bei einer AufsichtsbehördeSie haben das Recht, sich bei einer Datenschutz-Aufsichtsb'
+    },
+    {
+      tag: 'H2',
+      id: 'datenschutz-beschwerde',
+      cls: 'text-h2-sm text-ink sm:text-h2',
+      left: 16,
+      right: 359,
+      width: 343,
+      scrollWidth: 345,
+      clientWidth: 343,
+      text: 'Beschwerderecht bei einer Aufsichtsbehörde'
+    }
+  ]
+}

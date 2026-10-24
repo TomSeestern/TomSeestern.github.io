@@ -1,0 +1,74 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 lighthouse /home/tom/Projects/tomsegbers-de
+> lhci autorun
+
+✅  .lighthouseci/ directory writable
+✅  Configuration file found
+✅  Chrome installation found
+Healthcheck passed!
+
+Started a web server with "pnpm start"...
+Running Lighthouse 3 time(s) on http://localhost:3055/
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/about
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/blog
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/blog/entry/2019-ebeltoft-cheesecake-recipe
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/projects
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/projects/entry/2020-soudest-backend-nodejs
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/contact
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Done running Lighthouse!
+
+Checking assertions against 7 URL(s), 21 total run(s)
+
+1 result(s) for [1mhttp://localhost:3055/about[0m :
+
+  [31m✘[0m  [1mlargest-contentful-paint[0m failure for [1mmaxNumericValue[0m assertion
+       Largest Contentful Paint
+       https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/
+
+        expected: <=[32m2500[0m
+           found: [31m2612.17[0m
+      [2mall values: 2612.17, 2646.7749999999996, 2066.5049999999997[0m
+
+1 result(s) for [1mhttp://localhost:3055/blog/entry/2019-ebeltoft-cheesecake-recipe[0m :
+
+  [31m✘[0m  [1mlargest-contentful-paint[0m failure for [1mmaxNumericValue[0m assertion
+       Largest Contentful Paint
+       https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/
+
+        expected: <=[32m2500[0m
+           found: [31m2555.437[0m
+      [2mall values: 2913.4719999999998, 2555.437, 2104.8450000000003[0m
+
+Assertion failed. Exiting with status code 1.
+
+Dumping 21 reports to disk at /home/tom/Projects/tomsegbers-de/.lighthouseci...
+Done writing reports to disk.
+
+assert command failed. Exiting with status code 1.
+ ELIFECYCLE  Command failed with exit code 1.

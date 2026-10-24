@@ -1,0 +1,33 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+[TEST] 
+[TEST] > tomsegbers-de@0.0.0 test-storybook /home/tom/Projects/tomsegbers-de
+[TEST] > cross-env FORCE_COLOR=1 test-storybook
+[TEST] 
+[SB] (node:2607677) [DEP0066] DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+[SB] (Use `node --trace-deprecation ...` to show where the warning was created)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/Card/[22m[1mCard.stories.tsx[22m ([0m[1m[41m5.209 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/MonumentCard/[22m[1mMonumentCard.stories.tsx[22m ([0m[1m[41m5.404 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/ArchiveRow/[22m[1mArchiveRow.stories.tsx[22m ([0m[1m[41m5.685 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/PixelSigil/[22m[1mPixelSigil.stories.tsx[22m ([0m[1m[41m5.667 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/Breadcrumb/[22m[1mBreadcrumb.stories.tsx[22m ([0m[1m[41m5.839 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/ArticleMeta/[22m[1mArticleMeta.stories.tsx[22m ([0m[1m[41m5.751 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/Tooltip/[22m[1mTooltip.stories.tsx[22m ([0m[1m[41m5.679 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/Footer/[22m[1mFooter.stories.tsx[22m ([0m[1m[41m5.566 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/Alert/[22m[1mAlert.stories.tsx[22m ([0m[1m[41m5.888 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/ProjectDossier/[22m[1mProjectDossier.stories.tsx[22m ([0m[1m[41m5.703 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/Button/[22m[1mButton.stories.tsx[22m ([0m[1m[41m5.587 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/ArticleCard/[22m[1mArticleCard.stories.tsx[22m ([0m[1m[41m5.746 s[49m[22m[0m)
+[TEST] [0m[7m[1m[32m PASS [39m[22m[27m[0m [0m[7m[33m browser: chromium [39m[27m[0m [2mcomponents/DesignSystem/[22m[1mDesignSystem.stories.tsx[22m ([0m[1m[41m6.048 s[49m[22m[0m)
+[TEST] 
+[TEST] [1mTest Suites: [22m[1m[32m13 passed[39m[22m, 13 total
+[TEST] [1mTests:       [22m[1m[32m16 passed[39m[22m, 16 total
+[TEST] [1mSnapshots:   [22m0 total
+[TEST] [1mTime:[22m        8.133 s
+[TEST] [2mRan all test suites[22m[2m.[22m
+[TEST] npx wait-on tcp:127.0.0.1:6006 && pnpm test-storybook exited with code 0
+--> Sending SIGTERM to other processes..
+[SB] npx http-server storybook-static --port 6006 --silent exited with code 0

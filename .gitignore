@@ -48,11 +48,18 @@ storybook-static/
 # Contentlayer
 .contentlayer
 
-# OhMyOpenCode state
-.omo/
+# Agent state (.omo/) is intentionally tracked, not ignored: AGENTS.md R1.x makes
+# it the durable store for plans, boulders, evidence, decisions and notepads.
+# It was listed here while 506 of its files were already committed, so the rule
+# only hid new files from `git status`. Do not re-add it.
 
 # CodeGraph tooling artifact (MCP server writes a relative-path SQLite index here)
 /null/
 
 # impeccable design-skill runtime state (caches, crops, captures)
 .impeccable/
+
+# pnpm writes this when `pnpm audit --ignore` is used, and reading it does NOT
+# change audit results — the authoritative ignore list is the flag list in
+# .forgejo/workflows/check.yml plus docs/security/audit-exceptions.md.
+pnpm-workspace.yaml

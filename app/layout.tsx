@@ -1,10 +1,10 @@
 import "styles/tailwind.css"
-import React from "react"
-import { Footer } from "../components/Footer/Footer"
-import { Header } from "../components/Header/Header"
-import { THEME_COLOR } from "@/lib/design-tokens"
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
+import React from "react"
+import { THEME_COLOR } from "@/lib/design-tokens"
+import { Footer } from "../components/Footer/Footer"
+import { Header } from "../components/Header/Header"
 
 // Two custom families: Geist for the whole interface and Geist Mono for labels,
 // counters, and the small terminal artifacts. No decorative display face.

@@ -1,0 +1,20 @@
+   ▲ Next.js 15.5.24
+   - Local:        http://localhost:3077
+   - Network:      http://192.168.7.166:3077
+
+ ✓ Starting...
+ ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+ ✓ Ready in 275ms
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+
+> tomsegbers-de@0.0.0 postinstall /home/tom/Projects/tomsegbers-de
+> npx patch-package -y
+
+patch-package 8.0.1
+Applying patches...
+No patch files found
+Done in 11.5s using pnpm v10.15.1

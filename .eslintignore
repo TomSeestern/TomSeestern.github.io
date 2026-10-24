@@ -1,2 +1,7 @@
 .next
 node_modules
+
+# Agent state: plans, evidence and one-off scratch scripts. Tracked in git
+# (AGENTS.md R1.x) but not application source, so lint rules that make sense for
+# `app/` and `lib/` would only produce noise here.
+.omo

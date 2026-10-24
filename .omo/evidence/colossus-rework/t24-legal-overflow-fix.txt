@@ -1,0 +1,7 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+/datenschutz { vw: 375, sw: 375 }
+/impressum { vw: 375, sw: 375 }

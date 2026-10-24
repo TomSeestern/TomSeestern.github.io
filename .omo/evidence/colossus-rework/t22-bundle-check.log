@@ -1,0 +1,33 @@
+Bundle budget check
+  analyzer : .next/analyze/__bundle_analysis.json
+  baseline : tests/budgets/bundle-baseline.json
+  limits   : shared first-load 130 KB, route 180 KB, route growth +10.0%
+
+Route                          Current   Baseline       Δ                   Limit
+---------------------------------------------------------------------------------
+__global                     102,248 B  102,253 B   -0.0%                  130 KB
+/_not-found/page                 140 B      133 B   +5.3%           180 KB / +10%
+/about/page                    5,686 B    5,496 B   +3.5%           180 KB / +10%
+/api/health/route                140 B      133 B   +5.3%           180 KB / +10%
+/blog/entry/[slug]/page       34,956 B   92,496 B  -62.2%           180 KB / +10%
+/blog/page                     3,537 B   94,550 B  -96.3%           180 KB / +10%
+/contact/page                  9,617 B   18,056 B  -46.7%           180 KB / +10%
+/datenschutz/page                140 B          —       —           180 KB / +10%  (new route)
+/impressum/page                  140 B          —       —           180 KB / +10%  (new route)
+/layout                       44,366 B   44,105 B   +0.6%           180 KB / +10%
+/not-found                       140 B      133 B   +5.3%           180 KB / +10%
+/page                          8,746 B  103,734 B  -91.6%           180 KB / +10%
+/projects/entry/[slug]/page   35,308 B   92,495 B  -61.8%           180 KB / +10%
+/projects/page                 3,537 B  103,736 B  -96.6%           180 KB / +10%
+/robots.txt/route                140 B      133 B   +5.3%           180 KB / +10%
+/sitemap.xml/route               140 B      133 B   +5.3%           180 KB / +10%
+/tags/[tag]/page              34,956 B          —       —           180 KB / +10%  (new route)
+/tags/page                     3,537 B          —       —           180 KB / +10%  (new route)
+
+Note: 4 route(s) absent from baseline — absolute limit only:
+  /datenschutz/page (140 B gzip)
+  /impressum/page (140 B gzip)
+  /tags/[tag]/page (34,956 B gzip)
+  /tags/page (3,537 B gzip)
+
+PASS — 18 entries within budget.

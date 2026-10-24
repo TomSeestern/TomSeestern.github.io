@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react"
+import TagArchive from "./page"
 import type { MarkdownEntry } from "../../../lib/markdown"
 import type { TaggedEntry, TagSummary } from "../../../lib/tags"
 import { getAllTags, getTagByLegacySlug, getTagBySlug } from "../../../lib/tags"
-import TagArchive from "./page"
 
 const permanentRedirect = jest.fn((url: string) => {
   throw new Error(`NEXT_REDIRECT:${url}`)

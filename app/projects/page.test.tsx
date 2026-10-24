@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react"
+import ProjectsArchive from "./page"
 import { MarkdownEntry } from "../../lib/markdown"
 
 jest.mock("../../lib/tags", () => ({
@@ -11,7 +12,6 @@ jest.mock("../../lib/projects", () => ({
 
 import { getAllProjects } from "../../lib/projects"
 import { getAllProjectTags } from "../../lib/tags"
-import ProjectsArchive from "./page"
 
 const mockGetAllProjects = jest.mocked(getAllProjects)
 const mockGetAllProjectTags = jest.mocked(getAllProjectTags)

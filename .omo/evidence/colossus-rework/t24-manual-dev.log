@@ -1,0 +1,69 @@
+ ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+   ▲ Next.js 15.5.24
+   - Local:        http://localhost:3030
+   - Network:      http://192.168.7.166:3030
+
+ ✓ Starting...
+ ✓ Ready in 1659ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1958ms (882 modules)
+ GET / 200 in 2621ms
+ ✓ Compiled in 717ms (290 modules)
+ GET / 200 in 171ms
+ ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled /projects in 446ms (875 modules)
+ GET /projects 200 in 719ms
+ ○ Compiling /projects/entry/[slug] ...
+ ✓ Compiled /projects/entry/[slug] in 524ms (1074 modules)
+ GET /projects/entry/2021-paymenow-leveraging-tech-to-secure-payments-for-ebay-sellers 200 in 1313ms
+ ✓ Compiled /blog in 288ms (1076 modules)
+ GET /blog 200 in 501ms
+ ✓ Compiled /blog/entry/[slug] in 286ms (1083 modules)
+ GET /blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation 200 in 1101ms
+ ○ Compiling /contact ...
+ ✓ Compiled /contact in 691ms (1259 modules)
+ GET /contact 200 in 971ms
+ POST /contact 200 in 162ms
+ GET / 200 in 450ms
+ GET / 200 in 161ms
+ GET / 200 in 142ms
+ GET /projects 200 in 263ms
+ GET /blog 200 in 135ms
+ GET /contact 200 in 80ms
+ ✓ Compiled /about in 361ms (1267 modules)
+ GET /about 200 in 781ms
+ ✓ Compiled /tags in 347ms (1269 modules)
+ GET /tags 200 in 822ms
+ ✓ Compiled /impressum in 379ms (1271 modules)
+ GET /impressum 200 in 678ms
+ ✓ Compiled /datenschutz in 318ms (1273 modules)
+ GET /datenschutz 200 in 594ms
+ GET / 200 in 196ms
+ GET /projects 200 in 204ms
+ GET /blog 200 in 121ms
+ GET /contact 200 in 89ms
+ GET /about 200 in 132ms
+ GET /tags 200 in 234ms
+ GET /impressum 200 in 77ms
+ GET /datenschutz 200 in 70ms
+ GET / 200 in 137ms
+ GET /projects 200 in 192ms
+ GET /blog 200 in 92ms
+ GET /contact 200 in 89ms
+ GET /about 200 in 112ms
+ GET /tags 200 in 221ms
+ GET /impressum 200 in 64ms
+ GET /datenschutz 200 in 76ms
+ ✓ Compiled /_not-found in 322ms (1274 modules)
+ GET /this-route-does-not-exist 404 in 548ms
+ GET /impressum 200 in 74ms
+ GET /datenschutz 200 in 87ms
+ GET / 200 in 166ms
+ GET /about 200 in 116ms
+ GET /projects 200 in 203ms
+ GET /blog 200 in 107ms
+ GET /contact 200 in 82ms
+[?25h

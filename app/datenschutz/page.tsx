@@ -131,6 +131,13 @@ export default function Datenschutz() {
               lit.&nbsp;f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen).
             </p>
             <p className="mt-4 text-body text-ink-muted">
+              Zur Abwehr von Missbrauch findet eine Ratenbegrenzung statt. Dabei wird die IP-Adresse des aufrufenden
+              Geräts für 15 Minuten ausschließlich im Arbeitsspeicher des Servers verarbeitet, um maximal 5 Anfragen pro
+              Zeitfenster zuzulassen. Die IP-Adresse wird nicht dauerhaft gespeichert, nicht mit der Nachricht
+              zusammengeführt und nicht an Dritte weitergegeben. Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f
+              DSGVO (berechtigtes Interesse an der Abwehr von Missbrauch).
+            </p>
+            <p className="mt-4 text-body text-ink-muted">
               Speicherdauer: <Placeholder label="Speicherdauer der Kontaktanfragen und E-Mails" />
             </p>
           </section>

@@ -325,9 +325,11 @@ If architecture diagrams exist in `docs/`, they must reflect the current code st
 
 ### Verification gates
 
-#### R6.1) No code change without executable verification `[auto: .forgejo/workflows/check.yml — CI required status checks]`
+#### R6.1) No code change without executable verification `[manual]`
 
-Every non-trivial code change must be verified through automated tests. The CI workflow (`check.yml`) runs `pnpm typecheck`, `pnpm lint`, `pnpm prettier`, `pnpm contrast`, `pnpm design-tokens`, `pnpm images`, `pnpm fonts`, `pnpm test`, `pnpm build`, and Storybook smoke tests on every push and PR. Trivial documentation-only changes are exempt.
+<!-- manual: CI runs the commands below on every push and PR, but the repository configures no required status check (see R16.5) — so nothing mechanically prevents a red run from being ignored -->
+
+Every non-trivial code change must be verified through automated tests. The CI workflow (`check.yml`) runs `pnpm typecheck`, `pnpm lint`, `pnpm prettier`, `pnpm content:audit`, `pnpm contrast`, `pnpm design-tokens`, `pnpm images`, `pnpm fonts`, `pnpm test` (with coverage), `pnpm build`, the Playwright end-to-end suite against the production build, and Storybook smoke tests on every push and PR. Trivial documentation-only changes are exempt.
 
 #### R6.2) Changed behavior must be covered at the correct layer `[manual]`
 
@@ -435,9 +437,11 @@ For significant changes (new components, data flow modifications, architectural 
 
 ### CI / release discipline
 
-#### R9.1) Required verification commands must be standardized `[auto: .forgejo/workflows/check.yml — CI required status checks]`
+#### R9.1) Required verification commands must be standardized `[manual]`
 
-The CI workflow (`check.yml`) is the canonical verification contract: `pnpm typecheck`, `pnpm lint`, `pnpm prettier`, `pnpm contrast`, `pnpm design-tokens`, `pnpm images`, `pnpm fonts`, `pnpm test`, `pnpm build`, and the Storybook smoke step. `pnpm design-tokens` replaces the retired ornament gate; no separate validation script overrides the workflow.
+<!-- manual: the list below mirrors check.yml, but "must be standardized" is a convention about what a change is expected to run — the workflow cannot prove an author ran it locally, and the repo has no required status check (see R16.5) -->
+
+The CI workflow (`check.yml`) is the canonical verification contract: `pnpm typecheck`, `pnpm lint`, `pnpm prettier`, `pnpm content:audit`, `pnpm contrast`, `pnpm design-tokens`, `pnpm images`, `pnpm fonts`, `pnpm test` (coverage-enforced), `pnpm build`, `pnpm audit --prod --audit-level=high` (with the documented ignores), the Playwright end-to-end suite against the production build, and the Storybook smoke step. `pnpm design-tokens` replaces the retired ornament gate; no separate validation script overrides the workflow.
 
 #### R9.2) Nightly deep verification must exist `[manual]`
 
@@ -1573,14 +1577,16 @@ When the same conditional chain appears in multiple places (e.g., `switch` on a 
 
 The following rule IDs remain in the Project rules section for audit
 trail and R2.5 numbering continuity, but their operational invariants
-no longer apply under the public-access architecture. Full decision
-record: [ADR-0007](docs/adr/0007-public-access-refactor.md).
+no longer apply under the public-access architecture. That refactor has no
+ADR: each rule's disposition is recorded in the table itself.
 
-| Rule  | Former concern                                                           | Disposition                                                         |
-| ----- | ------------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| R4.4  | Server-side schema migrations require `data/.pre-migrate/<ts>/` snapshot | **Superseded by ADR-0007** — no server-owned archive migration path |
-| R4.19 | Archive served only via gocryptfs mount at `data/`                       | **Superseded by ADR-0007** — user-picked folder / OPFS archive      |
-| R4.20 | Startup mount guard (`runStartupMountGuard`, exit 78)                    | **Superseded by ADR-0007** — no server encrypted-mount boot gate    |
+| Rule  | Former concern                                                           | Disposition                                                    |
+| ----- | ------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| R4.4  | Server-side schema migrations require `data/.pre-migrate/<ts>/` snapshot | **Superseded** — no server-owned archive migration path         |
+| R4.19 | Archive served only via gocryptfs mount at `data/`                       | **Superseded** — user-picked folder / OPFS archive              |
+| R4.20 | Startup mount guard (`runStartupMountGuard`, exit 78)                    | **Superseded** — no server encrypted-mount boot gate            |
 
-Related: ADR-0002 / ADR-0003 are marked Superseded by ADR-0007 in a later
-docs task (T41). Browser-side archive detail: ADR-0008 (T40).
+Related: ADR-0002 is superseded in part by
+[ADR-0003](docs/adr/0003-deploy-gated-on-check.md), which moves the GitHub
+mirror into `check.yml`. Browser-side archive detail lives in the code, not in
+an ADR.

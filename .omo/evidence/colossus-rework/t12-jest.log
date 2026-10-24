@@ -1,0 +1,11 @@
+PASS app/blog/page.test.tsx
+  BlogIndex
+    ✓ renders a featured article and the remaining dispatches as rows (236 ms)
+    ✓ renders absolute dates and tag-strip links (112 ms)
+    ✓ renders an empty state when there are no posts (18 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        2.626 s
+Ran all test suites matching /app\/blog\/page.test.tsx/i.

@@ -1,0 +1,672 @@
+=== pnpm typecheck ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 typecheck /home/tom/Projects/tomsegbers-de
+> node_modules/typescript/bin/tsc --noEmit
+
+=== exit 0 ===
+=== pnpm lint ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 lint /home/tom/Projects/tomsegbers-de
+> eslint . --ext .ts,.tsx
+
+
+/home/tom/Projects/tomsegbers-de/app/about/page.tsx
+    4:8   warning  'path' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   46:15  warning  Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!      tailwindcss/enforces-shorthand
+  127:21  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!      tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/app/blog/entry/[slug]/page.tsx
+   2:1   warning  `@/app/layout` import should occur after import of `react-markdown`       import/order
+  30:21  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!        tailwindcss/enforces-shorthand
+  52:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/blog/page.test.tsx
+  21:1  warning  `./page` import should occur before import of `../../lib/blog`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/blog/page.tsx
+  3:1  warning  `next` import should occur before import of `../../components/ArticleTeaser/ArticleTeaser`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/layout.tsx
+  6:1  warning  `next` type import should occur before import of `react`         import/order
+  7:1  warning  `next/font/google` import should occur before import of `react`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/page.tsx
+  87:22  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/app/projects/entry/[slug]/page.tsx
+   2:1   warning  `@/app/layout` import should occur after import of `react-markdown`       import/order
+  34:21  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!        tailwindcss/enforces-shorthand
+  58:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/projects/page.test.tsx
+  28:1  warning  `./page` import should occur before import of `../../lib/markdown`  import/order
+
+/home/tom/Projects/tomsegbers-de/app/projects/page.tsx
+   3:1   warning  `next` import should occur before import of `next/image`            import/order
+  57:22  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/app/sitemap.ts
+  3:1  warning  `gray-matter` import should occur before import of `fs`  import/order
+  4:1  warning  `next` import should occur before import of `fs`         import/order
+
+/home/tom/Projects/tomsegbers-de/app/tags/[tag]/page.tsx
+   2:1   warning  `@/app/layout` import should occur after import of `react-icons/hi`       import/order
+  58:21  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!        tailwindcss/enforces-shorthand
+  94:60  warning  'parent' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/tom/Projects/tomsegbers-de/app/tags/page.tsx
+  44:21  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/ArticleTeaser/ArticleTeaser.tsx
+    2:1   warning  `../Card/Card` import should occur after import of `react`          import/order
+   74:20  warning  Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+   97:13  warning  Classnames 'h-7, w-7' could be replaced by the 'size-7' shorthand!  tailwindcss/enforces-shorthand
+  110:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/Footer/Footer.tsx
+   2:1   warning  `next/image` import should occur before import of `react`                import/order
+   9:29  warning  'props' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  28:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!       tailwindcss/enforces-shorthand
+  35:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!       tailwindcss/enforces-shorthand
+  42:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!       tailwindcss/enforces-shorthand
+  49:18  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!       tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/Header/Header.tsx
+  39:13  warning  Classnames 'h-6, w-6' could be replaced by the 'size-6' shorthand!           tailwindcss/enforces-shorthand
+  39:13  warning  Classnames 'sm:h-9, sm:w-9' could be replaced by the 'sm:size-9' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/PersonTeaser/PersonTeaser.tsx
+  23:9  warning  Classnames 'h-12, w-12' could be replaced by the 'size-12' shorthand!  tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/components/ProjectTeaser/ProjectTeaser.test.tsx
+   3:1  warning  `@testing-library/react` import should occur before import of `date-fns`     import/order
+  10:1  warning  `./ProjectTeaser` import should occur before import of `../../lib/icon-map`  import/order
+
+/home/tom/Projects/tomsegbers-de/components/ProjectTeaser/ProjectTeaser.tsx
+    1:1   warning  `react` import should occur after import of `next/link`                                                                                                                                                                                                                                  import/order
+    2:1   warning  `../Tooltip/Tooltip` import should occur after import of `../../lib/icon-map`                                                                                                                                                                                                            import/order
+    4:1   warning  `../Card/Card` import should occur after import of `../../lib/icon-map`                                                                                                                                                                                                                  import/order
+   31:3   warning  'imageUrl' is defined but never used. Allowed unused args must match /^_/u                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   43:7   warning  Classnames 'h-full, w-full' could be replaced by the 'size-full' shorthand!                                                                                                                                                                                                              tailwindcss/enforces-shorthand
+   82:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  100:20  warning  Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!                                                                                                                                                                                                                       tailwindcss/enforces-shorthand
+
+/home/tom/Projects/tomsegbers-de/lib/markdown.ts
+  3:1  warning  `gray-matter` import should occur before import of `fs`  import/order
+  4:1  warning  `zod` import should occur before import of `fs`          import/order
+
+/home/tom/Projects/tomsegbers-de/lib/sendEmail.tsx
+  3:1  warning  `await-to-js` import should occur before import of `next/headers`  import/order
+
+✖ 48 problems (0 errors, 48 warnings)
+  0 errors and 38 warnings potentially fixable with the `--fix` option.
+
+=== exit 0 ===
+=== pnpm prettier ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 prettier /home/tom/Projects/tomsegbers-de
+> prettier --check "**/*.{js,jsx,ts,tsx}"
+
+Checking formatting...
+All matched files use Prettier code style!
+=== exit 0 ===
+=== pnpm contrast ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 contrast /home/tom/Projects/tomsegbers-de
+> node scripts/check-contrast.mjs
+
+WCAG 2.x contrast gate — 24 pair(s) from /home/tom/Projects/tomsegbers-de/tests/budgets/contrast.json
+STATUS KIND  RATIO   MIN  NAME
+------------------------------------------------------------------------
+PASS   text  14.97   4.5  body ink on surface
+PASS   text  13.59   4.5  body ink on surface-muted
+PASS   text   6.43   4.5  muted on surface
+PASS   text   5.84   4.5  muted on surface-muted
+PASS   text   5.57   4.5  muted on muted-block
+PASS   text   5.52   4.5  accent link on surface
+PASS   text   5.01   4.5  accent link on surface-muted
+PASS   text   7.92   4.5  accent hover link on surface
+PASS   text  10.55   4.5  wine link on surface
+PASS   text   9.57   4.5  wine link on surface-muted
+PASS   text   6.33   4.5  cta white on accent
+PASS   text   9.08   4.5  cta white on accent-hover
+PASS   text  18.57   4.5  cta white on soft-foreground hover
+PASS   text   4.75   4.5  badge label on accent-soft
+PASS   text   5.38   4.5  button primary warm-white on accent
+PASS   text   5.52   4.5  button secondary accent on surface
+PASS   text  12.10   4.5  wine cta white on wine
+PASS   ui     3.41   3.0  focus ring accent-soft on surface
+PASS   ui     3.10   3.0  focus ring accent-soft on surface-muted
+PASS   ui     5.52   3.0  accent border on surface
+PASS   ui     5.01   3.0  accent border on surface-muted
+PASS   ui     4.01   3.0  input focus border accent-dark on surface-muted
+PASS   ui    10.55   3.0  wine border on surface
+PASS   ui    16.20   3.0  soft-foreground ring on surface
+------------------------------------------------------------------------
+
+CONTRAST GATE PASSED — all 24 pair(s) meet their minimums.
+=== exit 0 ===
+=== pnpm ornaments ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 ornaments /home/tom/Projects/tomsegbers-de
+> node scripts/check-ornaments.mjs
+
+Banned-ornament gate — scanned 110 source file(s)
+Banned terms: laurel, bust, spqr, colosseum, toga, papyrus, gold, marble
+
+ORNAMENT GATE PASSED — no banned ornament or token found.
+=== exit 0 ===
+=== pnpm images ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 images /home/tom/Projects/tomsegbers-de
+> node scripts/check-image-size.mjs
+
+Image byte-budget gate
+  root   : public
+  limits : image 200 KB, hero 50 KB
+  scanned: 101 image(s)
+
+STATUS  KIND      SIZE  BUDGET  PATH                                
+--------------------------------------------------------------------
+PASS    image  79.9 KB  200 KB  public/img/logo.png                 
+PASS    image  58.8 KB  200 KB  public/img/layzrgg_logo.png         
+PASS    image  45.3 KB  200 KB  public/img/screenshots/projects.webp
+PASS    image  44.9 KB  200 KB  public/img/screenshots/blog.webp    
+PASS    image  43.3 KB  200 KB  public/img/screenshots/home.webp    
+PASS    image  42.6 KB  200 KB  public/img/cheesecake-ebeltoft.webp 
+PASS    image  38.3 KB  200 KB  public/img/og-default.png           
+PASS    image  30.6 KB  200 KB  public/img/Tom_Segbers_Frontal.webp 
+PASS    image  24.0 KB  200 KB  public/icon/labview.svg             
+PASS    image  23.9 KB  200 KB  public/img/screenshots/contact.webp 
+PASS    image  11.0 KB  200 KB  public/img/hattec_logo.jpg          
+PASS    image   9.9 KB  200 KB  public/icon/seaborn.svg             
+PASS    image   9.6 KB  200 KB  public/img/placeholder.png          
+PASS    image   9.2 KB  200 KB  public/icon/aws2.svg                
+PASS    image   8.2 KB  200 KB  public/icon/teamspeak3.svg          
+PASS    image   7.5 KB  200 KB  public/icon/ford.svg                
+PASS    image   6.5 KB  200 KB  public/icon/spotify.svg             
+PASS    image   6.0 KB  200 KB  public/icon/microsoft.svg           
+PASS    image   5.6 KB  200 KB  public/icon/flowbite.svg            
+PASS    image   5.6 KB  200 KB  public/icon/aws.svg                 
+PASS    image   5.1 KB  200 KB  public/icon/react.svg               
+PASS    image   4.5 KB  200 KB  public/icon/intel.svg               
+PASS    image   4.5 KB  200 KB  public/icon/raspberrypi.svg         
+PASS    image   4.4 KB  200 KB  public/icon/pinata.svg              
+PASS    image   4.0 KB  200 KB  public/icon/microsoft-visio.svg     
+PASS    image   3.9 KB  200 KB  public/icon/sql.svg                 
+PASS    image   3.6 KB  200 KB  public/icon/scikit-learn.svg        
+PASS    image   3.5 KB  200 KB  public/icon/arma3.svg               
+PASS    image   3.2 KB  200 KB  public/icon/metamask.svg            
+PASS    image   2.7 KB  200 KB  public/icon/fedex.svg               
+PASS    image   2.6 KB  200 KB  public/icon/atmel.svg               
+PASS    image   2.5 KB  200 KB  public/icon/jest.svg                
+PASS    image   2.5 KB  200 KB  public/icon/express.svg             
+PASS    image   2.4 KB  200 KB  public/icon/powerbi.svg             
+PASS    image   2.3 KB  200 KB  public/icon/androidstudio.svg       
+PASS    image   2.3 KB  200 KB  public/icon/java.svg                
+PASS    image   2.3 KB  200 KB  public/icon/eclipse.svg             
+PASS    image   2.1 KB  200 KB  public/icon/teams.svg               
+PASS    image   2.0 KB  200 KB  public/icon/python.svg              
+PASS    image   2.0 KB  200 KB  public/icon/googlemaps.svg          
+PASS    image   2.0 KB  200 KB  public/icon/illustrator.svg         
+PASS    image   1.9 KB  200 KB  public/icon/sharepoint.svg          
+PASS    image   1.7 KB  200 KB  public/icon/c++.svg                 
+PASS    image   1.7 KB  200 KB  public/icon/typescript.svg          
+PASS    image   1.6 KB  200 KB  public/icon/azure.svg               
+PASS    image   1.6 KB  200 KB  public/icon/bosch.svg               
+PASS    image   1.5 KB  200 KB  public/icon/assembly.svg            
+PASS    image   1.5 KB  200 KB  public/icon/powerpoint.svg          
+PASS    image   1.4 KB  200 KB  public/icon/figma.svg               
+PASS    image   1.4 KB  200 KB  public/icon/qtcreator.svg           
+PASS    image   1.4 KB  200 KB  public/icon/netflix.svg             
+PASS    image   1.4 KB  200 KB  public/icon/opencv.svg              
+PASS    image   1.3 KB  200 KB  public/icon/html5.svg               
+PASS    image   1.2 KB  200 KB  public/icon/ros.svg                 
+PASS    image   1.2 KB  200 KB  public/icon/css3.svg                
+PASS    image   1.2 KB  200 KB  public/icon/nvidia.svg              
+PASS    image   1.1 KB  200 KB  public/icon/c.svg                   
+PASS    image   1.1 KB  200 KB  public/icon/sqf.svg                 
+PASS    image   1.1 KB  200 KB  public/icon/android.svg             
+PASS    image   1.1 KB  200 KB  public/icon/tailwindcss.svg         
+PASS    image   1.1 KB  200 KB  public/icon/ubuntu.svg              
+PASS    image   1.1 KB  200 KB  public/icon/nodejs.svg              
+PASS    image   1.0 KB  200 KB  public/icon/lambda.svg              
+PASS    image    981 B  200 KB  public/icon/dribble.svg             
+PASS    image    936 B  200 KB  public/icon/nextjs.svg              
+PASS    image    926 B  200 KB  public/icon/google-cloud.svg        
+PASS    image    829 B  200 KB  public/icon/keras.svg               
+PASS    image    807 B  200 KB  public/icon/obsidian.svg            
+PASS    image    792 B  200 KB  public/icon/jwt.svg                 
+PASS    image    739 B  200 KB  public/icon/github.svg              
+PASS    image    735 B  200 KB  public/icon/gitlab.svg              
+PASS    image    732 B  200 KB  public/icon/webpack.svg             
+PASS    image    704 B  200 KB  public/icon/django.svg              
+PASS    image    699 B  200 KB  public/icon/google-colab.svg        
+PASS    image    663 B  200 KB  public/icon/tensorflow.svg          
+PASS    image    531 B  200 KB  public/icon/bootstrapcss.svg        
+PASS    image    499 B  200 KB  public/icon/git.svg                 
+PASS    image    490 B  200 KB  public/icon/eslint.svg              
+PASS    image    478 B  200 KB  public/icon/material-ui.svg         
+PASS    image    474 B  200 KB  public/icon/aws-amplify.svg         
+PASS    image    443 B  200 KB  public/icon/passport.svg            
+PASS    image    420 B  200 KB  public/icon/brand-mark.svg          
+PASS    image    419 B  200 KB  public/icon/rds.svg                 
+PASS    image    412 B  200 KB  public/icon/list.svg                
+PASS    image    402 B  200 KB  public/icon/windows.svg             
+PASS    image    398 B  200 KB  public/icon/office365.svg           
+PASS    image    395 B  200 KB  public/icon/unity.svg               
+PASS    image    375 B  200 KB  public/icon/openzeppelin.svg        
+PASS    image    363 B  200 KB  public/icon/legomindstorms nxt.svg  
+PASS    image    363 B  200 KB  public/icon/legomindstorms.svg      
+PASS    image    357 B  200 KB  public/icon/twitter.svg             
+PASS    image    325 B  200 KB  public/icon/article.svg             
+PASS    image    307 B  200 KB  public/icon/close-x.svg             
+PASS    image    303 B  200 KB  public/icon/linkedin.svg            
+PASS    image    272 B  200 KB  public/icon/camera.svg              
+PASS    image    268 B  200 KB  public/icon/calender.svg            
+PASS    image    261 B  200 KB  public/icon/burger-menu.svg         
+PASS    image    250 B  200 KB  public/icon/arrow-right.svg         
+PASS    image    240 B  200 KB  public/icon/speaker.svg             
+PASS    image    235 B  200 KB  public/icon/facebook.svg            
+PASS    image    152 B  200 KB  public/icon/mail.svg                
+
+IMAGE SIZE GATE PASSED — 101 image(s) within budget.
+
+=== exit 0 ===
+=== pnpm test ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 test /home/tom/Projects/tomsegbers-de
+> cross-env FORCE_COLOR=1 jest
+
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mprojects.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1msendEmail.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mmarkdown.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mlib/[22m[1mtags.test.ts[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/contact/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/CaseStudyMeta/[22m[1mCaseStudyMeta.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/blog/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/CaseStudyMeta/[22m[1mCaseStudyHero.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Testimonials/[22m[1mTestimonials.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Breadcrumb/[22m[1mBreadcrumb.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/PersonTeaser/[22m[1mPersonTeaser.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Alert/[22m[1mAlert.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/TimelineEntry/[22m[1mTimelineEntry.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Button/[22m[1mButton.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/contact/[22m[1mContactForm.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/projects/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Footer/[22m[1mFooter.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/blog/entry/[slug]/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mapp/projects/entry/[slug]/[22m[1mpage.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Tooltip/[22m[1mTooltip.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/Header/[22m[1mHeader.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/ArticleTeaser/[22m[1mArticleTeaser.test.tsx[22m
+[0m[7m[1m[32m PASS [39m[22m[27m[0m [2mcomponents/ProjectTeaser/[22m[1mProjectTeaser.test.tsx[22m
+
+[1mTest Suites: [22m[1m[32m23 passed[39m[22m, 23 total
+[1mTests:       [22m[1m[32m163 passed[39m[22m, 163 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        5.643 s
+[2mRan all test suites[22m[2m.[22m
+=== exit 0 ===
+=== pnpm build ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 build /home/tom/Projects/tomsegbers-de
+> next build
+
+ ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+   ▲ Next.js 15.5.24
+
+   Creating an optimized production build ...
+
+
+Retrying 1/3...
+
+
+Retrying 1/3...
+ ✓ Compiled successfully in 18.6s
+   Linting and checking validity of types ...
+
+./app/about/page.tsx
+4:8  Warning: 'path' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+46:15  Warning: Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+127:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/blog/entry/[slug]/page.tsx
+2:1  Warning: `@/app/layout` import should occur after import of `react-markdown`  import/order
+30:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+52:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/blog/page.test.tsx
+21:1  Warning: `./page` import should occur before import of `../../lib/blog`  import/order
+
+./app/blog/page.tsx
+3:1  Warning: `next` import should occur before import of `../../components/ArticleTeaser/ArticleTeaser`  import/order
+
+./app/layout.tsx
+6:1  Warning: `next` type import should occur before import of `react`  import/order
+7:1  Warning: `next/font/google` import should occur before import of `react`  import/order
+
+./app/page.tsx
+87:22  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/projects/entry/[slug]/page.tsx
+2:1  Warning: `@/app/layout` import should occur after import of `react-markdown`  import/order
+34:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+58:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/projects/page.test.tsx
+28:1  Warning: `./page` import should occur before import of `../../lib/markdown`  import/order
+
+./app/projects/page.tsx
+3:1  Warning: `next` import should occur before import of `next/image`  import/order
+57:22  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./app/sitemap.ts
+3:1  Warning: `gray-matter` import should occur before import of `fs`  import/order
+4:1  Warning: `next` import should occur before import of `fs`  import/order
+
+./app/tags/[tag]/page.tsx
+2:1  Warning: `@/app/layout` import should occur after import of `react-icons/hi`  import/order
+58:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+94:60  Warning: 'parent' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/tags/page.tsx
+44:21  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/ArticleTeaser/ArticleTeaser.tsx
+2:1  Warning: `../Card/Card` import should occur after import of `react`  import/order
+74:20  Warning: Classnames 'h-3, w-3' could be replaced by the 'size-3' shorthand!  tailwindcss/enforces-shorthand
+97:13  Warning: Classnames 'h-7, w-7' could be replaced by the 'size-7' shorthand!  tailwindcss/enforces-shorthand
+110:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Footer/Footer.tsx
+2:1  Warning: `next/image` import should occur before import of `react`  import/order
+9:29  Warning: 'props' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+28:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+35:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+42:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+49:18  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./components/Header/Header.tsx
+39:13  Warning: Classnames 'h-6, w-6' could be replaced by the 'size-6' shorthand!  tailwindcss/enforces-shorthand
+39:13  Warning: Classnames 'sm:h-9, sm:w-9' could be replaced by the 'sm:size-9' shorthand!  tailwindcss/enforces-shorthand
+
+./components/PersonTeaser/PersonTeaser.tsx
+23:9  Warning: Classnames 'h-12, w-12' could be replaced by the 'size-12' shorthand!  tailwindcss/enforces-shorthand
+
+./components/ProjectTeaser/ProjectTeaser.test.tsx
+3:1  Warning: `@testing-library/react` import should occur before import of `date-fns`  import/order
+10:1  Warning: `./ProjectTeaser` import should occur before import of `../../lib/icon-map`  import/order
+
+./components/ProjectTeaser/ProjectTeaser.tsx
+1:1  Warning: `react` import should occur after import of `next/link`  import/order
+2:1  Warning: `../Tooltip/Tooltip` import should occur after import of `../../lib/icon-map`  import/order
+4:1  Warning: `../Card/Card` import should occur after import of `../../lib/icon-map`  import/order
+31:3  Warning: 'imageUrl' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+43:7  Warning: Classnames 'h-full, w-full' could be replaced by the 'size-full' shorthand!  tailwindcss/enforces-shorthand
+82:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+100:20  Warning: Classnames 'h-4, w-4' could be replaced by the 'size-4' shorthand!  tailwindcss/enforces-shorthand
+
+./lib/markdown.ts
+3:1  Warning: `gray-matter` import should occur before import of `fs`  import/order
+4:1  Warning: `zod` import should occur before import of `fs`  import/order
+
+./lib/sendEmail.tsx
+3:1  Warning: `await-to-js` import should occur before import of `next/headers`  import/order
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/127) ...
+   Generating static pages (31/127) 
+   Generating static pages (63/127) 
+   Generating static pages (95/127) 
+ ✓ Generating static pages (127/127)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                                              Size  First Load JS
+┌ ○ /                                                                                   174 B         111 kB
+├ ○ /_not-found                                                                         140 B         102 kB
+├ ○ /about                                                                              160 B         108 kB
+├ ƒ /api/health                                                                         140 B         102 kB
+├ ○ /apple-icon.png                                                                       0 B            0 B
+├ ○ /blog                                                                               174 B         111 kB
+├ ● /blog/entry/[slug]                                                                1.65 kB         126 kB
+├   ├ /blog/entry/2019-ebeltoft-cheesecake-recipe
+├   ├ /blog/entry/2020-homelab-v2-the-evolution-of-my-homelab-journey-second-edition
+├   └ /blog/entry/2024-homelab-v2-transforming-homelab-with-advanced-automation
+├ ○ /contact                                                                          9.02 kB         111 kB
+├ ○ /datenschutz                                                                        140 B         102 kB
+├ ○ /icon.png                                                                             0 B            0 B
+├ ○ /impressum                                                                          140 B         102 kB
+├ ○ /projects                                                                           181 B         128 kB
+├ ● /projects/entry/[slug]                                                            1.65 kB         126 kB
+├   ├ /projects/entry/2010-Journey-Into-Coding-with-LabVIEW-and-LEGO-Mindstorms
+├   ├ /projects/entry/2011-first-competition-with-wenzelbots-team
+├   ├ /projects/entry/2012-elevating-robot-competition-performance
+├   └ [+18 more paths]
+├ ○ /robots.txt                                                                         140 B         102 kB
+├ ○ /sitemap.xml                                                                        140 B         102 kB
+├ ○ /tags                                                                               483 B         106 kB
+└ ● /tags/[tag]                                                                       1.66 kB         129 kB
+    ├ /tags/robotics
+    ├ /tags/arma-3
+    ├ /tags/digital-transformation
+    └ [+83 more paths]
++ First Load JS shared by all                                                          102 kB
+  ├ chunks/26-f9a8958c8fc95dc8.js                                                     46.2 kB
+  ├ chunks/3f9eb5ed-4ee7e796f67bc406.js                                               54.2 kB
+  └ other shared chunks (total)                                                       1.86 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+=== exit 0 ===
+=== pnpm fonts ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 fonts /home/tom/Projects/tomsegbers-de
+> node scripts/check-font-budget.mjs
+
+Font budget gate — families: Inter, Newsreader (2/2)
+FAMILY      FILE                             SIZE
+-------------------------------------------------
+Inter       e4af272ccee01ff0-s.p.woff2   47.3 KiB
+Newsreader  cdda087ff4cb1a1a-s.p.woff2   23.4 KiB
+-------------------------------------------------
+First-load woff2: 70.7 KiB / 100.0 KiB budget
+  Newsreader:     23.4 KiB / 60.0 KiB budget
+All emitted woff2 (every unicode-range subset, not all downloaded): 257.3 KiB across 10 file(s)
+
+FONT BUDGET GATE PASSED — 2 families, first-load 70.7 KiB.
+=== exit 0 ===
+=== node report-bundle-size.js ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+{"/_not-found/page":{"raw":154,"gzip":140},"/api/health/route":{"raw":154,"gzip":140},"/robots.txt/route":{"raw":154,"gzip":140},"/sitemap.xml/route":{"raw":154,"gzip":140},"/not-found":{"raw":154,"gzip":140},"/layout":{"raw":126986,"gzip":34572},"/blog/page":{"raw":22370,"gzip":8744},"/blog/entry/[slug]/page":{"raw":66013,"gzip":23865},"/contact/page":{"raw":26825,"gzip":9015},"/about/page":{"raw":14538,"gzip":5500},"/datenschutz/page":{"raw":154,"gzip":140},"/projects/page":{"raw":70271,"gzip":25628},"/page":{"raw":22370,"gzip":8744},"/impressum/page":{"raw":154,"gzip":140},"/projects/entry/[slug]/page":{"raw":66013,"gzip":23865},"/tags/page":{"raw":8723,"gzip":3713},"/tags/[tag]/page":{"raw":73875,"gzip":27105},"__global":{"raw":350070,"gzip":102248}}
+=== exit 0 ===
+=== node scripts/check-bundle-budget.mjs ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+Bundle budget check
+  analyzer : .next/analyze/__bundle_analysis.json
+  baseline : tests/budgets/bundle-baseline.json
+  limits   : shared first-load 130 KB, route 180 KB, route growth +10.0%
+
+Route                          Current   Baseline       Δ                   Limit
+---------------------------------------------------------------------------------
+__global                     102,248 B  102,253 B   -0.0%                  130 KB
+/_not-found/page                 140 B      133 B   +5.3%           180 KB / +10%
+/about/page                    5,500 B    5,496 B   +0.1%           180 KB / +10%
+/api/health/route                140 B      133 B   +5.3%           180 KB / +10%
+/blog/entry/[slug]/page       23,865 B   92,496 B  -74.2%           180 KB / +10%
+/blog/page                     8,744 B   94,550 B  -90.8%           180 KB / +10%
+/contact/page                  9,015 B   18,056 B  -50.1%           180 KB / +10%
+/datenschutz/page                140 B          —       —           180 KB / +10%  (new route)
+/impressum/page                  140 B          —       —           180 KB / +10%  (new route)
+/layout                       34,572 B   44,105 B  -21.6%           180 KB / +10%
+/not-found                       140 B      133 B   +5.3%           180 KB / +10%
+/page                          8,744 B  103,734 B  -91.6%           180 KB / +10%
+/projects/entry/[slug]/page   23,865 B   92,495 B  -74.2%           180 KB / +10%
+/projects/page                25,628 B  103,736 B  -75.3%           180 KB / +10%
+/robots.txt/route                140 B      133 B   +5.3%           180 KB / +10%
+/sitemap.xml/route               140 B      133 B   +5.3%           180 KB / +10%
+/tags/[tag]/page              27,105 B          —       —           180 KB / +10%  (new route)
+/tags/page                     3,713 B          —       —           180 KB / +10%  (new route)
+
+Note: 4 route(s) absent from baseline — absolute limit only:
+  /datenschutz/page (140 B gzip)
+  /impressum/page (140 B gzip)
+  /tags/[tag]/page (27,105 B gzip)
+  /tags/page (3,713 B gzip)
+
+PASS — 18 entries within budget.
+=== exit 0 ===
+=== pnpm lighthouse ===
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 lighthouse /home/tom/Projects/tomsegbers-de
+> lhci autorun
+
+✅  .lighthouseci/ directory writable
+✅  Configuration file found
+✅  Chrome installation found
+Healthcheck passed!
+
+Started a web server with "pnpm start"...
+Running Lighthouse 3 time(s) on http://localhost:3055/
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/about
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/blog
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/blog/entry/2019-ebeltoft-cheesecake-recipe
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/projects
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/projects/entry/2020-soudest-backend-nodejs
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Running Lighthouse 3 time(s) on http://localhost:3055/contact
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Done running Lighthouse!
+
+Checking assertions against 7 URL(s), 21 total run(s)
+
+1 result(s) for [1mhttp://localhost:3055/blog[0m :
+
+  [31m✘[0m  [1mtotal-blocking-time[0m failure for [1mmaxNumericValue[0m assertion
+       Total Blocking Time
+       https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/
+
+        expected: <=[32m200[0m
+           found: [31m1084.9065000000007[0m
+      [2mall values: 1935.982, 1084.9065000000007, 228.5[0m
+
+2 result(s) for [1mhttp://localhost:3055/blog/entry/2019-ebeltoft-cheesecake-recipe[0m :
+
+  [31m✘[0m  [1mlargest-contentful-paint[0m failure for [1mmaxNumericValue[0m assertion
+       Largest Contentful Paint
+       https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/
+
+        expected: <=[32m2500[0m
+           found: [31m2708.4325[0m
+      [2mall values: 3038.56, 2105.6530000000002, 2708.4325[0m
+
+
+  [31m✘[0m  [1mtotal-blocking-time[0m failure for [1mmaxNumericValue[0m assertion
+       Total Blocking Time
+       https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/
+
+        expected: <=[32m200[0m
+           found: [31m264.5[0m
+      [2mall values: 264.5, 9620.173499999999, 72.5[0m
+
+1 result(s) for [1mhttp://localhost:3055/projects[0m :
+
+  [31m✘[0m  [1mtotal-blocking-time[0m failure for [1mmaxNumericValue[0m assertion
+       Total Blocking Time
+       https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/
+
+        expected: <=[32m200[0m
+           found: [31m903.5000000000002[0m
+      [2mall values: 2266.9999999999986, 903.5000000000002, 61.99999999999977[0m
+
+1 result(s) for [1mhttp://localhost:3055/contact[0m :
+
+  [31m✘[0m  [1mtotal-blocking-time[0m failure for [1mmaxNumericValue[0m assertion
+       Total Blocking Time
+       https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/
+
+        expected: <=[32m200[0m
+           found: [31m945[0m
+      [2mall values: 945, 722.0885000000003, 1103.7425000000007[0m
+
+Assertion failed. Exiting with status code 1.
+
+Dumping 21 reports to disk at /home/tom/Projects/tomsegbers-de/.lighthouseci...
+Done writing reports to disk.
+
+assert command failed. Exiting with status code 1.
+ ELIFECYCLE  Command failed with exit code 1.
+=== exit 1 ===
+FAILED: pnpm lighthouse

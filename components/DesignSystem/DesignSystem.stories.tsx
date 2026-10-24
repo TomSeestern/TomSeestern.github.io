@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs"
+import { Button } from "../Button/Button"
 import { ArrowRight } from "../Icon"
 import { ArchFrame, Laurel, Meander, PixelDust } from "../Ornament"
 import { SectionHeading } from "../SectionHeading/SectionHeading"
 import { TagChip } from "../TagChip/TagChip"
 import { Ticker } from "../Ticker/Ticker"
-import { Button } from "../Button/Button"
 
 const swatches = [
   ["canvas", "bg-canvas"],

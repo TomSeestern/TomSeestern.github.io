@@ -1,0 +1,29 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 8 tests using 1 worker
+
+[1/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › / declares a resolvable 1200x630 OG and Twitter image
+
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[2/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /about declares a resolvable 1200x630 OG and Twitter image
+
+[WebServer]  ⨯ The requested resource "https://placehold.co/512x512?text=Various" has type "image/svg+xml" but dangerouslyAllowSVG is disabled. Consider adding the "unoptimized" property to the <Image>.
+[3/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /blog declares a resolvable 1200x630 OG and Twitter image
+[4/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /contact declares a resolvable 1200x630 OG and Twitter image
+[5/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /projects declares a resolvable 1200x630 OG and Twitter image
+[6/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /blog/entry/2019-ebeltoft-cheesecake-recipe declares a resolvable 1200x630 OG and Twitter image
+[7/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /projects/entry/2020-soudest-backend-nodejs declares a resolvable 1200x630 OG and Twitter image
+[8/8] [chromium] › e2e/metadata.spec.ts:79:7 › social-share metadata › canonical link and og:url stay on their route
+
+[WebServer]  ⨯ The requested resource "https://placehold.co/512x512?text=Various" has type "image/svg+xml" but dangerouslyAllowSVG is disabled. Consider adding the "unoptimized" property to the <Image>.
+  8 passed (1.0m)

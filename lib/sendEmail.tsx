@@ -1,14 +1,20 @@
 "use server"
-import { headers } from "next/headers"
 import to from "await-to-js"
+import { headers } from "next/headers"
 import { Resend } from "resend"
 import { z } from "zod"
 import { env } from "../env.mjs"
 
 const contactFormSchema = z.object({
-  name: z.string().min(1, "Please enter your name"),
+  name: z
+    .string()
+    .min(1, "Please enter your name")
+    .max(100, "Please keep your name under 100 characters")
+    // The name is interpolated into the Subject header; a CRLF would let a
+    // visitor inject header lines into the outgoing message.
+    .refine((value) => !/[\r\n]/.test(value), "Please remove line breaks from your name"),
   email: z.string().min(1, "Email address is missing an @ symbol").email("Email address is missing an @ symbol"),
-  message: z.string().min(1, "Please enter a message"),
+  message: z.string().min(1, "Please enter a message").max(5000, "Please keep your message under 5000 characters"),
 })
 
 /** Discriminated result type for the contact-form server action.
@@ -94,7 +100,15 @@ export const sendEmail = async (formData: {
   }
 
   const ip = await getClientIP()
-  if (env.E2E_CONTACT_FORM_SUCCESS !== "true" && !checkRateLimit(ip)) {
+
+  // Test-only shortcut used by the e2e suite and the screenshot worker.
+  // Guarded on VERCEL_ENV rather than NODE_ENV: the e2e suite runs against
+  // `next start`, which sets NODE_ENV=production, so a NODE_ENV guard would
+  // disable the very bypass those suites depend on. On Vercel this must never
+  // be able to turn the contact form into a silent no-op.
+  const e2eBypass = env.E2E_CONTACT_FORM_SUCCESS === "true" && process.env.VERCEL_ENV !== "production"
+
+  if (!e2eBypass && !checkRateLimit(ip)) {
     return {
       success: false,
       errors: { _form: "Too many messages. Please try again later." },
@@ -103,7 +117,7 @@ export const sendEmail = async (formData: {
 
   const { name, email, message } = parsed.data
 
-  if (env.E2E_CONTACT_FORM_SUCCESS === "true") {
+  if (e2eBypass) {
     return { success: true }
   }
 
@@ -120,10 +134,16 @@ export const sendEmail = async (formData: {
     text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
   }
 
-  const [error] = await to(resend.emails.send(emailData))
+  const [thrown, response] = await to(resend.emails.send(emailData))
 
-  if (error) {
-    console.error(error)
+  // resend@2 resolves `{ data, error }` on an API failure and only rejects on a
+  // transport error. Checking `thrown` alone reports success for a 403 (bad
+  // `from` domain), a 429, or a 5xx, telling the visitor their message was sent
+  // when it was dropped. A message id is the only positive proof of acceptance.
+  const providerError = thrown ?? response?.error
+
+  if (providerError || !response?.data?.id) {
+    console.error(providerError ?? "Resend returned no message id")
     return {
       success: false,
       errors: {

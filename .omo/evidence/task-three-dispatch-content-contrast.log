@@ -1,0 +1,51 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 contrast /home/tom/Projects/tomsegbers-de
+> node scripts/check-contrast.mjs
+
+WCAG 2.x contrast gate — 36 pair(s) from /home/tom/Projects/tomsegbers-de/tests/budgets/contrast.json
+STATUS KIND  RATIO   MIN  NAME
+---------------------------------------------------------
+PASS   text  19.53   4.5  body ink on canvas
+PASS   text  18.97   4.5  body ink on canvas-deep
+PASS   text  18.36   4.5  body ink on panel
+PASS   text  20.12   4.5  body ink on night
+PASS   text  17.65   4.5  body ink on night-soft
+PASS   text   7.95   4.5  muted on canvas
+PASS   text   7.72   4.5  muted on canvas-deep
+PASS   text   7.48   4.5  muted on panel
+PASS   text   8.19   4.5  muted on night
+PASS   text   7.19   4.5  muted on night-soft
+PASS   text   6.63   4.5  crimson link on canvas
+PASS   text   6.44   4.5  crimson link on canvas-deep
+PASS   text   6.24   4.5  crimson link on panel
+PASS   text   6.83   4.5  crimson link on night
+PASS   text   6.00   4.5  crimson link on night-soft
+PASS   text  20.12   4.5  night ink on night
+PASS   text  17.65   4.5  night ink on night-soft
+PASS   text   8.19   4.5  night muted on night
+PASS   text   7.19   4.5  night muted on night-soft
+PASS   text  20.12   4.5  gold ink on night
+PASS   text  17.65   4.5  gold ink on night-soft
+PASS   text   6.63   4.5  canvas on crimson
+PASS   text  18.69   4.5  canvas on gold button
+PASS   text   7.34   4.5  danger on canvas
+PASS   text   7.13   4.5  danger on canvas-deep
+PASS   text   6.91   4.5  danger on panel
+PASS   text   6.45   4.5  danger on danger-surface
+PASS   ui    19.53   3.0  focus ring on canvas
+PASS   ui    18.97   3.0  focus ring on canvas-deep
+PASS   ui    18.36   3.0  focus ring on panel
+PASS   ui    20.12   3.0  inverse focus ring on night
+PASS   ui    17.65   3.0  inverse focus ring on night-soft
+PASS   ui     6.63   3.0  accent focus ring on canvas
+PASS   ui     6.24   3.0  accent focus ring on panel
+PASS   ui     6.63   3.0  canvas focus ring on crimson
+PASS   ui    11.70   3.0  verdigris status dot on canvas
+---------------------------------------------------------
+
+CONTRAST GATE PASSED — all 36 pair(s) meet their minimums.

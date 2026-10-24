@@ -1,0 +1,18 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+PASS components/Button/Button.test.tsx
+PASS components/SectionHeading/SectionHeading.test.tsx
+PASS components/Ornament/Ornament.test.tsx
+PASS components/PageHero/PageHero.test.tsx
+PASS components/Section/Section.test.tsx
+PASS components/TagChip/TagChip.test.tsx
+PASS components/Ticker/Ticker.test.tsx
+
+Test Suites: 7 passed, 7 total
+Tests:       24 passed, 24 total
+Snapshots:   0 total
+Time:        4.399 s
+Ran all test suites matching /components\/Button|components\/Section|components\/SectionHeading|components\/PageHero|components\/Ornament|components\/Ticker|components\/TagChip/i.

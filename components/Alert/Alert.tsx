@@ -1,6 +1,6 @@
 import React from "react"
-import { Close } from "../Icon/Close"
 import { twMerge } from "tailwind-merge"
+import { Close } from "../Icon/Close"
 
 export type AlertVariant = "success" | "failure"
 

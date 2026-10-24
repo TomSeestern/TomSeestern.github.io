@@ -1,0 +1,15 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+PASS components/Tooltip/Tooltip.test.tsx
+PASS components/Breadcrumb/Breadcrumb.test.tsx
+PASS components/Alert/Alert.test.tsx
+PASS components/Card/Card.test.tsx
+
+Test Suites: 4 passed, 4 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        3.926 s
+Ran all test suites matching /components\/Card|components\/Alert|components\/Breadcrumb|components\/Tooltip/i.

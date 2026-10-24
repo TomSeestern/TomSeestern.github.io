@@ -1,0 +1,22 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+PASS lib/projects.test.ts
+PASS components/MonumentCard/MonumentCard.test.tsx
+PASS lib/content.test.ts
+PASS components/ArchiveRow/ArchiveRow.test.tsx
+PASS components/ArticleCard/ArticleCard.test.tsx
+PASS lib/sigil.test.ts
+PASS components/ArticleMeta/ArticleMeta.test.tsx
+PASS components/PixelSigil/PixelSigil.test.tsx
+PASS lib/reading-time.test.ts
+PASS lib/technologies.test.ts
+PASS lib/format-date.test.ts
+
+Test Suites: 11 passed, 11 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        11.867 s
+Ran all test suites matching /lib\/sigil.test.ts|lib\/format-date.test.ts|lib\/reading-time.test.ts|lib\/technologies.test.ts|lib\/content.test.ts|lib\/projects.test.ts|components\/PixelSigil|components\/MonumentCard|components\/ArchiveRow|components\/ArticleCard|components\/ArticleMeta/i.

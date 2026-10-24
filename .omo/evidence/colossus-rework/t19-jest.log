@@ -1,0 +1,48 @@
+PASS components/TechnologyTooltip/TechnologyTooltip.test.tsx
+PASS lib/markdown.test.ts
+PASS app/projects/page.test.tsx
+PASS components/Footer/Footer.test.tsx
+PASS app/projects/entry/[slug]/page.test.tsx
+PASS app/blog/page.test.tsx
+PASS components/Header/Header.test.tsx
+PASS app/blog/entry/[slug]/page.test.tsx
+PASS app/contact/ContactForm.test.tsx
+PASS components/Button/Button.test.tsx
+PASS components/ArticleMeta/ArticleMeta.test.tsx
+PASS components/ArchiveRow/ArchiveRow.test.tsx
+PASS components/Tooltip/Tooltip.test.tsx
+PASS app/about/page.test.tsx
+PASS app/tags/page.test.tsx
+PASS components/Ornament/Ornament.test.tsx
+PASS components/SectionHeading/SectionHeading.test.tsx
+PASS components/ProjectDossier/ProjectDossier.test.tsx
+PASS components/MonumentCard/MonumentCard.test.tsx
+PASS components/Breadcrumb/Breadcrumb.test.tsx
+PASS components/PageHero/PageHero.test.tsx
+PASS components/TagChip/TagChip.test.tsx
+PASS components/Alert/Alert.test.tsx
+PASS components/ArticleCard/ArticleCard.test.tsx
+PASS components/PersonTeaser/PersonTeaser.test.tsx
+PASS components/Testimonials/Testimonials.test.tsx
+PASS components/Section/Section.test.tsx
+PASS components/Card/Card.test.tsx
+PASS lib/sendEmail.test.tsx
+PASS lib/tags.test.ts
+PASS components/TimelineEntry/TimelineEntry.test.tsx
+PASS components/CaseStudyMeta/CaseStudyHero.test.tsx
+PASS components/Ticker/Ticker.test.tsx
+PASS components/PixelSigil/PixelSigil.test.tsx
+PASS app/tags/[tag]/page.test.tsx
+PASS lib/content.test.ts
+PASS lib/projects.test.ts
+PASS lib/sigil.test.ts
+PASS app/contact/page.test.tsx
+PASS lib/reading-time.test.ts
+PASS lib/technologies.test.ts
+PASS lib/format-date.test.ts
+
+Test Suites: 42 passed, 42 total
+Tests:       201 passed, 201 total
+Snapshots:   0 total
+Time:        17.11 s, estimated 19 s
+Ran all test suites.

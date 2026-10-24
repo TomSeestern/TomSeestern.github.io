@@ -1,0 +1,7 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+wrote /home/tom/Projects/tomsegbers-de/app/apple-icon.png (180 × 180)
+wrote /home/tom/Projects/tomsegbers-de/public/img/og-default.png (1200 × 630)

@@ -1,0 +1,22 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 fonts /home/tom/Projects/tomsegbers-de
+> node scripts/check-font-budget.mjs
+
+Font budget gate — families: Cinzel, Silkscreen (2/2)
+FAMILY      FILE                             SIZE
+-------------------------------------------------
+Cinzel      a273567b21a7c318-s.p.woff2   25.3 KiB
+Silkscreen  966913bad25267a8-s.p.woff2    3.1 KiB
+Silkscreen  cd21efaca8026c00-s.p.woff2    3.4 KiB
+-------------------------------------------------
+First-load woff2: 31.9 KiB / 100.0 KiB budget
+  Cinzel:        25.3 KiB (display)
+  Silkscreen:    6.6 KiB (pixel)
+All emitted woff2 (every unicode-range subset, not all downloaded): 48.2 KiB across 6 file(s)
+
+FONT BUDGET GATE PASSED — 2 families, first-load 31.9 KiB.

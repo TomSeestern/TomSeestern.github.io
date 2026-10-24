@@ -1,0 +1,98 @@
+TASK project-narrative-refresh
+DATE 2026-10-22
+PLAN .omo/plans/2026-project-narrative-refresh.md
+BOULDER .omo/boulders/task-project-narrative-refresh.md
+COMMIT 9f865a3 feat(projects): rewrite all project case files
+PUSH origin/main 5b4471e..9f865a3
+MODEL default
+TOKEN USAGE not instrumented in this session
+
+## Baseline
+
+28 project case files in content/projects/. Body lengths were uneven (roughly
+230-390 words in the older files), headings were inconsistent, and the 2018
+file ended with "What I would change" instead of the shared closing heading.
+
+## What changed
+
+- Rewrote all 28 bodies into the same four-section narrative:
+  The problem -> The build -> The result -> What I took from it.
+- Every body is now at least 450 words. Final distribution:
+  min 450, max 550, mean 473.1, total 13,247 words.
+- Preserved every filename, project ID, article date, featured flag,
+  recentHighlight flag, public URL, and existing verified metric.
+- Normalised 17 visible titles to the "Project: Specific outcome" pattern
+  without changing URLs.
+- Added a content invariant to lib/project-content.test.ts that checks the
+  exact heading sequence and a 450-word floor for every project body.
+- Reframed unsupported early-project specifics as grounded reflection rather
+  than invented events. No new metrics, funding, awards, or links were added.
+
+## Sources used
+
+- GitHub: TomSeestern/AT89C5131A_Gleichstrommotor, LCD-Display, BotBoost,
+  SouDest, soudest_backend, soudest_frontend, ISEEU-Net.
+- Forgejo READMEs: EveryFontEver.com, FullSound, ClosedLoopOS, foerderhebel,
+  audiobook-3d-covers.
+- Public sites: hammer-robotics.de, everyfontever.com,
+  closed-loop-os.vercel.app, layzr.gg.
+- Press: RWU Tom Segbers profile, openPR Jodel/LAYZR acquisition,
+  Business Insider LAYZR coverage.
+- Existing content and `.omo` project-case evidence.
+
+## Verification
+
+Commands run in this session:
+
+1. `node scripts/check-project-frontmatter.js`
+   -> PASS for all 28 files; COUNT 28; exit 0.
+
+2. `node_modules/.bin/jest lib/project-content.test.ts --runInBand`
+   -> 7/7 tests passed, including "keeps every case file on the shared
+   narrative structure"; exit 0.
+
+3. `npm test -- --runInBand`
+   -> 45/45 suites, 230/230 tests passed; exit 0.
+
+4. `npm run typecheck`
+   -> exit 0, no diagnostics.
+
+5. `npm run lint`
+   -> exit 0; 0 errors, 26 pre-existing warnings.
+
+6. `npm run prettier`
+   -> exit 0; "All matched files use Prettier code style!"
+
+7. `npm run build`
+   -> exit 0; Next.js generated 160 static pages, including all 28 project
+   detail routes.
+
+8. Playwright production-browser verification against `npm start -p 4321`
+   using the system Chromium:
+   -> 28/28 project routes returned 200.
+   -> All four expected H2 headings present in order on every route.
+   -> 0 failures, 0 console errors, 0 page errors.
+   -> All 28 routes checked at 390px width; 0 horizontal overflow.
+   -> `/projects` rendered 32 project links (28 archive + 4 featured).
+   -> `/sitemap.xml` contained 28 project URLs.
+   -> Screenshots: /tmp/opencode/projects-desktop.png,
+      /tmp/opencode/projects-mobile.png, /tmp/opencode/project-altis.png,
+      /tmp/opencode/project-hammer.png.
+
+9. `npm run contrast`, `npm run design-tokens`, `npm run images`, `npm run fonts`
+   -> all passed: 36/36 contrast pairs, design-token gate, 115/115 images,
+   2/2 font families and 28.6 KiB critical preload.
+
+10. `git diff --check`
+    -> exit 0, no whitespace errors.
+
+## Caveats
+
+- No deployment was performed. `https://tomsegbers.de/projects` still serves
+  the previous build; this checkout has the verified new production build.
+- The older pre-repository projects have no public source repository. Their
+  sections use the existing case-file facts and grounded reflection; no new
+  external claims were introduced.
+- Browser checks covered rendering, headings, console errors, and mobile
+  overflow. They did not include a full axe accessibility run or visual
+  regression diff beyond the saved screenshots.

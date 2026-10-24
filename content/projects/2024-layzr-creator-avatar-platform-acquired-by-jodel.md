@@ -19,8 +19,6 @@ metrics:
     value: €500k
 heroImage: /img/projects/layzr-jodel.jpg
 links:
-  - label: LAYZR
-    href: https://layzr.gg
   - label: Business Insider coverage
     href: https://www.businessinsider.de/gruenderszene/technologie/fast-nach-amerika-verkauft-jodel-uebernimmt-sueddeutsches-avatar-startup-layzr/
   - label: Jodel acquisition announcement

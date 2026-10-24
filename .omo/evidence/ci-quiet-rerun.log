@@ -1,0 +1,26 @@
+[2026-09-13T22:04:15Z] quiet-rerun-ci starting (max 180 iters, poll 300s, load<8)
+[2026-09-13T22:04:16Z] iter 1: load=28/22 peers=1
+[2026-09-13T22:09:17Z] iter 2: load=28/22 peers=1
+[2026-09-13T22:14:17Z] iter 3: load=30/22 peers=1
+[2026-09-13T22:19:18Z] iter 4: load=30/22 peers=1
+[2026-09-13T22:24:19Z] iter 5: load=26/22 peers=1
+[2026-09-13T22:29:19Z] iter 6: load=26/22 peers=0
+[2026-09-13T22:34:20Z] iter 7: load=25/22 peers=0
+[2026-09-13T22:39:20Z] iter 8: load=24/22 peers=0
+[2026-09-13T22:44:21Z] iter 9: load=25/22 peers=0
+[2026-09-13T22:49:21Z] iter 10: load=26/22 peers=0
+[2026-09-13T22:54:22Z] iter 11: load=30/22 peers=1
+[2026-09-13T23:00:10Z] quiet-rerun-ci starting (max 180 iters, poll 300s, load<8)
+[2026-09-13T23:00:10Z] iter 1: load=6/22 peers=3
+[2026-09-13T23:05:10Z] iter 2: load=5/22 peers=3
+[2026-09-13T23:10:10Z] iter 3: load=4/22 peers=2
+[2026-09-13T23:15:10Z] iter 4: load=5/22 peers=3
+[2026-09-13T23:20:10Z] iter 5: load=2/22 peers=1
+[2026-09-13T23:25:10Z] iter 6: load=3/22 peers=1
+[2026-09-13T23:30:10Z] iter 7: load=1/22 peers=0
+[2026-09-13T23:30:10Z] QUIET WINDOW — dispatching lighthouse.yml playwright.yml
+[2026-09-13T23:30:11Z] dispatched lighthouse.yml -> http 204
+[2026-09-13T23:30:11Z] dispatched playwright.yml -> http 204
+[2026-09-13T23:45:11Z] lighthouse.yml status: success:2142
+[2026-09-13T23:45:11Z] playwright.yml status: success:2144
+[2026-09-13T23:45:11Z] quiet-window attempt complete; stopping

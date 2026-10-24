@@ -1,0 +1,109 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 92 tests using 1 worker
+
+[1/92] [chromium] › e2e/a11y.spec.ts:70:7 › accessibility (axe) › allowlist references only scanned route/scheme combinations
+[2/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › / has only allowlisted serious/critical violations
+
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[3/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /about has only allowlisted serious/critical violations
+[4/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /blog has only allowlisted serious/critical violations
+[5/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /blog/entry/2019-ebeltoft-cheesecake-recipe has only allowlisted serious/critical violations
+[6/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /projects has only allowlisted serious/critical violations
+[7/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /projects/entry/2020-soudest-backend-nodejs has only allowlisted serious/critical violations
+[8/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /tags has only allowlisted serious/critical violations
+[9/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /tags/c-plus-plus has only allowlisted serious/critical violations
+[10/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /contact has only allowlisted serious/critical violations
+[11/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /impressum has only allowlisted serious/critical violations
+[12/92] [chromium] › e2e/a11y.spec.ts:87:13 › accessibility (axe) › light scheme › /datenschutz has only allowlisted serious/critical violations
+[13/92] [chromium] › e2e/breadcrumb.spec.ts:19:7 › breadcrumb on /blog/entry/2019-ebeltoft-cheesecake-recipe exposes ordered-list semantics and the current page
+[14/92] [chromium] › e2e/breadcrumb.spec.ts:19:7 › breadcrumb on /projects/entry/2020-soudest-backend-nodejs exposes ordered-list semantics and the current page
+[15/92] [chromium] › e2e/case-study.spec.ts:5:5 › legacy project entry renders no case-study containers
+[16/92] [chromium] › e2e/contact.spec.ts:4:7 › contact form › submits valid form and shows success message
+[17/92] [chromium] › e2e/contact.spec.ts:19:7 › contact form › shows inline error for invalid email
+[18/92] [chromium] › e2e/contact.spec.ts:32:7 › contact form › shows all field errors when all fields are empty
+[19/92] [chromium] › e2e/contact.spec.ts:46:7 › contact form › shows inline error for missing name
+[20/92] [chromium] › e2e/contact.spec.ts:58:7 › contact form › button is disabled while submitting
+[21/92] [chromium] › e2e/contact.spec.ts:72:7 › contact form › clear errors on resubmission after failed attempt
+[22/92] [chromium] › e2e/contact.spec.ts:91:7 › contact form › validates the email field on blur, before submit
+[23/92] [chromium] › e2e/contact.spec.ts:104:7 › contact form › does not flag an untouched empty field on its first blur
+[24/92] [chromium] › e2e/contact.spec.ts:115:7 › contact form › success message is exposed as a polite live region
+[25/92] [chromium] › e2e/dark-mode.spec.ts:29:5 › public routes render a single light semantic surface
+[26/92] [chromium] › e2e/dark-mode.spec.ts:51:5 › ships no theme toggle and resolves a single mode regardless of system preference
+[27/92] [chromium] › e2e/dark-mode.spec.ts:91:11 › contrast per scheme (axe color-contrast) › light /contact has no serious or critical contrast violations
+[28/92] [chromium] › e2e/dark-mode.spec.ts:91:11 › contrast per scheme (axe color-contrast) › light /blog/entry/2019-ebeltoft-cheesecake-recipe has no serious or critical contrast violations
+[29/92] [chromium] › e2e/dark-mode.spec.ts:91:11 › contrast per scheme (axe color-contrast) › light /projects/entry/2020-soudest-backend-nodejs has no serious or critical contrast violations
+[30/92] [chromium] › e2e/dynamic-content.spec.ts:22:5 › blog listing discovers a detail route and breadcrumb returns to blog
+[31/92] [chromium] › e2e/dynamic-content.spec.ts:55:5 › project listing discovers a detail route and breadcrumb returns to projects
+[32/92] [chromium] › e2e/dynamic-content.spec.ts:94:5 › project archive presents the featured selection as selected
+[33/92] [chromium] › e2e/header-nav.spec.ts:14:7 › site header navigation › mobile menu toggle opens and closes the navigation
+[34/92] [chromium] › e2e/header-nav.spec.ts:47:7 › site header navigation › mobile menu toggle is operable with Enter and Space
+[35/92] [chromium] › e2e/header-nav.spec.ts:69:7 › site header navigation › mobile menu toggle exposes its expanded state and controls the navigation
+[36/92] [chromium] › e2e/header-nav.spec.ts:90:7 › site header navigation › desktop shows the navigation and hides the mobile toggle
+[37/92] [chromium] › e2e/home.spec.ts:5:5 › homepage renders the COLOSSUS sections
+[38/92] [chromium] › e2e/home.spec.ts:42:5 › home page stays within the DOM node budget
+[39/92] [chromium] › e2e/home.spec.ts:54:5 › home page does not overflow at 375px
+[40/92] [chromium] › e2e/interactions.spec.ts:35:7 › interactive accessibility › skip link becomes visible on Tab and moves focus to main content on Enter
+[41/92] [chromium] › e2e/interactions.spec.ts:56:7 › interactive accessibility › keyboard focus gives the primary header CTA a visible outline
+[42/92] [chromium] › e2e/interactions.spec.ts:66:7 › interactive accessibility › home featured link exposes a visible keyboard outline
+[43/92] [chromium] › e2e/interactions.spec.ts:76:7 › interactive accessibility › keyboard activation follows a home CTA without a pointer
+[44/92] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › / declares a resolvable 1200x630 OG and Twitter image
+[45/92] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /about declares a resolvable 1200x630 OG and Twitter image
+[46/92] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /blog declares a resolvable 1200x630 OG and Twitter image
+[47/92] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /contact declares a resolvable 1200x630 OG and Twitter image
+[48/92] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /projects declares a resolvable 1200x630 OG and Twitter image
+[49/92] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /blog/entry/2019-ebeltoft-cheesecake-recipe declares a resolvable 1200x630 OG and Twitter image
+[50/92] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /projects/entry/2020-soudest-backend-nodejs declares a resolvable 1200x630 OG and Twitter image
+[51/92] [chromium] › e2e/metadata.spec.ts:79:7 › social-share metadata › canonical link and og:url stay on their route
+[52/92] [chromium] › e2e/responsive.spec.ts:93:9 › home remains usable at mobile
+[53/92] [chromium] › e2e/responsive.spec.ts:93:9 › home remains usable at tablet
+[54/92] [chromium] › e2e/responsive.spec.ts:93:9 › home remains usable at desktop
+[55/92] [chromium] › e2e/responsive.spec.ts:93:9 › about remains usable at mobile
+[56/92] [chromium] › e2e/responsive.spec.ts:93:9 › about remains usable at tablet
+[57/92] [chromium] › e2e/responsive.spec.ts:93:9 › about remains usable at desktop
+[58/92] [chromium] › e2e/responsive.spec.ts:93:9 › blog remains usable at mobile
+[59/92] [chromium] › e2e/responsive.spec.ts:93:9 › blog remains usable at tablet
+[60/92] [chromium] › e2e/responsive.spec.ts:93:9 › blog remains usable at desktop
+[61/92] [chromium] › e2e/responsive.spec.ts:93:9 › blog detail remains usable at mobile
+[62/92] [chromium] › e2e/responsive.spec.ts:93:9 › blog detail remains usable at tablet
+[63/92] [chromium] › e2e/responsive.spec.ts:93:9 › blog detail remains usable at desktop
+[64/92] [chromium] › e2e/responsive.spec.ts:93:9 › projects remains usable at mobile
+[65/92] [chromium] › e2e/responsive.spec.ts:93:9 › projects remains usable at tablet
+[66/92] [chromium] › e2e/responsive.spec.ts:93:9 › projects remains usable at desktop
+[67/92] [chromium] › e2e/responsive.spec.ts:93:9 › project detail remains usable at mobile
+[68/92] [chromium] › e2e/responsive.spec.ts:93:9 › project detail remains usable at tablet
+[69/92] [chromium] › e2e/responsive.spec.ts:93:9 › project detail remains usable at desktop
+[70/92] [chromium] › e2e/responsive.spec.ts:93:9 › contact remains usable at mobile
+[71/92] [chromium] › e2e/responsive.spec.ts:93:9 › contact remains usable at tablet
+[72/92] [chromium] › e2e/responsive.spec.ts:93:9 › contact remains usable at desktop
+[73/92] [chromium] › e2e/responsive.spec.ts:124:5 › mobile header renders navigation and hamburger toggle
+[74/92] [chromium] › e2e/responsive.spec.ts:206:7 › touch targets › contact form primary controls meet the 44px touch target
+[75/92] [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › / interactive controls meet the WCAG 2.2 target-size floor
+[76/92] [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › /blog interactive controls meet the WCAG 2.2 target-size floor
+[77/92] [chromium] › e2e/responsive.spec.ts:220:9 › touch targets › /contact interactive controls meet the WCAG 2.2 target-size floor
+[78/92] [chromium] › e2e/static-routes.spec.ts:38:7 › static routes › homepage renders hydrated primary content accessibly
+[79/92] [chromium] › e2e/static-routes.spec.ts:54:7 › static routes › about page renders its section hierarchy and decorative image semantics
+[80/92] [chromium] › e2e/static-routes.spec.ts:69:7 › static routes › contact form returns test-safe success without a Resend request after hydration
+[81/92] [chromium] › e2e/static-routes.spec.ts:93:7 › static routes › missing route presents Next.js 404 page
+[82/92] [chromium] › e2e/tooltip.spec.ts:18:7 › tooltip (single root provider) › technology tooltip opens on hover and dismisses on Escape on a project dossier
+[83/92] [chromium] › e2e/visual-language.spec.ts:11:9 › COLOSSUS visual-language contract › / ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[84/92] [chromium] › e2e/visual-language.spec.ts:11:9 › COLOSSUS visual-language contract › /projects ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[85/92] [chromium] › e2e/visual-language.spec.ts:11:9 › COLOSSUS visual-language contract › /blog ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[86/92] [chromium] › e2e/visual-language.spec.ts:11:9 › COLOSSUS visual-language contract › /about ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[87/92] [chromium] › e2e/visual-language.spec.ts:11:9 › COLOSSUS visual-language contract › /contact ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[88/92] [chromium] › e2e/visual-language.spec.ts:11:9 › COLOSSUS visual-language contract › /tags ships the canvas shell, Cinzel H1, and no horizontal overflow at 375
+[89/92] [chromium] › e2e/visual-language.spec.ts:47:9 › COLOSSUS visual-language contract › / renders at least one deterministic pixel sigil
+[90/92] [chromium] › e2e/visual-language.spec.ts:47:9 › COLOSSUS visual-language contract › /projects renders at least one deterministic pixel sigil
+[91/92] [chromium] › e2e/visual-language.spec.ts:47:9 › COLOSSUS visual-language contract › /blog renders at least one deterministic pixel sigil
+[92/92] [chromium] › e2e/visual-language.spec.ts:56:7 › COLOSSUS visual-language contract › home ticker is static under prefers-reduced-motion
+  92 passed (4.9m)

@@ -14,7 +14,7 @@ describe("Header", () => {
     render(<Header />)
 
     // Then
-    expect(screen.getByRole("link", { name: "Tom Segbers — home" })).toHaveAttribute("href", "/")
+    expect(screen.getByRole("link", { name: "tomsegbers — Tom Segbers, home" })).toHaveAttribute("href", "/")
   })
 
   it("renders the site header landmark", () => {

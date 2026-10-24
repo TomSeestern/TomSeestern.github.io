@@ -1,0 +1,57 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 8 tests using 8 workers
+
+[1/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /about declares a resolvable 1200x630 OG and Twitter image
+[2/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /contact declares a resolvable 1200x630 OG and Twitter image
+[3/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /projects declares a resolvable 1200x630 OG and Twitter image
+[4/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /projects/entry/2020-soudest-backend-nodejs declares a resolvable 1200x630 OG and Twitter image
+[5/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › / declares a resolvable 1200x630 OG and Twitter image
+[6/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /blog/entry/2019-ebeltoft-cheesecake-recipe declares a resolvable 1200x630 OG and Twitter image
+[7/8] [chromium] › e2e/metadata.spec.ts:79:7 › social-share metadata › canonical link and og:url stay on their route
+[8/8] [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /blog declares a resolvable 1200x630 OG and Twitter image
+
+[WebServer]  ⨯ SyntaxError: Unexpected end of JSON input
+[WebServer]     at JSON.parse (<anonymous>) {
+[WebServer]   page: '/blog/entry/2019-ebeltoft-cheesecake-recipe'
+[WebServer] }
+
+[WebServer]  ⨯ The requested resource "https://placehold.co/512x512?text=Various" has type "image/svg+xml" but dangerouslyAllowSVG is disabled. Consider adding the "unoptimized" property to the <Image>.
+
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+
+[WebServer]  ⨯ The requested resource "https://placehold.co/512x512?text=Various" has type "image/svg+xml" but dangerouslyAllowSVG is disabled. Consider adding the "unoptimized" property to the <Image>.
+  1) [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /blog/entry/2019-ebeltoft-cheesecake-recipe declares a resolvable 1200x630 OG and Twitter image 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.goto: Test timeout of 30000ms exceeded.
+    Call log:
+      - navigating to "http://127.0.0.1:3030/blog/entry/2019-ebeltoft-cheesecake-recipe", waiting until "load"
+
+
+      48 |     test(`${route} declares a resolvable 1200x630 OG and Twitter image`, async ({ page }) => {
+      49 |       // Given
+    > 50 |       await page.goto(route)
+         |                  ^
+      51 |
+      52 |       // When — read the declared share metadata.
+      53 |       const ogImage = await metaContent(page, 'meta[property="og:image"]')
+        at /home/tom/Projects/tomsegbers-de/e2e/metadata.spec.ts:50:18
+
+    Error Context: test-results/metadata-social-share-meta-37ea6-00x630-OG-and-Twitter-image-chromium/error-context.md
+
+
+  1 failed
+    [chromium] › e2e/metadata.spec.ts:48:9 › social-share metadata › /blog/entry/2019-ebeltoft-cheesecake-recipe declares a resolvable 1200x630 OG and Twitter image 
+  7 passed (59.7s)

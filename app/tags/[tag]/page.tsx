@@ -8,7 +8,7 @@ import { MonumentCard } from "@/components/MonumentCard/MonumentCard"
 import { PageHero } from "@/components/PageHero/PageHero"
 import { PixelSigil } from "@/components/PixelSigil/PixelSigil"
 import { Section } from "@/components/Section/Section"
-import { getAllTags, getTagByLegacySlug, getTagBySlug } from "@/lib/tags"
+import { getAllTags, getTagByLegacySlug, getTagBySlug, MIN_INDEXABLE_TAG_ENTRIES } from "@/lib/tags"
 import type { TaggedEntry } from "@/lib/tags"
 
 interface Params {
@@ -101,7 +101,7 @@ export async function generateStaticParams(): Promise<{ tag: string }[]> {
   return getAllTags().map((tag) => ({ tag: tag.slug }))
 }
 
-export async function generateMetadata({ params }: Params, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: Params, _parent: ResolvingMetadata): Promise<Metadata> {
   const { tag: slug } = await params
   const tag = getTagBySlug(slug)
 
@@ -117,6 +117,10 @@ export async function generateMetadata({ params }: Params, parent: ResolvingMeta
   return {
     title: `Tag: ${tag.label}`,
     description,
+    robots: {
+      index: tag.count >= MIN_INDEXABLE_TAG_ENTRIES,
+      follow: true,
+    },
     alternates: {
       canonical: new URL(`/tags/${tag.slug}`, layoutMetadata.metadataBase || "https://tomsegbers.de").toString(),
     },

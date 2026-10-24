@@ -1,0 +1,13 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+PASS components/Header/Header.test.tsx (10.245 s)
+PASS components/Footer/Footer.test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       19 passed, 19 total
+Snapshots:   0 total
+Time:        13.504 s
+Ran all test suites matching /components\/Header|components\/Footer/i.

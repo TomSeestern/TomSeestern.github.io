@@ -44,11 +44,13 @@ export function Footer() {
       <PixelColumn className="pointer-events-none absolute -right-4 top-10 hidden h-44 w-24 text-ink/[0.045] lg:block" />
       <div className="mx-auto grid w-full max-w-width-page gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-10 lg:py-16">
         <div>
-          <Link href="/" aria-label="Tom Segbers — home" className="focus-ring-inverse flex items-center gap-2.5">
+          <Link href="/" className="focus-ring-inverse flex items-center gap-2.5">
             <Image src="/icon/brand-mark.svg" alt="" width={32} height={32} unoptimized className="size-8 shrink-0" />
             <span className="font-display text-[15px] font-semibold leading-none tracking-[-0.03em] text-night-ink">
               tomsegbers
             </span>
+            {/* WCAG 2.5.3 — see the matching note in Header.tsx. */}
+            <span className="sr-only">— Tom Segbers, home</span>
           </Link>
           <p className="mt-4 max-w-measure-card font-body text-small text-night-muted">
             Senior developer building reliable systems and clear interfaces.

@@ -1,0 +1,236 @@
+Task: Content audit AI-tells and search-spam extension
+Date: 2026-10-23
+Plan: .omo/plans/2026-content-audit-seo-extension.md
+Boulder: .omo/boulders/task-content-audit-seo-extension.md
+Owner: default
+
+## Baseline
+
+Command:
+  nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm content:audit'
+
+Output:
+  Scanned 34 Markdown file(s) and 60 TSX copy file(s); 22072 prose words.
+  PASS — no slop signals found.
+
+Command:
+  nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test --runInBand scripts/content-audit/rules.test.js'
+
+Output:
+  1 suite passed, 23 tests passed.
+
+## Research basis
+
+Sources read:
+- https://developers.google.com/search/docs/essentials/spam-policies
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+- https://developers.google.com/search/blog/2023/02/google-search-and-ai-content
+- https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing
+
+Google policy used:
+- Scaled content abuse: many pages generated primarily to manipulate rankings,
+  including generative-AI pages without added value.
+- Keyword stuffing: repeating words or phrases so often that it sounds unnatural.
+- Doorway abuse: substantially similar pages created for similar queries.
+- Scraped/duplicate content and thin affiliate pages are low-value patterns.
+- Google's AI guidance: "Appropriate use of AI or automation is not against our
+  guidelines"; using it primarily to manipulate rankings violates spam policies.
+- Helpful-content guidance: original information, descriptive non-exaggerated
+  titles, first-hand experience, and people-first rather than search-engine-first
+  content.
+
+Wikipedia AI-writing sections used:
+- Vague expression of connection or association
+- Vague attributions and overgeneralization of opinions
+- Outline-like conclusions about challenges and future prospects
+- Promotional and advertisement-like language
+- Avoidance of basic copulatives
+- Title case and boldface (considered, not added as standalone rules because of
+  house style and functional recipe labels)
+- Collaborative communication and hedging disclaimers
+- Phrasal templates
+- Ineffective indicators: isolated transitions, perfect grammar, and formal prose
+  are not reliable tells; em-dash overuse is historical.
+
+## Implemented rules
+
+AI-writing tells:
+- vague-attribution
+- hedging-disclaimer
+- formulaic-phrase
+- outline-conclusion
+- promotional-language
+
+Search-quality / spam anti-patterns:
+- keyword-stuffing: three content words, at least five occurrences, at least 2% of
+  document words
+- duplicate-content: exact 12-word shingle shared by two Markdown content files
+
+Files:
+- scripts/content-audit/rules.js
+- scripts/content-audit/repetition.js (new)
+- scripts/content-audit/audit.js
+- scripts/content-audit/rules.test.js
+- docs/content-audit.md
+- README.md
+- content/blog/2019-ebeltoft-cheesecake-recipe.md
+- content/projects/2026-audioforge-printable-audiobook-covers.md
+- content/projects/2026-fullsound-browser-engine-sound.md
+- app/blog/entry/[slug]/page.test.tsx
+- components/ArticleCard/ArticleCard.test.tsx
+- components/ArticleCard/ArticleCard.stories.tsx
+
+## Expanded audit before rewrites
+
+Command:
+  nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm content:audit --verbose'
+
+Output:
+  Scanned 34 Markdown file(s) and 60 TSX copy file(s); 22072 prose words.
+  FAIL — 4 finding(s) across 2 file(s).
+
+  content/blog/2019-ebeltoft-cheesecake-recipe.md
+       3:1   promotional-language      hype adjective
+          Memorable Ebeltoft Cheesecake – A Sweet Souvenir
+       5:28  promotional-language      hype adjective
+          Discover how to create the delightful Ebeltoft Cheesecake...
+      15:3   promotional-language      hype adjective
+          # Unforgettable Ebeltoft Cheesecake: A Delightful Culinary Adventure
+
+  content/projects/2026-audioforge-printable-audiobook-covers.md
+      56:153 duplicate-content         26-word exact overlap with
+          content/projects/2026-fullsound-browser-engine-sound.md
+
+Rewrites:
+- Recipe title: "Ebeltoft Cheesecake: A Recipe from Cafe Moeslund"
+- Recipe meta: first-person factual summary with the cafe, base, and cream.
+- Recipe H1: same descriptive title.
+- AudioForge result: local evidence is the screenshot set, contract tests, and
+  browser-side generation path.
+- FullSound result: local evidence is the test suite and production build.
+- Updated the page and ArticleCard fixtures to the new title.
+
+Dedupe bug:
+- The duplicate finding initially appeared in only one file. `addFinding` used a
+  default key of rule|line, so the second file at the same line was suppressed.
+- Fixed the default key to rule|file|line. The hidden-Unicode custom key now also
+  includes the file.
+- The duplicate fixture asserts both files report `duplicate-content`.
+
+## Expanded audit after rewrites
+
+Command:
+  nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm content:audit'
+
+Output:
+  Scanned 34 Markdown file(s) and 60 TSX copy file(s); 22045 prose words.
+  PASS — no slop signals found.
+
+## Focused tests
+
+Command:
+  nix develop --command bash -c 'unset PNPM_HOME npm_config_prefix; pnpm test --runInBand scripts/content-audit/rules.test.js'
+
+Output:
+  1 suite passed, 37 tests passed.
+  Includes positive/negative fixtures for every new rule, both-file duplicate
+  reporting, and the committed-corpus gate.
+
+## Full verification
+
+Commands and results:
+- pnpm typecheck: exit 0.
+- pnpm lint: exit 0, 26 pre-existing warnings, 0 errors.
+- pnpm prettier: all matched files use Prettier code style.
+- pnpm test --runInBand: 46 suites passed, 288 tests passed.
+- pnpm build: compiled successfully, 173 static pages generated.
+- pnpm build-storybook --quiet + concurrent http-server + pnpm test-storybook:
+  13 suites passed, 16 tests passed.
+  Triage: the first bare `pnpm test-storybook` invocation failed because the
+  static Storybook server was not running. That was an environmental misrun, not
+  a test failure. The CI-equivalent concurrent http-server command then passed.
+- pnpm contrast && pnpm design-tokens && pnpm images && pnpm fonts: all pass.
+  Image gate: 115 images within budget. Font gate: 2 families, 28.6 KiB critical
+  preload within the 100 KiB budget.
+
+## CLI failure proof
+
+Command:
+  node scripts/check-content-slop.js /tmp/opencode/seo-slop-fixture.md --verbose
+
+Fixture:
+  A Markdown file whose body repeats "best seo agency" seven times and begins with
+  "Experts say".
+
+Output:
+  FAIL — 2 finding(s) across 1 file(s).
+  keyword-stuffing: "best seo agency" repeated 7 times
+  vague-attribution: unsourced authority
+  exit=1
+
+## Not verified
+
+- No deployment was performed; Vercel production was not checked.
+- No paraphrase/plagiarism comparison against the open web. `duplicate-content`
+  is exact 12-word shingle matching only.
+- No claim about Google ranking outcomes.
+- Token usage was not instrumented in this session; no provider usage data was
+  exposed to the shell.
+
+## CI
+
+Commits pushed:
+  46f03e5 feat(content): add AI-tell and search-spam audit rules
+  origin/main: 69f60f0..46f03e5
+
+Follow-up commit pushed:
+  aa35eaf docs(content): describe expanded audit scope in CLI help
+  origin/main: 46f03e5..aa35eaf
+
+Forgejo runs for aa35eaf:
+- Check run 3966: success.
+  Log excerpt:
+    Content slop audit
+    Scanned 34 Markdown file(s) and 60 TSX copy file(s); 22045 prose words.
+    PASS — no slop signals found.
+- Playwright run 3969: success, 100 tests passed in 1.7m.
+- Bundle Analysis run 3968: success.
+- Lighthouse run 3967: failure on total-blocking-time, then dispatched rerun
+  3979: failure on the same assertion. Host load average was 37–52 while the
+  rerun measured. This is the documented shared-host Lighthouse flake; the diff
+  only touches scripts under `scripts/content-audit/`, not runtime JavaScript or
+  styles.
+- Screenshots did not trigger for `aa35eaf` because the path filter excludes
+  `scripts/content-audit/**`; the `46f03e5` screenshots run 3947 passed.
+
+Forgejo runs for 46f03e5:
+- Check run 3943: success.
+  Log excerpt:
+    Content slop audit
+    Scanned 34 Markdown file(s) and 60 TSX copy file(s); 22045 prose words.
+    PASS — no slop signals found.
+  The same job ran typecheck, lint, Prettier, contrast, design tokens, images,
+  fonts, Jest, build, and Storybook smoke.
+- Playwright run 3946: success, 100 tests passed.
+- Update Screenshots run 3947: success.
+- Lighthouse run 3944: failure, then dispatched rerun 3958: success.
+  Original failure was environmental: Next.js build could not fetch Geist and
+  Geist Mono from Google Fonts (`EHOSTUNREACH 142.251.14.95:443`). The network
+  recovered and the manual workflow dispatch passed.
+- Bundle Analysis run 3945: failure, then dispatched rerun 3959: success.
+  Original failure was environmental: the runner could not clone
+  `https://data.forgejo.org/actions/checkout` (connection failure). The rerun
+  passed.
+
+Triage:
+- The two original supplemental failures on `46f03e5` were classified as
+  environmental network failures, not regressions. They occurred before project
+  code ran for Bundle Analysis, and at the Next.js font-fetch step for
+  Lighthouse. Reruns after network recovery passed. The canonical Check workflow
+  passed on the original push and included the content audit.
+- The Lighthouse failures on `aa35eaf` were classified as the known shared-host
+  total-blocking-time flake, not a content or script regression. The changed
+  files are audit scripts and published Markdown/text fixtures; no runtime JS,
+  CSS, layout, or component code changed. The host was under load average 37–52
+  from unrelated CI work. The canonical Check, Playwright, and Bundle Analysis
+  workflows passed.

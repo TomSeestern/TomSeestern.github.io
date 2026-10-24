@@ -1,0 +1,78 @@
+# Release remediation baseline (T0)
+date: 2026-10-24T12:17:15+02:00
+head: cf82454fb4f683e17ac6f0cb712e804ec4e4dbac
+branch: main
+
+== typecheck exit=0
+
+> tomsegbers-de@0.0.0 typecheck /home/tom/Projects/tomsegbers-de
+> node_modules/typescript/bin/tsc --noEmit
+
+
+== lint exit=0
+
+✖ 26 problems (0 errors, 26 warnings)
+  0 errors and 21 warnings potentially fixable with the `--fix` option.
+
+
+== prettier exit=0
+> prettier --check "**/*.{js,jsx,ts,tsx}"
+
+Checking formatting...
+All matched files use Prettier code style!
+
+== content:audit exit=0
+
+PASS — no slop signals found.
+
+Note: textGrain and SynthID are statistical watermarks. They cannot be detected from plain Markdown; this gate checks hidden Unicode, prompt residue, and visible prose patterns instead.
+
+== contrast exit=0
+PASS   ui    11.70   3.0  verdigris status dot on canvas
+---------------------------------------------------------
+
+CONTRAST GATE PASSED — all 36 pair(s) meet their minimums.
+
+== design-tokens exit=0
+> tomsegbers-de@0.0.0 design-tokens /home/tom/Projects/tomsegbers-de
+> node scripts/check-design-tokens.mjs
+
+DESIGN-TOKEN GATE PASSED — 138 file(s), no legacy tokens, dark utilities, raw hex, or retired faces.
+
+== images exit=0
+PASS    image     152 B  200 KB  public/icon/mail.svg                              
+
+IMAGE SIZE GATE PASSED — 115 image(s) within budget.
+
+
+== fonts exit=1
+  - expected font family Geist is missing from the built CSS
+  - expected font family Geist Mono is missing from the built CSS
+  - Geist (the LCP face) has no preloaded woff2
+ ELIFECYCLE  Command failed with exit code 1.
+
+== test exit=0
+[1mTests:       [22m[1m[32m288 passed[39m[22m, 288 total
+[1mSnapshots:   [22m0 total
+[1mTime:[22m        3.404 s
+[2mRan all test suites[22m[2m.[22m
+
+== build exit=0
++ First Load JS shared by all                                                          102 kB
+
+== fonts (after build) exit=0
+All emitted woff2 (every unicode-range subset, not all downloaded): 143.0 KiB across 11 file(s)
+
+FONT BUDGET GATE PASSED — 2 families, critical preload 28.6 KiB.
+
+== images (after build) exit=0
+IMAGE SIZE GATE PASSED — 115 image(s) within budget.
+
+
+== e2e exit=0
+  100 passed (2.0m)
+
+== T1 regression proof
+against stashed (old) implementation: 'returns a form error when Resend resolves an API error' -> 1 failed
+restored implementation -> 13 passed
+

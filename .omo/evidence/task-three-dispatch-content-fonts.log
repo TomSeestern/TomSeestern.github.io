@@ -1,0 +1,20 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 fonts /home/tom/Projects/tomsegbers-de
+> node scripts/check-font-budget.mjs
+
+Font budget gate — families: Geist, Geist Mono (2/2)
+FAMILY  FILE                             SIZE
+---------------------------------------------
+Geist   22a5144ee8d83bca-s.p.woff2   28.6 KiB
+---------------------------------------------
+Critical preload woff2: 28.6 KiB / 100.0 KiB budget
+  Geist:        28.6 KiB (interface/display)
+  Geist Mono:   68.9 KiB emitted, deferred (labels/pixel)
+All emitted woff2 (every unicode-range subset, not all downloaded): 143.0 KiB across 11 file(s)
+
+FONT BUDGET GATE PASSED — 2 families, critical preload 28.6 KiB.

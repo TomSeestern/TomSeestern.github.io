@@ -1,0 +1,28 @@
+ ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+ ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+   ▲ Next.js 15.5.24
+   - Local:        http://localhost:3030
+   - Network:      http://192.168.7.166:3030
+
+ ✓ Starting...
+ ✓ Ready in 1416ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.6s (882 modules)
+ GET / 200 in 3200ms
+ ✓ Compiled in 142ms (290 modules)
+ GET / 200 in 153ms
+ ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET / 200 in 149ms
+ ✓ Compiled /projects in 366ms (875 modules)
+ GET /projects 200 in 818ms
+ GET /projects 200 in 195ms
+ ✓ Compiled /blog in 220ms (877 modules)
+ GET /blog 200 in 478ms
+ GET /blog 200 in 101ms
+ ○ Compiling /contact ...
+ ✓ Compiled /contact in 541ms (1053 modules)
+ GET /contact 200 in 965ms
+ GET /contact 200 in 85ms
+[?25h

@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "Blog",
   description:
     "Thoughts on technology, homelabs, and software engineering. Personal blog by Tom Segbers covering AI, self-hosting, automation, and lessons learned from real projects.",
+  alternates: {
+    canonical: "https://tomsegbers.de/blog",
+  },
   openGraph: {
     url: "https://tomsegbers.de/blog",
     siteName: "TomSegbers.de",

@@ -47,15 +47,17 @@ export function Header() {
         aria-label="Main navigation"
         className="mx-auto flex w-full max-w-width-page flex-wrap items-center justify-between gap-3 px-4 py-2.5 sm:px-6 lg:px-10"
       >
-        <Link
-          href="/"
-          aria-label="Tom Segbers — home"
-          className="focus-ring flex min-h-11 items-center gap-2.5 rounded-sm"
-        >
+        <Link href="/" className="focus-ring flex min-h-11 items-center gap-2.5 rounded-sm">
           <Image src="/icon/brand-mark.svg" alt="" width={32} height={32} unoptimized className="size-8 shrink-0" />
           <span className="font-display text-[15px] font-semibold leading-none tracking-[-0.03em] text-ink">
             tomsegbers
           </span>
+          {/* WCAG 2.5.3: the accessible name must contain the visible label. An
+              aria-label of "Tom Segbers — home" replaced the visible
+              "tomsegbers", which axe 4.14 now flags as
+              label-content-name-mismatch. Appending instead of replacing keeps
+              both. */}
+          <span className="sr-only">— Tom Segbers, home</span>
         </Link>
 
         <div className="flex items-center gap-2 md:order-2">

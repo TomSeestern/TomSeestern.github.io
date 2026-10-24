@@ -1,5 +1,5 @@
-import { createSigil, type SigilColor } from "@/lib/sigil"
 import { twMerge } from "tailwind-merge"
+import { createSigil, type SigilColor } from "@/lib/sigil"
 
 export type PixelSigilSize = "sm" | "md" | "lg"
 

@@ -1,0 +1,22 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+[WebServer]  ⚠ Built-in amp support is deprecated and the `amp` configuration option will be removed in Next.js 16.
+
+[WebServer]  ⚠ Runtime config is deprecated and the `publicRuntimeConfig` configuration option will be removed in Next.js 16.
+[WebServer]  ⚠ Runtime config is deprecated and the `serverRuntimeConfig` configuration option will be removed in Next.js 16.
+
+Running 5 tests using 1 worker
+
+[1/5] [chromium] › e2e/breadcrumb.spec.ts:19:7 › breadcrumb on /blog/entry/2019-ebeltoft-cheesecake-recipe exposes ordered-list semantics and the current page
+[2/5] [chromium] › e2e/breadcrumb.spec.ts:19:7 › breadcrumb on /projects/entry/2020-soudest-backend-nodejs exposes ordered-list semantics and the current page
+[3/5] [chromium] › e2e/dynamic-content.spec.ts:22:5 › blog listing discovers a detail route and breadcrumb returns to blog
+
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[4/5] [chromium] › e2e/dynamic-content.spec.ts:55:5 › project listing discovers a detail route and breadcrumb returns to projects
+[5/5] [chromium] › e2e/dynamic-content.spec.ts:94:5 › project archive presents the featured selection as selected
+  5 passed (51.9s)

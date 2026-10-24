@@ -1,0 +1,131 @@
+# Evidence — canonical domain correction
+
+- Task: `task-canonical-domain-fix`
+- Plan: `.omo/plans/2026-canonical-domain-fix.md`
+- Boulder: `.omo/boulders/task-canonical-domain-fix.md`
+- Collected: 2026-10-22T19:05:00+02:00
+- Status: verified; committed and pushed as `cf96691`
+- Branch: `main`
+
+## Problem
+
+- The live portfolio is `https://tomsegbers.de`.
+- `https://tom.segbers.de` serves a “This domain is for sale” page.
+- The repository hardcoded `https://tom.segbers.de` in 21 places across 17
+  tracked application/README files, including `metadataBase`, canonical URLs,
+  `og:url`, JSON-LD, `robots.txt`, and `sitemap.xml`.
+
+## Change
+
+- Replaced the parked host with `https://tomsegbers.de` in:
+  - `README.md`
+  - `app/layout.tsx` (`metadataBase` and JSON-LD)
+  - `app/page.tsx`, `app/about/page.tsx`, `app/blog/page.tsx`,
+    `app/projects/page.tsx`, `app/tags/page.tsx`, `app/contact/page.tsx`,
+    `app/impressum/page.tsx`, `app/datenschutz/page.tsx`
+  - dynamic blog/project/tag canonical fallbacks
+  - `app/sitemap.ts`, `app/robots.ts`
+  - existing canonical test expectations
+- Added `app/public-urls.test.ts` to assert:
+  - every sitemap entry has origin `https://tomsegbers.de`
+  - `robots.txt` points at `https://tomsegbers.de/sitemap.xml`
+- Strengthened `e2e/metadata.spec.ts` to assert canonical and `og:url` origins
+  are `https://tomsegbers.de`, not just pathnames.
+- Historical `.omo` evidence files that mention the old domain were left
+  untouched; they are records of earlier runs, not application metadata.
+
+## Verification
+
+### Static gates
+
+```text
+$ pnpm typecheck
+exit 0
+
+$ pnpm lint
+✖ 26 problems (0 errors, 26 warnings)
+
+$ pnpm prettier
+All matched files use Prettier code style.
+```
+
+```text
+$ pnpm test --runInBand
+Test Suites: 45 passed, 45 total
+Tests:       227 passed, 227 total
+Time:        24.858 s
+```
+
+```text
+$ pnpm build
+✓ Generating static pages (160/160)
+exit 0
+```
+
+### Generated output
+
+Production server on port 3101:
+
+```text
+/sitemap.xml 200
+locs 151, origins ['https://tomsegbers.de']
+new routes:
+https://tomsegbers.de/projects/entry/2026-audioforge-printable-audiobook-covers
+https://tomsegbers.de/projects/entry/2026-foerderhebel-ai-grant-database
+https://tomsegbers.de/projects/entry/2026-fullsound-browser-engine-sound
+
+/robots.txt 200
+User-Agent: *
+Allow: /
+
+Sitemap: https://tomsegbers.de/sitemap.xml
+```
+
+Canonical / OG spot checks:
+
+```text
+/projects
+canonical: https://tomsegbers.de/projects
+og:url:    https://tomsegbers.de/projects
+og:image:  https://tomsegbers.de/img/og-default.png
+
+/projects/entry/2026-fullsound-browser-engine-sound
+canonical: https://tomsegbers.de/projects/entry/2026-fullsound-browser-engine-sound
+
+/blog/entry/2019-ebeltoft-cheesecake-recipe
+canonical: https://tomsegbers.de/blog/entry/2019-ebeltoft-cheesecake-recipe
+```
+
+### Browser metadata contract
+
+```text
+$ CI=1 pnpm exec playwright test --project=chromium e2e/metadata.spec.ts
+8 passed (2.4m)
+```
+
+## Deployment note
+
+The source fix is not a production deploy. The current live site at
+`https://tomsegbers.de` responds, but it does not serve this build: `/sitemap.xml`
+and `/robots.txt` return 404 there, and the live `/projects` does not expose the
+new case files or the current archive markup. The README says deployment is
+manual (`vercel --prod` or a Forgejo job), and the local Vercel CLI has no
+credentials. A deploy/re-auth step is still required before the corrected
+canonical URLs and new content are public.
+
+## Commit
+
+```text
+$ git log -1 --oneline
+cf96691 fix(seo): use tomsegbers.de as canonical domain
+
+$ git push origin main
+14dddb0..cf96691  main -> main
+```
+
+Working tree is clean after the push.
+
+## Resource accounting
+
+- Token usage: not instrumented in this harness.
+- Model: default session model.

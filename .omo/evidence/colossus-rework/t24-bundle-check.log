@@ -1,0 +1,27 @@
+Bundle budget check
+  analyzer : .next/analyze/__bundle_analysis.json
+  baseline : tests/budgets/bundle-baseline.json
+  limits   : shared first-load 130 KB, route 180 KB, route growth +10.0%
+
+Route                          Current   Baseline      Δ                   Limit
+--------------------------------------------------------------------------------
+__global                     102,248 B  102,248 B  +0.0%                  130 KB
+/_not-found/page                 140 B      140 B  +0.0%           180 KB / +10%
+/about/page                    5,686 B    5,686 B  +0.0%           180 KB / +10%
+/api/health/route                140 B      140 B  +0.0%           180 KB / +10%
+/blog/entry/[slug]/page       34,956 B   34,956 B  +0.0%           180 KB / +10%
+/blog/page                     3,537 B    3,537 B  +0.0%           180 KB / +10%
+/contact/page                  9,617 B    9,617 B  +0.0%           180 KB / +10%
+/datenschutz/page                140 B      140 B  +0.0%           180 KB / +10%
+/impressum/page                  140 B      140 B  +0.0%           180 KB / +10%
+/layout                       44,366 B   44,366 B  +0.0%           180 KB / +10%
+/not-found                       140 B      140 B  +0.0%           180 KB / +10%
+/page                          8,746 B    8,746 B  +0.0%           180 KB / +10%
+/projects/entry/[slug]/page   35,308 B   35,308 B  +0.0%           180 KB / +10%
+/projects/page                 3,537 B    3,537 B  +0.0%           180 KB / +10%
+/robots.txt/route                140 B      140 B  +0.0%           180 KB / +10%
+/sitemap.xml/route               140 B      140 B  +0.0%           180 KB / +10%
+/tags/[tag]/page              34,956 B   34,956 B  +0.0%           180 KB / +10%
+/tags/page                     3,537 B    3,537 B  +0.0%           180 KB / +10%
+
+PASS — 18 entries within budget.

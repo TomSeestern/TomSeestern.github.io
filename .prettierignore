@@ -2,5 +2,10 @@
 node_modules
 storybook-static
 
+# Agent state: plans, evidence, run logs and one-off scratch scripts. Tracked in
+# git (AGENTS.md R1.x) but not application source — formatting it would churn
+# historical evidence every time Prettier changes a default.
+.omo
+
 # Vendored third-party code keeps its upstream formatting (see .claude/skills/impeccable/VENDORING.md)
 .claude

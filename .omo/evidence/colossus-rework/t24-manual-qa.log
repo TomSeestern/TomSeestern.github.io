@@ -1,0 +1,19 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+PASS keyboard / -> /projects
+PASS keyboard /projects -> project detail
+PASS keyboard project detail -> /blog
+PASS keyboard /blog -> post detail
+PASS contact submit with E2E_CONTACT_FORM_SUCCESS=true; success Alert visible
+PASS mobile menu opens with Enter and closes with Escape
+PASS prefers-reduced-motion: ticker animationName=none
+PASS no horizontal overflow at 375px across 8 routes
+PASS no horizontal overflow at 768px across 8 routes
+PASS no horizontal overflow at 1280px across 8 routes
+PASS 404 route returns 404 with 404 / Lost in the Forum headings
+PASS legal pages render their #main-content copy and H1
+PASS canonical/og:url + 1200x630 OG image resolve on five public routes
+PASS no browser console errors or page errors during manual QA

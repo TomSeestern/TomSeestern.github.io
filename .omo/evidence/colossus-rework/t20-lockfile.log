@@ -1,0 +1,37 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 12, reused 0, downloaded 0, added 0
+ WARN  deprecated eslint@8.54.0: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+Progress: resolved 34, reused 0, downloaded 0, added 0
+ WARN  deprecated tsc@2.0.4: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+Progress: resolved 51, reused 0, downloaded 0, added 0
+Progress: resolved 79, reused 0, downloaded 0, added 0
+Progress: resolved 87, reused 0, downloaded 0, added 0
+Progress: resolved 88, reused 0, downloaded 0, added 0
+Progress: resolved 166, reused 0, downloaded 0, added 0
+Progress: resolved 240, reused 0, downloaded 0, added 0
+Progress: resolved 273, reused 0, downloaded 0, added 0
+Progress: resolved 325, reused 0, downloaded 0, added 0
+Progress: resolved 421, reused 0, downloaded 0, added 0
+Progress: resolved 462, reused 0, downloaded 0, added 0
+Progress: resolved 619, reused 0, downloaded 0, added 0
+Progress: resolved 761, reused 0, downloaded 0, added 0
+Progress: resolved 884, reused 0, downloaded 0, added 0
+Progress: resolved 1113, reused 0, downloaded 0, added 0
+Progress: resolved 1276, reused 0, downloaded 0, added 0
+Progress: resolved 1473, reused 0, downloaded 0, added 0
+Progress: resolved 1667, reused 0, downloaded 0, added 0
+Progress: resolved 1870, reused 0, downloaded 0, added 0
+ WARN  18 deprecated subdependencies found: @humanwhocodes/config-array@0.11.14, @humanwhocodes/object-schema@2.0.3, abab@2.0.6, acorn-import-assertions@1.9.0, domexception@4.0.0, expect-playwright@0.8.0, glob@10.5.0, glob@7.2.3, inflight@1.0.6, jest-playwright-preset@4.0.0, jest-process-manager@0.4.0, lodash.isequal@4.5.0, querystring@0.2.1, read-pkg-up@11.0.0, rimraf@2.7.1, rimraf@3.0.2, uuid@8.3.2, whatwg-encoding@2.0.0
+Progress: resolved 1873, reused 0, downloaded 0, added 0, done
+ WARN  Issues with peer dependencies found
+.
+└─┬ eslint-plugin-storybook 9.1.20
+  └─┬ @typescript-eslint/utils 8.68.0
+    └── ✕ unmet peer eslint@"^8.57.0 || ^9.0.0 || ^10.0.0": found 8.54.0
+
+Done in 23.1s using pnpm v10.15.1

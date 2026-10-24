@@ -1,0 +1,46 @@
+warning: Git tree '/home/tom/Projects/tomsegbers-de' is dirty
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+
+> tomsegbers-de@0.0.0 contrast /home/tom/Projects/tomsegbers-de
+> node scripts/check-contrast.mjs
+
+WCAG 2.x contrast gate — 31 pair(s) from /home/tom/Projects/tomsegbers-de/tests/budgets/contrast.json
+STATUS KIND  RATIO   MIN  NAME
+-----------------------------------------------------
+PASS   text  14.89   4.5  body ink on canvas
+PASS   text  12.86   4.5  body ink on canvas-deep
+PASS   text  16.55   4.5  body ink on panel
+PASS   text   7.36   4.5  muted on canvas
+PASS   text   6.36   4.5  muted on canvas-deep
+PASS   text   8.18   4.5  muted on panel
+PASS   text   5.66   4.5  crimson link on canvas
+PASS   text   4.88   4.5  crimson link on canvas-deep
+PASS   text   6.29   4.5  crimson link on panel
+PASS   text   5.66   4.5  cta canvas on crimson
+PASS   text   8.61   4.5  cta canvas on crimson-hover
+PASS   text  16.02   4.5  night ink on night
+PASS   text  14.40   4.5  night ink on night-soft
+PASS   text  10.15   4.5  night muted on night
+PASS   text   9.12   4.5  night muted on night-soft
+PASS   text  11.32   4.5  gold ink on night
+PASS   text  10.17   4.5  gold ink on night-soft
+PASS   text   6.75   4.5  ink on gold button
+PASS   text   5.93   4.5  verdigris on canvas
+PASS   text   5.12   4.5  verdigris on canvas-deep
+PASS   text   6.59   4.5  verdigris on panel
+PASS   text   6.44   4.5  danger on canvas
+PASS   text   5.56   4.5  danger on canvas-deep
+PASS   text   7.16   4.5  danger on panel
+PASS   text   6.41   4.5  danger on danger-surface
+PASS   ui    14.89   3.0  focus ring on canvas
+PASS   ui    12.86   3.0  focus ring on canvas-deep
+PASS   ui    16.55   3.0  focus ring on panel
+PASS   ui    11.32   3.0  inverse focus ring on night
+PASS   ui     5.66   3.0  canvas focus ring on crimson
+PASS   ui     6.75   3.0  ink focus ring on gold
+-----------------------------------------------------
+
+CONTRAST GATE PASSED — all 31 pair(s) meet their minimums.

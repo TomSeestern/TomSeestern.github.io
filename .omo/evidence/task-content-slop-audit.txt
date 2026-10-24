@@ -1,0 +1,123 @@
+Task: Content slop audit and published-prose cleanup
+Date: 2026-10-23
+Branch: main
+Base before work: 7cdd8ed
+Rebased onto: e51e675 (remote screenshot-only commit)
+Final content commit: f80f2d7 feat(content): add slop audit and clean published prose
+Follow-up commit: 69f60f0 test(content): cover remaining audit rule families
+Push: origin/main accepted e51e675..f80f2d7 and f80f2d7..69f60f0
+
+## Baseline
+
+Command: node scripts/check-content-slop.js
+Result: FAIL, 60 findings across 25 files.
+Main families: 52 negative-parallelism, 3 significance-inflation, 2 inline-header-list, 2 slop-vocabulary, 1 formulaic-intro.
+
+## Implementation
+
+- scripts/content-audit/rules.js: rule metadata, regex banks, hidden-Unicode table, prose and structure analyzers, allow-directive parser.
+- scripts/content-audit/extract.js: Markdown frontmatter/body extraction, code/link masking, TSX visible-copy extraction via the TypeScript AST.
+- scripts/content-audit/audit.js: file discovery, orchestration, report, CLI, JSON/verbose modes.
+- scripts/check-content-slop.js: CLI entry point.
+- scripts/content-audit/rules.test.js: 19 fixture tests, including hidden Unicode, prompt residue, allow directives, code/URL exclusions, TSX extraction, and a committed-repo gate.
+- package.json: added `content:audit`.
+- .forgejo/workflows/check.yml: added the `Content slop audit` step.
+- docs/content-audit.md: scope, rules, false-positive policy, and watermark limits.
+- README.md: script table, content section, structure tree.
+
+## Content rewrite
+
+The baseline had findings in 25 files. The final cleanup touched 29 published files: five blog posts, 23 project case files, and app/about/page.tsx (some touched for residual patterns or accuracy rather than a baseline finding).
+A second manual pass found 11 additional contrast variants; the negative-parallelism rules were expanded and those were rewritten too.
+No allow directives are used in published content.
+The existing 450-word project narrative test caught one shortened file; it was restored to 453 words without changing the test.
+
+## Verification commands and results
+
+1. `pnpm content:audit`
+   - PASS
+   - Scanned 34 Markdown files and 60 TSX copy files; 22,072 prose words.
+   - Output includes the explicit note that textGrain/SynthID are statistical watermarks and cannot be detected from plain Markdown.
+
+2. `pnpm test --runInBand`
+   - 46 suites passed, 270 tests passed.
+   - Includes scripts/content-audit/rules.test.js and the committed-repo gate.
+
+3. `pnpm typecheck`
+   - exit 0.
+
+4. `pnpm lint`
+   - exit 0, 26 pre-existing warnings, 0 errors.
+
+5. `pnpm prettier`
+   - All matched files use Prettier code style.
+
+6. `pnpm build`
+   - Compiled successfully.
+   - Generated 173/173 static pages.
+
+7. `pnpm build-storybook --quiet` + `pnpm test-storybook`
+   - 13 suites passed, 16 tests passed.
+
+8. `pnpm contrast && pnpm design-tokens && pnpm images && pnpm fonts`
+   - All passed.
+
+9. Production `next start` route checks
+   - 12 changed routes returned expected new copy:
+     /about
+     /blog/entry/2025-falling-for-nix
+     /blog/entry/2026-unraid-declarative-homelab-v4
+     /blog/entry/2026-what-llm-agents-are-missing
+     /projects/entry/2012-journey-into-cpp-desktop-application-development
+     /projects/entry/2012-elevating-robot-competition-performance
+     /projects/entry/2015-arma-3-freelance-development-journey
+     /projects/entry/2018-data-analytics-municipal-administration
+     /projects/entry/2024-layzr-creator-avatar-platform-acquired-by-jodel
+     /projects/entry/2026-foerderhebel-ai-grant-database
+     /projects/entry/2026-fullsound-browser-engine-sound
+     /projects/entry/2026-hammer-robotics-mark-humanoid
+   - Server started and became ready; no runtime errors in the log.
+
+10. `git diff --check`
+    - exit 0 before commit.
+
+## CI
+
+Forgejo workflow run 3910 (`check.yml`) succeeded in 4m38s.
+Job log excerpt:
+- Content slop audit
+- Scanned 34 Markdown file(s) and 60 TSX copy file(s); 22072 prose words.
+- PASS — no slop signals found.
+- Note: textGrain and SynthID are statistical watermarks. They cannot be detected from plain Markdown.
+
+The Check workflow includes typecheck, lint, Prettier, content audit, contrast, design tokens, images, fonts, Jest, build, and Storybook smoke.
+
+Final commit `69f60f0` also passed `Check` (run 3919, 4m20s). Its job log shows the content audit step:
+- Content slop audit
+- Scanned 34 Markdown file(s) and 60 TSX copy file(s); 22072 prose words.
+- PASS — no slop signals found.
+
+Final commit workflow results: Check success, Lighthouse success, bundle analysis success, Playwright success. Screenshots did not run for the test-only commit (path filter).
+
+The content commit (f80f2d7) had one supplemental Lighthouse failure on total-blocking-time (run 3911). The same Lighthouse failure occurred on the prior published commit 7cdd8ed, before this work, and the final follow-up run passed. Treat it as the documented shared-host timing flake; the content audit itself passed on every Check run.
+
+## Not verified
+
+- No deployment was performed; Vercel production was not checked.
+- Statistical watermark detection was not attempted; it is impossible from repository Markdown and is documented as out of scope.
+- Other push workflows were not complete at evidence time; the previously published commit 7cdd8ed had unrelated Playwright/Lighthouse failures before this change.
+
+## Gate-failure proof
+
+Command: node scripts/check-content-slop.js /tmp/opencode/sloppy-fixture.md
+Fixture: a Markdown file containing "This is not just a tool, but a system." and a U+200B zero-width space.
+Result: exit 1, 2 findings:
+- negative-parallelism at line 3
+- hidden-unicode at line 5, detail U+200B zero-width or bidi mark
+This proves the CLI fails on a sloppy fixture, not only on unit-test strings.
+
+## Additional manual checks
+
+- `rg` over content/app/components for canonical residual tells (`not just`, `not only`, `less about`, `not X; it is Y`, `I am not`) returned no matches.
+- `rg` over content/app/components for the high-confidence vocabulary and future-projection list returned no matches.
+- A one-off hidden-formatting-character scan over every tracked Markdown/TS/TSX/JS/JSON/YAML/CSS file returned no matches.

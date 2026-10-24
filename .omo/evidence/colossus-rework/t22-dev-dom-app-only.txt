@@ -1,0 +1,5 @@
+ TomSegbers.de dev shell
+  node:  v22.23.1
+  pnpm:  10.15.1
+  git:   2.54.0
+{ all: 539, scripts: 140, title: 1, meta: 18, appOnly: 372 }

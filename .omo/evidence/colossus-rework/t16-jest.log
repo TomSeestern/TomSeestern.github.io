@@ -1,0 +1,8 @@
+PASS app/contact/ContactForm.test.tsx
+PASS app/contact/page.test.tsx
+
+Test Suites: 2 passed, 2 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        2.473 s
+Ran all test suites matching /app\/contact/i.

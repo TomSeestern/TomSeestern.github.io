@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
+import TagsIndex from "./page"
 import type { TagSummary } from "../../lib/tags"
 import { getAllTags } from "../../lib/tags"
-import TagsIndex from "./page"
 
 jest.mock("../../lib/tags", () => ({
   getAllTags: jest.fn(),
