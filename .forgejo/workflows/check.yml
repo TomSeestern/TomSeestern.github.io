@@ -98,6 +98,14 @@ jobs:
           chmod 600 "$RUNNER_TEMP/github-mirror/id_ed25519"
           export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/github-mirror/id_ed25519 -o IdentitiesOnly=yes -o UserKnownHostsFile=$GITHUB_WORKSPACE/docs/security/github-known-hosts -o StrictHostKeyChecking=yes"
 
+          # The shared checkout is shallow (depth 1). Pushing from it sends the
+          # tip commit without its parent, and GitHub rejects the pack with
+          # "remote: fatal: did not receive expected object <parent>". Deepen
+          # only here, so the common no-deploy run stays a fast shallow clone.
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow origin
+          fi
+
           # Never move GitHub backwards: with cancel-in-progress false, an older
           # run can finish after a newer one. Only the current tip may deploy.
           tip=$(git ls-remote origin refs/heads/main | cut -f1)

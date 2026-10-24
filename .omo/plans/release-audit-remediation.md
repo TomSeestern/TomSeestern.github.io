@@ -292,6 +292,19 @@ message Resend rejected, and no page publishes an unfilled legal fact.
   `mirror-main.yml` absent; `grep -rn 'workflow_run\|needs:'` → 0; guard at
   `check.yml:79`; tip guard at `check.yml:98`; `timeout-minutes: 35` at `:26`;
   screenshots commit message no longer carries `[skip ci]`.
+  **Amendment (found on the first real push, not in review):** two defects only a
+  live run could expose. (1) The mirror step inherited `check.yml`'s shallow
+  checkout, so `git push` sent the tip commit without its parent and GitHub
+  rejected the pack with `remote: fatal: did not receive expected object
+  b4f668a…` / `remote unpack failed: index-pack failed`. The step now runs
+  `git fetch --unshallow origin` before pushing, but only when the repository is
+  shallow, so ordinary runs keep the fast clone. The deleted `mirror-main.yml`
+  had `fetch-depth: 0` on its own checkout, which is why the extraction lost the
+  requirement. (2) The runner could not download Playwright's Chromium: the host
+  firewall killed `playwright install chromium` with SIGTERM eight seconds into
+  the download (host policy, fixed outside the repo). Worth recording because
+  the first red `Check` looked like a code regression and was not: all gates
+  including 308 unit tests and the e2e suite had passed.
 
 ### T8 — Make the coverage threshold real
 - **What:** `jest.config.js:16-23` declares an 80 % global floor that can never
