@@ -65,7 +65,9 @@ message Resend rejected, and no page publishes an unfilled legal fact.
 1. The Forgejo `linux` runner is online. It mirrors `main` today, so gating the
    mirror adds latency but no new availability dependency.
 2. Vercel's production branch is GitHub `main`. ADR-0002 calls this
-   unverifiable from the checkout; T7's dry run is the only proof available.
+   unverifiable from the checkout; the 2026-10-24 ship settled it — Vercel
+   created Production deployment `7299820871` for `68d2a437a80f`, the SHA the
+   mirror pushed (see Results).
 3. `E2E_CONTACT_FORM_SUCCESS` is **not** set in Vercel Production. T4 makes the
    answer irrelevant, but if it *is* set today, every enquiry since then was
    silently discarded — check the Vercel dashboard before announcing the fix.
@@ -285,8 +287,8 @@ message Resend rejected, and no page publishes an unfilled legal fact.
   **Amendment:** PyYAML is not installed on this host, so the parse check uses
   the `yaml@2.9.0` copy already in the pnpm store:
   `node -e "require('./node_modules/.pnpm/yaml@2.9.0/node_modules/yaml').parse(...)"`.
-  The post-merge dry run was **not performed** — it needs a real push to
-  Forgejo, which would deploy. Prove it on the first post-merge push instead.
+  The post-merge observation was performed on 2026-10-24 and is recorded in the
+  Proof below.
 - **Status:** done
 - **Proof:** all five workflows parse (`jobs=check|screenshots|…`);
   `mirror-main.yml` absent; `grep -rn 'workflow_run\|needs:'` → 0; guard at
@@ -300,11 +302,25 @@ message Resend rejected, and no page publishes an unfilled legal fact.
   `git fetch --unshallow origin` before pushing, but only when the repository is
   shallow, so ordinary runs keep the fast clone. The deleted `mirror-main.yml`
   had `fetch-depth: 0` on its own checkout, which is why the extraction lost the
-  requirement. (2) The runner could not download Playwright's Chromium: the host
-  firewall killed `playwright install chromium` with SIGTERM eight seconds into
-  the download (host policy, fixed outside the repo). Worth recording because
-  the first red `Check` looked like a code regression and was not: all gates
-  including 308 unit tests and the e2e suite had passed.
+  requirement. (2) The runner's `playwright install chromium` was SIGTERM'd eight
+  seconds into the 191 MB download. The cause is not established from the logs:
+  `earlyoom` never fired (memory stayed 78–85 % available) and no firewall denial
+  was recorded, so the attribution was left open rather than guessed. A retry
+  completed the download, `chromium-1248` is now in
+  `/var/lib/forgejo-runner-cache/xdg/ms-playwright`, and the step has been green
+  since. Worth recording because the first red `Check` looked like a code
+  regression and was not: every gate including 308 unit tests had passed.
+  **Operational note:** superseded runs left in `waiting` hold the shared
+  `ci-${{ github.ref }}` group; cancelling them through the API
+  (`POST …/actions/runs/{id}/cancel` → 204) released the queue, though the
+  cancelled job's process kept running in its runner for a while.
+
+  **Post-merge observation — performed on the real push, 2026-10-24.** Two red
+  `Check` runs (`b4f668a`, `aa5b9f6`) left the GitHub mirror at `cf82454`; the
+  first green run (`68d2a43`) advanced it to `68d2a437a80f`, and Vercel turned
+  that into Production deployment `7299820871` at 14:20:25Z. The negative path
+  is therefore proven with real failures rather than a synthetic one: no red run
+  moved the mirror.
 
 ### T8 — Make the coverage threshold real
 - **What:** `jest.config.js:16-23` declares an 80 % global floor that can never
@@ -702,16 +718,25 @@ message Resend rejected, and no page publishes an unfilled legal fact.
 
 ## Results
 
-**All 20 tasks are `done`. One half of `T7` (the post-merge dry run) could not be
-performed without deploying; everything else is verified.**
+**All 20 tasks are `done`, verified locally and in CI, and the result is
+deployed.** Nothing is open.
 
-### Still open
+### Deployed
 
-- **T7 — post-merge observation.** The step, its guard, the tip check and the
-  workflow deletion are all in place and the workflows parse, but "push a commit
-  that fails `pnpm test` on a scratch branch and confirm GitHub `main` does not
-  move" needs a real push to Forgejo, which would deploy. Prove it with the next
-  deliberately-failing push.
+- `68d2a43` passed `check.yml` (run 4096): every gate, 308 unit tests, the
+  Playwright suite and the Storybook smoke tests.
+- The mirror step pushed it: GitHub `main` = `68d2a437a80f` (deployment
+  `7299813140` at 14:19:45Z).
+- Vercel created Production deployment `7299820871` for the same SHA at
+  14:20:25Z; the site serves it (`server: Vercel`, fresh `etag`, `age: 2`).
+- Live routes `/`, `/about`, `/blog`, `/projects`, `/contact`, `/impressum` and
+  `/datenschutz` all return 200. `/impressum` renders the § 5 DDG block with
+  `c/o Drei-Kreuz-Straße 26, 89584 Ehingen (Donau)`, `web@tomsegbers.de` and the
+  § 18 Abs. 2 MStV line. `/datenschutz` renders the controller block, the Vercel
+  and Resend paragraphs and the six-month retention sentence. Neither page
+  contains `TODO`, `Platzhalter`, `wird nachgereicht`, `Telefon` or `USt-IdNr`.
+- T7's post-merge observation is covered by the two red `Check` runs that left
+  the mirror at `cf82454` — see T7's proof.
 
 ### What changed
 
@@ -850,9 +875,6 @@ Always rebuild before those gates. CI is already correct (`Build` precedes
 
 ### Not done, and why
 
-- The **post-merge dry run** (T7) — needs a deliberately failing push, which
-  would deploy if it unexpectedly passed.
-- Nothing else. The legal facts are filled and the pages render them.
-- Nothing has been committed. The working tree holds the whole change set,
-  including 186 previously hidden `.omo/` files, which should be staged as part
-  of the release commit.
+- Nothing. The whole change set is committed (`7bf1a18`, `b4f668a`, `aa5b9f6`,
+  `68d2a43`), `68d2a43` passed `check.yml`, the mirror advanced and Vercel is
+  serving that build in production — see Results. The working tree is clean.
