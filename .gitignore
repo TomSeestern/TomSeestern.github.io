@@ -48,10 +48,12 @@ storybook-static/
 # Contentlayer
 .contentlayer
 
-# Agent state (.omo/) is intentionally tracked, not ignored: AGENTS.md R1.x makes
-# it the durable store for plans, boulders, evidence, decisions and notepads.
-# It was listed here while 506 of its files were already committed, so the rule
-# only hid new files from `git status`. Do not re-add it.
+# Agent state (.omo/). Per operator decision, new files under .omo/ are ignored so
+# `git status` stays readable. Note this does NOT untrack the ~900 .omo files that
+# are already committed — git only skips untracked paths, so those keep showing up
+# in `git status` when modified. Untrack them separately with
+# `git rm -r --cached .omo` if the whole directory should leave the index.
+.omo/
 
 # CodeGraph tooling artifact (MCP server writes a relative-path SQLite index here)
 /null/
