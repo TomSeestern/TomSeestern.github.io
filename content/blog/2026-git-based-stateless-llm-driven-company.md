@@ -31,7 +31,7 @@ The list starts with principles, then gives requirements in five groups: the wor
 
 If a fact matters after the current process exits, it is in a committed file. Task state, decisions, evidence, SOPs, rules, approvals, memory and the receipts of every effect are text in the repository. Derived things like search indexes, rendered dashboards and caches can be thrown away and rebuilt from a commit.
 
-That gives an audit trail for free. Every change has an author, a timestamp and a diff. History is one copy of the backup, and requirement {{r:Backup and restore}} covers the rest. Branches give parallel attempts, and review happens on diffs.
+That gives an audit trail for free. Every change has an author, a timestamp and a diff. History is one copy of the backup, and requirement 33 covers the rest. Branches give parallel attempts, and review happens on diffs.
 
 Git is the index of truth, and it makes a bad warehouse. Personal data that may need erasing, large binaries, secrets and high-volume spam cannot live in history, because history is effectively permanent. Git holds hashes, metadata, pointers and decisions. Payloads go to an encrypted blob store addressed by content hash. Secret values go to a vault. Neither may be the only record of a decision.
 
@@ -79,6 +79,8 @@ Goals are set by the board and committed as files: an objective, a measurable ou
 
 Each task carries an estimate of value and of cost: money, tokens, human hours and the risk tier of its effects. The loop picks from the frontier by value against cost within the goal's remaining budget, and records why it picked. When value cannot be estimated, the task goes to the board as a question instead of being guessed. Estimates are checked against outcomes later, like confidence, so a loop that keeps overrating its own work becomes visible.
 
+Value against cost picks tasks. It must not pick people. A nonprofit whose loop ranks "enrol the family with high needs and uncertain progress" against "enrol the two siblings who will show gains quickly" fills its programme with the cheapest cases within a year, and every gate stays green. A public authority that orders permit files by value has no legal basis for that order and treats applicants unequally. So wherever a task decides whom the company serves, admits, refuses or puts on a waiting list, the order comes from a committed eligibility and priority rule adopted by the board or set by law, and the predicted outcome of that person may not enter the estimate. An adverse decision about a person is made by a named human with written reasons and a way to appeal.
+
 Goals end. A goal whose outcome is met, missed or no longer wanted closes with a short review, and its open tasks are archived or moved. Without that, the frontier fills with work nobody wants.
 
 ### 3. Board decision rights
@@ -112,6 +114,8 @@ The attention budget is a committed file:
 - one scheduled digest instead of a stream, grouped by decision class, with a line that says "nothing needs you today" on quiet days, so silence and a broken system look different
 - agents cannot raise the urgency of their own requests; urgency comes from deadlines in the ledger and from the risk tier
 - approval latency and approval rate per decision class are measured, and a class approved faster than a person can read it, or approved every single time, triggers a sampling audit and a review of whether that gate should exist
+
+The cap must never hold back the things that cannot wait. A volunteer's message that a child is being hurt at home, a patient writing "chest tightness since last night", a serious adverse event in a drug trial and a burst pipe at 02:00 are all one more item in a capped queue unless the system says otherwise. So a short, committed list of urgent classes bypasses the cap, the digest and the frontier entirely. Each class names its trigger rules, the on-call human, the second channel and the minutes within which that person must acknowledge. The trigger rules are deterministic and over-inclusive, such as keywords, sender types and observation types, because a false alarm costs a phone call and a missed one can cost a life. Agents can neither route a case out of an urgent class nor answer it; they hand over the observation and stay out of the record. A stopped loop does not stop this lane: the outside monitor of requirement 14 carries it on its own.
 
 An approval request has to be checkable by the person who gets it. A payload hash means nothing to a human, so the request renders the decision in plain words: payee, amount, account, due date, what changed since last time. It carries a short fingerprint the approver can compare with what the bank app shows. Requests expire, so an old tap cannot approve a changed situation. A new payee, a changed bank account and anything above a set amount need a second confirmation on another channel, such as a phone call back to a number from semantic memory, never one taken from the request.
 
@@ -153,7 +157,7 @@ A rebase rewrites every commit it moves, which strips their signatures and chang
 
 Force-push and every other history rewrite are refused on protected branches. The only exception is the board, under its decision rights, for cases like a secret pushed by mistake. A rewrite is a top-tier decision with its own signed record: what was removed, why, and who decided. An append-only mirror on another host keeps the history that was there before, so a rewrite can be detected even if it was authorised.
 
-The books are outside even the board's reach. [§146(4) AO](https://www.gesetze-im-internet.de/ao_1977/__146.html) forbids changing a booking in a way that hides the original entry, so the accounting subtree accepts no rewrite at all; an error is corrected by a reversal entry and a new booking. Rewrites are rare for the same reason elsewhere: personal data and secrets never enter history in the first place (requirement {{r:Data classes, legal bases and erasure}}), so erasure works on the blob store and the vault, and a force-push stays an emergency tool.
+The books are outside even the board's reach. [§146(4) AO](https://www.gesetze-im-internet.de/ao_1977/__146.html) forbids changing a booking in a way that hides the original entry, so the accounting subtree accepts no rewrite at all; an error is corrected by a reversal entry and a new booking. Rewrites are rare for the same reason elsewhere: personal data and secrets never enter history in the first place (requirement 35), so erasure works on the blob store and the vault, and a force-push stays an emergency tool.
 
 ### 7. Trusted time
 
@@ -201,7 +205,7 @@ Change logs serve people who do not read diffs. Commits follow [Conventional Com
 
 A transition commits whole or not at all. The state flip, the evidence, the rendered roadmap and the gate result land in one commit, or the store returns to its previous state. Every command that changes the store runs the gates on the result and rolls back on failure. Each agent session works in its own worktree or container, and only a change that passes the gates reaches main.
 
-Rollback means a change never lands. It never means removing something that already landed. A transition that touches the books, sends an effect or records a human decision has left a trace the law or the audit needs, so a failure after that point keeps the attempt as a committed record with its own terminal state, and the correction is a new forward entry: a reversal booking, a compensating effect, a withdrawn decision.
+Rollback means a change never lands. It never means removing a record of something that already landed. A transition that touches the books, sends an effect or records a human decision has left a trace the law or the audit needs, so a failure after that point keeps the attempt as a committed record with its own terminal state, and the correction is a new forward entry: a reversal booking, a compensating effect, a withdrawn decision. Taking a published article down is such a compensating effect. The article leaves the site and every copy of it is chased, and the record that it was published, in which version and to whom stays.
 
 ### 11. Diffs people can read
 
@@ -237,7 +241,7 @@ People should see the state of the company without reading git. The interface is
 
 The board page answers a few questions in order. What is waiting on me, and for how long? What ran since yesterday, and what failed? How much has been spent against the cap? Then the frontier, evidence coverage, pending approvals and the state of the kill switch. The task graph renders as inline SVG, for example as a Gantt chart by state. A single file travels to a phone like any other attachment.
 
-A dashboard nobody opens shows nothing. The same page goes out as the daily digest from requirement {{r:Human attention as a scarce resource}}, pushed to the board's channel with a one-line summary on top. The failure lines on it come from machine signals such as exit codes, gate results and missed heartbeats, never from an agent's description of its own run. Each section states its coverage, such as "evidence for 41 of 44 criteria", so a gap shows as a number and not as an absence.
+A dashboard nobody opens shows nothing. The same page goes out as the daily digest from requirement 4, pushed to the board's channel with a one-line summary on top. The failure lines on it come from machine signals such as exit codes, gate results and missed heartbeats, never from an agent's description of its own run. Each section states its coverage, such as "evidence for 41 of 44 criteria", so a gap shows as a number and not as an absence.
 
 ## Requirements, part 2: the agent's mind
 
@@ -274,7 +278,7 @@ The handoff contract matters. Every delegation declares:
 
 The child returns what it changed, the commands it ran with their output, what it could not verify and any unrelated breakage it saw. The parent treats that return as a claim and re-runs the evidence command before it counts.
 
-Management needs a registry of running children with their task, budget, heartbeat and worktree. Depth and fan-out are capped in a committed orchestration file, next to the watchdog thresholds, restart budget and merge gate. A child's budget is carved out of its parent's, and its permissions are a subset of its parent's. Each child runs in its own worktree or container under its own identity, so the audit log shows which agent did what. The harness mints that identity: a run key scoped to the child's owned paths (requirement {{r:Signed commits, linear history, board-only force-push}}), never a copy of the parent's key.
+Management needs a registry of running children with their task, budget, heartbeat and worktree. Depth and fan-out are capped in a committed orchestration file, next to the watchdog thresholds, restart budget and merge gate. A child's budget is carved out of its parent's, and its permissions are a subset of its parent's. Each child runs in its own worktree or container under its own identity, so the audit log shows which agent did what. The harness mints that identity: a run key scoped to the child's owned paths (requirement 6), never a copy of the parent's key.
 
 Kill has to mean kill. If the watchdog signals a client while a shared background service keeps the agent alive, the agent goes on editing and pushing after its run was declared dead. The agent therefore runs inside the process the watchdog signals, and a signal that is ignored escalates to a hard kill. Orphaned children are a bug class of their own.
 
@@ -296,6 +300,8 @@ The rest:
 - sub-agents get their own scoped packet, and parents see results, never transcripts
 
 Isolation is the most important property of the packet. An agency works for competing clients, a renovation business for neighbours with a dispute, a startup for investors who must not see each other's terms. Every fact, episode, file and secret carries the scope it belongs to: a client, a project, an employee, the company. A packet only draws from the scopes its task belongs to. Retrieval checks scope before similarity, so a closely matching fact from another client never appears, and a derived index filters by scope at query time rather than after ranking. Summaries and consolidated facts inherit the strictest scope of their sources; a lesson learned on client A becomes general only after a human strips the client-specific parts. The run manifest records which scopes a run read, so a leak can be traced, and a gate fails any outbound effect that cites material from a scope its recipient does not belong to.
+
+People read the store too, and scopes have to bind them as well. The usual shortcut, giving the external bookkeeper or a funder's auditor access to the repository, hands them every task file and tag in it, including "family 4471, suspected neglect". Payloads are encrypted; metadata is not. So read access for humans is granted per scope and per path set, with an expiry, enforced on the server by separate repositories per scope or filtered views, never by convention. A consortium partner gets the one work package it needs, and when the data-use agreement ends, access is revoked and the partner sends a signed destruction statement, recorded as an observation. Aggregates that leave the company, such as "three families in one district received emergency support", pass a disclosure gate with a minimum group size, so a published number cannot name anyone.
 
 The test: a fresh session given only the last commit and the task id resumes the work.
 
@@ -324,11 +330,13 @@ Semantic memory holds what the company knows: contacts, suppliers and their lead
 - a validity window, because prices, addresses and opening hours expire
 - an owner who reviews changes
 
-Writes go through review, since one wrong fact poisons every future run that retrieves it. A newer fact supersedes an older one and keeps the history, and contradictions surface as conflicts for a human. Embedding and full-text indexes are caches rebuilt from git. Personal data follows the warehouse rule: payload in the encrypted blob store, hash in git. Every fact also carries the data-protection tags of requirement {{r:Data classes, legal bases and erasure}}, so "prefers morning appointments" and a treatment note are never the same kind of record.
+Writes go through review, since one wrong fact poisons every future run that retrieves it. A newer fact supersedes an older one and keeps the history, and contradictions surface as conflicts for a human. Embedding and full-text indexes are caches rebuilt from git. Personal data follows the warehouse rule: payload in the encrypted blob store, hash in git. Every fact also carries the data-protection tags of requirement 35, so "prefers morning appointments" and a treatment note are never the same kind of record.
 
 Some facts come from authorities and are not the company's to change: the statutory minimum wage, VAT rates, the OSS threshold, notice periods. They sit in a separate law store, each fact with its legal source, the date it takes effect and the date it was last checked against that source. An agent cannot supersede them from an email or a guess; a change needs the source document and a human review.
 
 Facts from untrusted input stay tainted until confirmed. The classic case is business email compromise: a supplier's "new bank details" arrive by email. That may update a tentative fact. It can never authorise a payment to a new account; that needs out-of-band confirmation, whatever semantic memory says.
+
+People are the join key for most of this, and two patients called Anna Müller, mother and daughter, break it. A lab result filed to the wrong one goes to the wrong chart, a claim goes out under the wrong member number, and an erasure request shreds the wrong key. So people, clients, suppliers and entities live in a register with a master id per subject. Matching a new observation to a subject is scored, an ambiguous or missing match blocks every effect that touches a person, and merging or splitting two records is a two-person decision that carries the keys, scopes and history along and can be reversed.
 
 ### 19. A skill library
 
@@ -399,7 +407,7 @@ Sandbox and live never share credentials or data. Sandbox runs see synthetic or 
 
 ### 24. Deterministic assets
 
-Videos, documents, graphics and audio must be reproducible or at least traceable. An asset is a recipe plus a pinned toolchain plus inputs by hash, producing an output hash. That is a Nix derivation, which is one more reason for requirement {{r:Dependencies managed by Nix alone}}.
+Videos, documents, graphics and audio must be reproducible or at least traceable. An asset is a recipe plus a pinned toolchain plus inputs by hash, producing an output hash. That is a Nix derivation, which is one more reason for requirement 12.
 
 Assets are text where possible: timelines in [OpenTimelineIO](https://opentimeline.io/), ffmpeg filter graphs or Blender Python, documents in Typst or LaTeX, graphics in SVG, audio from TTS with a pinned voice. Other sources of nondeterminism are removed: embedded timestamps, encoder thread counts, GPU float behaviour, font availability.
 
@@ -418,7 +426,7 @@ One risk tier per action type is too coarse. Each proposed action is scored on s
 - counterparty novelty, since paying a new payee is the classic fraud vector
 - data exposure
 
-Agents propose, and a separate executor executes. The agent never holds bank credentials; the executor runs only actions whose payload hash has been approved. Approvals bind to that exact payload, which prevents bait-and-switch. The git-native form is a signed commit (SSH or GPG, a hardware key for the top tiers) that references the action hash, and the gate checks the signature against allowed keys. The request that reaches the approver carries a human-comparable summary of the payload, and a new payee or a changed bank account requires a second confirmation through an out-of-band channel (requirement {{r:Human attention as a scarce resource}}).
+Agents propose, and a separate executor executes. The agent never holds bank credentials; the executor runs only actions whose payload hash has been approved. Approvals bind to that exact payload, which prevents bait-and-switch. The git-native form is a signed commit (SSH or GPG, a hardware key for the top tiers) that references the action hash, and the gate checks the signature against allowed keys. The request that reaches the approver carries a human-comparable summary of the payload, and a new payee or a changed bank account requires a second confirmation through an out-of-band channel (requirement 4).
 
 The escalation ladder runs from automatic through logged, one human approval and two-person approval to approval plus a cooling-off delay. Defence in depth sits outside the code: bank-side limits, per-vendor virtual cards with caps, payee allowlists. Strong customer authentication under PSD2 already puts a human into many payment flows.
 
@@ -430,7 +438,7 @@ Bookkeeping fits git as plain-text accounting with [beancount](https://beancount
 
 Every processing of personal data needs a legal basis, and consent is only one of them. Under GDPR Art. 6 most of a company's processing rests on something else: a contract with the person, a legal obligation such as keeping invoices, or a legitimate interest that was weighed and written down. Health data needs an exception under Art. 9(2), and a physiotherapy practice relies on [Art. 9(2)(h)](https://gdpr-info.eu/art-9-gdpr/), the provision of treatment, for its treatment notes. Treating consent as the only basis gets it wrong both ways: it asks patients to consent to records the law requires, and it suggests they can withdraw from them.
 
-So each processing activity in the register of requirement {{r:Data classes, legal bases and erasure}} names its basis. Where that basis is consent, the company has to prove it had consent at the moment it acted. Consent is then an observation with its own record: who, for what purpose, through which channel, the wording they agreed to, the time with its anchor and the evidence, such as the double-opt-in confirmation. Withdrawals are records too, and they take effect immediately.
+So each processing activity in the register of requirement 35 names its basis. Where that basis is consent, the company has to prove it had consent at the moment it acted. Consent is then an observation with its own record: who, for what purpose, through which channel, the wording they agreed to, the time with its anchor and the evidence, such as the double-opt-in confirmation. Withdrawals are records too, and they take effect immediately.
 
 Every effect cites its basis in its proposal. Where the basis is consent, the pre-effect gate checks the purpose, the date and the absence of a later withdrawal. No basis, no effect. The consent ledger falls under the warehouse rule: the identity of the person sits in the encrypted blob store, and git holds the hash and the purpose.
 
@@ -442,7 +450,7 @@ Pre-effect hooks attach to effect types. A spellcheck hook on "outbound email" c
 
 Discovery is a registry matched by trigger or intent. When no SOP fits, the agent improvises, records the full trace and proposes a draft SOP from it. A human approves the draft before it is promoted.
 
-Feedback comes from human edits to agent drafts, failed checks, incidents and outcome metrics like reply rate and rework rate. The diff between a draft and the version a human actually sent is the most valuable signal there is. Each one becomes a friction entry, then an amendment as a pull request, tested by replaying past cases as pseudonymised fixtures (requirement {{r:A sandbox for effects}}) against the new version before it ships. Recorded deviations ("skipped step 4 because the supplier was closed") feed the same loop, and SOPs nobody runs get retired.
+Feedback comes from human edits to agent drafts, failed checks, incidents and outcome metrics like reply rate and rework rate. The diff between a draft and the version a human actually sent is the most valuable signal there is. Each one becomes a friction entry, then an amendment as a pull request, tested by replaying past cases as pseudonymised fixtures (requirement 23) against the new version before it ships. Recorded deviations ("skipped step 4 because the supplier was closed") feed the same loop, and SOPs nobody runs get retired.
 
 ### 28. Secrets
 
@@ -471,9 +479,13 @@ Browsing follows explore, then codify: an LLM-driven browser finds the path once
 
 Truth has owners. The bank owns the balance; git owns intent, decisions and evidence. External state enters git as timestamped snapshot observations.
 
+An API that answers 200 has accepted a request. It has not shown that the outside system now holds what the company meant. The practice books an appointment through the scheduling system's API and commits the receipt, then the front desk moves the slot inside that system, and git still says 14:30. So every write to an outside system of record ends with a read-back in the same effect: the external id, its version and a hash of what the system returned are the receipt. A scheduled reconciliation compares git's intent with each system's current state and opens a task for every divergence, with the owner declared per field: the outside system wins on facts it owns, such as the booked slot or the balance, and git wins on intent. An acceptance criterion for an outside effect names the read-back, since a command in a clean checkout cannot prove what another system holds.
+
 ### 30. Human collaborators
 
-Some work needs people: an inspection on site, attending an event, a judgment call that needs a licence. There are three kinds of human with different trust. Governors on the board approve and sign decisions. Workers do in-person tasks. External parties, clients and suppliers, are only ever correspondents.
+Some work needs people: an inspection on site, attending an event, a judgment call that needs a licence. There are three kinds of human with different trust. Governors on the board approve and sign decisions. Workers do in-person tasks. External parties, clients and suppliers, are correspondents: what they send is an observation, and they cannot approve the company's effects.
+
+Some outsiders hold rights against the company, and treating them as mere correspondents loses those rights in the inbox. A neighbour who must be heard before a permit issues, a regulator who opened an inquiry, a franchisee under a cure notice, a person in a supplier's factory reporting forced labour and a beneficiary refused a place each have standing in a case: a role, a deadline the company owes them and a record of how their submission was handled. Their messages match to that case by party, never by similarity, and a submission from a party with standing cannot be closed without a recorded disposition. Grievance and whistleblower channels accept anonymous reports, and a report is hidden from everyone connected to what it is about, including the account manager of the supplier concerned. An authority's case also needs consistency: every statement made to it is recorded with its exact text, and a new statement is checked against everything already said to that authority before it goes out.
 
 People will not use git. Tasks reach them through channels they already use: WhatsApp, SMS, a small mobile web page. Results come back as photos, checklists, timestamps, locations and signatures, and the system commits them on the person's behalf with attribution.
 
@@ -493,7 +505,7 @@ One global stop for all effects that a human can trigger from a phone. Finer swi
 
 A switch that lives only in a committed file can be overwritten by anything that can commit, and it reaches only the processes that read it. So the switch has two halves. The committed record says what is stopped, who stopped it and why, and only a board key may clear it. The second half sits outside the repository: a small service on another host that the board reaches by one message or one call, and that acts directly on the edges. It revokes the executor's credentials at the broker, pauses outbound queues in the adapters, cancels scheduled sends and payments that the provider still holds, and tells the dead-man's switch that silence is expected.
 
-Stopping is also physical. Effects already in flight, such as a worker driving to a site or a newsletter queued at the provider, are listed on the stop confirmation with what was recalled and what could not be. A stop per place, for a site or a room, is part of requirement {{r:Physical safety and site stops}}.
+Stopping is also physical. Effects already in flight, such as a worker driving to a site or a newsletter queued at the provider, are listed on the stop confirmation with what was recalled and what could not be. A stop per place, for a site or a room, is part of requirement 43.
 
 ### 33. Backup and restore
 
@@ -512,6 +524,8 @@ Requirements:
 
 A forge outage stops the company. The loop must be able to run against the mirror with the board's agreement, and the mirror must be promotable to primary. Promotion raises an authority epoch, a counter in the key registry that every writer and executor checks, so an old primary that comes back cannot accept writes or run effects next to the new one.
 
+Some dates do not move when the forge is down. The doors of a poetry slam open at 19:30, a court hearing starts at 09:00, a youth group leaves for camp on Saturday. Every task therefore carries a deadline class, and a task tied to an externally fixed date has a degraded-mode packet committed and signed ahead of time: the running order, the contacts, the roster with emergency numbers, the payments already authorised. It prints on paper and needs no forge, network or model to use. The packet names the person who holds it and expires after the event, and a drill before each season proves someone can run the event from it alone. Whatever happens on paper during the outage comes back afterwards as observations, the same way a scanned letter does.
+
 ### 34. Continuity and exit
 
 The company must survive the loss of a person and be able to end cleanly. Every account, key and recovery path has at least two human holders. A succession document in the repository says who takes over which decision class when a board member drops out, and the board reviews it once a year.
@@ -526,21 +540,23 @@ Every observation, episode, memory fact, fixture and blob carries a small set of
 
 - data class, such as contact data, payroll, health data under Art. 9, or data covered by professional secrecy
 - purpose, from a fixed list of the company's processing activities
-- legal basis, per requirement {{r:Legal bases and consent records}}
+- legal basis, per requirement 26
 - retention class, with its legal source and the event that starts the clock
 - recipients, including every processor that sees it
 
 Context assembly and every effect may only draw records whose purpose matches the task's purpose. The record of processing activities under GDPR Art. 30 and a DPIA entry per high-risk activity are generated from these tags rather than written by hand, so they cannot drift from what the system does.
 
-Personal data lives in the blob store, encrypted, and history only ever holds hashes. One key per person is too coarse, because the same person's data falls under different rules. A patient's appointment reminders may be erased on request, while the treatment record must be kept for ten years under [§630f BGB](https://www.gesetze-im-internet.de/bgb/__630f.html), and an invoice to them for ten years under §147 AO. GDPR [Art. 17(3)(b)](https://gdpr-info.eu/art-17-gdpr/) exempts data kept to meet a legal obligation from erasure. So keys are per person and per retention class. Deleting a key (crypto-shredding) erases one class, and a legal-hold check refuses to delete a key while a record under a running retention period still references it. Data under a running retention period moves to a restricted state instead: still stored, readable only by the SOP that serves the legal duty, and out of every context packet.
+Personal data lives in the blob store, encrypted, and history only ever holds hashes. Two other tags sit beside the data class. A privilege tag marks legal advice from counsel, with its holder and distribution list; it never passes to summaries, embeddings, episodes or dashboards, and only a person on a committed roster may release it. A protected-source tag marks a journalist's confidential source: the durable record carries a pseudonymous id only, and the mapping to the person stays with one named human outside git. One key per person is too coarse, because the same person's data falls under different rules. A patient's appointment reminders may be erased on request, while the treatment record must be kept for ten years under [§630f BGB](https://www.gesetze-im-internet.de/bgb/__630f.html), and an invoice to them for ten years under §147 AO. GDPR [Art. 17(3)(b)](https://gdpr-info.eu/art-17-gdpr/) exempts data kept to meet a legal obligation from erasure. So keys are per person and per retention class. Deleting a key (crypto-shredding) erases one class, and a legal-hold check refuses to delete a key while a record under a running retention period still references it. Data under a running retention period moves to a restricted state instead: still stored, readable only by the SOP that serves the legal duty, and out of every context packet.
 
 A decision table maps each kind of request to its outcome per data class: erase, restrict, keep with reason. When a retention period ends, the scheduler opens the shredding task for that key.
+
+A dispute freezes deletion. The day a claim, a cease-and-desist letter, an authority's inquiry or a damage event arrives, the records it may touch fall under a litigation hold: a committed record of the matter, the custodians, the data classes and the time range, its issuer and its release. Every deletion path consults it: key shredding, spam purge, blob garbage collection, backup expiry, vault rotation and the scheduled end of a retention period. A deletion attempt under hold is an incident. Erasure requests under GDPR are weighed against the hold, because [Art. 17(3)(e)](https://gdpr-info.eu/art-17-gdpr/) exempts data needed for the establishment, exercise or defence of legal claims. Only the person who issued the hold, or the board, releases it.
 
 Data minimisation applies to transcripts and screenshots as much as to databases. Some data needs more than GDPR: a physiotherapist is bound by professional secrecy under [§203 StGB](https://www.gesetze-im-internet.de/stgb/__203.html), so treatment data may only reach a processor who has been bound to secrecy, and the model provider is such a processor.
 
 ### 36. Data subject rights, breaches and processors
 
-Erasure is one right among several. Access, rectification, restriction, objection and portability each need an SOP that finds every record about the person through the tags of requirement {{r:Data classes, legal bases and erasure}}, including episodes, memory facts and blobs, and produces the answer as an effect with a receipt. [Art. 12(3) GDPR](https://gdpr-info.eu/art-12-gdpr/) gives one month from receipt of the request, so a request is an observation that starts a timer in the compliance calendar.
+Erasure is one right among several. Access, rectification, restriction, objection and portability each need an SOP that finds every record about the person through the tags of requirement 35, including episodes, memory facts and blobs, and produces the answer as an effect with a receipt. [Art. 12(3) GDPR](https://gdpr-info.eu/art-12-gdpr/) gives one month from receipt of the request, so a request is an observation that starts a timer in the compliance calendar.
 
 A personal data breach starts a different clock. Under [Art. 33 GDPR](https://gdpr-info.eu/art-33-gdpr/) the supervisory authority has to be notified without undue delay and where feasible within 72 hours of becoming aware of it. A breach is an incident type with its own SOP: contain, assess the risk from the data classes involved, decide on notifying the authority and the people affected, and record the decision with its reasons whether or not a notice goes out. A secret pushed to git, a context packet sent with the wrong client's data, and a misdirected email are all candidates, so the gates that detect them also open the breach task.
 
@@ -565,23 +581,41 @@ The read path and size:
 
 Repositories split by domain or project when one store becomes a bottleneck, with tasks referring across them by repository and id.
 
-### 38. Contracts and signatures
+### 38. Contracts, signatures and acts only a person can perform
 
 Binding commitments use qualified electronic signatures under eIDAS and sit deliberately in the top risk tier.
 
+A signature is the easy part. The law prescribes a form for many acts, and the wrong form makes the act void rather than merely hard to prove. A contract to buy land needs a notary under [§311b BGB](https://www.gesetze-im-internet.de/bgb/__311b.html), and the transfer itself needs both parties present before one under [§925 BGB](https://www.gesetze-im-internet.de/bgb/__925.html). A termination of employment needs paper. A register of acts lists the form each kind of act requires: notarial, written on paper, qualified electronic signature, text form or none. The pre-effect gate consults it and refuses an effect whose form does not match.
+
+Some acts belong to a person and cannot be delegated to an agent at all, whatever a delegation says: writing a clinical note, certifying that an insurance claim was performed and necessary, signing a manuscript as its author, writing a thesis, adopting an administrative decision that involves discretion. [§35a VwVfG](https://www.gesetze-im-internet.de/vwvfg/__35a.html) allows a fully automated administrative act only where a statute permits it and no discretion exists. For each such act the register names the role whose holder must perform it, and the act carries that person's own signature and second factor, bound to the exact content. An agent may prepare a draft, and the record shows that it did.
+
+A contract is also a set of clauses that keep working after signing. The executed document is hashed, and the clauses that create duties are extracted into data and checked by a human: term and renewal, the notice period and the address and form a notice must use, liability caps and indemnities, governing law. The entity that signs and the authority of the person signing for the other side are checked against the register extract. Before signing, a gate compares the worst-case liability of the terms with the insured limits and the board's accepted retention, and unlimited liability needs a board decision. In a live dispute or before an authority, every outbound message is top tier by default, needs counsel's approval and may not admit anything or accept an offer. Settlement authority is a number in the decision-rights file.
+
 ### 39. Cost accounting
 
-Tokens, API spend, tool costs and human hours are recorded per task and per run. They feed the budgets in requirement {{r:Metacognition: confidence, budgets and the next action}}, the value-against-cost choice in requirement {{r:Goals, priorities and value against cost}} and the dashboard in requirement {{r:Single-file HTML dashboards for humans}}.
+Tokens, API spend, tool costs and human hours are recorded per task and per run. They feed the budgets in requirement 21, the value-against-cost choice in requirement 2 and the dashboard in requirement 13.
 
 ### 40. Outcome metrics
 
 Verified tasks are not the same as a working company. Each goal has outcome metrics, such as revenue, margin, reply rate, client satisfaction, rework rate and days from enquiry to quote. They are computed from the ledger and shown on the dashboard. A metric that stays off target opens a task for the board. Proxy metrics like tasks closed per week are allowed, and never as a goal on their own.
 
+A metric is only as good as its source. Programme outcomes for a beneficiary-serving nonprofit, patient notes in a healthcare practice and quality reports from franchisees all come from records the agents themselves wrote. Where no outside observer signs off, a gate cannot know whether the number is true or fabricated. The defence is to match the figure against facts the agents did not write: the payer's claim decision, a mystery shopper's report, a random sample a human checks against the original records. Where no such fact exists, the outcome definition is versioned before the period starts, a named human signs every figure that goes to a funder or an authority, and the sample rate rises for any submitter whose numbers improve faster than the sample confirms.
+
 A metric that pays is a metric agents will learn to move. A content agency paid by engagement can hit its numbers with posts that like each other across twenty client accounts, or with bought traffic. The measurement therefore sits outside the agents' reach: a collector with its own credentials reads the platforms and commits each figure with its source, account, retrieval time and the hash of the raw response. No agent holds a write credential for an analytics surface, interactions between accounts the company controls are excluded by construction, and a monthly review breaks every target hit down into organic, paid and suspicious sources. A metric that is on target is checked as hard as one that is off.
 
-### 41. A compliance calendar
+### 41. A compliance calendar and clocks started by others
 
-Legal duties recur on dates: VAT returns, annual accounts, insurance renewals, contract notice periods, retention deadlines, certificate and domain expiry, the yearly review of the succession document. They live in a committed calendar, each with an owner, a lead time and an SOP. The scheduler opens a task ahead of each deadline, and a missed deadline is an incident. For a German company the list includes the yearly record of processing activities under GDPR Art. 30, the Impressum under [§5 DDG](https://www.gesetze-im-internet.de/ddg/__5.html), and a managing director, who under [§6 GmbHG](https://www.gesetze-im-internet.de/gmbhg/__6.html) has to be a natural person.
+Legal duties recur on dates: VAT returns, annual accounts, insurance renewals, contract notice periods, retention deadlines, certificate and domain expiry, the yearly review of the succession document. They live in a committed calendar, each with an owner, a lead time and an SOP. The scheduler opens a task ahead of each deadline, and a missed deadline is an incident.
+
+Many deadlines do not recur. Someone else starts them, and some end by turning silence into a decision. A payer's denial opens an appeal window that runs from the date on its letter, not from the day the scan arrived. A buyer who does not inspect delivered goods promptly loses its claims under [§377 HGB](https://www.gesetze-im-internet.de/hgb/__377.html). A landlord who sends the service-charge statement after twelve months loses the back-charge under [§556(3) BGB](https://www.gesetze-im-internet.de/bgb/__556.html). An application an authority does not decide in time can count as granted under [§42a VwVfG](https://www.gesetze-im-internet.de/vwvfg/__42a.html). Each such clock is a first-class object:
+
+- the triggering event and its anchor, taken from the counterparty's own date and reference where the law counts from it, with a gate that flags the gap when the observation arrived late
+- the cited rule that turns the event into a deadline, and a computed deadline confirmed by two people
+- the effect of expiry, in plain words: right lost, deemed approved, deemed accepted, appeal barred
+- a decision-by date well before the deadline, after which the clock escalates to the board instead of waiting to become an incident
+- for a deadline the company must meet by notifying someone, the contractual or legal service channel and a proof-of-receipt artifact, because a notice that never arrived does not count; [§41(2) VwVfG](https://www.gesetze-im-internet.de/vwvfg/__41.html), for example, treats a posted administrative act as notified on the fourth day after posting and puts the burden of proof on the authority when receipt is in doubt
+
+When signing a contract, every term whose trigger is elapsed time or the company's own inaction becomes such a clock at once. An expiry that no recorded decision preceded is a board-level incident. Clocks carry their time zone and the working calendar they count in, so a deadline in Tokyo or one that falls on a public holiday in one country is computed correctly. For a German company the list includes the yearly record of processing activities under GDPR Art. 30, the Impressum under [§5 DDG](https://www.gesetze-im-internet.de/ddg/__5.html), and a managing director, who under [§6 GmbHG](https://www.gesetze-im-internet.de/gmbhg/__6.html) has to be a natural person.
 
 
 
@@ -653,9 +687,11 @@ Commitments are edges, and the task graph is nodes. A commitment ledger makes th
 
 Each commitment references the task or milestone that creates it, the one that clears it, and the source document or contract clause. Missed obligations open incident tasks, with the counterparty notice and the penalty or the compensation attached. Commitments stay live in a separate view beyond the task they came from, and the scheduler checks them before opening dependent work.
 
+Every engagement, client or funder has an engagement file: the signed agreement, conflict checks against concurrent work, embargo dates, the client's AI policy, their authority register naming who may approve what, and restrictions on sub-contracting or disclosure. Gates consult it before starting work: a conflict blocks the bid, a missed embargo becomes an incident, and an agent cannot bind the client to AI-generated work when the policy forbids it.
+
 ### 46. Operating a live service
 
-A company that runs a product on the web for paying customers has a surface the previous requirements barely touch: detection, paging, liveness, incidents, deploys and rollback. This moves the work from producing things to keeping a thing running.
+A company that runs a product on the web for paying customers, or that operates a building with tenants, or a fleet with scheduled routes, has a surface the earlier requirements barely touch: detection, paging, liveness, incidents, deploys and rollback. This moves the work from producing things to keeping a thing running.
 
 On-call:
 
@@ -668,11 +704,11 @@ Liveness and measurement:
 - SLOs are defined in the ledger per service and endpoint, with the target and the measurement window
 - a monitor outside the service reads logs, metrics and traces, and commits the current state every few minutes
 - availability is computed from that record, so an SLA credit dispute has a committed basis
-- the dead-man's switch of requirement {{r:The CEO loop that stops itself}} is part of this same outside monitor: the loop watches the service, and another monitor watches the loop
+- the dead-man's switch of requirement 14 is part of this same outside monitor: the loop watches the service, and another monitor watches the loop
 
 The production data store:
 
-- the product database, such as Postgres for a SaaS app, is added to the backup inventory of requirement {{r:Backup and restore}}, with point-in-time recovery enabled and a recovery point objective and a recovery time objective written down and tested
+- the product database, such as Postgres for a SaaS app, is added to the backup inventory of requirement 33, with point-in-time recovery enabled and a recovery point objective and a recovery time objective written down and tested
 - the restore drill brings the product back and the company back, not only one of them
 
 Deploys as effects:
@@ -687,7 +723,13 @@ Incidents:
 - break-glass is a small set of high-tier actions (roll back, reboot, failover, add capacity) that a smaller quorum may trigger during a declared incident, with the incident file recording what was used
 - an incident is its own task type, opened by an alert or by a human, and worked through a runbook: contain, diagnose, mitigate, resolve, then review
 
-A live service has a different contract from a task-driven one. The loop does not work down the frontier until it is drained; it reacts to alerts and keeps things running.
+Each kind of running operation needs its own set:
+
+- a fleet has a route and shift register, a vehicle-state live map, fuel and maintenance logs, driver certifications and a breakdown escalation path
+- a building has a tenant contact list per unit, a maintenance log, rent ledgers that reconcile to the bank per month, a 24-hour emergency line and a response time
+- a van on the road sends location every few minutes; going silent opens an incident
+
+For any of them, the availability target, the on-call person, the runbook and the break-glass set follow the same structure as the web product above.
 
 ### 47. Bookkeeping, tax and annual accounts
 
@@ -697,7 +739,7 @@ Three-way reconciliation closes each period. Revenue from a Shopify shop means t
 
 The books are append-only, per §146 AO. A payment that turns out to be wrong is corrected by a reversal entry and a new entry, and the original stays visible. History rewrites that touch the accounting subtree are refused by the pre-receive hook, even from the board. Rollback in that scope means the attempt never left the agent's branch.
 
-Invoices need gapless serial numbers per [§14(4) UStG](https://www.gesetze-im-internet.de/ustg_1980/__14.html), supplied by the allocator in requirement {{r:A task graph with a state machine}}. Gaps are registered with their reason: a cancelled order, a quote that never converted, a technical failure. Missing numbers show up in the next audit.
+Invoices need gapless serial numbers per [§14(4) UStG](https://www.gesetze-im-internet.de/ustg_1980/__14.html), supplied by the allocator in requirement 1. Gaps are registered with their reason: a cancelled order, a quote that never converted, a technical failure. Missing numbers show up in the next audit.
 
 Each financial year ends with a close:
 
@@ -731,7 +773,7 @@ A cap table is an append-only ledger of instruments with a verifier that recompu
 - every instrument references the signed agreement as its source document
 - the outcome is a Gesellschafterliste per [§40 GmbHG](https://www.gesetze-im-internet.de/gmbhg/__40.html) that reconciles to the version filed with the court, and any equity measure is not effective until the notarial deed per [§53 GmbHG](https://www.gesetze-im-internet.de/gmbhg/__53.html) is attached as evidence
 
-Runway is computed from cash, monthly burn, committed funding, receivables weighted by confidence, and payables. A gate blocks taking a new commitment when runway falls below a set number of months. The board sees the waterfall, the cliff from an option expiry or a warrant trigger, and the equity held by founders, employees, angels and VCs.
+Runway is computed from cash, monthly burn, committed funding, receivables weighted by confidence, and payables. When the company receives restricted funds, such as a grant limited to a purpose, a tenant deposit under [§551(3) BGB](https://www.gesetze-im-internet.de/bgb/__551.html) or a public appropriation, those funds live in a separate wallet: a ledger entry with the restriction, the source and the return rule, with gates that refuse an expense whose purpose does not match. A gate blocks taking a new commitment when runway falls below a set number of months. The board sees the waterfall, the cliff from an option expiry or a warrant trigger, and the equity held by founders, employees, angels and VCs.
 
 Multiple entities: subsidiary, holding, foreign branch:
 
@@ -739,7 +781,7 @@ Multiple entities: subsidiary, holding, foreign branch:
 - transfer pricing between entities is computed at arm's length, and the basis is committed with the entry
 - some filings happen per entity (Handelsregister, VAT ID), and others per group
 
-Investor consent rights: debt covenants, board seats, information rights, pro-rata in the next round, and consent required for large expenditures, new debt or an exit are committed obligations (requirement {{r:Commitments and external obligations}}). An investor decision is a human task assigned to that investor, with the clause that gave them the right attached. They respond through their approval channel, and the decision is committed before the company acts.
+Investor consent rights: debt covenants, board seats, information rights, pro-rata in the next round, and consent required for large expenditures, new debt or an exit are committed obligations (requirement 45). An investor decision is a human task assigned to that investor, with the clause that gave them the right attached. They respond through their approval channel, and the decision is committed before the company acts.
 
 Grants and crowdfunding:
 
@@ -808,13 +850,13 @@ Regulated content and proof of publication:
 Placement obligations:
 
 - sponsor contracts, affiliate agreements and content licences create obligations to publish something at a time or on a platform, and missing them triggers a penalty
-- they are tracked in the commitment ledger of requirement {{r:Commitments and external obligations}} with the content hash, the placement rule and the deadline, and a late or missed placement becomes an incident
+- they are tracked in the commitment ledger of requirement 45 with the content hash, the placement rule and the deadline, and a late or missed placement becomes an incident
 
 
 
 ## Function packs for the business
 
-A company also has to sell, bill, buy and hire. These functions do not need new platform machinery; each is a pack of SOPs, adapters, memory schemas, verifiers and calendar entries on top of the requirements above. A pack is versioned and tested like a skill, and a company enables the packs it needs. Each pack below lists what it needs most.
+The requirements above cover the platform, and every company also needs domain machinery. Each pack is a set of SOPs, a data schema extension and a set of gates. A pack is versioned and tested like a skill, and a company enables the packs it needs.
 
 - Sales and the customer lifecycle: leads, quotes from a price list in semantic memory, onboarding, support with response-time targets, complaints and refunds as effects, and offboarding that returns the client's data.
 - Marketing: campaigns and brand guidelines for the persona voice. Every campaign effect cites consent records.
@@ -826,6 +868,14 @@ A company also has to sell, bill, buy and hire. These functions do not need new 
 - Paper mail: letters from authorities, banks and courts arrive on paper. A scan intake makes them observations like any email, with the original kept where the law asks for it.
 - Incidents and reputation: postmortems for business failures, not only technical ones, such as a wrong invoice, a missed deadline or a message sent to the wrong client. A crisis communication SOP with board approval for any public statement.
 - Acceptable use: a committed list of work the company refuses, checked at intake, and an outbound content check for what the company publishes or sends in its name.
+- Manufacturing: bills of materials with revisions, lot and serial tracking, shelf life and expiry, calibration records for measuring tools, quality sampling by AQL, non-conformance and corrective action, approved vendor lists and counterfeit screening.
+- Insurance and claims: policy schedules as data, exposure summed across one site or class, custody records for other people's goods, claims opened and reserves set per occurrence and against aggregate limits, and timely reporting under [§30 VVG](https://www.gesetze-im-internet.de/vvg_2008/__30.html).
+- Healthcare operations: patient master index with disambiguation, scheduling, insurance pre-authorizations, claims submission and appeals, clinical documentation by named clinicians per [§630d](https://www.gesetze-im-internet.de/bgb/__630d.html) and [§630e BGB](https://www.gesetze-im-internet.de/bgb/__630e.html), a log of every read of a patient record, quality metrics and payer contract reporting.
+- Public sector and permits: application intake with statutory clocks, deemed approvals under silence per [§42a VwVfG](https://www.gesetze-im-internet.de/vwvfg/__42a.html), hearing rights per [§28 VwVfG](https://www.gesetze-im-internet.de/vwvfg/__28.html), reasoned decisions, public comment periods, open records responses and standstill under [§134 GWB](https://www.gesetze-im-internet.de/gwb/__134.html) for public procurement.
+- Publishing and ESG reporting: a claim-by-claim fact-check ledger, corrections that reach every placement, source protection with pseudonymous ids, editorial independence from commercial, and computed ESG datasets from a versioned environmental inventory model with factor-set hashes and period locks so the assured number is reproducible.
+- International operations: VAT on services under [§3a(2) UStG](https://www.gesetze-im-internet.de/ustg_1980/__3a.html) and reverse charge under [§13b UStG](https://www.gesetze-im-internet.de/ustg_1980/__13b.html), e-invoicing clearance per jurisdiction, data residency gates per hop, time zones and local working calendars, sanctions screening, declared FX rate sources and revaluation of open FX items.
+- Nonprofits and grants: restricted fund wallets, in-kind donation valuation, volunteer hour logging, programme outcome tracking with external validation, grant reporting per funder requirements, and safeguarding for work with minors under [§8a SGB VIII](https://www.gesetze-im-internet.de/sgb_8/__8a.html).
+- Research labs: ethics committee approvals with renewal dates, serious adverse event clocks, authorship ledgers, data-sharing agreements with federation and end-of-term destruction, preregistration of study designs, replication materials and embargo dates for manuscripts under peer review.
 
 ## Nice-to-haves
 
@@ -897,6 +947,7 @@ A startup stresses money, legal binding and semantic memory. The committed state
 7. How far the Nix-only rule bends for hosts without Nix.
 8. Who sits on the board, and the quorum for each decision class.
 9. Which domain goes first. Renovation, the agency and the slam put pressure on very different parts.
+10. Which jurisdictions the first version covers. Most citations here are German and EU law, and every new country brings its own tax, labour, data and deadline rules into the law store and the register of acts.
 
 ## Projects that implement parts of this
 
