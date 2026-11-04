@@ -77,7 +77,7 @@ export const COPY = {
 } as const
 
 /** Posts published under `content/blog/` (asserted as an exact count). */
-export const BLOG_POST_COUNT = 6
+export const BLOG_POST_COUNT = 7
 
 /** Project entries expected under `content/projects/` (asserted as a floor). */
 export const MIN_PROJECT_COUNT = 28
