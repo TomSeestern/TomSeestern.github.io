@@ -2,7 +2,7 @@
 id: 2026-git-based-stateless-llm-driven-company
 title: "Requirements for a Git-Based, Stateless, LLM-Driven Company"
 articleDate: 2026-11-04
-articleContent: "Requirements for running any work that can be written down, from software to house renovations, on committed files and LLM agents: principles, twenty-nine must-haves from task graphs to memory and Nix, nice-to-haves, non-goals and the decisions to settle first."
+articleContent: "Requirements for running any work that can be written down, from software to house renovations, on committed files and LLM agents: principles, twenty-nine must-haves from task graphs to memory and Nix, nice-to-haves, non-goals, the decisions to settle first and the projects that already cover parts of it."
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
 tags:
@@ -21,16 +21,9 @@ What would it take to run a company on committed files and language-model agents
 
 I mean any work that can be written down. A house renovation has material orders, permits and inspections. A design agency has briefs, feedback rounds and invoices. A science slam has a script, rehearsals and a hard time limit. A startup has runway, investor updates and contracts. Software is the easiest case because code is already text and CI already exists. The interesting question is what everything else needs.
 
-The requirements below come from four projects. Three are my own experiments, and one is a third-party platform:
+[What LLM Agents Are Still Missing](/blog/entry/2026-what-llm-agents-are-missing) argued that agents need durable state, checkable outcomes and human gates. This is a requirements list for one way to supply them: git as the only durable store, and every process allowed to die at any moment.
 
-- [Paperclip](https://github.com/paperclipai/paperclip) is a Node.js server and React UI that runs a team of agents as an org chart. It has heartbeats, budgets that pause work at configured limits, approval stages, atomic task checkout, scoped secrets and a Skill Studio with saved test inputs and version history. Its state lives in PostgreSQL.
-- ohmyroadmap is a CLI and agent skill that keeps a task graph in the repository: one `TASK.md` per node under `.omr/tasks/`, with `ROADMAP.md` rendered from them. Its gates run from a lefthook pre-commit hook, and a node cannot flip to done until each acceptance criterion has evidence.
-- [ClosedLoopOS](https://closed-loop-os.vercel.app/) runs YAML SOPs with step dependencies, cron triggers and per-step retries. Code changes land as Forgejo pull requests from isolated Docker worktrees. Its runtime state lives in SQLite.
-- ohmybetterroadmap is a Rust port of ohmyroadmap, checked against the original with differential fixtures. It adds a single-file HTML cockpit and an unattended loop with seven stop conditions and a monthly spend cap.
-
-Two of the four keep their runtime state in a database. For a product with a web UI that is a reasonable choice. It is also the assumption I want to drop: what changes when git is the only durable store and any process can die at any moment?
-
-[What LLM Agents Are Still Missing](/blog/entry/2026-what-llm-agents-are-missing) argued that agents need durable state, checkable outcomes and human gates. This is a requirements list for one way to supply them. It starts with principles, then lists requirements in four groups: the work ledger, the agent's own machinery, the edges where the system meets the world, and operations. Nice-to-haves, non-goals, four domain sketches and open decisions follow.
+The list starts with principles, then gives requirements in four groups: the work ledger, the agent's own machinery, the edges where the system meets the world, and operations. Nice-to-haves, non-goals, four domain sketches and open decisions follow. Projects that already implement parts of this are listed at the end.
 
 ## Principles
 
@@ -40,8 +33,6 @@ If a fact matters after the current process exits, it is in a committed file. Ta
 
 That gives an audit trail for free. Every change has an author, a timestamp and a diff. History doubles as the backup. Branches give parallel attempts, and review happens on diffs.
 
-ohmyroadmap is the closest of the four. Each node is a `TASK.md` with frontmatter for state, dependencies and acceptance criteria, and `ROADMAP.md` is a rendered view of the store. The nodes carry no dates; a node's git log is its history.
-
 Git is the index of truth, and it makes a bad warehouse. Personal data that may need erasing, large binaries, secrets and high-volume spam cannot live in history, because history is effectively permanent. Git holds hashes, metadata, pointers and decisions. Payloads go to an encrypted blob store addressed by content hash. Secret values go to a vault. Neither may be the only record of a decision.
 
 ### A stateless core with stateful edges
@@ -50,7 +41,7 @@ Agents are disposable. A task starts in one session and resumes days later in an
 
 Some things are stateful by nature: phone calls, OAuth refresh tokens, bank sessions, IMAP connections, humans with phones. That state goes into small adapters at the edge. Their only job is to turn the world into commits and approved commits into actions. The agents and the ceremony in the middle hold nothing.
 
-ohmyroadmap's `exec-batch` supervises one long command and writes a heartbeat to `.omr/run-continuation/<id>.json`, so the watchdog can tell a slow job from a dead one. ohmybetterroadmap runs each loop iteration as a fresh process on a clean checkout, under a lock. Paperclip and ClosedLoopOS resume work from their databases, which is durable, though the state sits outside git.
+A long-running job writes a committed heartbeat, so a watchdog can tell a slow job from a dead one. Each loop iteration starts as a fresh process on a clean checkout.
 
 ### Observations in, effects out
 
@@ -64,13 +55,11 @@ An effect goes out: sending, paying, posting, signing, booking. It is proposed, 
 
 The default is an unattended loop. Agents pick work, delegate, verify and commit with nobody watching. Human gates sit where a mistake cannot be undone or where the law wants a person: large payments, contracts, policy changes, anything that speaks for the company in a new way.
 
-ClosedLoopOS opens pull requests and leaves the merge to a human by default; `FORGEJO_AUTO_MERGE` is opt-in. ohmyroadmap parks questions for people as `[H]` nodes. `ohmyroadmap block <id> "action"` marks work blocked behind a human prerequisite, `board` lists the open `[H]` nodes oldest first, and its loop command tells the agent never to answer the board's question itself.
+Questions for people are tasks in the graph, owned by a human. Work that depends on one is blocked behind it, the open questions are listed oldest first, and an agent never answers a question addressed to the board.
 
 ### Done means verified
 
-Work is done when a check says so. Every acceptance criterion should be checkable by someone who was not there, and the check is a command that exits 0 or 1, or an artifact a named person signed.
-
-In ohmyroadmap, `check` refuses to let a node reach done while any acceptance criterion lacks a line in its `EVIDENCE.md`, and `task outcome` seals a record with the exit code of the command that proved it. ClosedLoopOS's landing step verifies CI, review and branch protection before a merge.
+Work is done when a check says so. Every acceptance criterion should be checkable by someone who was not there, and the check is a command that exits 0 or 1, or an artifact a named person signed. A task cannot reach done while any acceptance criterion lacks evidence.
 
 ## Requirements, part 1: the work ledger
 
@@ -78,7 +67,7 @@ In ohmyroadmap, `check` refuses to let a node reach done while any acceptance cr
 
 Tasks form a dependency graph. Each node has a state (open, in plan, blocked, done, future, human, archived), dependencies, acceptance criteria and an owner. A transition is legal only when its dependencies and gates allow it. The frontier, the set of open nodes whose dependencies are done, is what the loop works on.
 
-ohmyroadmap's `slice` prints the frontier, and `check` validates the graph on every commit. Task ids are content hashes, so parallel worktrees can mint nodes without collisions. Paperclip models work as issues linked to a company, project, goal and parent, with a single assignee and an execution lock per task.
+The graph is validated on every commit. Task ids are content hashes, so parallel worktrees can create nodes without collisions. Each task links to the goal it serves and has a single assignee at a time, with a lock so two runs cannot claim it.
 
 ### 2. Gates at every point where a mistake can enter
 
@@ -98,19 +87,19 @@ Formatting has one entry point ([treefmt](https://github.com/numtide/treefmt) fi
 
 Agents must not be able to weaken their own gates. Editing the policy that gates payments is itself a top-tier effect, protected by code owners and a required human signature.
 
-ohmyroadmap runs `check` and a fail-closed [gitleaks](https://github.com/gitleaks/gitleaks) scan from lefthook, and one script defines the gate set for commit, push and CI. This site runs a prose audit in CI. The first draft of this post had seventeen findings in it.
+One definition of the gate set serves commit, push and CI, so the three cannot drift apart. A gate whose tool is missing fails closed.
 
 ### 3. An evidence ledger per task
 
 Every task produces evidence: command output, build logs, photos, signed acceptance, receipts. Evidence is committed, add-only and tied to the acceptance criterion it proves. A claim with no command or artifact behind it does not count.
 
-An ohmyroadmap evidence line looks like `- AC2 2026-11-03: …` in the node's `EVIDENCE.md`. ohmybetterroadmap adds an attestation: after each iteration its loop runs `check --ship`, and a record that does not describe the pushed code stops the loop.
+A sealed outcome record stores the command that proved a criterion and its exit code. An attestation ties the record to the pushed commit, and a record that does not describe the pushed code stops the loop.
 
 ### 4. Test suites, verifiers and change logs
 
 Three things, each with its own job.
 
-Test suites are tiered by cost. ohmybetterroadmap's split works well: fast tests before a commit, the full suite in CI, mutation testing on changed lines as an opt-in pre-commit step, a nightly mutation run over the core files and a deep run before a release. Each tier has a time budget of about twice its worst measured run, so load on the host does not flip the gate.
+Test suites are tiered by cost: fast tests before a commit, the full suite in CI, mutation testing on changed lines as an opt-in pre-commit step, a nightly mutation run over the core files and a deep run before a release. Each tier has a time budget of about twice its worst measured run, so load on the host does not flip the gate.
 
 Verifiers make non-code work checkable. Each artifact type needs one:
 
@@ -124,15 +113,15 @@ Deterministic checks come first. An LLM judge with a committed rubric is accepta
 
 Verifiers need tests too. A verifier that always passes is worse than none, because it produces false evidence. Mutation testing and known-bad fixtures prove that a check can fail. Every fixed bug adds a regression case that failed before the fix.
 
-Change logs serve people who do not read diffs. Commits follow [Conventional Commits](https://www.conventionalcommits.org/) so tools can parse them. A human-facing log in the [Keep a Changelog](https://keepachangelog.com/) format is generated from commits and decision records, then edited by hand. Outside software the change log is the client report: "this week: tiles ordered, plumbing inspection passed, budget line 4 up 300 €". SOPs and rules get the same treatment, so a change in how the agents behave traces back to a dated, reasoned edit. ohmyroadmap keeps a Keep a Changelog file and bumps a task template's version with a recorded delta whenever a retro produces an improvement.
+Change logs serve people who do not read diffs. Commits follow [Conventional Commits](https://www.conventionalcommits.org/) so tools can parse them. A human-facing log in the [Keep a Changelog](https://keepachangelog.com/) format is generated from commits and decision records, then edited by hand. Outside software the change log is the client report: "this week: tiles ordered, plumbing inspection passed, budget line 4 up 300 €". SOPs and rules get the same treatment, so a change in how the agents behave traces back to a dated, reasoned edit with a version bump.
 
 ### 5. Atomic transitions with rollback
 
-A transition commits whole or not at all. The state flip, the evidence, the rendered roadmap and the gate result land in one commit, or the store returns to its previous state. ohmyroadmap's mutating commands are gate-checked and rolled back on failure. ClosedLoopOS gives every session its own Docker worktree, and only a pull request that passes landing reaches main.
+A transition commits whole or not at all. The state flip, the evidence, the rendered roadmap and the gate result land in one commit, or the store returns to its previous state. Every command that changes the store runs the gates on the result and rolls back on failure. Each agent session works in its own worktree or container, and only a change that passes the gates reaches main.
 
 ### 6. Diffs people can read
 
-Review happens on diffs, so diffs must make sense without tools: plain text, stable ordering, one concept per line. A state flip should be a one-line change. Generated views like `ROADMAP.md` render deterministically, so they never churn.
+Review happens on diffs, so diffs must make sense without tools: plain text, stable ordering, one concept per line. A state flip should be a one-line change. Generated views such as a rendered roadmap are deterministic, so they never churn.
 
 ### 7. Dependencies managed by Nix alone
 
@@ -150,8 +139,6 @@ The reasons are practical. A stateless agent that resumes on another machine nee
 
 The costs are real too. Every lockfile change means a hash update. A binary cache becomes infrastructure. Nix runs on Linux and macOS, and Windows hosts need WSL2. Proprietary desktop tools such as Figma or a bank's app cannot be packaged, so they sit behind adapters and their exports enter as observations. A model behind an API cannot be pinned either, so each run records the model id it used.
 
-None of my projects meet this yet. This site's flake supplies Node and pnpm, and `pnpm-lock.yaml` still owns the packages. The requirement is stricter than what I run today.
-
 This replaces the usual "runs anywhere" promise. Portability now means moving between git forges, CI systems, model providers and agent harnesses, with Nix as the one fixed dependency.
 
 ### 8. Single-file HTML dashboards for humans
@@ -164,9 +151,7 @@ People should see the state of the company without reading git. The interface is
 - stored text is inserted as text and never as markup, because some of it comes from inbound email
 - redacted per audience, so a client sees their project and the board sees everything
 
-The board page answers a few questions in order. What is waiting on me, and for how long? What ran since yesterday, and what failed? How much has been spent against the cap? Then the frontier, evidence coverage, pending approvals and the state of the kill switch.
-
-ohmybetterroadmap's `ohmyroadmap cockpit` writes such a page with one inline style element, one inline script and one JSON data element, and it makes no network requests. ohmyroadmap's `view --browser --static` renders the graph as a self-contained inline-SVG Gantt chart, and `view --history` writes a separate timeline page. A single file travels to a phone like any other attachment.
+The board page answers a few questions in order. What is waiting on me, and for how long? What ran since yesterday, and what failed? How much has been spent against the cap? Then the frontier, evidence coverage, pending approvals and the state of the kill switch. The task graph renders as inline SVG, for example as a Gantt chart by state. A single file travels to a phone like any other attachment.
 
 ## Requirements, part 2: the agent's mind
 
@@ -174,36 +159,36 @@ ohmybetterroadmap's `ohmyroadmap cockpit` writes such a page with one inline sty
 
 The orchestrator picks the next task from the frontier, dispatches an agent, waits for completion, verifies the result, updates state, commits and repeats. It must be unattended, and it must stop itself when it should not continue.
 
-ohmybetterroadmap's `scripts/loop.sh` reads its limits from `.omr/orchestration.json` and stops with an exit code per condition:
+The loop reads its limits from a committed file and stops with a distinct exit code for each condition:
 
-- 0 when the frontier is drained and the ship gate is green
-- 3 when the iterations allowed per run are used up
-- 4 when the frontier stayed identical for too many iterations in a row
-- 5 when one attempt outlived the watchdog
-- 6 when a command still failed after its allowed restarts
-- 7 when a merge-gate lane such as `check`, lint or tests went red
-- 8 when the next iteration would exceed the monthly spend cap
+- the frontier is drained and the release gates are green
+- the iterations allowed per run are used up
+- the frontier stayed identical for too many iterations in a row
+- one attempt outlived the watchdog
+- a command still failed after its allowed restarts
+- a merge gate such as tests or lint went red
+- the next iteration would exceed the monthly spend cap
 
-It runs from a systemd timer, and a lock keeps a second driver out of the store. The driver runs the command it is given and counts. It does not plan or edit the store, so it cannot report progress it did not make.
+A timer starts it, and a lock keeps a second driver out of the store. The driver runs the command it is given and counts. It does not plan or edit the store, so it cannot report progress it did not make.
 
 ### 10. Sub-agent delegation and management
 
 The CEO session keeps the slice, the order and the final gate. Every bounded sub-task goes to a child agent, and sub-agents spawn their own children. A leaf may not become a second CEO loop, and a parent never delegates these: slicing the frontier, editing a shared file, weakening a check, the final verify, commit and push, or answering a human-only question.
 
-The handoff contract matters. Every delegation declares, following ohmybetterroadmap's `docs/DELEGATION.md`:
+The handoff contract matters. Every delegation declares:
 
 - the goal, one result the child can finish
 - the inputs: exact files, paths, commands and context
 - ownership: the files the child may write, with one writer per file
 - the evidence: a command the child runs and the output it must report
 - a stop rule that returns control to the parent
-- limits on time, tests and network or external access, and in my version a spend budget as well
+- limits on time, spend, tests and network or external access
 
 The child returns what it changed, the commands it ran with their output, what it could not verify and any unrelated breakage it saw. The parent treats that return as a claim and re-runs the evidence command before it counts.
 
-Management needs a registry of running children with their task, budget, heartbeat and worktree. Depth and fan-out are capped; ohmyroadmap's `.omr/orchestration.json` holds the hierarchy depth, worker limits, watchdog thresholds, restart budget and merge gate. A child's budget is carved out of its parent's, and its permissions are a subset of its parent's. Each child runs in its own worktree or container under its own identity, so the audit log shows which agent did what.
+Management needs a registry of running children with their task, budget, heartbeat and worktree. Depth and fan-out are capped in a committed orchestration file, next to the watchdog thresholds, restart budget and merge gate. A child's budget is carved out of its parent's, and its permissions are a subset of its parent's. Each child runs in its own worktree or container under its own identity, so the audit log shows which agent did what.
 
-Kill has to mean kill. ohmybetterroadmap's continuity notes record an agent that was still writing and pushing fifty minutes after its iteration had exited with a timeout, because the client process died while the shared background service kept the agent alive. The fix runs the agent inside the process the watchdog signals and escalates to a hard kill after fifteen seconds. Orphaned children are a bug class of their own.
+Kill has to mean kill. If the watchdog signals a client while a shared background service keeps the agent alive, the agent goes on editing and pushing after its run was declared dead. The agent therefore runs inside the process the watchdog signals, and a signal that is ignored escalates to a hard kill. Orphaned children are a bug class of their own.
 
 Delegation exists for context isolation and parallelism. It costs coordination, and every handoff loses context, which is why the packet is written down.
 
@@ -238,7 +223,7 @@ Git history covers changes to the repository, and it leaves out the reasoning. E
 
 Raw transcripts are large and may contain personal data, so they go to the blob store, redacted, with git holding the summary and hash. Episodes are retrievable by task, entity, time and similarity, through a derived index. Failures are as valuable as successes. Episodes are evidence of the past and never instructions: an episode that quotes an inbound email carries that email's taint.
 
-A periodic consolidation step reads recent episodes and proposes changes as pull requests: new facts for semantic memory, amendments to SOPs and skills, new regression cases. ohmyroadmap's mandatory retro is a small version. Every task-template run ends with a jot proposing an improvement or an explicit "no change" record.
+A periodic consolidation step reads recent episodes and proposes changes as pull requests: new facts for semantic memory, amendments to SOPs and skills, new regression cases. A mandatory retro after every procedure run is the small version: it ends with a proposed improvement or an explicit "no change" record.
 
 ### 13. Semantic memory
 
@@ -255,7 +240,7 @@ Facts from untrusted input stay tainted until confirmed. The classic case is bus
 
 ### 14. A skill library
 
-A skill is a packaged capability: instructions, scripts and reference files that an agent loads when a task needs them. The [Agent Skills](https://agentskills.io/) format is a `SKILL.md` with a name and description in frontmatter, and ohmyroadmap ships itself as one. Rendering an invoice, booking through a supplier portal or producing a loudness-normalised video export are skills.
+A skill is a packaged capability: instructions, scripts and reference files that an agent loads when a task needs them. The [Agent Skills](https://agentskills.io/) format is a `SKILL.md` with a name and description in frontmatter. Rendering an invoice, booking through a supplier portal or producing a loudness-normalised video export are skills.
 
 A skill differs from an SOP. An SOP is a business procedure with steps, owners, risk tiers and checks. A skill is how to do one kind of step. SOP steps reference skills, and rules apply to both.
 
@@ -264,8 +249,8 @@ Requirements:
 - versioned in git, with each run recording the skill version it loaded
 - discoverable by name and description, with bodies loaded on demand
 - a declared permission scope listing the tools and adapters it may use
-- tests with saved inputs and expected results before a new version is promoted, the way Paperclip's Skill Studio keeps saved test inputs and version history with restore
-- an owner, usage metrics and a retirement path, like ohmyroadmap archiving a task template unused for three waves
+- tests with saved inputs and expected results before a new version is promoted, and a way to restore an earlier version
+- an owner, usage metrics and a retirement path, so a skill unused for a set period gets archived
 - third-party skills reviewed and pinned like code, because a skill is a prompt with a README and can carry an injection
 
 New skills can be mined from successful improvised runs and land as pull requests.
@@ -276,7 +261,7 @@ Should an agent be told "You are an experienced frontend engineer"? The evidence
 
 The three options compare like this. No persona works for generic subtasks and knows none of the house conventions. A persona line changes tone and vocabulary and adds no knowledge or checks. SOPs, skills and rules carry information the model lacks: the checklist, the tool conventions, the acceptance criteria. That information moves outcomes.
 
-Role still matters, as routing and permissions. A role is a bundle: the tools it may call, its skills and SOPs, its budget, its reviewer, its model and an output contract. A verifier role is told to look for failures and has no write access to the thing it checks. Paperclip's org chart works this way, with responsibilities and permissions per role. Persona text keeps one legitimate job: voice in outbound communication, where brand tone is a requirement.
+Role still matters, as routing and permissions. A role is a bundle: the tools it may call, its skills and SOPs, its budget, its reviewer, its model and an output contract. A verifier role is told to look for failures and has no write access to the thing it checks. An org chart of such roles, with responsibilities and permissions per role, is how humans and agents share one structure. Persona text keeps one legitimate job: voice in outbound communication, where brand tone is a requirement.
 
 Prompts are versioned artifacts. Each run records the hash of its prompt. A change to a prompt is tested on saved cases against the current version, the same way a code change is tested, and it ships only if the evals improve. Default: no persona, task plus SOP plus skills, and a role line only where an eval shows it helps.
 
@@ -286,7 +271,7 @@ An agent needs to know three things about itself: how sure it is, what it has le
 
 Confidence cannot be self-reported. [Xiong et al.](https://arxiv.org/abs/2306.13063) found that verbalised LLM confidence is overconfident. So self-reported confidence can never lower a risk tier by itself. Confidence comes from external signals: checks passed, evidence coverage, agreement between independent samples or agents, whether the retrieved facts are fresh. Each episode logs the predicted confidence next to the verified outcome, so calibration can be measured per agent and task type over time. Low confidence routes to verification or a human.
 
-Budgets cover tokens, wall time, money, retries and human attention. They are set before work starts, carved down to children and enforced by the harness, since the model cannot be trusted to stop itself. Paperclip pauses work at configured limits. ohmyroadmap gives each node an iteration budget that `check` enforces, and a task-template step that runs out of rework rounds escalates to the board as an `[H]` node. ohmybetterroadmap's spend cap is an estimate: the loop cannot read the provider's meter, so it adds a conservative figure before each iteration. An exhausted budget ends in a written diagnosis, never in a silent stop.
+Budgets cover tokens, wall time, money, retries and human attention. They are set before work starts, carved down to children and enforced by the harness, since the model cannot be trusted to stop itself. Each task has an iteration budget, and running out of rework rounds escalates to a human task. Where the provider's meter cannot be read, the loop adds a conservative estimate before each iteration and treats the cap as a bound on that estimate. An exhausted budget ends in a written diagnosis, never in a silent stop.
 
 The next action is explicit and committed at the end of every step, from a fixed set: continue, verify, delegate, ask a human, escalate, stop with a diagnosis. A stateless successor reads it instead of guessing. Stall detection compares state across iterations and stops a loop that repeats itself. "I could not verify X" is a required field of every report.
 
@@ -339,17 +324,17 @@ Bookkeeping fits git as plain-text accounting with [beancount](https://beancount
 
 ### 20. SOPs and the feedback loop
 
-An SOP is a versioned procedure: trigger, inputs, steps, the skills and adapters each step may use, risk tier, checks, outputs and owner. Each run records the SOP version it used. ClosedLoopOS writes SOPs as YAML with `depends_on` between steps, cron or issue triggers and per-step retry and escalation, and ohmyroadmap's task templates are procedures with rework budgets per step.
+An SOP is a versioned procedure: trigger, inputs, steps, the skills and adapters each step may use, risk tier, checks, outputs and owner. Steps declare their dependencies, triggers can be a schedule or an event such as a closed task, and each step has its own retry, rework budget and escalation. Each run records the SOP version it used.
 
 Pre-effect hooks attach to effect types. A spellcheck hook on "outbound email" covers every SOP that sends email.
 
-Discovery is a registry matched by trigger or intent. When no SOP fits, the agent improvises, records the full trace and proposes a draft SOP from it. ClosedLoopOS routes such drafts through an approval dashboard before they are promoted.
+Discovery is a registry matched by trigger or intent. When no SOP fits, the agent improvises, records the full trace and proposes a draft SOP from it. A human approves the draft before it is promoted.
 
-Feedback comes from human edits to agent drafts, failed checks, incidents and outcome metrics like reply rate and rework rate. The diff between a draft and the version a human actually sent is the most valuable signal there is. Each one becomes a friction entry, then an amendment as a pull request, tested by replaying past cases against the new version before it ships, the way ohmybetterroadmap compares two implementations on frozen fixtures. Recorded deviations ("skipped step 4 because the supplier was closed") feed the same loop, and SOPs nobody runs get retired.
+Feedback comes from human edits to agent drafts, failed checks, incidents and outcome metrics like reply rate and rework rate. The diff between a draft and the version a human actually sent is the most valuable signal there is. Each one becomes a friction entry, then an amendment as a pull request, tested by replaying past cases as frozen fixtures against the new version before it ships. Recorded deviations ("skipped step 4 because the supplier was closed") feed the same loop, and SOPs nobody runs get retired.
 
 ### 21. Secrets
 
-Agents never see secret values. A broker injects credentials into an approved action. Git holds references like `secret://bank/main`, and values live in a vault: [sops](https://github.com/getsops/sops) with age keys in the repository, or a hosted vault. Paperclip calls the same idea secret references.
+Agents never see secret values. A broker injects credentials into an approved action. Git holds references like `secret://bank/main`, and values live in a vault: [sops](https://github.com/getsops/sops) with age keys in the repository, or a hosted vault.
 
 Credential types behave differently:
 
@@ -360,7 +345,7 @@ Credential types behave differently:
 - SMS codes need a phone number the system controls, with SIM-swap risk
 - recovery codes stay offline and human-only
 
-Credentials are scoped and short-lived per SOP or task, and each agent has its own identity so the audit log shows who used what. Rotation, revocation, a break-glass procedure and leak scanning with gitleaks are part of the requirement. Browser screenshots and call transcripts can capture passwords and card numbers, so they get redacted. Accounts belong to the organisation, with a human recovery path.
+Credentials are scoped and short-lived per SOP or task, and each agent has its own identity so the audit log shows who used what. Rotation, revocation, a break-glass procedure and leak scanning with [gitleaks](https://github.com/gitleaks/gitleaks) are part of the requirement. Browser screenshots and call transcripts can capture passwords and card numbers, so they get redacted. Accounts belong to the organisation, with a human recovery path.
 
 ### 22. External services: APIs, MCP and browsers
 
@@ -368,7 +353,7 @@ Integrations come in a preferred order: an official API, then an MCP server, the
 
 Each integration has an adapter contract: capabilities, read and write operations listed separately, a risk tier per operation, auth method, rate limits, idempotency support and the evidence it produces. Read adapters can be used freely. Write adapters always go through the effect pipeline.
 
-MCP servers are third-party code running with your credentials, so they are pinned through the flake, reviewed and sandboxed. Paperclip's tool gateway sets each gateway action to allowed, ask first or off, which is the right shape.
+MCP servers are third-party code running with your credentials, so they are pinned through the flake, reviewed and sandboxed. Each tool action is set to allowed, ask first or off.
 
 Browsing follows explore, then codify: an LLM-driven browser finds the path once, the path gets distilled into a Playwright script, and that script joins the SOP. The run stays deterministic until the site changes. Terms of service and bot detection apply, and CAPTCHA bypasses are out. Playwright traces and screenshots serve as evidence.
 
@@ -380,7 +365,7 @@ Some work needs people: an inspection on site, attending an event, a judgment ca
 
 People will not use git. Tasks reach them through channels they already use: WhatsApp, SMS, a small mobile web page. Results come back as photos, checklists, timestamps, locations and signatures, and the system commits them on the person's behalf with attribution.
 
-Natural language is welcome on every channel. An intake step turns a request into a structured task, and the original message stays as an observation. ohmyroadmap's `intake` does the mechanical half by matching a request to a task template or minting one. Its goal routing already sends "build a house" to discovery as physical construction and "prepare dinner for six" as an everyday procedure.
+Natural language is welcome on every channel. An intake step turns a request into a structured task, and the original message stays as an observation. Intake matches the request to an existing procedure or creates one. A broad goal like "build a house" first routes to discovery, classified by domain, before any milestone exists.
 
 A worker registry holds skills, qualifications, location, availability and rates; some acceptance steps legally need a qualified person. Waiting on a human is a first-class state with timeouts, reminders, no-show handling and reassignment. Verification scales with risk: photo metadata and location, a second person, spot audits. People are never dispatched into unsafe situations, and directing freelancers like employees raises the false self-employment question under [§7 SGB IV](https://www.gesetze-im-internet.de/sgb_4/__7.html).
 
@@ -388,11 +373,11 @@ A worker registry holds skills, qualifications, location, availability and rates
 
 ### 24. A clock and a scheduler
 
-A stateless system needs something to wake it. Deadlines, follow-ups ("chase the supplier if there is no reply in three days") and recurring SOPs are committed timers, and an edge scheduler fires them. ClosedLoopOS uses cron triggers, and ohmybetterroadmap uses a systemd user timer.
+A stateless system needs something to wake it. Deadlines, follow-ups ("chase the supplier if there is no reply in three days") and recurring SOPs are committed timers, and an edge scheduler such as cron or a systemd timer fires them.
 
 ### 25. A kill switch
 
-One global stop for all effects that a human can trigger from a phone. ClosedLoopOS has separate switches: `AUTONOMOUS_DISPATCH=false` stops picking new work, and `LANDING_DISABLED` and `SCHEDULER_DISABLED` stop landing and scheduling. A `hold` label pauses a single task.
+One global stop for all effects that a human can trigger from a phone. Finer switches stop picking new work, landing changes and scheduling separately, and a label pauses a single task.
 
 ### 26. Privacy against an immutable history
 
@@ -414,11 +399,11 @@ Tokens, API spend, tool costs and human hours are recorded per task and per run.
 
 These help and do not block a first version:
 
-- notifications to Slack, Matrix or email when a gate fails or an `[H]` node ages; a notification is an outbound effect, so it uses the effect pipeline at a low tier
+- notifications to Slack, Matrix or email when a gate fails or a human task ages; a notification is an outbound effect, so it uses the effect pipeline at a low tier
 - multi-repository orchestration with tasks and evidence across repos
 - a history view that replays the graph commit by commit
-- velocity and KPI review derived from git history, like ohmyroadmap's `velocity` and its outcome review after a ship
-- portable company templates that export roles, SOPs and skills with secrets scrubbed, as Paperclip does
+- velocity and KPI review derived from git history, with an outcome check scheduled after each release
+- portable company templates that export roles, SOPs and skills with secrets scrubbed
 - rehearsal drills that replay a recorded week against a new model or prompt set before switching
 
 ## Non-goals
@@ -475,5 +460,19 @@ A startup stresses money, legal binding and semantic memory. The committed state
 6. Who reviews writes to semantic memory, and how fast a fact expires by default.
 7. How far the Nix-only rule bends for hosts without Nix.
 8. Which domain goes first. Renovation, the agency and the slam put pressure on very different parts.
+
+## Projects that implement parts of this
+
+No project I know meets the whole list. Four cover parts of it. Three are my own experiments, and one is a third-party platform.
+
+[Paperclip](https://github.com/paperclipai/paperclip) runs a team of agents as an org chart, from a Node.js server and React UI with its state in PostgreSQL. It covers much of the operational side: heartbeats, budgets that pause work at configured limits, approval stages, atomic task checkout with a single assignee, scoped secret references, a tool gateway with allowed, ask-first and off per action, and a Skill Studio with saved test inputs and version history. Company templates export with secrets scrubbed. The database is the part this list would replace.
+
+ohmyroadmap is a CLI and agent skill that keeps the task graph in the repository, one `TASK.md` per node, with `ROADMAP.md` rendered from the store and the node's git log as its history. It covers most of the work ledger. Lefthook runs one gate set for commit, push and CI, including a fail-closed gitleaks scan, and `check` refuses done while an acceptance criterion lacks a line in `EVIDENCE.md`. Human questions are `[H]` nodes listed by `board`, task templates end in a mandatory retro, and `view --browser --static` writes a self-contained SVG Gantt chart.
+
+[ClosedLoopOS](https://closed-loop-os.vercel.app/) runs YAML SOPs with step dependencies, cron and issue triggers and per-step retries. Each session works in an isolated Docker worktree behind an egress proxy, and changes land as Forgejo pull requests with a human merge by default. It has kill switches for dispatch, landing and scheduling, a `hold` label, and an approval queue for SOP drafts. Runtime state lives in SQLite.
+
+ohmybetterroadmap is a Rust port of ohmyroadmap, checked against the original with differential fixtures. It adds the single-file HTML cockpit, tiered test suites with mutation testing and a written delegation contract. Its unattended loop has seven stop conditions and a monthly spend cap, and its watchdog kill rule came from an agent that kept pushing fifty minutes after its run timed out.
+
+The Nix-only rule is the one none of them meet, this site included: its flake supplies Node and pnpm, and pnpm still owns the packages.
 
 The first milestone is small: one domain, one SOP, one effect with a receipt, one human task, and a loop that survives a week of resets. If wiping every session and cache, cloning fresh and starting a new agent picks the work up where it stopped, the design holds. Whatever got lost was state that lived outside git.
