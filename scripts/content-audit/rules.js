@@ -163,6 +163,8 @@ const PROMPT_PATTERNS = [
   { label: "generation label", regex: /\bGenerated (?:by|with) (?:ChatGPT|OpenAI|Claude|Gemini|an AI|AI)\b/gi },
   { label: "model attribution", regex: /\b(?:ChatGPT|Claude|Gemini|Copilot)\s+(?:wrote|generated|produced|said)\b/gi },
   { label: "placeholder text", regex: /\bLorem ipsum\b/gi },
+  // Editing convention for cross-references; the site does not resolve them, so one that survives ships literally.
+  { label: "unresolved cross-reference", regex: /\{\{r:[^}]*\}\}/g },
 ]
 
 // High-confidence vocabulary tells. Context-sensitive words such as "journey",

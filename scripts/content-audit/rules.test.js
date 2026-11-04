@@ -250,6 +250,21 @@ describe("content audit", () => {
     expect(rulesFor(result)).toContain("prompt-artifact")
   })
 
+  it("flags an unresolved cross-reference placeholder", () => {
+    const result = auditMarkdownSource(
+      "# Notes\n\nSee requirement {{r:Backup and restore}} for the drill.\n",
+      "xref.md"
+    )
+
+    expect(rulesFor(result)).toContain("prompt-artifact")
+  })
+
+  it("does not flag a resolved cross-reference", () => {
+    const result = auditMarkdownSource("# Notes\n\nSee requirement 33 for the drill.\n", "xref.md")
+
+    expect(rulesFor(result)).not.toContain("prompt-artifact")
+  })
+
   it("flags hidden HTML comments", () => {
     const result = auditMarkdownSource("# Notes\n\n<!-- hidden editorial note -->\n\nBody.\n", "comment.md")
 
