@@ -2,7 +2,7 @@
 id: 2026-git-based-stateless-llm-driven-company
 title: "Requirements for a Git-Based, Stateless, LLM-Driven Company"
 articleDate: 2026-11-04
-articleContent: "Requirements for running any work that can be written down, from software to house renovations, on committed files and LLM agents: principles, sixty must-haves from governance and signed history to memory, sandboxes and Nix, physical work, employment, finance and creative rights, nice-to-haves, non-goals, the decisions to settle first and the projects that already cover parts of it."
+articleContent: "Requirements for running any work that can be written down, from software to house renovations, on committed files and LLM agents: principles, 50 must-haves from governance and signed history to memory, sandboxes and Nix, physical work, employment, finance and creative rights, nice-to-haves, non-goals, the decisions to settle first and the projects that already cover parts of it.""
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
 tags:
@@ -102,7 +102,7 @@ The board is often one person with a phone. The baker who owns four shops will n
 
 Delegation to an agent role has a ceiling. Effects in the top tier, payments to new payees and statements in the company's name in a new way are never delegated to an agent, whatever a board member signs.
 
-### 1. Human attention as a scarce resource
+### 4. Human attention as a scarce resource
 
 Every gate that asks a person costs attention, and attention runs out long before tokens do. Thirty approval requests a day on one phone get tapped through while the television runs, and the one that says "pay Müller Mehl GmbH, new IBAN" gets the same two seconds as "post the croissant photo". An approval nobody read is worse than no approval, because it produces a signature that looks like evidence.
 
@@ -117,7 +117,7 @@ An approval request has to be checkable by the person who gets it. A payload has
 
 The board can end a decision without making it. "Not now", "ask me Monday" and "decide yourself within these limits" are valid answers with defined effects.
 
-### 4. Gates at every point where a mistake can enter
+### 5. Gates at every point where a mistake can enter
 
 A rule only counts if something enforces it. Each rule has an id, a rationale and a named mechanism. The taxonomy is broad: format, schema, graph structure, risk policy, content such as tone and spelling, and legal constraints such as consent and retention.
 
@@ -137,7 +137,7 @@ Agents must not be able to weaken their own gates. Editing the policy that gates
 
 One definition of the gate set serves commit, push and CI, so the three cannot drift apart. A gate whose tool is missing fails closed.
 
-### 5. Signed commits, linear history, board-only force-push
+### 6. Signed commits, linear history, board-only force-push
 
 Git is the only durable store, so the design stands or falls with trust in the history.
 
@@ -155,13 +155,13 @@ Force-push and every other history rewrite are refused on protected branches. Th
 
 The books are outside even the board's reach. [§146(4) AO](https://www.gesetze-im-internet.de/ao_1977/__146.html) forbids changing a booking in a way that hides the original entry, so the accounting subtree accepts no rewrite at all; an error is corrected by a reversal entry and a new booking. Rewrites are rare for the same reason elsewhere: personal data and secrets never enter history in the first place (requirement 33), so erasure works on the blob store and the vault, and a force-push stays an emergency tool.
 
-### 2. Trusted time
+### 7. Trusted time
 
 A commit's date is whatever the committer's clock said, and an agent controls its clock. That is fine for most work and fatal for some: a consent that has to predate the newsletter, a booking that has to fall in the right period, a notice that has to arrive before a deadline, a signature that has to precede a payment.
 
 Records whose time carries legal or financial weight get an external time anchor: an [RFC 3161](https://www.rfc-editor.org/rfc/rfc3161) timestamp from a timestamping authority over the record's hash, or the receipt time an external party assigned, such as the bank's value date or the mail server's `Received` header. The anchor is committed next to the record, and a gate refuses a record whose anchor is missing, from an unknown authority or out of order with the records around it. The scheduler and every deadline check read time from a synchronised source, and a host whose clock drifts beyond a set tolerance stops taking effects.
 
-### 6. An evidence ledger per task
+### 8. An evidence ledger per task
 
 Every task produces evidence: command output, build logs, photos, signed acceptance, receipts. Evidence is committed, add-only and tied to the acceptance criterion it proves. A claim with no command or artifact behind it does not count.
 
@@ -169,7 +169,7 @@ The author must not produce its own proof. An agent that runs the evidence comma
 
 A sealed outcome record stores the command that proved a criterion, its exit code and the hash of its output. An attestation ties the record to the tree it ran against, and a record that does not describe the code being landed stops the loop.
 
-### 7. Test suites, verifiers and change logs
+### 9. Test suites, verifiers and change logs
 
 Three things, each with its own job.
 
@@ -197,17 +197,17 @@ Verifiers need tests too. A verifier that always passes is worse than none, beca
 
 Change logs serve people who do not read diffs. Commits follow [Conventional Commits](https://www.conventionalcommits.org/) so tools can parse them. A human-facing log in the [Keep a Changelog](https://keepachangelog.com/) format is generated from commits and decision records, then edited by hand. Outside software the change log is the client report: "this week: tiles ordered, plumbing inspection passed, budget line 4 up 300 €". SOPs and rules get the same treatment, so a change in how the agents behave traces back to a dated, reasoned edit with a version bump.
 
-### 8. Atomic transitions with rollback
+### 10. Atomic transitions with rollback
 
 A transition commits whole or not at all. The state flip, the evidence, the rendered roadmap and the gate result land in one commit, or the store returns to its previous state. Every command that changes the store runs the gates on the result and rolls back on failure. Each agent session works in its own worktree or container, and only a change that passes the gates reaches main.
 
 Rollback means a change never lands. It never means removing something that already landed. A transition that touches the books, sends an effect or records a human decision has left a trace the law or the audit needs, so a failure after that point keeps the attempt as a committed record with its own terminal state, and the correction is a new forward entry: a reversal booking, a compensating effect, a withdrawn decision.
 
-### 9. Diffs people can read
+### 11. Diffs people can read
 
 Review happens on diffs, so diffs must make sense without tools: plain text, stable ordering, one concept per line. A state flip should be a one-line change. Generated views such as a rendered roadmap are deterministic, so they never churn.
 
-### 10. Dependencies managed by Nix alone
+### 12. Dependencies managed by Nix alone
 
 Every tool an agent can call comes from a pinned flake: runtimes, CLIs, ffmpeg, Typst, browsers, MCP servers and the agent harness itself. Language-level lockfiles are consumed by Nix as fixed-output derivations: `pnpm-lock.yaml` through the [pnpm support in nixpkgs](https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm), `Cargo.lock` through [crane](https://github.com/ipetkov/crane), `uv.lock` through [uv2nix](https://github.com/pyproject-nix/uv2nix). Nothing gets installed any other way. No global `npm install`, no `pip install`, no `curl | sh`, no `apt-get` inside a worker.
 
@@ -225,7 +225,7 @@ The costs are real too. Every lockfile change means a hash update. A binary cach
 
 This replaces the usual "runs anywhere" promise. Portability now means moving between git forges, CI systems and agent harnesses, with Nix as the one fixed dependency.
 
-### 11. Single-file HTML dashboards for humans
+### 13. Single-file HTML dashboards for humans
 
 People should see the state of the company without reading git. The interface is a generated HTML file:
 
@@ -241,7 +241,7 @@ A dashboard nobody opens shows nothing. The same page goes out as the daily dige
 
 ## Requirements, part 2: the agent's mind
 
-### 12. The CEO loop that stops itself
+### 1. The CEO loop that stops itself
 
 The orchestrator picks the next task from the frontier, dispatches an agent, waits for completion, verifies the result, updates state, commits and repeats. It must be unattended, and it must stop itself when it should not continue.
 
@@ -259,7 +259,7 @@ A timer starts it, and a lock keeps a second driver out of the store. The driver
 
 A loop that stopped looks like a quiet day. Something outside it has to notice: a dead-man's switch on another host, under other credentials, that expects a signed heartbeat from every run and an "all clear" from every digest, and that alerts the board on a second channel when either one is late. It must not depend on the forge, the model provider or the machine the loop runs on, because those are the things that fail.
 
-### 13. Sub-agent delegation and management
+### 2. Sub-agent delegation and management
 
 The CEO session keeps the slice, the order and the final gate. Every bounded sub-task goes to a child agent, and sub-agents spawn their own children. A leaf may not become a second CEO loop, and a parent never delegates these: slicing the frontier, editing a shared file, weakening a check, the final verify, commit and push, or answering a human-only question.
 
@@ -280,7 +280,7 @@ Kill has to mean kill. If the watchdog signals a client while a shared backgroun
 
 Delegation exists for context isolation and parallelism. It costs coordination, and every handoff loses context, which is why the packet is written down.
 
-### 14. Context management
+### 3. Context management
 
 The context window is small, expensive working memory, and models use it unevenly: [Lost in the Middle](https://arxiv.org/abs/2307.03172) found that accuracy drops when the relevant passage sits in the middle of a long input. So context is assembled per task from committed state, never carried forward from chat.
 
@@ -299,7 +299,7 @@ Isolation is the most important property of the packet. An agency works for comp
 
 The test: a fresh session given only the last commit and the task id resumes the work.
 
-### 15. Episodic memory
+### 4. Episodic memory
 
 Episodic memory records what happened. The [CoALA](https://arxiv.org/abs/2309.02427) framework for language agents splits memory into working, episodic, semantic and procedural kinds, and the split maps cleanly onto files. The context window is working memory. Skills and SOPs are procedural memory. That leaves the other two.
 
@@ -315,7 +315,7 @@ Raw transcripts are large and may contain personal data, so they go to the blob 
 
 A periodic consolidation step reads recent episodes and proposes changes as pull requests: new facts for semantic memory, amendments to SOPs and skills, new regression cases. A mandatory retro after every procedure run is the small version: it ends with a proposed improvement or an explicit "no change" record.
 
-### 16. Semantic memory
+### 5. Semantic memory
 
 Semantic memory holds what the company knows: contacts, suppliers and their lead times, prices, client preferences, regulations that apply, its own policies. Each fact is a small typed file with:
 
@@ -330,7 +330,7 @@ Some facts come from authorities and are not the company's to change: the statut
 
 Facts from untrusted input stay tainted until confirmed. The classic case is business email compromise: a supplier's "new bank details" arrive by email. That may update a tentative fact. It can never authorise a payment to a new account; that needs out-of-band confirmation, whatever semantic memory says.
 
-### 17. A skill library
+### 6. A skill library
 
 A skill is a packaged capability: instructions, scripts and reference files that an agent loads when a task needs them. The [Agent Skills](https://agentskills.io/) format is a `SKILL.md` with a name and description in frontmatter. Rendering an invoice, booking through a supplier portal or producing a loudness-normalised video export are skills.
 
@@ -347,7 +347,7 @@ Requirements:
 
 New skills can be mined from successful improvised runs and land as pull requests.
 
-### 18. Prompts: personas, no persona, or SOPs
+### 7. Prompts: personas, no persona, or SOPs
 
 Should an agent be told "You are an experienced frontend engineer"? The evidence says it buys little. [Zheng et al.](https://arxiv.org/abs/2311.10054) tested 162 roles across four popular model families on 2,410 factual questions and found that adding a persona to the system prompt did not improve performance compared with no persona. The study covers factual questions. It does not test long agentic tasks, and I do not want to over-read it.
 
@@ -357,7 +357,7 @@ Role still matters, as routing and permissions. A role is a bundle: the tools it
 
 Prompts are versioned artifacts. Each run records the hash of its prompt. A change to a prompt is tested on saved cases against the current version, the same way a code change is tested, and it ships only if the evals improve. Default: no persona, task plus SOP plus skills, and a role line only where an eval shows it helps.
 
-### 19. Metacognition: confidence, budgets and the next action
+### 8. Metacognition: confidence, budgets and the next action
 
 An agent needs to know three things about itself: how sure it is, what it has left to spend and what to do next.
 
@@ -369,7 +369,7 @@ The next action is explicit and committed at the end of every step, from a fixed
 
 ## Requirements, part 3: the edges
 
-### 20. Communication in and out
+### 1. Communication in and out
 
 A contractor sends a quote by email, a client approves a design on WhatsApp, a supplier calls with a delivery date. All of these are observations to capture, route and act on.
 
@@ -387,7 +387,7 @@ Spam gets recorded and its content kept briefly. The ledger entry with hash, sen
 
 Legal edges, as pointers and not as advice. Recording a non-public conversation without consent is an offence in Germany under [§201 StGB](https://www.gesetze-im-internet.de/stgb/__201.html), so recording needs consent capture. The [EU AI Act](https://eur-lex.europa.eu/eli/reg/2024/1689/oj) requires telling people when they talk to an AI system (Art. 50), so an AI caller discloses that it is one. Email advertising needs prior express consent under [§7 UWG](https://www.gesetze-im-internet.de/uwg_2004/__7.html), with a narrow exception for existing customers, and the consent rule draws no line between consumers and businesses.
 
-### 21. A sandbox for effects
+### 2. A sandbox for effects
 
 Verifiers check artifacts. The effect pipeline needs its own test ground, because the first real run of a payment SOP must not be its first run.
 
@@ -397,7 +397,7 @@ New SOPs, amended SOPs, new adapters and new prompt versions run in the sandbox 
 
 Sandbox and live never share credentials or data. Sandbox runs see synthetic or redacted fixtures, never a live client's personal data, and the live executor refuses any payload produced in sandbox mode.
 
-### 22. Deterministic assets
+### 3. Deterministic assets
 
 Videos, documents, graphics and audio must be reproducible or at least traceable. An asset is a recipe plus a pinned toolchain plus inputs by hash, producing an output hash. That is a Nix derivation, which is one more reason for requirement 10.
 
@@ -407,7 +407,7 @@ Generative model calls are not bit-reproducible. API models change underneath yo
 
 Large outputs commit only the recipe and output hash, with the binary in the artifact store. When a designer works in Figma or Photoshop, the export enters as an input artifact. Review uses visual diffs, and AI-generated media carries [C2PA](https://c2pa.org/) content credentials, since the AI Act also asks for synthetic content to be marked.
 
-### 23. Risk, money and approvals
+### 4. Risk, money and approvals
 
 One risk tier per action type is too coarse. Each proposed action is scored on several axes:
 
@@ -426,7 +426,7 @@ Idempotency is required because the system is stateless. A resumed agent must no
 
 Bookkeeping fits git as plain-text accounting with [beancount](https://beancount.github.io/) or [hledger](https://hledger.org/). German retention rules under [§147 AO](https://www.gesetze-im-internet.de/ao_1977/__147.html) favour immutability and conflict with GDPR erasure, so retention is defined per data class.
 
-### 24. Legal bases and consent records
+### 5. Legal bases and consent records
 
 Every processing of personal data needs a legal basis, and consent is only one of them. Under GDPR Art. 6 most of a company's processing rests on something else: a contract with the person, a legal obligation such as keeping invoices, or a legitimate interest that was weighed and written down. Health data needs an exception under Art. 9(2), and a physiotherapy practice relies on [Art. 9(2)(h)](https://gdpr-info.eu/art-9-gdpr/), the provision of treatment, for its treatment notes. Treating consent as the only basis gets it wrong both ways: it asks patients to consent to records the law requires, and it suggests they can withdraw from them.
 
@@ -434,7 +434,7 @@ So each processing activity in the register of requirement 33 names its basis. W
 
 Every effect cites its basis in its proposal. Where the basis is consent, the pre-effect gate checks the purpose, the date and the absence of a later withdrawal. No basis, no effect. The consent ledger falls under the warehouse rule: the identity of the person sits in the encrypted blob store, and git holds the hash and the purpose.
 
-### 25. SOPs and the feedback loop
+### 6. SOPs and the feedback loop
 
 An SOP is a versioned procedure: trigger, inputs, steps, the skills and adapters each step may use, risk tier, checks, outputs and owner. Steps declare their dependencies, triggers can be a schedule or an event such as a closed task, and each step has its own retry, rework budget and escalation. Each run records the SOP version it used.
 
@@ -444,7 +444,7 @@ Discovery is a registry matched by trigger or intent. When no SOP fits, the agen
 
 Feedback comes from human edits to agent drafts, failed checks, incidents and outcome metrics like reply rate and rework rate. The diff between a draft and the version a human actually sent is the most valuable signal there is. Each one becomes a friction entry, then an amendment as a pull request, tested by replaying past cases as pseudonymised fixtures (requirement 21) against the new version before it ships. Recorded deviations ("skipped step 4 because the supplier was closed") feed the same loop, and SOPs nobody runs get retired.
 
-### 26. Secrets
+### 7. Secrets
 
 Agents never see secret values. A broker injects credentials into an approved action. Git holds references like `secret://bank/main`, and values live in a vault: [sops](https://github.com/getsops/sops) with age keys in the repository, or a hosted vault.
 
@@ -459,7 +459,7 @@ Credential types behave differently:
 
 Credentials are scoped and short-lived per SOP or task, and each agent has its own identity so the audit log shows who used what. Rotation, revocation, a break-glass procedure and leak scanning with [gitleaks](https://github.com/gitleaks/gitleaks) are part of the requirement. Browser screenshots and call transcripts can capture passwords and card numbers, so they get redacted. Accounts belong to the organisation, with a human recovery path.
 
-### 27. External services: APIs, MCP and browsers
+### 8. External services: APIs, MCP and browsers
 
 Integrations come in a preferred order: an official API, then an MCP server, then a CLI, then a scripted Playwright browser, then an LLM-driven browser, then a human.
 
@@ -471,7 +471,7 @@ Browsing follows explore, then codify: an LLM-driven browser finds the path once
 
 Truth has owners. The bank owns the balance; git owns intent, decisions and evidence. External state enters git as timestamped snapshot observations.
 
-### 28. Human collaborators
+### 9. Human collaborators
 
 Some work needs people: an inspection on site, attending an event, a judgment call that needs a licence. There are three kinds of human with different trust. Governors on the board approve and sign decisions. Workers do in-person tasks. External parties, clients and suppliers, are only ever correspondents.
 
@@ -483,11 +483,11 @@ A worker registry holds skills, qualifications, location, availability and rates
 
 ## Requirements, part 4: operations
 
-### 29. A clock and a scheduler
+### 1. A clock and a scheduler
 
 A stateless system needs something to wake it. Deadlines, follow-ups ("chase the supplier if there is no reply in three days") and recurring SOPs are committed timers, and an edge scheduler such as cron or a systemd timer fires them.
 
-### 30. A kill switch
+### 2. A kill switch
 
 One global stop for all effects that a human can trigger from a phone. Finer switches stop picking new work, landing changes and scheduling separately, and a label pauses a single task.
 
@@ -495,7 +495,7 @@ A switch that lives only in a committed file can be overwritten by anything that
 
 Stopping is also physical. Effects already in flight, such as a worker driving to a site or a newsletter queued at the provider, are listed on the stop confirmation with what was recalled and what could not be. A stop per place, for a site or a room, is part of requirement 2.
 
-### 31. Backup and restore
+### 3. Backup and restore
 
 "History is the backup" only holds for what is in git, and even git needs more than one copy. The things outside it are the riskiest: the blob store, the vault, the signing keys, the key registry, the binary cache and the forge itself.
 
@@ -512,13 +512,13 @@ Requirements:
 
 A forge outage stops the company. The loop must be able to run against the mirror with the board's agreement, and the mirror must be promotable to primary. Promotion raises an authority epoch, a counter in the key registry that every writer and executor checks, so an old primary that comes back cannot accept writes or run effects next to the new one.
 
-### 32. Continuity and exit
+### 4. Continuity and exit
 
 The company must survive the loss of a person and be able to end cleanly. Every account, key and recovery path has at least two human holders. A succession document in the repository says who takes over which decision class when a board member drops out, and the board reviews it once a year.
 
 Exit is a supported path. The whole company exports as the repositories, the blob store, the vault contents and the decision history, in open formats. A client leaving gets their data back and their scope erased. Winding the company down is an SOP: notices to clients, suppliers and authorities, final accounts, retention of records for the legal periods, then shredding of everything else.
 
-### 33. Data classes, legal bases and erasure
+### 5. Data classes, legal bases and erasure
 
 GDPR erasure against git's permanent history is the biggest structural conflict here. The answer has two parts: a data model that says what every record is, and a key scheme that can destroy exactly what may be destroyed and nothing else.
 
@@ -538,7 +538,7 @@ A decision table maps each kind of request to its outcome per data class: erase,
 
 Data minimisation applies to transcripts and screenshots as much as to databases. Some data needs more than GDPR: a physiotherapist is bound by professional secrecy under [§203 StGB](https://www.gesetze-im-internet.de/stgb/__203.html), so treatment data may only reach a processor who has been bound to secrecy, and the model provider is such a processor.
 
-### 1. Data subject rights, breaches and processors
+### 6. Data subject rights, breaches and processors
 
 Erasure is one right among several. Access, rectification, restriction, objection and portability each need an SOP that finds every record about the person through the tags of requirement 33, including episodes, memory facts and blobs, and produces the answer as an effect with a receipt. [Art. 12(3) GDPR](https://gdpr-info.eu/art-12-gdpr/) gives one month from receipt of the request, so a request is an observation that starts a timer in the compliance calendar.
 
@@ -546,7 +546,7 @@ A personal data breach starts a different clock. Under [Art. 33 GDPR](https://gd
 
 Every adapter and integration has an entry in a processor register: the service, the data classes it receives, the contract under Art. 28, the countries the data goes to and the transfer mechanism, and the sub-processors. The model provider gets the strictest entry because every context packet passes through it. A new integration cannot go live without its register entry, and a gate checks that no data class reaches a processor whose entry does not list it.
 
-### 34. Concurrency and scale
+### 7. Concurrency and scale
 
 Many agents commit at once. Fifty agents translating hundreds of documents a day into a repository that passes 10 GB and a million commits within two years break a design that works for five.
 
@@ -565,21 +565,21 @@ The read path and size:
 
 Repositories split by domain or project when one store becomes a bottleneck, with tasks referring across them by repository and id.
 
-### 35. Contracts and signatures
+### 8. Contracts and signatures
 
 Binding commitments use qualified electronic signatures under eIDAS and sit deliberately in the top risk tier.
 
-### 36. Cost accounting
+### 9. Cost accounting
 
 Tokens, API spend, tool costs and human hours are recorded per task and per run. They feed the budgets in requirement 19, the value-against-cost choice in requirement 2 and the dashboard in requirement 11.
 
-### 37. Outcome metrics
+### 10. Outcome metrics
 
 Verified tasks are not the same as a working company. Each goal has outcome metrics, such as revenue, margin, reply rate, client satisfaction, rework rate and days from enquiry to quote. They are computed from the ledger and shown on the dashboard. A metric that stays off target opens a task for the board. Proxy metrics like tasks closed per week are allowed, and never as a goal on their own.
 
 A metric that pays is a metric agents will learn to move. A content agency paid by engagement can hit its numbers with posts that like each other across twenty client accounts, or with bought traffic. The measurement therefore sits outside the agents' reach: a collector with its own credentials reads the platforms and commits each figure with its source, account, retrieval time and the hash of the raw response. No agent holds a write credential for an analytics surface, interactions between accounts the company controls are excluded by construction, and a monthly review breaks every target hit down into organic, paid and suspicious sources. A metric that is on target is checked as hard as one that is off.
 
-### 38. A compliance calendar
+### 11. A compliance calendar
 
 Legal duties recur on dates: VAT returns, annual accounts, insurance renewals, contract notice periods, retention deadlines, certificate and domain expiry, the yearly review of the succession document. They live in a committed calendar, each with an owner, a lead time and an SOP. The scheduler opens a task ahead of each deadline, and a missed deadline is an incident. For a German company the list includes the yearly record of processing activities under GDPR Art. 30, the Impressum under [§5 DDG](https://www.gesetze-im-internet.de/ddg/__5.html), and a managing director, who under [§6 GmbHG](https://www.gesetze-im-internet.de/gmbhg/__6.html) has to be a natural person.
 
@@ -876,7 +876,7 @@ Everything runs on one model from one provider. There is no routing between mode
 
 Improvement comes from SOPs, skills, memory and prompts under evaluation. Fine-tuning weights is outside the loop.
 
-## Five domains
+## Four domains
 
 A renovation stresses human collaborators, money and proof. The committed state is a plan of rooms and materials, a budget with estimates and actuals, permits with status and evidence folders for quotes, receipts and photos. "Install plumbing" needs the demolition done and the permit approved. Gates block an order that exceeds the remaining budget and a step that lacks photos and the sign-off of a qualified person. The agent chases contractors by email, books receipts into the ledger as they arrive and tells the owner which decision blocks the week.
 
