@@ -10,6 +10,7 @@ const {
   collectSuppressions,
   countWords,
   findUnknownFrontmatterKeys,
+  parseDictionaryEntries,
   scanEmoji,
   scanHiddenComments,
   scanHiddenUnicode,
@@ -83,6 +84,21 @@ function displayPath(root, filePath) {
   return path.relative(root, filePath).split(path.sep).join("/")
 }
 
+function loadStatementDictionary(file, data) {
+  const name = data && data.statementDictionary
+  if (typeof name !== "string" || name.trim() === "") return { entries: new Map(), error: null }
+
+  const reference = name.trim()
+  const resolved = path.resolve(path.dirname(file), reference)
+  try {
+    const entries = parseDictionaryEntries(fs.readFileSync(resolved, "utf8"))
+    if (entries.size === 0) return { entries, error: `statementDictionary has no entries: ${reference}` }
+    return { entries, error: null }
+  } catch {
+    return { entries: new Map(), error: `statementDictionary not found: ${reference}` }
+  }
+}
+
 function auditMarkdownSource(raw, file) {
   const extracted = extractMarkdown(raw)
   const findings = []
@@ -125,6 +141,7 @@ function auditMarkdownSource(raw, file) {
     suppressions,
   })
 
+  const dictionary = loadStatementDictionary(file, extracted.data)
   const statements = analyzeStatements({
     file,
     body: extracted.bodyProse,
@@ -132,6 +149,8 @@ function auditMarkdownSource(raw, file) {
     data: extracted.data,
     findings,
     suppressions,
+    dictionaryEntries: dictionary.entries,
+    dictionaryError: dictionary.error,
   })
   stats.statements = statements.checked
 

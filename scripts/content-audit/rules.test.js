@@ -533,6 +533,51 @@ describe("statement rules", () => {
     expect(result.findings.find((finding) => finding.rule === "statement-case").detail).toContain("no dictionary")
   })
 
+  it("checks a post against a dictionary another post defines", () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), "statement-dictionary-"))
+    fs.writeFileSync(
+      path.join(directory, "dictionary.md"),
+      "**HASH** — the content address of a byte string.\n\n**PARTY** — a thing that can act.\n\n**SIGN** — to make a mark.\n"
+    )
+    const document = [
+      "---",
+      "statementRules:",
+      "  - Requirements",
+      "statementDictionary: dictionary.md",
+      "---",
+      "",
+      "## Requirements",
+      "",
+      "1. A PARTY SIGNs the HASH.",
+      "",
+    ].join("\n")
+
+    const result = auditMarkdownSource(document, path.join(directory, "post.md"))
+
+    expect(result.findings).toEqual([])
+  })
+
+  it("reports a shared dictionary that is missing", () => {
+    const document = [
+      "---",
+      "statementRules:",
+      "  - Requirements",
+      "statementDictionary: missing.md",
+      "---",
+      "",
+      "## Requirements",
+      "",
+      "1. A PARTY SIGNs the HASH.",
+      "",
+    ].join("\n")
+
+    const result = auditMarkdownSource(document, "post.md")
+    const caseFindings = result.findings.filter((finding) => finding.rule === "statement-case")
+
+    expect(caseFindings).toHaveLength(1)
+    expect(caseFindings[0].detail).toContain("statementDictionary not found")
+  })
+
   // The post states how many statements its rules govern. Without this the
   // number is prose, and the next edit that adds or drops a statement leaves
   // it stale while every gate stays green.

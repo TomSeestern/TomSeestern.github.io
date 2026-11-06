@@ -400,6 +400,8 @@ const FRONTMATTER_KEYS = new Set([
   "links",
   // Opt-in for the statement rules below. Posts without it are not checked.
   "statementRules",
+  // A post that reuses another post's dictionary names that file here.
+  "statementDictionary",
 ])
 
 const STATEMENT_MAX_WORDS = 25
@@ -827,7 +829,16 @@ function reducesToEntry(token, entries) {
  * the case of a word that has an entry. Whether a statement carries one
  * mechanism, and whether it is true, stay with a reader.
  */
-function analyzeStatements({ file, body, bodyStartLine, data, findings, suppressions }) {
+function analyzeStatements({
+  file,
+  body,
+  bodyStartLine,
+  data,
+  findings,
+  suppressions,
+  dictionaryEntries = new Map(),
+  dictionaryError = null,
+}) {
   const declared = data && data.statementRules
   if (!Array.isArray(declared) || declared.length === 0) return { checked: 0, sections: [] }
 
@@ -835,7 +846,8 @@ function analyzeStatements({ file, body, bodyStartLine, data, findings, suppress
   const wanted = new Set(sections)
   const lines = body.split("\n")
   const seen = new Set()
-  const entries = parseDictionaryEntries(body)
+  // The post's own entries win over a shared dictionary it points at.
+  const entries = new Map([...dictionaryEntries, ...parseDictionaryEntries(body)])
   const hasDictionary = entries.size > 0
   const config = (detail) =>
     addFinding(findings, suppressions, {
@@ -848,7 +860,9 @@ function analyzeStatements({ file, body, bodyStartLine, data, findings, suppress
       message: RULE_META["statement-case"].message,
     })
 
-  if (!hasDictionary) {
+  if (dictionaryError) {
+    config(dictionaryError)
+  } else if (!hasDictionary) {
     // Without a dictionary every capital would fail, which hides the cause.
     config("no dictionary entries found for statementRules")
   }
