@@ -361,3 +361,191 @@ describe("content audit", () => {
     expect(result.findings).toHaveLength(2)
   })
 })
+
+describe("statement rules", () => {
+  // A file opts in by naming the sections whose numbered lists are statements,
+  // and carries its own dictionary: an entry is a bold word followed by an em
+  // dash. The case of that line is the case the statements must use.
+  const statementDocument = (statements, { entries = true, section = "Requirements" } = {}) =>
+    [
+      "---",
+      "statementRules:",
+      `  - ${section}`,
+      "---",
+      "",
+      "## The given words",
+      "",
+      ...(entries
+        ? [
+            "**HASH** — the content address of a byte string.",
+            "",
+            "**TASK** — a unit of work.",
+            "",
+            "**APPEND** — to add a record.",
+            "",
+            "**PARTY** — a thing that can act.",
+            "",
+            "**SIGN** — to make a mark.",
+            "",
+            "**gate** — a rule and the check it runs.",
+            "",
+          ]
+        : []),
+      "## Requirements",
+      "",
+      ...statements,
+      "",
+    ].join("\n")
+
+  const words = (count) => Array.from({ length: count }, (_, index) => `w${index}`).join(" ")
+
+  it("ignores numbered lines in a file that does not opt in", () => {
+    const result = auditMarkdownSource(`# Notes\n\n1. ${words(40)}.\n`, "plain.md")
+
+    expect(rulesFor(result)).not.toContain("statement-too-long")
+  })
+
+  it("flags a statement over the 25-word limit", () => {
+    const result = auditMarkdownSource(statementDocument([`1. ${words(26)}.`]), "long.md")
+
+    expect(rulesFor(result)).toContain("statement-too-long")
+  })
+
+  it("accepts a statement at the 25-word limit", () => {
+    const result = auditMarkdownSource(statementDocument([`1. ${words(25)}.`]), "limit.md")
+
+    expect(rulesFor(result)).not.toContain("statement-too-long")
+  })
+
+  it("flags a statement that opens with a bare pronoun", () => {
+    const result = auditMarkdownSource(statementDocument(["1. It records the APPEND."]), "pronoun.md")
+
+    expect(rulesFor(result)).toContain("statement-bare-pronoun")
+  })
+
+  it("accepts a demonstrative that names its subject", () => {
+    const result = auditMarkdownSource(statementDocument(["1. That PARTY records the APPEND."]), "named.md")
+
+    expect(rulesFor(result)).not.toContain("statement-bare-pronoun")
+  })
+
+  it("flags the perfect tense", () => {
+    const result = auditMarkdownSource(statementDocument(["1. The HASH has waited since the APPEND."]), "tense.md")
+
+    expect(rulesFor(result)).toContain("statement-tense")
+  })
+
+  it("accepts the present and the past", () => {
+    const result = auditMarkdownSource(
+      statementDocument(["1. The HASH waits until the APPEND.", "2. The PARTY SIGNed the HASH."]),
+      "simple.md"
+    )
+
+    expect(rulesFor(result)).not.toContain("statement-tense")
+  })
+
+  it("flags a capital that marks no entry", () => {
+    const result = auditMarkdownSource(statementDocument(["1. Every KPI carries a HASH."]), "capital.md")
+
+    expect(rulesFor(result)).toContain("statement-case")
+  })
+
+  it("accepts an abbreviation", () => {
+    const result = auditMarkdownSource(statementDocument(["1. The VAT rate sits in a HASH."]), "abbreviation.md")
+
+    expect(rulesFor(result)).not.toContain("statement-case")
+  })
+
+  it("accepts an inflection of an entry", () => {
+    const result = auditMarkdownSource(
+      statementDocument(["1. A TASK APPENDs a HASH.", "2. The HASHes APPENDed to a TASK."]),
+      "inflection.md"
+    )
+
+    expect(rulesFor(result)).not.toContain("statement-case")
+  })
+
+  it("flags an entry written in ordinary type", () => {
+    const result = auditMarkdownSource(statementDocument(["1. A task carries a HASH."]), "lowercase.md")
+
+    expect(rulesFor(result)).toContain("statement-case")
+  })
+
+  it("accepts an approved compound that has no entry", () => {
+    const result = auditMarkdownSource(statementDocument(["1. A gate refuses the APPEND."]), "compound.md")
+
+    expect(rulesFor(result)).not.toContain("statement-case")
+  })
+
+  it("ignores a word in guillemets or inline code", () => {
+    const result = auditMarkdownSource(
+      statementDocument(["1. A «task» file holds the HASH.", "2. The `task` file holds the HASH."]),
+      "masked.md"
+    )
+
+    expect(rulesFor(result)).not.toContain("statement-case")
+  })
+
+  it("ignores a numbered list outside the declared sections", () => {
+    const document = [
+      "---",
+      "statementRules:",
+      "  - Requirements",
+      "---",
+      "",
+      "## The given words",
+      "",
+      "**HASH** — the content address of a byte string.",
+      "",
+      "**TASK** — a unit of work.",
+      "",
+      "## Notes",
+      "",
+      `1. ${words(40)} task.`,
+      "",
+      "## Requirements",
+      "",
+      "1. A TASK APPENDs a HASH.",
+      "",
+    ].join("\n")
+
+    const result = auditMarkdownSource(document, "scoped.md")
+
+    expect(rulesFor(result)).not.toContain("statement-too-long")
+    expect(rulesFor(result)).not.toContain("statement-case")
+  })
+
+  it("reports a declared section that is not in the file", () => {
+    const result = auditMarkdownSource(
+      statementDocument(["1. A TASK APPENDs a HASH."], { section: "Elsewhere" }),
+      "missing.md"
+    )
+    const caseFindings = result.findings.filter((finding) => finding.rule === "statement-case")
+
+    expect(caseFindings).toHaveLength(1)
+    expect(caseFindings[0].detail).toContain("declared section not found")
+  })
+
+  it("reports a missing dictionary instead of every capital", () => {
+    const result = auditMarkdownSource(statementDocument(["1. A TASK holds a HASH."], { entries: false }), "nodict.md")
+
+    expect(result.findings.filter((finding) => finding.rule === "statement-case")).toHaveLength(1)
+    expect(result.findings.find((finding) => finding.rule === "statement-case").detail).toContain("no dictionary")
+  })
+
+  // The post states how many statements its rules govern. Without this the
+  // number is prose, and the next edit that adds or drops a statement leaves
+  // it stale while every gate stays green.
+  it("keeps the statement count in the published post true", () => {
+    const post = fs.readFileSync(
+      path.join(__dirname, "..", "..", "content", "blog", "2026-seven-nouns-eighteen-verbs.md"),
+      "utf8"
+    )
+    const claimed = post.match(/The rules govern the (\d+) statements/)
+    expect(claimed).not.toBeNull()
+
+    const result = auditMarkdownSource(post, "2026-seven-nouns-eighteen-verbs.md")
+
+    expect(result.stats.statements).toBe(Number(claimed[1]))
+  })
+})

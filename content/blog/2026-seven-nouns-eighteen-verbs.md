@@ -2,6 +2,12 @@
 id: 2026-seven-nouns-eighteen-verbs
 title: "Seven Nouns and Eighteen Verbs"
 articleDate: 2026-11-05
+# Opt in to the statement rules in scripts/content-audit/rules.js for the two
+# statement sections: at most 25 words, a named subject, simple tenses, and the
+# case the dictionary uses.
+statementRules:
+  - The fifty requirements, rewritten
+  - The eighteen function packs, rewritten
 articleContent: "Seven record kinds, eighteen verbs, fifteen axioms: fifty requirements rewritten in a controlled vocabulary and tested by two writers who never compared notes."
 authorName: Tom Segbers
 authorImgSrc: /img/logo.png
@@ -34,9 +40,33 @@ That claim is worth testing, because the failure it prevents is quiet. A specifi
 
 Two of its ideas matter here. The first is the dictionary: each approved word has one meaning and one part of speech, and about 1,200 words are listed as not approved, each with a pointer to the approved word to use instead. "Verify" is not approved; the dictionary sends you to CHECK. The second is the split between the general vocabulary and the technical nouns, which live in their own list so that "propeller" and "aural warning system" do not have to enter the core dictionary.
 
-Three of its writing rules shape the rewrites: one mechanism per statement, which is STE's one instruction per sentence carried over to a requirement; no statement longer than 25 words, its limit for a description; and capitals for the words the dictionary approves, which is how STE marks them in its examples. A reader can check the second by counting.
+It takes five of those 53 writing rules, and the rewrites follow all five.
 
 What I did not take is the rest of the grammar, the spelling and punctuation rules, and the procedural sections. Those exist so a mechanic can perform a step without ambiguity. A requirement is a property that has to hold, not a step somebody performs, and written as an instruction it loses the subject that makes the control checkable. "A gate refuses the append" names who refuses; "Refuse the append" does not.
+
+## Five writing rules, and the check that counts them
+
+Four of the five are mechanical, and the audit that gates this site stops a deploy when a statement breaks the word limit, opens with a bare pronoun, uses a perfect tense or writes an approved word in the wrong case. The fifth, one mechanism per statement, stays a judgement about what a sentence is for.
+
+A statement carries one mechanism. STE's rule is one instruction per sentence; carried to a requirement, the unit is one failure that has to become impossible or visible, so a statement holds one gate, one check or one duty with the guard that makes it work. Everything else in the sentence exists to make that mechanism checkable. A statement with two mechanisms reads like a summary, and a summary is how the first draft lost controls.
+
+A statement names its subject. The check refuses one that opens with a bare pronoun, and the rule behind it is that a reader must not look back a line to find out who acts: "A gate refuses the append" says who refuses, and "It refuses the append" does not. Both shapes turned up in the pass, and each fix names what acts.
+
+A statement stays under 25 words. That is STE's limit for one description and it is the rule a reader can check by counting. Four statements broke it when the check arrived, and each was a place where a guard and its consequence had been welded together; folding the phrase brought the statement back under without losing the control.
+
+A statement keeps to the simple tenses: the present for what holds, the past for what happened. The perfect tense is the usual slip, because it sounds like care, and it hides when a thing happened behind an auxiliary. One statement had it, "the VIEW shows how long each DECISION has waited"; it now says that the VIEW shows how long each open DECISION waits.
+
+The dictionary governs the domain, not the whole sentence: what a record is called, the parts it has and the verbs that act on it. Everything else is ordinary English, and the only control there is the ban in an entry, which says which word to use in the sense it names.
+
+A capital marks a word with its own entry. STE marks an approved word that way, and inside a statement the rewrites apply it in both directions: THING, APPEND and HASH are in capitals, and an inflection keeps the capital on the stem and lowercase on the ending, as in TASKs, CHECKed and SUPERSEDEs.
+
+Two kinds of approved word stay in ordinary type. A compound without an entry of its own, such as gate, policy or risk tier, because the dictionary fixes the phrase and not the word. And the two entries that name a category and a part of a deadline, record and consequence. An abbreviation keeps its capitals and takes no entry, because VAT, GDPR and API name things outside the company; the check carries the list of them, and a new one fails it until somebody adds the word. A trade noun sits outside these cases: a truck or a crew position has no entry and carries no mark, because its definition belongs to the pack's annex.
+
+The pass that applied the rules to the finished statements changed 149 of the 875 numbered lines. In 68 the only change was case. The other 81 changed more than case, and 16 of those came from the rules: 7 opened with a bare pronoun, 4 had no subject at all, 4 were over the limit and 1 used the perfect tense. The check caught 12 of the 16; the four subjectless ones needed its rule rather than its pattern, because a fragment opens with a verb and carries no pronoun. The other 65 came from reading each statement, and most of those fixes are dictionary ones. A word an entry bans in the sense it bans is one shape, such as "recipe" for a procedure, "timer" for a deadline or "token" for a key. A word that has an entry in a sense the entry does not define is another: an access credential called an account, a print run called a run, a statutory scheme called a procedure. A relation the dictionary already has is a third: "exclusive" where it has booking, "binds" and "references" where it has CITE. Each fix stays inside its statement and no control moved, which is the point, because the drift this post is about is a private word for a public relation.
+
+The rules govern the 856 statements under the fifty requirements and the eighteen packs, which is the part of this post a builder has to meet. The fifteen axioms further down are prose summaries of the invariants and the four steps at the end are instructions to a reader, so neither is a statement. That number is not an assertion either: a test in the audit suite parses it out of this paragraph and fails when it and the analyser disagree.
+
+The check counts words, pronouns, tenses and capitals. It cannot see whether a statement is true, and it does not police the bans, because an unapproved word is wrong only in the sense its entry names and a sense needs a reader. It cannot tell a trade noun from a missing entry either, and the annex holds that judgement. The rules and their tests sit in `scripts/content-audit/`; `pnpm content:audit` runs the rules over this post and every other file on the site.
 
 ## Five rounds, and what each one found
 
@@ -62,7 +92,7 @@ A sixth pass came later and attacked the dictionary directly rather than a rewri
 
 ## How to read the dictionary
 
-Each entry gives one meaning, the forms it takes and the words it replaces. A word in capitals is approved. A word in ordinary type is not, and the entry says what to write instead; the ban applies to the sense named in that entry, not to every use of the word. To go from a word you have to the word to use, search the page for it, because every unapproved word sits in the entry that replaces it. A word in « » is one the dictionary does not have: the rewrite keeps it and reports it under what did not fit. That report is a sample, not an index, because most of the marked words are domain nouns that belong to a pack's annex. Two lowercase entries, record and consequence, are the exceptions, because one names the category and the other names a part of a deadline.
+Each entry gives one meaning, the forms it takes and the words it replaces. A word in capitals is approved. A word in ordinary type is not, and the entry says what to write instead, unless the list below gives it as a compound without an entry of its own; the ban applies to the sense named in that entry, not to every use of the word. To go from a word you have to the word to use, search the page for it, because every unapproved word sits in the entry that replaces it. A word in « » is a general word the dictionary does not have, which the rewrite kept and reported under what did not fit; that report is a sample, not an index. A trade noun carries no mark at all: a truck and a crew position are words of one business, they belong to a pack's annex and this post does not carry it. Two lowercase entries, record and consequence, are the exceptions, because one names the category and the other names a part of a deadline.
 
 There are three layers. The given words come from git and cryptography and this dictionary does not design them. The record kinds are the seven things a company appends. The defined nouns are built from record kinds, and the verbs act on both. The five nouns that are not records sit beside them, because a view, a label, a unit, an amount and an address are used by records without being appended as one.
 
@@ -368,7 +398,7 @@ It is not a schema. The dictionary says what a record is called. The previous po
 
 It is not a data model. Nothing here decides how a record is stored, whether the repository uses one file per task, or how the blob store encrypts a payload.
 
-It is not a grammar. The dictionary says which words are allowed and says nothing about how to build a sentence. The three writing rules above belong to the method, and the dictionary carries none of them.
+It is not a grammar of English. The five writing rules are rules about statements and the dictionary carries none of them: nothing here says how to build a paragraph, how to order two statements or which tense a manual should use. The rules stop at the statement, because a statement is the unit a builder has to meet.
 
 It is not an argument that a specification should read like this. The rewrites are for checking, not for reading. Nobody wants fifty requirements where every third word is in capitals.
 
@@ -386,7 +416,7 @@ Each requirement keeps its title from the previous post and each of its controls
 3. The LABEL holds one of seven values: open, in plan, blocked, done, future, human, archived.
 4. A PARTY changes the LABEL only when the dependencies are done and each gate passes.
 5. The «frontier» holds the open TASKs whose dependencies are done; the «loop» takes its work from there.
-6. A CHECK of the graph runs on every COMMIT.
+6. A CHECK of the graph RUNs on every COMMIT.
 7. A TASK id is a HASH of its specification, so RUNs in parallel worktrees APPEND TASKs with no collision.
 8. Each TASK CITEs the goal it serves.
 9. §14(4) Nr. 4 UStG requires a sequential invoice number unique to the issuer.
@@ -418,13 +448,13 @@ Each requirement keeps its title from the previous post and each of its controls
 3. The «quorum» of a class is one PARTY, two PARTYs or a majority of the board.
 4. The board gives a GRANT for a class with a scope, a limit and a DEADLINE; a DECISION REVOKEs it, or it EXPIREs.
 5. Every board member alone holds the GRANT to STOP; every other class needs its normal «quorum», also in a hurry.
-6. A board member tightens autonomy with one message that becomes a signed GRANT change; loosening it needs the «quorum».
+6. A board member tightens autonomy with one SIGNed GRANT change; loosening it needs the «quorum».
 7. An absence mode names a deputy PARTY and a reduced set of classes for one span.
 8. An offline GRANT bounds a site lead's DECISION by scope, place, AMOUNT and span.
 9. The PARTY APPENDs that DECISION afterwards; a DECISION outside the GRANT opens an incident.
 10. An outside PARTY sets a RULE that binds the board and CITEs its source document.
 11. No GRANT to an agent covers an EFFECT at risk=top, a new payee or a new kind of statement, whatever a board member SIGNs.
-12. The PARTY that PROPOSEs an EFFECT is never its only DECIDER.
+12. The PARTY that PROPOSEs an EFFECT never DECIDEs it alone.
 
 #### 4. Human attention as a scarce THING
 *People can only read so much, so the company caps and batches what reaches them.*
@@ -443,19 +473,19 @@ Each requirement keeps its title from the previous post and each of its controls
 12. The request shows the DECISION in plain words and a «fingerprint», and it EXPIREs.
 13. A new payee, a changed ACCOUNT or an AMOUNT above a limit needs a second confirmation on another ADDRESS.
 14. The second confirmation uses a number from a FACT, never one taken from the request.
-15. The board may close a DECISION with «not now», «ask me Monday» or «decide yourself within these limits», each with a defined effect.
+15. The board may close a DECISION with «not now», «ask me Monday» or «decide yourself within these limits», and names what follows.
 
 #### 5. Gates at every point where a mistake can enter
 *Every rule has a mechanism that stops a mistake at the point it can enter.*
 
 1. A RULE counts only when a named mechanism enforces it; each RULE carries an id, a rationale and that mechanism.
 2. The RULEs cover format, schema, graph structure, risk, content and law.
-3. A gate that finishes in seconds runs «pre-commit»; a slow gate runs «pre-push» and CI.
-4. A gate on an EFFECT runs «pre-effect», a «monitor» CHECKs velocity limits and budgets at runtime, and a periodic CHECK looks for drift.
-5. A client-side hook gives no security, because an agent can pass `--no-verify`; the server runs «pre-receive», required CHECKs and protected branches.
-6. Formatting has one entry point, treefmt, with sorted keys, normalised YAML and JSON and LF line endings.
-7. An agent never weakens its gates; an edit of the payment policy is a DECISION at risk=top with code owners and a required human SIGN.
-8. One definition of the gate set serves commit, push and CI.
+3. A gate that finishes in seconds RUNs «pre-commit»; a slow gate RUNs «pre-push» and CI.
+4. A gate on an EFFECT RUNs «pre-effect», a «monitor» CHECKs velocity limits and budgets at runtime, and a periodic CHECK looks for drift.
+5. A client-side hook gives no security, because an agent can pass `--no-verify`; the server RUNs «pre-receive», required CHECKs and protected branches.
+6. Formatting has one entry point, treefmt, with sorted «keys», normalised YAML and JSON and LF line endings.
+7. An agent never weakens its gates; an edit of the payment policy is a risk=top DECISION with code owners and a human SIGN.
+8. One definition of the gate set serves COMMIT, push and CI.
 9. A gate whose tool is missing fails, and that fail refuses the APPEND.
 
 #### 6. Signed commits, linear history, board-only force-push
@@ -463,15 +493,15 @@ Each requirement keeps its title from the previous post and each of its controls
 
 1. Every COMMIT carries a SIGN from a named PARTY with its own KEY, and the KEY registry gives its role at the parent COMMIT.
 2. The STORE refuses an unsigned COMMIT or an unknown KEY; a «pre-receive» hook refuses a path outside the KEY's scope.
-3. An agent KEY stays non-extractable in a keystore or hardware token that the harness controls.
+3. An agent KEY stays non-extractable in a keystore or hardware KEY that the harness controls.
 4. A PARTY mints an agent KEY per RUN, REVOKEs it at the end and scopes it to one TASK, one role and its paths.
-5. A «pre-receive» hook refuses a CHECK signed by the KEY that signed the TASK under CHECK.
+5. A «pre-receive» hook refuses a CHECK SIGNed by the KEY that SIGNed the TASK under CHECK.
 6. The «trust root» is the gate definitions, CI configuration, the Nix flake and its lock, the KEY registry and the DECISION-rights policy.
 7. No agent KEY changes a trust-root path; such a change needs a human SIGN and an independent rebuild of the gates.
 8. History is linear: a branch lands by fast-forward, with no merge COMMIT and no «squash»; each COMMIT passes the gates alone.
 9. A «rebase» rewrites each moved COMMIT, removes its SIGN and changes its HASH; the «merge queue» re-SIGNs and the gates rerun.
 10. The originals stay under a «ref», and the queue re-issues the attestation for the landed tree; a changed tree invalidates the EVIDENCE.
-11. Only the board, under its DECISION rights, may rewrite a protected branch as a DECISION at risk=top, and a second STORE keeps the earlier history.
+11. Only the board, under its DECISION rights, may rewrite a protected branch as a risk=top DECISION; a second STORE keeps the earlier history.
 12. That DECISION names what was removed, why and who DECIDEd.
 13. Axiom 1 applies; §146(4) AO forbids a POSTING change that hides the original entry.
 
@@ -491,31 +521,31 @@ Each requirement keeps its title from the previous post and each of its controls
 
 *A task counts as done only when an independent party records proof for each criterion.*
 
-1. Every TASK cites EVIDENCE for each acceptance criterion.
-2. The ledger holds command output, build logs, photos, an OBSERVATION of a signed acceptance, or «receipts».
+1. Every TASK CITEs EVIDENCE for each acceptance criterion.
+2. The ledger holds command output, build logs, photos, an OBSERVATION of a SIGNed acceptance, or «receipts».
 3. A claim counts only when a command or an «artifact» stands behind it.
-4. The harness runs the command that the TASK names, in a clean worktree at the COMMIT under test.
+4. The harness RUNs the command that the TASK names, in a clean worktree at the COMMIT under test.
 5. The harness SIGNs the outcome record with a KEY that no agent PARTY holds; Axiom 9 applies.
 6. The outcome record holds the command, its exit code and the HASH of its output.
-7. An attestation ties that record to the tree that the RUN used.
+7. An attestation CITEs that record and the tree that the RUN used.
 8. A gate refuses the APPEND when the attestation does not describe the tree being APPENDed.
 
 #### 9. Test suites, verifiers and change logs
 
 *Tiers, independent checkers and plain change logs keep work that is not code checkable.*
 
-1. Test levels run by cost: fast before APPEND, full in CI, mutation on changed lines, nightly on core, deep before release.
+1. Test levels RUN by cost: fast before APPEND, full in CI, mutation on changed lines, nightly on core, deep before release.
 2. Each test level holds twice its worst measured RUN as a budget.
-3. Each «artifact type» gets a verifier that CHECKs it; a deterministic CHECK runs first, and a «rubric» judge never gates a high-risk EFFECT alone.
+3. Each «artifact type» gets a verifier that CHECKs it; a deterministic CHECK RUNs first, and a «rubric» judge never gates a high-risk EFFECT alone.
 4. A document gets a spelling, link and style CHECK, and a page-count and font CHECK on the rendered «PDF».
 5. A video gets a duration CHECK and a loudness CHECK against EBU R 128.
 6. A ledger gets an AMOUNT CHECK by `bean-check` or `hledger check`.
-7. A renovation step gets a photo with location and ANCHOR, and a sign-off from a qualified PARTY where a statute RULE asks for one.
+7. A renovation step gets a photo with location and ANCHOR, and a DECISION from a qualified PARTY where a statute RULE asks for one.
 8. A science-slam rehearsal gets a timed recording under the limit.
 9. The verifier is another agent PARTY, with another «prompt» and no write GRANT.
 10. «Eval cases», «rubrics» and known-bad cases sit READ-only with a «held-out» share, and a RUN assigns verifiers at random, never to each other.
 11. A scheduled RUN seeds known-bad work, and a verifier that passes it loses its GRANT until a human READs it.
-12. A blocked TASK cites an OBSERVATION or reopens at its DEADLINE; repeated reopening or regenerated EVIDENCE flags a human.
+12. A blocked TASK CITEs an OBSERVATION or reopens at its DEADLINE; repeated reopening or regenerated EVIDENCE flags a human.
 13. Mutation testing and known-bad cases prove a CHECK can fail.
 14. Every fixed bug APPENDs a regression CHECK that failed before the fix.
 15. A COMMIT follows Conventional Commits so a tool can parse it.
@@ -552,34 +582,34 @@ Each requirement keeps its title from the previous post and each of its controls
 2. Nix READs each language lockfile as a fixed-output derivation.
 3. Nix READs `pnpm-lock.yaml` through nixpkgs, `Cargo.lock` through crane and `uv.lock` through uv2nix.
 4. A new dependency is a VIEW of `flake.nix` and `flake.lock` that a human DECIDEs.
-5. A worker runs no global `npm install`, no `pip install`, no `curl | sh` and no `apt-get`.
-6. A build runs in the Nix sandbox with no network access except a fixed-output fetch with a pinned HASH.
+5. A worker RUNs no global `npm install`, no `pip install`, no `curl | sh` and no `apt-get`.
+6. A build RUNs in the Nix sandbox with no network access except a fixed-output fetch with a pinned HASH.
 7. A gate refuses a worker's connection to a package registry; the binary STORE and the model provider pass an egress proxy.
-8. CI runs each command through `nix develop -c` or `nix flake check`.
+8. CI RUNs each command through `nix develop -c` or `nix flake check`.
 9. `nix flake update` APPENDs its own COMMIT with its gate CHECKs.
 10. A stateless agent PARTY needs the same tools on every machine, and a deterministic THING needs a pinned toolchain.
 11. A dependency becomes a reviewed change, not a «side effect» of an agent's improvisation.
 12. Each lockfile change costs one HASH update, and the binary STORE becomes infrastructure.
 13. A proprietary desktop tool sits behind an «adapter» and its exports enter as OBSERVATIONs; a model behind an API is recorded per RUN.
-14. Nix runs on Linux and macOS, and Windows needs WSL2.
+14. Nix RUNs on Linux and macOS, and Windows needs WSL2.
 15. Portability now means movement between STOREs, CI and harnesses.
 
 #### 13. Single-file HTML dashboards for humans
 
 *One generated HTML file shows the company state, the same page for every reader of a commit.*
 
-1. A human PARTY reads the state of the company without reading the repository.
+1. A human PARTY READs the state of the company without opening the repository.
 2. The interface is one generated VIEW: an HTML file with inline styles, script and data, no network request, opened from disk or a CI RUN.
 3. The VIEW is a pure function of one COMMIT and carries its HASH and ANCHOR.
-4. The VIEW gives READ only; a DECISION comes as a signed COMMIT or through the DECISION «channel».
-5. The VIEW inserts stored text as text, because some of it comes from inbound email.
+4. The VIEW gives READ only; a DECISION comes as a SIGNed COMMIT or through the DECISION ADDRESS.
+5. The VIEW never renders its text as markup, because some of it arrives by email.
 6. A RULE omits from the VIEW the records an audience may not READ.
 7. The board VIEW answers, in order, what waits, what ran and failed, and what was spent against the budget.
-8. The VIEW shows how long each DECISION has waited.
-9. It then shows the «frontier», EVIDENCE «coverage», pending DECISIONs and the STOP state of the STORE, with an inline SVG task graph.
+8. The VIEW shows how long each open DECISION waits.
+9. The VIEW also shows the «frontier», EVIDENCE «coverage», pending DECISIONs and whether the STORE is stopped, with an inline SVG TASK graph.
 10. The VIEW carries a one-line summary on top.
 11. The same VIEW goes out as the daily VIEW on the board's ADDRESS, so a page nobody opens still arrives.
-12. Failure lines come from exit codes, failed gate CHECKs and missed «heartbeats», never from a RUN's own account.
+12. Failure lines come from exit codes, failed gate CHECKs and missed «heartbeats», never from what a RUN says about itself.
 13. Each section states its coverage.
 
 
@@ -590,14 +620,14 @@ Each requirement keeps its title from the previous post and each of its controls
 
 1. An agent PARTY RUNs one PROCEDURE that advances the «frontier» one TASK at a time: give, wait, CHECK, APPEND, repeat.
 2. The PROCEDURE READs its limits from a COMMIT and STOPs the RUN with a distinct «exit code» per condition.
-3. Stop: the «frontier» is empty and every gate before the deploy EFFECT passed, or the allowed RUNs are used up.
-4. Stop: the «frontier» did not change across too many RUNs, or one RUN outlived its «watchdog» DEADLINE.
-5. Stop: a step failed again after its «retries», or a gate CHECK failed, or the next RUN would exceed the monthly money budget.
+3. The PROCEDURE STOPs when the «frontier» is empty and every gate before the deploy EFFECT passed, or the allowed RUNs are used up.
+4. The PROCEDURE STOPs when the «frontier» did not change across too many RUNs, or one RUN outlived its «watchdog» DEADLINE.
+5. The PROCEDURE STOPs when a step failed after its «retries», a gate CHECK failed, or the next RUN would exceed the monthly budget.
 6. A «timer» starts the PROCEDURE, and a «lock» keeps a second «driver» PARTY out of the STORE.
 7. The «driver» EXECUTEs only the step it is given and APPENDs nothing beyond it.
 8. The «driver» does not plan and does not edit the STORE, so it cannot claim progress it did not make.
 9. A stopped PROCEDURE looks like a quiet day, so a PARTY outside it holds a «dead-man's switch» DEADLINE on another «host».
-10. That DEADLINE, under other KEYs, waits for a signed «heartbeat» from every RUN and an "all clear" for every VIEW.
+10. That DEADLINE, under other KEYs, waits for a SIGNed «heartbeat» from every RUN and an "all clear" for every VIEW.
 11. When either is late it APPENDs a TASK for the board on a second ADDRESS, and depends on no code STORE, «model provider» or machine.
 
 #### 15. Sub-agent delegation and management
@@ -606,7 +636,7 @@ Each requirement keeps its title from the previous post and each of its controls
 1. The parent RUN keeps the «frontier» slice, the order and the final gate.
 2. The parent gives every bounded sub-TASK to a child PARTY; children may give TASKs to their children; a leaf never becomes a second CEO PROCEDURE.
 3. The parent keeps the slice, a write to a shared file, a weakened CHECK, the final CHECK, APPEND and «push», and human-only questions.
-4. The packet names the goal, inputs, file ownership with one writer per file, the EVIDENCE step and a stop RULE.
+4. The packet names the goal, inputs, file ownership with one writer per file, the EVIDENCE step and a STOP RULE.
 5. The packet limits time, spend, tests and external access.
 6. The child returns its changes, steps with output, what it could not CHECK and unrelated breakage; the parent re-runs the EVIDENCE step.
 7. A register holds each child's TASK, budget, «heartbeat» and worktree, and a committed COMMIT caps depth and fan-out.
@@ -621,7 +651,7 @@ Each requirement keeps its title from the previous post and each of its controls
 *each task gets a packet built from committed state, limited by budgets and closed by scope.*
 
 1. A model's working memory is small, costly and uneven, and accuracy drops when the needed passage sits mid-input.
-2. The «harness» DERIVEs each TASK's packet from committed records, never from «chat», and a fresh RUN with only the last COMMIT and TASK hash resumes.
+2. The «harness» DERIVEs each TASK's packet from committed records, never from «chat», and a fresh RUN with only the last COMMIT and TASK HASH resumes.
 3. The packet is a VIEW, and the RUN APPENDs a manifest that CITEs the HASH of every record it loaded.
 4. The packet holds the goal with ancestry, acceptance criteria, spec, RULEs, PROCEDURE, a «skills» VIEW, FACTs with CITEs, «episode» VIEWs, remaining budget and next action.
 5. Each part has a token budget, stable parts come first for prefix reuse, and the goal and limits repeat at the end.
@@ -629,11 +659,11 @@ Each requirement keeps its title from the previous post and each of its controls
 7. Untrusted content carries the LABEL quoted, never instruction; near its limit a RUN APPENDs its state and starts fresh.
 8. Every record, file payload and KEY carries the LABEL of the PARTY or project it belongs to.
 9. A packet draws only from its TASK's LABELs, and retrieval CHECKs the LABEL before «similarity», at query time.
-10. A summary or consolidated FACT inherits the strictest LABEL, a human PARTY strips client parts, and the manifest names the LABELs READ.
+10. A consolidated FACT inherits the strictest LABEL, a human PARTY strips client parts, and the manifest names the LABELs READ.
 11. Because payloads are encrypted and metadata is not, a human PARTY's GRANT names one LABEL value and path set with a DEADLINE.
 12. A gate in the STORE enforces that GRANT through separate STOREs or filtered VIEWs, never by convention.
 13. An outbound EFFECT fails a gate when it CITEs a foreign LABEL or falls below the minimum group size.
-14. When the data-use COMMITMENT ends, the company REVOKEs the GRANT and APPENDs the OBSERVATION of the partner's signed destruction statement.
+14. When the data-use COMMITMENT ends, the company REVOKEs the GRANT and APPENDs the OBSERVATION of the partner's SIGNed destruction statement.
 15. A child PARTY gets its own packet, and a parent sees result records, never the raw payloads.
 
 #### 17. Episodic memory
@@ -642,8 +672,8 @@ Each requirement keeps its title from the previous post and each of its controls
 1. «Episodic memory» holds what happened; the working, «episodic», semantic and procedural split maps onto files, the context window being the working kind.
 2. The history of COMMITs shows what changed and leaves out the reasoning, so each RUN APPENDs an «episode»: the outcome record of that RUN.
 3. The «episode» CITEs the TASK, the goal, the PROCEDURE and «skill» versions used, the input HASHes and the context manifest.
-4. It CITEs the steps EXECUTEd, the PROPOSEd EFFECTs with their receipts, the outcome, the verifier CHECKs and the cost.
-5. It holds the human corrections and the «friction».
+4. An «episode» CITEs the steps EXECUTEd, the PROPOSEd EFFECTs with their receipts, the outcome, the verifier CHECKs and the cost.
+5. An «episode» holds the human corrections and the «friction».
 6. A large raw «transcript» may hold personal data; it goes to a STORE under LABEL redacted; the repository holds a summary VIEW and the HASH.
 7. A DERIVEd VIEW answers a query by TASK, THING, ANCHOR or «similarity».
 8. An «episode» is a record of the past and never an instruction, and one that quotes an inbound email carries that email's taint.
@@ -660,9 +690,9 @@ Each requirement keeps its title from the previous post and each of its controls
 4. A newer FACT SUPERSEDEs an older one and the history stays; a contradiction opens a «conflict» TASK for a human PARTY.
 5. Axiom 1 applies.
 6. Personal data puts the payload in the encrypted STORE and the HASH in the repository, and every FACT carries the data-protection LABELs of requirement 35.
-7. A FACT from an authority PARTY (minimum wage, VAT rate, «OSS threshold») sits in another STORE with its legal source, effect ANCHOR and last CHECK.
+7. A FACT from an authority PARTY (minimum wage, VAT rate, «OSS threshold») sits in a second STORE with its legal source, ANCHOR and last CHECK.
 8. Only the source document and a human DECISION change such a FACT, never an agent PARTY, an email or a guess.
-9. An OBSERVATION from a supplier opens a TASK that sets LABEL tentative on the FACT but can never authorise a payment, needing a second-ADDRESS CHECK.
+9. An OBSERVATION from a supplier opens a TASK that sets LABEL tentative on the FACT but can never DECIDE an EFFECT, needing a second-ADDRESS CHECK.
 10. People live in a register with one THING record per subject, a «score» per match; LABEL blocked refuses every person EFFECT on an ambiguous match.
 11. A merge or split is a DECISION that two PARTYs SIGN and that carries KEYs, GRANTs and history; a later DECISION REVERSEs it.
 
@@ -676,22 +706,22 @@ Each requirement keeps its title from the previous post and each of its controls
 5. The repository versions each «skill»; each RUN names the version loaded; a PARTY finds it by name and description and loads the body on demand.
 6. A PROPOSEd «skill» names a GRANT that lists the THINGs («tools») and «adapters» it may use.
 7. A new version needs CHECKs with saved inputs and expected outputs before a PARTY DECIDEs it, and an earlier version stays restorable.
-8. Each «skill» names an owner PARTY and carries a usage metric, and a non-use DEADLINE appends a TASK that archives it.
+8. Each «skill» names an owner PARTY and carries a usage metric, and a non-use DEADLINE APPENDs a TASK that archives it.
 9. A third-party «skill» is PROPOSEd, CHECKed by a verifier PARTY and pinned by HASH.
 10. A «skill» packages a «prompt» with a README, can carry an «injection», and one mined from a good improvised RUN lands as a PROPOSEd record.
 
 #### 20. Prompts: personas, no persona, or SOPs
 *a persona line adds little, so the work comes from procedures, skills, rules and grants.*
 
-1. A test of 162 roles on 2,410 factual questions found no gain from a «persona» in the «system prompt», and covers no long agentic TASK.
+1. A test of 162 roles on 2,410 questions found no gain from a «persona» in the «system prompt» and covers no long agentic TASK.
 2. No «persona» works for generic sub-TASKs and knows no house convention, and a «persona» line changes only tone and vocabulary.
 3. A PROCEDURE, a «skill» and a RULE carry what the model lacks (checklist, tool conventions, acceptance criteria), and that moves outcomes.
 4. A role is GRANTs, LABELs and PROCEDUREs: its THINGs, budget, verifier PARTY and output RULE.
 5. A verifier role looks for failures and holds no GRANT to write the record it CHECKs.
 6. An «org chart» of roles, with a responsibility and a GRANT per role, lets human and agent PARTYs share one structure.
-7. A «persona» keeps one job: «voice» in an outbound EFFECT where brand tone is a requirement.
+7. A «persona» keeps one purpose: «voice» in an outbound EFFECT where brand tone is a requirement.
 8. A «prompt» is a record, and each RUN CITEs the HASH of the «prompt» it used.
-9. A changed «prompt» runs the saved CHECKs against the current version and is APPENDed only if the «evals» improve.
+9. A changed «prompt» RUNs the saved CHECKs against the current version and is APPENDed only if the «evals» improve.
 10. A RUN gets no «persona» unless an «eval» proves one pays; TASK, PROCEDURE and «skills» carry the work.
 
 #### 21. Metacognition: confidence, budgets and the next action
@@ -705,10 +735,10 @@ Each requirement keeps its title from the previous post and each of its controls
 6. A budget covers the UNITs token, second, euro, «retry» and human hour, and a RULE sets it before work starts.
 7. The «harness» carves the budget down to children and enforces it, because the model cannot be trusted to STOP itself.
 8. Each TASK has a RUN-count budget; an exhausted «rework» budget ESCALATEs to a human TASK, and an unreadable «meter» gets a bounded conservative estimate.
-9. An exhausted budget ends in a written diagnosis record, never a silent stop.
-10. Every step commits a next action from a fixed set: continue, CHECK, delegate, ask a human, ESCALATE, STOP with diagnosis.
-11. A «stall» CHECK compares state LABELs across RUNs and STOPs repetition, and "I could not CHECK X" is a required LABEL on the outcome record.
-12. Every report, including a child PARTY's return, carries its confidence as a required LABEL.
+9. An exhausted budget ends in a written diagnosis record, never a silent STOP.
+10. Every step names a next action from a fixed set: continue, CHECK, delegate, ask a human, ESCALATE, STOP with diagnosis.
+11. A «stall» CHECK compares LABELs across RUNs and STOPs repetition, and "I could not CHECK X" is a required LABEL on the outcome record.
+12. Every inbound OBSERVATION carries its confidence as a required LABEL, a child PARTY's return included.
 
 
 ### Part 3: the edges of the company
@@ -720,18 +750,18 @@ Each requirement keeps its title from the previous post and each of its controls
 1. A quote, a DECISION and a call are OBSERVATIONs in one register.
 2. One PARTY across three ADDRESSes needs one PARTY register with LABEL personal.
 3. Routing is a separate DECISION that SUPERSEDEs without rewriting history.
-4. A stateful live call APPENDs recording, transcript and COMMITMENTs after the call.
+4. A stateful live call APPENDs the recording, the «transcript» and COMMITMENTs after the call.
 5. One envelope per ADDRESS names ADDRESS, direction, ANCHOR, PARTY, «thread id», payload and attachment HASHes, DKIM and SPF CHECKs and LABEL class.
 6. Axiom 1 applies: no PARTY edits the raw `.eml`, chat export or audio.
-7. A transcript, summary and classification are VIEWs that CITE the raw HASH and the tool or model version.
+7. The «transcript», the summary and the classification are VIEWs that CITE the raw HASH and the tool or model version.
 8. An agent PARTY that READs an inbound OBSERVATION holds a GRANT with a narrow scope.
 9. An EFFECT whose DECISION CITEs an untrusted OBSERVATION moves up one LABEL risk.
 10. A sandbox parses each attachment with no ADDRESS and no KEY, because a PDF or office file attacks the parser.
-11. An identity claim is an OBSERVATION, so the company calls the recorded ADDRESS and APPENDs the OBSERVATION before a payment.
+11. An identity claim is an OBSERVATION, so the company calls the recorded ADDRESS and APPENDs the OBSERVATION before an EFFECT to a bank STORE.
 12. A gate refuses an EFFECT holding a LABEL class its ADDRESS may not carry.
 13. Each «context packet» passes the same CHECK with LABEL pseudonym.
 14. Spam is an OBSERVATION whose record keeps its classifier PROCEDURE version forever.
-15. A 30-day DEADLINE appends a TASK that DELETEs the spam payload.
+15. A 30-day DEADLINE APPENDs a TASK that DELETEs the spam payload.
 16. An executable attachment goes to «quarantine» and never lands in a «working tree».
 17. Spam classification is a PROCEDURE whose loop lets a human PARTY mark a false positive and REVERSEs the RULE.
 18. §201 StGB needs an OBSERVATION of consent to record a non-public conversation.
@@ -745,7 +775,7 @@ Each requirement keeps its title from the previous post and each of its controls
 
 1. A verifier PARTY CHECKs an artifact; the EFFECT pipeline needs its own test ground so a payment PROCEDURE does not RUN live first.
 2. Every write adapter has a sandbox twin STORE.
-3. The twin is a mail server that captures outbound mail, or a bank sandbox or a test ACCOUNT with play money.
+3. The twin is a mail server that captures outbound mail, a sandbox of a bank STORE or a test ACCOUNT with play money.
 4. The twin is also a test phone number, or a recorded supplier portal replayed by Playwright.
 5. Each RUN declares LABEL mode, part of the RUN record and of the payload HASH.
 6. A DECISION in sandbox mode never authorises a live EFFECT.
@@ -760,14 +790,14 @@ Each requirement keeps its title from the previous post and each of its controls
 *An output THING is a recipe, a pinned toolchain and input HASHes that give one output HASH.*
 
 1. A video, document, graphic and audio file must be reproducible or at least traceable.
-2. An output THING is a recipe, a pinned toolchain and input HASHes, and the output THING carries its HASH, as a Nix derivation does.
-3. The recipe is text where possible: OpenTimelineIO, ffmpeg filter graphs or Blender Python, Typst or LaTeX, SVG, and TTS with a pinned voice.
+2. An output THING carries its PROCEDURE, toolchain and input HASHes, and its own HASH follows from them, as a Nix derivation does.
+3. The PROCEDURE is text where possible: OpenTimelineIO, ffmpeg filter graphs or Blender Python, Typst or LaTeX, SVG, and TTS with a pinned voice.
 4. The company removes embedded timestamps, encoder thread counts, GPU float behaviour and missing fonts.
 5. A generative model call is not bit-reproducible, because the API model changes and a seed does not guarantee output.
 6. The company OBSERVEs each generation with the prompt, model, parameters and output HASH, and everything downstream is deterministic.
 7. The chain of records stays complete even where a PARTY cannot rebuild one link.
-8. A large output APPENDs the recipe and output HASH only, and the binary goes to a STORE.
-9. An export from Figma or Photoshop enters as an input artifact.
+8. A large output APPENDs the PROCEDURE and output HASH only, and the binary goes to a STORE.
+9. An export from Figma or Photoshop enters as an «artifact».
 10. A human PARTY READs a VIEW that shows a visual diff.
 11. AI-generated media carries C2PA content credentials, because the AI Act asks the company to mark synthetic content.
 
@@ -776,20 +806,20 @@ Each requirement keeps its title from the previous post and each of its controls
 *The company scores each planned EFFECT, and a separate executor PARTY EXECUTEs only a payload that a PARTY DECIDEd.*
 
 1. One LABEL risk per action type is too coarse.
-2. The company scores each proposed EFFECT on reversibility, summed AMOUNT, external visibility, legal binding, counterparty novelty and data exposure.
+2. The company scores each PROPOSEd EFFECT on reversibility, summed AMOUNT, external visibility, legal binding, counterparty novelty and data exposure.
 3. The company sums POSTING AMOUNTs over a span, so ten payments of 99 € count as 990 €.
 4. An agent PARTY PROPOSEs and a separate executor PARTY EXECUTEs only an EFFECT whose payload HASH holds a DECISION.
 5. The agent PARTY never holds a bank KEY.
-6. The DECISION binds to that payload; its git-native form is a SIGNed COMMIT that CITEs the EFFECT HASH, CHECKed against allowed KEYs.
+6. The DECISION covers that payload; its git-native form is a SIGNed COMMIT that CITEs the EFFECT HASH, CHECKed against allowed KEYs.
 7. A top LABEL risk needs a hardware KEY; a lower one may use SSH or GPG.
 8. The approver PARTY READs a VIEW that compares the payload, and a new payee or changed bank ADDRESS needs a second out-of-band DECISION.
-9. The escalation ladder runs from automatic through logged, one human DECISION and two-PARTY DECISION to a DECISION with a cooling-off DEADLINE.
+9. The escalation ladder RUNs from automatic through logged, one human DECISION and two-PARTY DECISION to a DECISION with a cooling-off DEADLINE.
 10. Defence in depth sits outside the code as a bank-side budget, a capped vendor card and an allowlist; PSD2 authentication adds a human PARTY.
 11. The stateless system must not pay twice: the outbox pattern APPENDs intent, EXECUTEs, APPENDs the receipt, and a resumed RUN CHECKs it first.
 12. The outbox intent carries an id, so a retry deduplicates against it.
-13. A reversible EFFECT carries a planned REVERSE, and bookkeeping is plain-text accounting with beancount or hledger.
-14. §147 AO sets the retention period, and §146(4) AO forbids altering a booking so the original content is no longer identifiable.
-15. The no-alteration rule conflicts with GDPR erasure, so each LABEL class carries a retention DEADLINE.
+13. A reversible EFFECT carries a planned REVERSE, and bookkeeping is plain text in beancount or hledger.
+14. §147 AO sets the retention DEADLINE, and §146(4) AO forbids altering a booking so the original content is no longer identifiable.
+15. The no-alteration RULE conflicts with GDPR erasure, so each LABEL class carries a retention DEADLINE.
 
 #### 26. Legal bases and consent records
 
@@ -802,7 +832,7 @@ Each requirement keeps its title from the previous post and each of its controls
 5. Each processing activity in the register of requirement 35 names its «legal basis».
 6. Where that «legal basis» is consent, the company proves it held consent when it acted.
 7. Consent is an OBSERVATION naming the PARTY, purpose LABEL, ADDRESS, wording, ANCHOR and EVIDENCE, such as double opt-in.
-8. A withdrawal is an OBSERVATION too, and it takes effect immediately.
+8. A withdrawal is an OBSERVATION too, and it takes EFFECT immediately.
 9. A later withdrawal OBSERVATION SUPERSEDEs the earlier consent.
 10. Every proposal for an EFFECT CITEs its «legal basis»; no basis, no EFFECT.
 11. A pre-EFFECT gate CHECKs purpose LABEL, date and absence of a later withdrawal.
@@ -814,7 +844,7 @@ Each requirement keeps its title from the previous post and each of its controls
 
 1. A PROCEDURE holds a trigger, inputs, steps, «skills» and «adapters» per step, a LABEL risk, CHECKs, outputs and one owner PARTY.
 2. A step declares its dependencies, and a trigger is a schedule or an OBSERVATION such as a closed TASK.
-3. Each step has its own retry, rework budget and ESCALATE rule, and each RUN CITEs the PROCEDURE version used.
+3. Each step has its own retry, rework budget and ESCALATE RULE, and each RUN CITEs the PROCEDURE version used.
 4. A «pre-effect» hook attaches to one EFFECT type and covers every PROCEDURE that produces it.
 5. Discovery is a register matched by trigger or intent; without a match the agent PARTY improvises, records the trace and PROPOSEs a draft.
 6. A human PARTY DECIDEs the draft before the company promotes it.
@@ -828,9 +858,9 @@ Each requirement keeps its title from the previous post and each of its controls
 *A broker PARTY injects each KEY into an approved EFFECT, so no agent PARTY ever sees a secret value.*
 
 1. An agent PARTY never READs a secret value; a broker PARTY injects the KEY into an approved EFFECT.
-2. Git holds a reference such as `secret://bank/main`, and the value lives in a STORE of sops age KEYs or a hosted STORE.
+2. Git holds a «ref» such as `secret://bank/main`, and the value lives in a STORE of sops age KEYs or a hosted STORE.
 3. A static KEY and a password are straightforward.
-4. An OAuth refresh token rotates, so it is state and the broker PARTY owns it.
+4. An OAuth refresh KEY rotates, so it is state and the broker PARTY owns it.
 5. A TOTP seed beside a password turns two factors into one, which is a DECISION per ACCOUNT.
 6. A hardware KEY needs a human tap, which makes a human gate; an SMS code needs a company-controlled number and carries SIM-swap risk.
 7. A recovery code stays offline and human-only.
@@ -848,7 +878,7 @@ Each requirement keeps its title from the previous post and each of its controls
 2. An adapter contract names capabilities, separate READ and write operations with a LABEL risk each, auth, rate limit, idempotency and EVIDENCE.
 3. A PARTY uses a READ adapter freely under a READ GRANT; every write adapter goes through the EFFECT pipeline.
 4. The flake pins each MCP server, third-party code with a company KEY.
-5. A PARTY CHECKs each MCP server and runs it sandboxed, and sets each tool action to allowed, ask first or off.
+5. A PARTY CHECKs each MCP server and RUNs it sandboxed, and sets each tool action to allowed, ask first or off.
 6. An LLM-driven browser finds a path once, a PARTY distils it into a Playwright script, and that script joins the PROCEDURE.
 7. The RUN stays deterministic until the site changes.
 8. Terms of service and bot detection apply, the company bypasses no CAPTCHA, and a trace or screenshot serves as EVIDENCE.
@@ -864,7 +894,7 @@ Each requirement keeps its title from the previous post and each of its controls
 1. Human work needs a governor PARTY who DECIDEs and SIGNs, and a worker PARTY who does a TASK in person.
 2. An outside client or supplier is a correspondent PARTY: what it sends is an OBSERVATION and it never DECIDEs a company EFFECT.
 3. An outside PARTY with a right holds «standing»: a role, a DEADLINE and a submission record, matched by PARTY and closed only with a disposition.
-4. A grievance or whistleblower channel accepts an anonymous OBSERVATION hidden from every PARTY connected to it.
+4. A grievance or whistleblower ADDRESS accepts an anonymous OBSERVATION hidden from every PARTY connected to it.
 5. An authority's «case» records every statement with its exact text, and the company CHECKs a new statement against all earlier ones.
 6. A broad goal goes to discovery before any milestone exists, and a TASK reaches a person by WhatsApp, SMS or a mobile page.
 7. Intake turns a request into a TASK, and the original message stays an OBSERVATION.
@@ -872,8 +902,8 @@ Each requirement keeps its title from the previous post and each of its controls
 9. The company APPENDs a person's returned result on that person's behalf with attribution.
 10. A worker register holds skills, qualifications, location, availability and rates.
 11. Some acceptance step needs a qualified person by law.
-12. A wait on a human PARTY has a timeout, a reminder, a no-show rule and a reassignment.
-13. Verification scales with LABEL risk: photo metadata and location, a second PARTY, a spot CHECK.
+12. A wait on a human PARTY has a timeout, a reminder, a no-show RULE and a reassignment.
+13. The CHECK scales with LABEL risk: photo metadata and location, a second PARTY, a spot CHECK.
 14. The company never sends a person into an unsafe situation.
 15. §7 SGB IV defines employment, so a freelancer who takes employee-like direction is employed for social security, a false self-employment status risk.
 
@@ -885,9 +915,9 @@ Each requirement keeps its title from the previous post and each of its controls
 *Nothing runs between runs, so a timer outside the repository must wake the system.*
 
 1. A «stateless» system keeps nothing alive between RUNs, so a PARTY outside it must wake it.
-2. The company APPENDs every timer as a record: a follow-up DEADLINE or a DEADLINE on a recurring PROCEDURE.
+2. A follow-up DEADLINE and a DEADLINE on a recurring PROCEDURE are both records the company APPENDs.
 3. A follow-up DEADLINE has the absence of an OBSERVATION as its trigger.
-4. The consequence of a recurring PROCEDURE's DEADLINE APPENDs the TASK that runs that PROCEDURE.
+4. The consequence of a recurring PROCEDURE's DEADLINE APPENDs the TASK that RUNs that PROCEDURE.
 5. An «edge scheduler» such as cron or a systemd timer READs these DEADLINEs and APPENDs each consequence at expiry.
 
 #### 32. A kill switch
@@ -899,33 +929,33 @@ Each requirement keeps its title from the previous post and each of its controls
 3. A record alone cannot switch: any PARTY that can APPEND overwrites it, it reaches only READers, so the switch has two halves.
 4. The record names what is stopped, the PARTY and the reason and only a board KEY clears it.
 5. A service on another host, reached by one message or one call, acts on the edges and REVOKEs the executing PARTY's KEYs at the «broker».
-6. It STOPs the outbound queues in the «adapters», cancels the EFFECTs a provider holds, and tells the «dead-man's switch» that silence is expected.
-7. Stopping is physical: the stop record CITEs every EFFECT in flight.
-8. The stop confirmation states what the company recalled and what it could not recover.
+6. The global STOP halts the outbound queues in the «adapters», cancels the EFFECTs a provider holds, and tells the «dead-man's switch» that silence is expected.
+7. The STOP is physical: the STOP record CITEs every EFFECT in flight.
+8. The STOP confirmation states what the company recalled and what it could not recover.
 9. A STOP per place belongs to requirement 43.
 
 #### 33. Backup and restore
 
 *Only records in git survive by history; mirrors, keys and restore drills must rebuild the whole company.*
 
-1. History backs up git only; the payload STORE, the KEY STORE, signing KEYs, the KEY register, the «binary cache» and the forge STORE need copies.
+1. History backs up git only; the payload STORE, the KEY STORE, SIGNing KEYs, the KEY register, the «binary cache» and the forge STORE need copies.
 2. Every repository is copied to a second STORE under different KEYs.
-3. The second STORE is append-only and refuses DELETE, so one compromised account on the forge STORE cannot delete both copies.
+3. The second STORE is append-only and refuses DELETE, so one compromised KEY on the forge STORE cannot DELETE both copies.
 4. The payload STORE keeps versioning and an «object lock».
-5. The «object lock» keeps a deleted or overwritten object recoverable for a set period.
+5. The «object lock» keeps a DELETEd or overwritten payload recoverable for a set period.
 6. The company backs up the KEY STORE and its encryption KEYs per person and retention class, encrypted; board members hold recovery KEYs offline.
-7. The board REVOKEs and reissues a signing KEY by a documented PROCEDURE, and the KEY register is in git.
+7. The board REVOKEs and reissues a SIGNing KEY by a documented PROCEDURE, and the KEY register is in git.
 8. A scheduled restore RUN rebuilds the company and its product on a fresh machine, and a verifier PARTY APPENDs the EVIDENCE.
 9. A product with its own STORE enters the register with «point-in-time recovery», a «recovery point objective», a «recovery time objective» and a restore RUN.
 10. The board writes the «recovery point objective» and the «recovery time objective» down per data STORE.
-11. Each backup copy carries a DEADLINE; a RULE APPENDs a TASK deleting a SHREDded KEY's backups; a lost KEY loses data like a deleted one.
-12. A forge STORE outage stops the company; a board DECISION runs RUNs on the second STORE; promotion raises the authority epoch, blocking the old primary.
+11. Each backup copy carries a DEADLINE; a RULE APPENDs a TASK deleting a SHREDded KEY's backups; a lost KEY loses data like a DELETEd one.
+12. A forge STORE outage STOPs the company; a board DECISION RUNs the RUNs on the second STORE; a raised epoch blocks the old primary.
 13. Every writer and executor CHECKs the authority epoch in the KEY registry before a write.
 14. Every TASK carries a deadline-class LABEL.
-15. A TASK tied to an externally fixed date gets a signed «degraded-mode packet» that names its holder.
+15. A TASK tied to an externally fixed date gets a SIGNed «degraded-mode packet» that names its holder.
 16. The packet holds the running order, the contacts, the roster with emergency numbers and the payments already authorised.
 17. The packet prints on paper and needs no forge STORE, network or model to use.
-18. The packet EXPIREs after the event, a RUN each season proves one PARTY can run it, and paper events return afterwards as OBSERVATIONs.
+18. The packet EXPIREs after the event, a RUN each season proves one PARTY can RUN it, and paper events return afterwards as OBSERVATIONs.
 
 #### 34. Continuity and exit
 
@@ -945,7 +975,7 @@ Each requirement keeps its title from the previous post and each of its controls
 *Every record is tagged, and one key per person and retention class erases exactly one class.*
 
 1. Every OBSERVATION, RUN, FACT, fixture and payload carries LABELs class, purpose, «legal basis», retention and recipient; purpose, «legal basis» and retention follow fixed lists.
-2. Each retention LABEL names its legal source and the event that starts the clock.
+2. Each retention LABEL names its legal source and the trigger.
 3. The recipient LABEL names every processor that sees the record.
 4. Personal data stays encrypted in the payload STORE, history holds only HASHes, and minimisation covers transcripts and screenshots.
 5. Context assembly and every EFFECT draw only records whose purpose LABEL matches the TASK's, and a RULE DERIVEs Art. 30 and DPIA entries.
@@ -955,7 +985,7 @@ Each requirement keeps its title from the previous post and each of its controls
 9. A KEY covers one person and one retention class, because Art. 17(3)(b) GDPR excepts data that a statute requires the company to keep.
 10. A gate refuses the SHRED of a KEY that a retained record CITEs; restricted data leaves every context packet.
 11. Restricted data is readable only by the PROCEDURE that serves the legal duty.
-12. A table RULE maps each request to erase, restrict or keep with reason, and the scheduler APPENDs the shred TASK at retention end.
+12. A table RULE maps each request to erase, restrict or keep with reason, and the scheduler APPENDs the SHRED TASK at retention end.
 13. A claim, a cease-and-desist, an authority inquiry or a damage event starts the legal hold.
 14. A dispute starts a legal hold, a DECISION naming matter, custodians, classes and span, that every DELETE path CHECKs; an attempt is an incident.
 15. The issuer or the board ends the hold.
@@ -977,7 +1007,7 @@ Each requirement keeps its title from the previous post and each of its controls
 8. The record states whether a notice went out.
 9. A pushed secret, a context packet with the wrong client's data and a misdirected email are candidates for a breach.
 10. A breach is an incident, and the gates that detect one APPEND the breach TASK.
-11. A register covers every «adapter»: which service it reaches, which LABEL classes it receives, the Art. 28 contract, where the data lands, how it gets there and who sub-processes it.
+11. A register covers every «adapter»: its service, LABEL classes, Art. 28 contract, where the data lands, its transfer mechanism and its sub-processors.
 12. The model provider gets the strictest entry, since every context packet passes through it.
 13. A new integration cannot go live without its entry, and a gate CHECKs that no LABEL class reaches a processor whose entry omits it.
 
@@ -989,14 +1019,14 @@ Each requirement keeps its title from the previous post and each of its controls
 2. Every update to main is a compare-and-swap from an expected parent, so a RUN on a stale base fails instead of overwriting.
 3. The compare-and-swap keeps the semantics of git push --force-with-lease.
 4. A lock is a «lease» with a time limit and a «fencing token» the forge STORE and payload STORE CHECK; a killed holder cannot write.
-5. Gates run on a speculative branch outside any lock, and a «merge queue» rebases, re-gates and retries a bounded number of times.
-6. The unit of merging is declared per file type.
+5. Gates RUN on a speculative branch outside any lock, and a «merge queue» rebases, re-gates and retries a bounded number of times.
+6. Each file type declares its merging granularity.
 7. One landing covers one segment of a translated document, one POSTING of the books, or one field of a TASK; anything else conflicts.
 8. A conflict that stays unresolved goes to the owner PARTY.
 9. A RUN works in a partial, «sparse clone» of the paths its TASK owns, and the RUNs on one host share one object STORE.
 10. A file has a size ceiling, and a record above it holds the payload by HASH.
 11. Routine removal never rewrites history, because only HASHes and pointers enter a COMMIT and the DELETE hits the payload STORE.
-12. Split the repository by domain or project once a single STORE becomes the bottleneck, and let a cross-reference carry a repository and an id.
+12. The company splits the repository by domain or project once a single STORE becomes the bottleneck, and a CITE carries a repository and an id.
 
 
 #### 38. Contracts, signatures and acts only a person can perform
@@ -1006,7 +1036,7 @@ Each requirement keeps its title from the previous post and each of its controls
 2. A register lists five form classes: notarial, written on paper, qualified electronic signature, text form and none.
 3. The wrong form makes the act void and not merely hard to prove.
 4. A gate refuses an EFFECT whose form does not match the register.
-5. The personal acts are writing a clinical note, certifying an insurance claim, signing a manuscript, writing a thesis and adopting a discretionary decision.
+5. The personal acts are writing a clinical note, certifying an insurance claim, SIGNing a manuscript, writing a thesis and adopting a discretionary DECISION.
 6. No GRANT passes a personal act to an agent.
 7. For each personal act the register names the position whose holder performs it.
 8. The act carries that person's own signature and second factor.
@@ -1014,11 +1044,11 @@ Each requirement keeps its title from the previous post and each of its controls
 10. §35a VwVfG permits a fully automated administrative act only where a statute authorises it and leaves neither discretion (Ermessen) nor assessment latitude (Beurteilungsspielraum).
 11. An agent may PROPOSE a draft.
 12. The record shows that an agent drafted it.
-13. The executed document carries a HASH.
+13. The EXECUTEd document carries a HASH.
 14. The clauses that create COMMITMENTs are term and renewal, notice period, notice ADDRESS and form, liability caps, indemnities and governing law.
 15. A human CHECKs those clauses.
-16. A RULE CHECKs the signing PARTY against the register extract.
-17. A RULE CHECKs the authority of the person that signs for the other PARTY.
+16. A RULE CHECKs the SIGNing PARTY against the register extract.
+17. A RULE CHECKs the authority of the person that SIGNs for the other PARTY.
 18. Before SIGN, a gate compares worst-case liability with the insured limits and the board's accepted retention.
 19. Unlimited liability needs a board DECISION.
 20. Settlement authority is an AMOUNT limit in the decision-rights file.
@@ -1031,7 +1061,7 @@ Each requirement keeps its title from the previous post and each of its controls
 
 1. Each TASK and each RUN records its tokens, API spend, tool cost and human hours as AMOUNTs.
 2. These AMOUNTs feed the budgets of requirement 21.
-3. They feed the value-against-cost DECISION of requirement 2.
+3. These AMOUNTs also feed the value-against-cost DECISION of requirement 2.
 4. The dashboard VIEW of requirement 13 shows them.
 
 #### 40. Outcome metrics
@@ -1045,9 +1075,9 @@ Each requirement keeps its title from the previous post and each of its controls
 6. An on-target metric is CHECKed as hard as an off-target one.
 7. A proxy metric is permitted and is never a goal on its own.
 8. A metric is only as good as its source, which is the records the agents wrote.
-9. Where no outside PARTY signs, a gate cannot tell a true number from a fabricated one.
+9. Where no outside PARTY SIGNs, a gate cannot tell a true number from a fabricated one.
 10. The company CHECKs the figure against FACTs the agents did not write.
-11. The independent FACTs include the payer's claim decision, a mystery shopper's report and a random sample that a human CHECKs against the original records.
+11. The independent FACTs include the payer's claim DECISION, a mystery shopper's OBSERVATION and a random sample that a human CHECKs against the original records.
 12. Where no such FACT exists, the company SUPERSEDEs the outcome definition before the period starts.
 13. A named human SIGNs every figure for a funder or an authority.
 14. The sample rate rises where a submitter's numbers outrun the sample.
@@ -1073,8 +1103,8 @@ Each requirement keeps its title from the previous post and each of its controls
 11. The DEADLINE names its consequence as a right lost, a deemed approval, a deemed acceptance or an appeal barred.
 12. The record gives each consequence a plain-words gloss.
 13. A decide-by date well before the DEADLINE ESCALATEs to the board.
-14. Where the company meets a DEADLINE by notifying a PARTY, the record names the contractual or legal service channel.
-15. The record cites a proof-of-receipt artifact.
+14. Where the company meets a DEADLINE by notifying a PARTY, the record names the contractual or legal ADDRESS for service.
+15. The record CITEs a proof-of-receipt artifact.
 16. §41(2) VwVfG deems a posted administrative act notified on the fourth day.
 17. Doubt about receipt puts the burden of proof on the authority.
 18. On SIGN every term triggered by elapsed time or the company's own inaction becomes a DEADLINE.
@@ -1096,19 +1126,19 @@ Each requirement keeps its title from the previous post and each of its controls
 7. Slack on a non-critical TASK is shown and shrinks with each delay.
 8. A calendar for a person or a shared THING blocks unavailable slots.
 9. The calendar blocks weekends, holidays and other bookings.
-10. A register of place THINGs gives each room exclusive use.
+10. A register of place THINGs gives each room one booking at a time.
 11. Concurrent use of a room needs a safe-work LABEL.
 12. A TASK CITEs one or more place THINGs.
-13. A gate fails the graph when two TASKs claim one exclusive place with no dependency.
-14. An access record names the PARTY that holds the door key THING or entry code per place and span.
+13. A gate fails the graph when two TASKs hold a reservation on one place and neither depends on the other.
+14. An access record names the PARTY that holds the door-key THING or entry code per place and span.
 15. A gate refuses a TASK whose place and span carry no access record.
 16. A bill of quantities holds the estimate, orders, goods received and consumed AMOUNT.
 17. Delivery notes and usage logs update the quantities.
 18. An invoice that differs from the bill of quantities is a gate failure.
-19. A THING that can sell out has a capacity ACCOUNT with total, reservations, bookings and free amount.
+19. A THING that can sell out has a capacity ACCOUNT with total, reservations, bookings and free AMOUNT.
 20. A RULE sets the overbooking limit per ACCOUNT.
 21. A gate refuses a POSTING beyond the limit.
-22. A crew position and a truck are exclusive to one TASK until it releases them or its span times out.
+22. A truck and a crew position take one booking at a time, until a release or the expiry of its span.
 23. A reservation with LABEL tentative converts to a booking or EXPIRES.
 
 #### 43. Physical safety and site stops
@@ -1120,7 +1150,7 @@ Each requirement keeps its title from the previous post and each of its controls
 4. Every place THING has a safety LABEL with three states: clear, restricted and halted.
 5. The restricted state holds conditions that fall short of a halt.
 6. A board DECISION or a safety RULE sets the LABEL.
-7. At a halt the system sends a plain-language stop order to every ADDRESS recorded in that zone.
+7. At a halt the system sends a plain-language STOP order to every ADDRESS recorded in that zone.
 8. Each ADDRESS gives an acknowledgement within a set time.
 9. Reminders repeat until the acknowledgement arrives.
 10. The system APPENDs the halt with reason, zone, PARTYs and ANCHOR.
@@ -1128,8 +1158,8 @@ Each requirement keeps its title from the previous post and each of its controls
 12. A worker who refuses entry as unsafe is never treated as absent or reassigned.
 13. The company records and ESCALATEs the refusal.
 14. Each worker gets the safety briefing and the last inspection CHECK for every site.
-15. Tenants and authorities are PARTYs with decision rights.
-16. They may refuse access, call a STOP or set conditions that open blocked TASKs.
+15. Tenants and authorities are PARTYs with DECISION rights.
+16. Tenants and authorities may refuse access, call a STOP or set conditions that open blocked TASKs.
 17. Sending a worker into danger is a crime.
 18. The site plan COMMITs to BaustellV duties.
 19. The plan appoints coordinators above a project-size limit.
@@ -1151,16 +1181,16 @@ Each requirement keeps its title from the previous post and each of its controls
 11. The company APPENDs a SIGNed acceptance record with the accepting PARTY, the date and the EVIDENCE.
 12. The record names a retained AMOUNT held back for open defects and the date it is paid.
 13. The COMMITMENT DEADLINE starts at acceptance.
-14. It defaults to five years for building work under §634a(1) Nr. 2 BGB.
+14. The defect DEADLINE defaults to five years for building work under §634a(1) Nr. 2 BGB.
 15. A calendar TASK CHECKs defects before the COMMITMENT DEADLINE EXPIREs.
-16. The handover pack carries SIGNed plans, EVIDENCE, operating instructions, door key THINGs and the notice that lifts restrictions on use.
+16. The handover pack carries SIGNed plans, EVIDENCE, operating instructions, door-key THINGs and the notice that lifts restrictions on use.
 17. A landlord announces modernisation in text form three months before the work, under §555a(2) BGB.
 18. The tenant may end the lease at the end of the month after next on hardship, under §555c BGB.
 19. A dwelling that is unusable or reduced in value triggers a rent reduction under §536 BGB.
 20. The law gives that reduction.
 21. No agent negotiates that reduction away.
 22. No agent waives what the tenant's rights give them.
-23. A GRANT to sign a works contract on site names its own limits.
+23. A GRANT to SIGN a works contract on site names its own limits.
 
 
 #### 45. Commitments and external obligations
@@ -1175,9 +1205,9 @@ Each requirement keeps its title from the previous post and each of its controls
 6. Each COMMITMENT names the TASK or milestone that creates it and the one that clears it, and CITEs its source clause.
 7. A missed DEADLINE opens an incident TASK with the counterparty notice and the penalty or the compensation attached.
 8. A RULE DERIVEs a VIEW of open COMMITMENTs, and the scheduler CHECKs it before opening dependent work.
-9. Every engagement, client or funder has an engagement file with the signed agreement and the client policy.
+9. Every engagement, client or funder has an engagement file with the SIGNed agreement and the client policy.
 10. The file holds conflict CHECKs against concurrent work, embargo ANCHORs and restrictions on sub-contracting and disclosure.
-11. The file holds an authority register naming who may approve what.
+11. The file holds an authority register naming who may DECIDE what.
 12. A gate READS that file before work starts: a conflict refuses the bid and a missed embargo opens an incident.
 13. A gate refuses AI-generated work that would bind the client when the client's policy forbids it.
 
@@ -1187,21 +1217,21 @@ Each requirement keeps its title from the previous post and each of its controls
 
 1. A web product, a tenant building and a routed fleet shift the work from producing THINGs to keeping one THING running.
 2. One or more PARTYs are on call per rotation, each with a paging ADDRESS and an acknowledgement DEADLINE.
-3. The SLO record carries the target and the measurement window per service and endpoint, so a red SLO has a definition.
+3. The SLO record carries the target and the measurement span per service and endpoint, so a red SLO has a definition.
 4. A monitoring RULE CHECKs liveness and each SLO, APPENDs the SLO record and pages the on-call PARTY.
 5. Each alert has a versioned PROCEDURE, and each incident has a dated record with the alert, timeline, actions, cause and postmortem DECISION.
-6. An outside monitor APPENDs state at intervals, a RULE DERIVEs availability as the basis for SLA disputes, and a second monitor watches the loop.
+6. An outside monitor APPENDs OBSERVATIONs at intervals, a RULE DERIVEs availability as the basis for SLA disputes, and a second monitor watches the loop.
 7. The product STORE joins the backup inventory of requirement 33 with «point-in-time recovery» and tested recovery objectives.
 8. The restore drill restores the product and the company, not only one of them.
 9. The system calls CI and READs its results; CI builds and packages.
-10. A deploy is an EFFECT, gated and DECIDEd for production, with a receipt naming version, place and ANCHOR.
-11. A production deploy has a canary stage, a freeze window and a rollback PROCEDURE; rollback needs the old version and the same DECISION class.
+10. An EFFECT that changes production is gated and DECIDEd, with a receipt naming version, place and ANCHOR.
+11. A production EFFECT has a canary stage, a freeze window and a rollback PROCEDURE; rollback needs the old version and the same DECISION class.
 12. Deploy configuration and feature flags are config-as-code or EFFECTs with a DECISION, so an agent cannot change them without a trace.
 13. break-glass is a GRANT to a smaller «quorum» for rollback, reboot, failover and capacity during a declared incident.
 14. The incident record shows which break-glass action was used.
 15. An incident is a TASK with LABEL incident, opened by an alert or a human, worked through contain, diagnose, mitigate, resolve, review.
 16. Each fleet keeps a route and shift register, a vehicle-state map, fuel and maintenance logs and driver certifications.
-17. A building keeps a tenant contact list per dwelling, a maintenance log and rent ACCOUNTs that reconcile to the bank.
+17. A building keeps a list of tenant PARTYs per dwelling, a maintenance log and rent ACCOUNTs that reconcile to the bank STORE.
 18. Each fleet, building and van has a response DEADLINE and a silent van opens an incident.
 
 #### 47. Bookkeeping, tax and annual accounts
@@ -1211,9 +1241,9 @@ Each requirement keeps its title from the previous post and each of its controls
 1. Plain-text ACCOUNTs on immutable COMMITs fit German law but need matching, period locks, year-end work, tax determination and documentation.
 2. §146(4) AO forbids a POSTING change that hides the original entry, so the books are append-only.
 3. A correction is a REVERSE entry, so the original POSTING stays visible.
-4. A three-way reconciliation CHECK closes each period: orders, payouts and bank lines must match per channel within a declared tolerance.
+4. A three-way reconciliation CHECK closes each period: orders, payouts and bank lines must match per «channel» within a declared tolerance.
 5. Every residual AMOUNT gets a reasoned entry, and an unmatched record refuses the close for Amazon, cards and suppliers.
-6. A «pre-receive hook» refuses any history rewrite in the accounting subtree, even from the board; rollback means the attempt never left the branch.
+6. A «pre-receive hook» refuses any history rewrite in the bookkeeping subtree, even from the board; rollback means the attempt never left the branch.
 7. §14(4) Nr. 4 UStG requires a sequential invoice number unique to the issuer, drawn from requirement 1's allocator.
 8. The GoBD requires a documented reason for each gap in the serial numbers.
 9. The close values inventory against a stock-take.
@@ -1222,13 +1252,13 @@ Each requirement keeps its title from the previous post and each of its controls
 12. A DECISION locks the period.
 13. A gate refuses every further entry into a locked period.
 14. The company DERIVEs the E-Bilanz per §5b EStG for the Finanzamt in machine-readable form and transmits it.
-15. The managing director SIGNs the HGB §242 and §264 accounts, and the company files them with the register.
+15. The managing director SIGNs the HGB §242 and §264 financial statements, and the company files them with the register.
 16. A RULE determines VAT at the statutory rate on every sale, and a marketplace is a deemed supplier per §3(3a) UStG.
-17. Distance sales above 10,000 € fall under §3c(4) UStG, and the One-Stop Shop procedure rests on §§18i to 18k UStG.
+17. Distance sales above 10,000 € fall under §3c(4) UStG, and the One-Stop Shop regime rests on §§18i to 18k UStG.
 18. The company reclaims input VAT and separates deductible from non-deductible.
 19. The company DERIVEs the VAT return with a LABEL per return line, a human PARTY reviews it and the Steuerberater files it.
 20. A committed, SIGNed Verfahrensdokumentation per GoBD states how POSTINGs enter the books and who CHECKs them.
-21. The Verfahrensdokumentation states which CHECKs run and how retention and read-back work.
+21. The Verfahrensdokumentation states which CHECKs RUN and how retention and read-back work.
 22. Every PROCEDURE on the books CITEs it, and a change needs a DECISION.
 
 #### 48. Capital, entities and investors
@@ -1237,7 +1267,7 @@ Each requirement keeps its title from the previous post and each of its controls
 
 1. Shares, funding instruments, PARTYs, investor rights and runway sit outside the TASK graph, and a share treated as a FACT loses legal structure.
 2. A cap table is an append-only record of instruments: each funding round is a DECISION with subscription agreements, pre-money, option pool and conversion RULEs.
-3. The verifier DERIVEs post-money fully diluted, the exit waterfall and the per-instrument cap; each instrument CITEs its signed agreement.
+3. The verifier DERIVEs post-money fully diluted, the exit waterfall and the per-instrument cap; each instrument CITEs its SIGNed agreement.
 4. The Gesellschafterliste per §40 GmbHG reconciles to the court version.
 5. A share transfer needs the notarial form of §15(3) GmbHG, and an amendment to the articles needs the notarised §53(3) GmbHG resolution.
 6. That deed is constitutive rather than EVIDENCE, so no equity measure is effective without it.
@@ -1250,7 +1280,7 @@ Each requirement keeps its title from the previous post and each of its controls
 13. Some filings happen per PARTY (Handelsregister, VAT ID) and others per group.
 14. Investor rights are COMMITMENTs: covenants, board seats, information rights and pro-rata in the next round.
 15. Investor rights also include consent for large expenditures, new debt and an exit.
-16. A human PARTY makes the investor DECISION through a TASK on the DECISION ADDRESS, with the clause that granted the right attached.
+16. A human PARTY makes the investor DECISION through a TASK on the DECISION ADDRESS, with the clause that GRANTed the right attached.
 17. The investor responds through the DECISION ADDRESS, and the company APPENDs the DECISION before it acts.
 18. COMMITMENTs carry milestones, a report COMMITMENT, a notice DEADLINE and claw-back terms.
 19. A crowdfunding campaign records backers, reward COMMITMENTs, VAT per backer location, fulfilment COMMITMENTs and refunds where the goal was missed.
@@ -1263,7 +1293,7 @@ Each requirement keeps its title from the previous post and each of its controls
 
 1. A company that dispatches, scores and terminates people by AI DECISION faces statute RULEs, mandatory consultation and a high-risk LABEL under the AI Act.
 2. The works council is a binary FACT with the election ANCHOR.
-3. Each Betriebsvereinbarung is a versioned COMMITMENT with a scope, an effective date and an expiry, stored in the governance registry.
+3. Each Betriebsvereinbarung is a versioned COMMITMENT with a scope, an effective date and an expiry, held in the governance registry.
 4. A pre-effect gate CHECKs the map from DECISION to co-determination class to required Betriebsvereinbarung.
 5. Participation under §87(1) Nr. 2 and Nr. 6 BetrVG covers rosters, shift allocation and performance monitoring, and so does AI that schedules or scores.
 6. Hiring needs the works council's consent per §99(1) BetrVG.
@@ -1272,12 +1302,12 @@ Each requirement keeps its title from the previous post and each of its controls
 9. A gate CHECKs each shift against eight hours a day under §3 ArbZG and eleven hours of rest under §5 ArbZG before dispatch.
 10. The gate caps cumulative weekly and monthly hours.
 11. A four-day DEADLINE governs on-call shifts per §12 TzBfG, and a working-time violation opens an incident that no agent overrides.
-12. A termination is a risk=top EFFECT because §623 BGB requires Schriftform, so the company prints, signs on paper and posts it.
+12. A termination is a risk=top EFFECT because §623 BGB requires Schriftform, so the company prints, SIGNs on paper and posts it.
 13. False self-employment risks back-dated social security contributions but is no offence under §1 AÜG.
 14. §1 AÜG requires a licence for temporary agency work, and §16(1) Nr. 1 AÜG makes unlicensed work an administrative offence.
 15. Each worker's classification is a FACT with its reasoning.
-16. AI that allocates TASKs by scoring or behaviour is high-risk under Annex III(4)(b), and Art. 26 requires informing representatives and affected workers before go-live.
-17. The MiLoG minimum wage sits in the statutory facts register and may not be undercut.
+16. TASK allocation by scoring or behaviour is high-risk AI under Annex III(4)(b); Art. 26 needs workers and representatives informed before go-live.
+17. The MiLoG minimum wage sits in the statutory FACTs register and may not be undercut.
 18. A gate refuses a dispatch whose wage is below the statutory minimum.
 19. Fitness, health or vaccination requirements carry expiry DEADLINEs the scheduler CHECKs before dispatch.
 20. A worker may contest an automated DECISION; a PROCEDURE routes each DECISION LABEL to a board member, an outside arbiter or the works council.
@@ -1286,15 +1316,15 @@ Each requirement keeps its title from the previous post and each of its controls
 
 *Licences, brand rules and client approvals must be checked before any work is published.*
 
-1. Every creative THING carries a rights record: licensor, assignment or publish GRANT, media, territory, DEADLINE, run limit, derivatives, AI use, credit line and licence HASH.
-2. A pre-effect gate refuses any placement whose media, DEADLINE or print run exceeds the GRANT.
+1. Every creative THING carries a rights record: licensor, assignment or publish GRANT, media, territory, DEADLINE, RUN limit, derivatives, AI use, credit line and licence HASH.
+2. A pre-effect gate refuses any placement whose media, DEADLINE or print count exceeds the GRANT.
 3. §29(1) UrhG makes copyright non-transferable, so the author passes only a GRANT under §31(1) UrhG, limited by §31(5) to the contract purpose.
-4. Payment is a contractual condition of the assignment, not a statutory requirement.
+4. An EFFECT that pays is a contractual condition of the assignment, not a statutory requirement.
 5. An identity THING passes a trade-mark clearance CHECK against committed registered marks for visual and phonetic similarity.
 6. The clearance EXPIREs when the identity THING changes.
-7. A client DECISION binds to the exact rendition it saw, CITEs the file HASH and the screenshot's OBSERVATION, and a change reopens the DECISION TASK.
+7. A client DECISION CITEs the exact rendition it saw, the file HASH and the screenshot's OBSERVATION, and a change reopens the DECISION TASK.
 8. Each brand has a committed system of colour, type, radius tokens, allowed font files, logo variants, voice RULEs, restricted words and templates.
-9. An output THING carries the HASH of the brand system it references, so a later change marks older work stale and opens a review TASK.
+9. An output THING CITEs the brand system it was made from, so a later change marks older work stale and opens a review TASK.
 10. Every output is CHECKed before delivery: colours and fonts by a RULE, voice by an LLM judge with a rubric.
 11. Taste is not deterministic, so a rejection by client, creative director or failed peer review resets a TASK even when the spec was met.
 12. A rejection record says what is wrong and what would fix it; the TASK records each attempt.
@@ -1302,7 +1332,7 @@ Each requirement keeps its title from the previous post and each of its controls
 14. A committed RULE covers alcohol advertising, health claims that need pre-approval, age ratings, accessibility and GEMA.
 15. A gate refuses a health claim that needs pre-approval.
 16. Each publication is an OBSERVATION with ANCHOR, HASH and placement.
-17. A placement COMMITMENT records the content HASH and the placement rule, with a penalty and a DEADLINE.
+17. A placement COMMITMENT records the content HASH and the placement RULE, with a penalty and a DEADLINE.
 18. Sponsor contracts, affiliate agreements and content GRANTs create placement COMMITMENTs, and a missed placement opens an incident.
 
 
@@ -1315,7 +1345,7 @@ A pack carries a version and its own tests, like a «skill», and a company turn
 
 1. A PARTY APPENDs each lead as an OBSERVATION with a source THING and an arrival ANCHOR.
 2. A RUN DERIVEs a quote from the price-list FACTs, and a DECISION sends it as a COMMITMENT with a DEADLINE.
-3. The customer's signed acceptance is a DECISION by that PARTY, and onboarding APPENDs its PARTY and ACCOUNTs.
+3. The customer's SIGNed acceptance is a DECISION by that PARTY, and onboarding APPENDs its PARTY and ACCOUNTs.
 4. Each support request opens a TASK under a PROCEDURE, and a response-time DEADLINE ESCALATEs it at the decide-by date.
 5. A complaint is an OBSERVATION that opens a TASK.
 6. The complaint response is an EFFECT with a DEADLINE.
@@ -1345,7 +1375,7 @@ A pack carries a version and its own tests, like a «skill», and a company turn
 6. A payroll RUN makes one POSTING per PARTY and one EFFECT to the bank STORE.
 7. The cash forecast is a metric VIEW.
 8. The handover to the tax advisor is an EFFECT that carries the books and the cash forecast.
-9. §14 UStG requires an XRechnung or ZUGFeRD e-invoice for German B2B invoices, with §27 UStG transition to 2027; the pack produces and reads both.
+9. §14 UStG requires an XRechnung or ZUGFeRD e-invoice for German B2B invoices, with §27 UStG transition to 2027; the pack produces and READs both.
 
 ### 4. Procurement and inventory
 *The pack buys stock safely, matches three documents before paying and tracks goods in and out.*
@@ -1383,7 +1413,7 @@ A pack carries a version and its own tests, like a «skill», and a company turn
 5. The relation names each contributor and what that contributor keeps.
 6. A gate CHECKs the shipped records against the open-source publish GRANT list before publication.
 7. A notice period is a DEADLINE on a planned ANCHOR.
-8. At expiry, a RULE APPENDs the renewal or termination that binds the COMMITMENT.
+8. At expiry, a RULE APPENDs a renewal or a termination of the COMMITMENT.
 9. The expiry also APPENDs a reminder TASK for the owner PARTY.
 
 ### 7. Meetings and calendars
@@ -1428,13 +1458,13 @@ A pack carries a version and its own tests, like a «skill», and a company turn
 *Records track what each lot is made of, each unit, tool calibration, sampling results and vendor approval.*
 
 1. A BOM record names the THINGs and AMOUNTs of one lot; each revision SUPERSEDEs the earlier BOM.
-2. Each lot CITEs the RUN manifest for its genealogy; each unit carries a serial LABEL.
+2. Each lot CITEs the RUN manifest for its genealogy; each UNIT carries a serial LABEL.
 3. A genealogy VIEW traces each lot forward to the receiving PARTYs, so a recall TASK can name them.
 4. A shelf-life RULE APPENDs the expiry DEADLINE from the production ANCHOR.
 5. The expiry APPENDs a TASK to remove the lot from sale.
 6. A verifier PARTY CHECKs each measuring tool against the calibration RULE and APPENDs EVIDENCE.
 7. The calibration EVIDENCE CITEs each measurement it covers.
-8. A sampling RULE reads AQL; a failed CHECK gives the lot a non-conforming LABEL and opens a corrective-action TASK.
+8. A sampling RULE READs AQL; a failed CHECK gives the lot a non-conforming LABEL and opens a corrective-action TASK.
 9. A corrective-action TASK closes only on EVIDENCE that the cause is fixed and the fix works.
 10. The approved-vendor register gives each vendor a GRANT with a scope.
 11. A gate refuses a purchase from a vendor without a GRANT.
@@ -1476,7 +1506,7 @@ A pack carries a version and its own tests, like a «skill», and a company turn
 
 1. Intake APPENDs one TASK per application and CITEs the statute RULE that sets its DEADLINE.
 2. A DEADLINE from §42a VwVfG APPENDs a deemed approval GRANT at expiry, where another provision orders the fiction.
-3. A DEADLINE from §28 VwVfG gives the applicant a span to state a view before the DECISION.
+3. A DEADLINE from §28 VwVfG gives the applicant a span to be heard before the DECISION.
 4. Each refusal is a DECISION that CITEs the RULE and the OBSERVATIONs behind it.
 5. The refusal states its grounds and how the authority exercised its discretion under §39 VwVfG.
 6. A public comment span is a DEADLINE whose expiry APPENDs a TASK.
@@ -1487,7 +1517,7 @@ A pack carries a version and its own tests, like a «skill», and a company turn
 11. A redaction RUN DELETEes each exempt payload before the disclosure.
 12. A disclosure DECISION releases the redacted records.
 13. The standstill DEADLINE counts fifteen or ten days from the ANCHOR that informs unsuccessful bidders, per §134 GWB.
-14. A gate holds the contract while the standstill DEADLINE runs.
+14. A gate holds the contract while the standstill DEADLINE RUNs.
 
 ### 15. Publishing and ESG reporting
 *Every claim is checked, corrections reach every placement, sources stay hidden, and ESG numbers reproduce.*
@@ -1526,7 +1556,7 @@ A pack carries a version and its own tests, like a «skill», and a company turn
 2. The funder report is an EFFECT to the funder's STORE with a receipt OBSERVATION.
 3. An in-kind donation is a POSTING of the THING at a declared AMOUNT with LABEL estimated.
 4. The AMOUNT states its valuation basis and that the valuer is independent of the donor.
-5. The donor acknowledges the valuation in a signed OBSERVATION that the POSTING CITEs.
+5. The donor acknowledges the valuation in a SIGNed OBSERVATION that the POSTING CITEs.
 6. A volunteer RUN APPENDs an OBSERVATION of hours; a POSTING moves that AMOUNT to the programme ACCOUNT.
 7. Each programme outcome is a FACT that a verifier PARTY outside the company CHECKs.
 8. The external CHECK covers the measurement method and the denominator.
@@ -1538,21 +1568,21 @@ A pack carries a version and its own tests, like a «skill», and a company turn
 *Ethics approvals renew, adverse events run on clocks, authorship is recorded, and shared data is destroyed at term end.*
 
 1. An ethics committee GRANT covers each protocol, with a DEADLINE for renewal.
-2. When the ethics GRANT expires, a gate STOPs every study RUN until a renewed GRANT.
+2. When the ethics GRANT EXPIREs, a gate STOPs every study RUN until a renewed GRANT.
 3. A serious adverse event opens a TASK and a DEADLINE counting from the OBSERVATION to the filing.
 4. Each recipient PARTY has its own DEADLINE from the same OBSERVATION.
 5. A causality assessment is a DECISION by the investigator that each DEADLINE record CITEs.
 6. The authorship register names each author PARTY and that PARTY's contribution role.
 7. The register names one corresponding author.
-8. Each author approves the submitted version in a signed OBSERVATION.
+8. Each author approves the submitted version in a SIGNed OBSERVATION.
 9. A data-sharing agreement is a COMMITMENT naming the federation RULE and a DEADLINE whose expiry opens a TASK that DELETEs the shared data.
-10. The deletion TASK CITEs the partner's signed destruction statement.
+10. The deletion TASK CITEs the partner's SIGNed destruction statement.
 11. A preregistration is a DECISION that fixes the study design before the first OBSERVATION.
 12. The preregistration carries a public ANCHOR.
 13. Each deviation from the preregistration APPENDs an OBSERVATION.
 14. The replication package is a PROCEDURE that a verifier PARTY can EXECUTE.
 15. The verifier's RUN APPENDs EVIDENCE that CITEs the package HASH.
-16. An embargo DEADLINE refuses the publish EFFECT until it expires.
+16. An embargo DEADLINE refuses the publish EFFECT until it EXPIREs.
 
 
 ## What did not fit
@@ -1561,7 +1591,7 @@ Every rewrite above was done by an agent working from the dictionary alone, and 
 
 ### Domain nouns belong in an annex
 
-Cap table, SAFE, waterfall, aggregate limit, AQL, SLO, XRechnung. None of them should enter a core dictionary, and a pack that uses one has to define it somewhere. That annex is per pack, and this post does not carry it: a construction company does not need a word for an insurance reserve, and a dictionary that held all eighteen trades would be a glossary of everything.
+Cap table, SAFE, waterfall, aggregate limit, AQL, SLO, XRechnung. None of them should enter a core dictionary, and a pack that uses one has to define it somewhere. That annex is per pack, and this post does not carry it: a construction company does not need a word for an insurance reserve, and a dictionary that held all eighteen trades would be a glossary of everything. Requirement 42 shows the shape of one. A room is a place THING, a truck is a vehicle THING, a crew position is the UNIT a crew's capacity ACCOUNT counts, and a bill of quantities is a VIEW of AMOUNTs. Each line maps a trade word to a record kind or a defined noun, and the mapping is all the annex holds. In the statements these nouns stay in ordinary type and take no mark, because a mark would say the dictionary failed where the trade simply has a word of its own.
 
 ### A statute is not a word
 

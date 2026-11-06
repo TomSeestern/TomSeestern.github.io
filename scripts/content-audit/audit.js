@@ -6,6 +6,7 @@ const {
   RULE_META,
   analyzeMarkdownStructure,
   analyzeProseSegments,
+  analyzeStatements,
   collectSuppressions,
   countWords,
   findUnknownFrontmatterKeys,
@@ -123,6 +124,16 @@ function auditMarkdownSource(raw, file) {
     findings,
     suppressions,
   })
+
+  const statements = analyzeStatements({
+    file,
+    body: extracted.bodyProse,
+    bodyStartLine: extracted.bodyStartLine,
+    data: extracted.data,
+    findings,
+    suppressions,
+  })
+  stats.statements = statements.checked
 
   scanKeywordStuffing({
     file,

@@ -91,6 +91,26 @@ const RULE_META = Object.freeze({
     label: "Duplicate content",
     message: "Remove or rewrite the copied span. Search engines treat scraped or duplicated content as low-value.",
   },
+  "statement-too-long": {
+    label: "Statement too long",
+    message:
+      "A numbered statement carries one mechanism and at most 25 words; split it or cut the material that is not a control.",
+  },
+  "statement-bare-pronoun": {
+    label: "Bare pronoun subject",
+    message:
+      "Name the record, gate, party or rule. A statement that opens with It or They makes the reader look back a line.",
+  },
+  "statement-tense": {
+    label: "Compound tense",
+    message:
+      "Use the present for what holds and the past for what happened; a statement in a controlled vocabulary carries no perfect tense.",
+  },
+  "statement-case": {
+    label: "Dictionary case",
+    message:
+      "Write a word in the case its definition uses: capitals for an entry defined in capitals, ordinary type otherwise, and capitals for an abbreviation.",
+  },
 })
 
 const HIDDEN_RANGES = [
@@ -378,7 +398,28 @@ const FRONTMATTER_KEYS = new Set([
   "heroImage",
   "metrics",
   "links",
+  // Opt-in for the statement rules below. Posts without it are not checked.
+  "statementRules",
 ])
+
+const STATEMENT_MAX_WORDS = 25
+const STATEMENT_ENTRY_REGEX = /^\*\*([^*]+)\*\* — /
+const QUOTED_SPAN_REGEX = /«[^»]*»|`[^`]*`/g
+const BARE_PRONOUN_REGEX = /^(?:it|they|them|we|you|he|she|i|there)\b/i
+// "has waited", "had been appended", "have got". A main-verb "has" takes an
+// article or a noun next, so it never matches.
+const PERFECT_TENSE_REGEX =
+  /\b(?:has|have|had)\s+(?:been|got|made|done|seen|shown|written|held|sent|left|kept|built|given|taken|\w+(?:ed|en))\b/gi
+const CAPITAL_TOKEN_REGEX = /(?<![\w-])[A-Z][A-Z0-9]{1,}(?![\w-])/g
+const ENTRY_SUFFIXES = ["s", "es", "ed", "d", "ing"]
+// Abbreviations have no entry by design, so they need an allowlist that fails
+// closed: a new one has to be added here deliberately.
+const STATEMENT_ABBREVIATIONS = new Set(
+  // prettier-ignore
+  "AI AO API AQL B2B BGB BOM C2PA CAPTCHA CEO CI CLI DDG DKIM DPIA EBU EUR FOB FX GB GDPR GEMA GPG GPU GWB HGB HTML IANA IBAN ID II III IV JSON LF LLM MCP PDF PSD2 README RFC SGB SIM SLA SLO SMS SPF SSH SVG TOTP TTS UWG VAT VIII VVG WSL2 YAML".split(
+    " "
+  )
+)
 
 function describeCodePoint(codePoint) {
   return `U+${codePoint.toString(16).toUpperCase().padStart(4, "0")}`
@@ -750,6 +791,130 @@ function analyzeProseSegments({ file, segments, findings, suppressions }) {
   }
 }
 
+/**
+ * Reads the dictionary a post carries: an entry is a bold word at the start of
+ * a paragraph, followed by an em dash and its definition. The case of that line
+ * is the case the statements must use, which is why this is read rather than
+ * configured.
+ */
+function parseDictionaryEntries(body) {
+  const entries = new Map()
+
+  for (const line of body.split("\n")) {
+    const match = line.match(STATEMENT_ENTRY_REGEX)
+    if (!match) continue
+    const word = match[1].trim()
+    if (word.length === 0 || entries.has(word.toLowerCase())) continue
+    entries.set(word.toLowerCase(), { word, capitalised: word === word.toUpperCase() })
+  }
+
+  return entries
+}
+
+function maskQuotedSpans(text) {
+  return text.replace(QUOTED_SPAN_REGEX, (match) => " ".repeat(match.length))
+}
+
+function reducesToEntry(token, entries) {
+  const lower = token.toLowerCase()
+  if (entries.has(lower)) return true
+  return ENTRY_SUFFIXES.some((suffix) => lower.endsWith(suffix) && entries.has(lower.slice(0, -suffix.length)))
+}
+
+/**
+ * Applies the statement rules a post opts into with `statementRules: true`.
+ * Every rule here is mechanical: the word limit, the subject, the tense, and
+ * the case of a word that has an entry. Whether a statement carries one
+ * mechanism, and whether it is true, stay with a reader.
+ */
+function analyzeStatements({ file, body, bodyStartLine, data, findings, suppressions }) {
+  const declared = data && data.statementRules
+  if (!Array.isArray(declared) || declared.length === 0) return { checked: 0, sections: [] }
+
+  const sections = declared.map((name) => String(name).trim())
+  const wanted = new Set(sections)
+  const lines = body.split("\n")
+  const seen = new Set()
+  const entries = parseDictionaryEntries(body)
+  const hasDictionary = entries.size > 0
+  const config = (detail) =>
+    addFinding(findings, suppressions, {
+      rule: "statement-case",
+      file,
+      line: bodyStartLine,
+      column: 1,
+      detail,
+      excerpt: "statementRules",
+      message: RULE_META["statement-case"].message,
+    })
+
+  if (!hasDictionary) {
+    // Without a dictionary every capital would fail, which hides the cause.
+    config("no dictionary entries found for statementRules")
+  }
+
+  let current = null
+  let checked = 0
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const heading = lines[index].match(/^##\s+(.+?)\s*#*\s*$/)
+    if (heading) {
+      current = heading[1].trim()
+      if (wanted.has(current)) seen.add(current)
+      continue
+    }
+
+    if (current === null || !wanted.has(current)) continue
+    const statement = lines[index].match(/^\d+\. (.*)$/)
+    if (!statement) continue
+
+    checked += 1
+    const text = statement[1]
+    const line = bodyStartLine + index
+    const masked = maskQuotedSpans(text)
+    const finding = (rule, detail) =>
+      addFinding(findings, suppressions, {
+        rule,
+        file,
+        line,
+        column: 1,
+        detail,
+        excerpt: text.slice(0, 180),
+        message: RULE_META[rule].message,
+      })
+
+    const words = countWords(masked)
+    if (words > STATEMENT_MAX_WORDS) finding("statement-too-long", `${words} words`)
+    if (BARE_PRONOUN_REGEX.test(masked.trim())) finding("statement-bare-pronoun", "bare pronoun subject")
+
+    for (const match of masked.matchAll(new RegExp(PERFECT_TENSE_REGEX.source, PERFECT_TENSE_REGEX.flags))) {
+      finding("statement-tense", match[0].replace(/\s+/g, " "))
+    }
+
+    if (!hasDictionary) continue
+
+    for (const match of masked.matchAll(new RegExp(CAPITAL_TOKEN_REGEX.source, CAPITAL_TOKEN_REGEX.flags))) {
+      const token = match[0]
+      if (reducesToEntry(token, entries) || STATEMENT_ABBREVIATIONS.has(token)) continue
+      finding("statement-case", `capital with no entry: ${token}`)
+    }
+
+    for (const [key, entry] of entries) {
+      if (!entry.capitalised || !/^[a-z]+$/.test(key)) continue
+      const pattern = new RegExp(`(?<![\\w-])${key}(?:s|es|ed|d|ing)?(?![\\w-])`, "g")
+      for (const match of masked.matchAll(pattern)) {
+        finding("statement-case", `entry in ordinary type: ${match[0]} (${entry.word})`)
+      }
+    }
+  }
+
+  for (const name of sections) {
+    if (!seen.has(name)) config(`declared section not found: ${name}`)
+  }
+
+  return { checked, sections }
+}
+
 function stripMarkdown(value) {
   return value
     .replace(/[*_`~]/g, "")
@@ -940,9 +1105,11 @@ module.exports = {
   addFinding,
   analyzeMarkdownStructure,
   analyzeProseSegments,
+  analyzeStatements,
   collectSuppressions,
   countWords,
   findRuleOfThree,
+  parseDictionaryEntries,
   findUnknownFrontmatterKeys,
   hasCitationOnLine,
   lineColumnAt,

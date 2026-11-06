@@ -151,6 +151,10 @@ Errors in async code use `await-to-js` (`to()` pattern) for structured error han
 
 Follow ESLint `import/order` rules (external → builtin → internal → sibling → parent → index, alphabetically sorted). Component files use PascalCase, utility modules use kebab-case or camelCase. No Hungarian notation or type prefixes.
 
+#### R3.7) Controlled-vocabulary statements carry their own rules `[auto: pnpm content:audit — scripts/content-audit/rules.js]`
+
+A Markdown file opts in with a `statementRules:` frontmatter list naming the h2 sections whose numbered lists are statements, as `content/blog/2026-seven-nouns-eighteen-verbs.md` does. In those sections every numbered statement must stay at or under 25 words, open with a named subject rather than a bare pronoun, use the present or the past, and write each approved word in the case its definition uses: capitals for an entry defined in capitals, ordinary type otherwise. The dictionary is read from the post itself, where an entry is a bold word followed by an em dash; abbreviations come from the allowlist in `scripts/content-audit/rules.js`, which fails closed so a new one must be added deliberately. The rules and their tests sit beside that file; `pnpm content:audit` runs the rules, `pnpm test` runs the tests, and CI runs both before the deploy mirror. One test parses the statement count the post states and fails when it and the analyser disagree.
+
 ### Project architecture
 
 #### R4.1) Post state preservation must be monotonic `[manual]`
